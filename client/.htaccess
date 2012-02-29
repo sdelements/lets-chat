@@ -1,0 +1,13 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^(.*)$ index.php?url=$1 [PT,L]
+
+AddDefaultCharset UTF-8
+
+#Development errors
+php_flag display_startup_errors on
+php_flag display_errors on
+php_flag html_errors on
