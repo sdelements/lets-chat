@@ -8,7 +8,6 @@ var config = require('./configuration.js')
 
 
 // start http server
-app.listen(5000)
-//io.listen(app)
+app.listen(config.port)
 // start chat server
-var chat = new ChatServer(config.port)
+var chat = new ChatServer(app)

@@ -20,7 +20,7 @@ var ChatServer = function (port) {
         mongoose.connect('mongodb://localhost/letschatbro');
 		// Listening
 		this.io = require('socket.io').listen(port);
-		
+	    this.io.set('log level', 1);	
 		// Setup listeners
 		this.setupListeners();
 

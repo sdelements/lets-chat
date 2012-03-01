@@ -2,7 +2,11 @@ var express = require('express')
 var mustache = require('mustache')
 var fs = require('fs')
 
+var config = require('./configuration.js')
+
 var app = express.createServer()
+
+
 
 var chatTemplate = fs.readFileSync("client/template/chat.tmpl").toString()
 var headerTemplate = fs.readFileSync("client/template/header.tmpl").toString()
@@ -10,7 +14,11 @@ var footerTemplate = fs.readFileSync("client/template/footer.tmpl").toString()
 var jsTemplates = fs.readFileSync("client/template/js-templates.tmpl").toString()
 
 app.get('/', function (req, res) {
-    cxt = {'media_url': '/media',
+    
+    cxt = {
+           'host': config.hostname,
+           'port': config.port,
+           'media_url': '/media',
            'site_title': "Let's Chat Bro",
            'page_title': "Development",
            'jsTemplates': jsTemplates

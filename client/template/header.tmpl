@@ -15,6 +15,10 @@
 <script src="{{media_url}}/js/bootstrap-buttons.js" type="text/javascript"></script>
 <script src="/socket.io/socket.io.js" type="text/javascript"></script>
 <script>
+    connection = {
+        'host': "{{host}}",
+        'port': {{port}}
+    }
 	soundManager.debugMode = false;
 	soundManager.debugFlash = false;
 	soundManager.url = '{{media_url}}/swf/';

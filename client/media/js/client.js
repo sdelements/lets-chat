@@ -192,8 +192,8 @@ function Client() {
 		this.updateStatus('Connecting...');
 	
 		// TODO: Why the hell didn't I add this to config?
-		this.socket = io.connect('letschat', {
-			port: 8111,
+		this.socket = io.connect(connection.host, {
+			port: connection.port,
 			reconnect: true,
 			transports: ['websocket', 'flashsocket']
 		});
