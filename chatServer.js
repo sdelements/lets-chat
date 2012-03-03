@@ -2,25 +2,48 @@
 // libraries
 var async = require('async');
 var mongoose = require('mongoose');
-
+var parseCookie = require('connect').utils.parseCookie
+var Session = require('connect').middleware.session.Session
 // Load models
 var MessageModel = require('./models/message.js');
 
-var ChatServer = function (port) {
+var ChatServer = function (app, sessionStore) {
 
 	var self = this;
 	
 	// Setup vars
 	this.clients = {};
 
-	this.init = function(port) {
+	this.init = function() {
 
 		console.log('Starting up bro...');
         // connect to db
         mongoose.connect('mongodb://localhost/letschatbro');
 		// Listening
-		this.io = require('socket.io').listen(port);
-	    this.io.set('log level', 1);	
+		this.io = require('socket.io').listen(app);
+	    this.io.set('log level', 0)
+        // This will parse out session info for connections
+        this.io.set('authorization', function (data, accept) {
+            // This function courtesy of danielbaulig.de
+            // check if there's a cookie header
+            if (data.headers.cookie) {
+                // if there is, parse the cookie
+                data.cookie = parseCookie(data.headers.cookie);
+                data.sessionID = data.cookie['express.sid'];
+                data.sessionStore = sessionStore
+                sessionStore.get(data.sessionID, function (err, session) {
+                    if (err || !session) {
+                        accept("Error with Sessions", false)
+                    } else {
+                        data.session = new Session(data, session)
+                        accept(null, true)
+                    }
+                })   
+            } else {
+                // if there isn't, turn down the connection
+                return accept('No cookie transmitted.', false);
+            }
+        })
 		// Setup listeners
 		this.setupListeners();
 
@@ -30,12 +53,14 @@ var ChatServer = function (port) {
 
 		// New client
 		this.io.sockets.on('connection', function (client) {
-
+            console.log(client.handshake.session)
 			console.log('What a nice client bro...');
-			
+            var hs = client.handshake
+            var user = hs.session.user
 			// Add to clients list
 			self.clients[client.id] = {
-				name: 'Anonymous',
+                name: user.displayName,
+                user: user,
 				sid: null
 			}
 			self.sendClientList();
@@ -65,12 +90,15 @@ var ChatServer = function (port) {
 				delete self.clients[client.id];
 				self.sendClientList();
 			});
-
+    
+            console.log("Send off message")
 			// Send off an announcement
 			self.io.sockets.emit('join', {
 				name: 'System',
-				text: 'A wild anonymoose appears!'
+				text: 'A wild Dude appears!'
 			});
+
+            console.log("Done")
 
 		});
 
@@ -108,7 +136,7 @@ var ChatServer = function (port) {
 		console.log('Holy shit bro, we goin down...');
 	}
 
-    this.init(port)
+    this.init()
 }
 
 module.exports = ChatServer

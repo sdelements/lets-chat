@@ -6,7 +6,7 @@ var userSchema = new Schema({
     username: String,
     firstName: String,
     lastName: String,
-    DisplayName: String,
+    displayName: String,
     joined: { type: Date, default: Date.now }
 });
 

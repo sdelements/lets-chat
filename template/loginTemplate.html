@@ -12,14 +12,55 @@
 <script src="{{media_url}}/js/bootstrap-transition.js" type="text/javascript"></script>
 <script src="{{media_url}}/js/bootstrap-modal.js" type="text/javascript"></script>
 <script src="{{media_url}}/js/bootstrap-buttons.js" type="text/javascript"></script>
+<script>
+$(document).ready(function(){
+    $('a#register-link').click(function(){
+        var registerDiv = $('#register')
+        var authForm = $('#authForm')
+        var link = $('#register-link')
+        if (registerDiv.is(":visible")) {
+            authForm.attr('action', '/login')
+            registerDiv.slideUp()
+            link.text('Already have an account?')
+        } else {
+            authForm.attr('action', '/register') 
+            registerDiv.slideDown()
+            link.text('New? Create an account?')
+        }
+    })
+})
+</script>
 </head>
-<body>
-    <h1>Login Bitches</h1>
-    <form method="post">
-        <input type="text" name="username"/>
-        <input type="password" name="password" />
-        <input type="hidden" name="next" value="{{next}}"/>
-        <input type="submit" name="submit" value="Login"/>
-    </form>
+<body id="auth">
+    <div id="auth">
+        <h3>Let's Chat Bro!</h3>
+        <form id="authForm" action="/login" method="post">
+            <fieldset>
+                <label for="username">Username</label>
+                <input type="text" name="username"/>
+            </fieldset>
+            <fieldset>
+                <label for="password">Password</label>
+                <input type="password" name="password" />
+            </fieldset>
+            <input type="hidden" name="next" value="{{next}}"/>
+            <div id="register">
+                <fieldset>
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" name="confirm-password" />
+                </fieldset> 
+                <fieldset>
+                    <label for="firstName">First Name</label>
+                    <input type="text" name="firstName" />
+                </fieldset>
+                <fieldset>
+                    <label for="lastName">Last Name</label>
+                    <input type="text" name="lastName" />
+                </fieldset>
+            </div>
+            <p><a id="register-link">New? Create an account</a></p>
+            <input type="submit" name="submit" value="Login"/>
+        </form>
+    </div>
 </body>
 </html>

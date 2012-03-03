@@ -193,7 +193,7 @@ function Client() {
 	
 		// TODO: Why the hell didn't I add this to config?
 		this.socket = io.connect(connection.host, {
-			port: connection.port,
+			port: 80,
 			reconnect: true,
 			transports: ['websocket', 'flashsocket']
 		});

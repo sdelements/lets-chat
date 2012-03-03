@@ -1,13 +1,10 @@
-
 // load our stuff
-var ChatServer = require('./chatServer.js')
-var app = require('./server.js')
-var io = require('socket.io')
+var Server = require('./server.js')
+
 // config
 var config = require('./configuration.js')
 
+var app = new Server(config)
 
-// start http server
-app.listen(config.port)
-// start chat server
-var chat = new ChatServer(app)
+// Start it all
+app.start()
