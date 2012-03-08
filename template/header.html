@@ -14,7 +14,7 @@
 <script src="{{media_url}}/js/bootstrap-modal.js" type="text/javascript"></script>
 <script src="{{media_url}}/js/bootstrap-buttons.js" type="text/javascript"></script>
 <script src="/socket.io/socket.io.js" type="text/javascript"></script>
-<script>
+<script type="text/javascript">
     connection = {
         'host': "{{host}}",
         'port': {{port}}
@@ -30,6 +30,7 @@
 		message: 'message.mp3',
 		event: 'event.mp3'
 	};
+    var user = "{{user}}"
 </script>
 <script src="{{media_url}}/js/sounds.js" type="text/javascript"></script>
 <script src="{{media_url}}/js/client.js" type="text/javascript"></script>

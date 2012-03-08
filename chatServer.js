@@ -6,6 +6,7 @@ var parseCookie = require('connect').utils.parseCookie
 var Session = require('connect').middleware.session.Session
 // Load models
 var MessageModel = require('./models/message.js');
+var User = require('./models/auth.js')
 
 var ChatServer = function (app, sessionStore) {
 
@@ -49,21 +50,24 @@ var ChatServer = function (app, sessionStore) {
 
 	}
 
+
+
 	this.setupListeners = function () {
 
 		// New client
 		this.io.sockets.on('connection', function (client) {
-            console.log(client.handshake.session)
 			console.log('What a nice client bro...');
             var hs = client.handshake
-            var user = hs.session.user
-			// Add to clients list
-			self.clients[client.id] = {
-                name: user.displayName,
-                user: user,
-				sid: null
-			}
-			self.sendClientList();
+            var userData = hs.session.user
+			User.findById(userData._id, function (err, user) {
+			    self.clients[client.id] = {
+                    user: user,
+				    sid: null
+			    }
+			    self.sendClientList();
+            })
+            // Add to clients list
+
 
 			// Bind ping
 			client.on('ping', function(data) {
@@ -82,7 +86,9 @@ var ChatServer = function (app, sessionStore) {
 			});
 			
 			client.on('set name', function(data) {
-				self.clients[client.id].name = data.name;
+				var user = self.clients[client.id].user
+                user.displayName = data.name;
+                user.save()
 				self.sendClientList(); // TODO: Change this to a general change
 			});
 
@@ -95,7 +101,8 @@ var ChatServer = function (app, sessionStore) {
 			// Send off an announcement
 			self.io.sockets.emit('join', {
 				name: 'System',
-				text: 'A wild Dude appears!'
+				text: userData.displayName + '(' + userData.firstName + ' '  + 
+                    userData.lastName + ') Signed in'
 			});
 
             console.log("Done")

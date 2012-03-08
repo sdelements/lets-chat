@@ -16,7 +16,7 @@ function Client() {
 		useritem: $('#js-tmpl-user-list-item').html(),
 		imagemessage: $('#js-tmpl-image-message').html()
 	}
-	this.user = {};
+	this.user = {'name': user};
 	this.windowFocus = true;
 	this.sound = new SoundSystem();
 	
@@ -44,7 +44,7 @@ function Client() {
 		userlist.empty();
 		$.each(users, function(i, user) {
 			var vars = {
-				name: user.name
+				name: user.user.displayName
 			};
 			var html = Mustache.to_html(self.templates.useritem, vars);
 			userlist.append(html);
@@ -193,7 +193,6 @@ function Client() {
 	
 		// TODO: Why the hell didn't I add this to config?
 		this.socket = io.connect(connection.host, {
-			port: 80,
 			reconnect: true,
 			transports: ['websocket', 'flashsocket']
 		});
