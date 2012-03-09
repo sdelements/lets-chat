@@ -2,11 +2,15 @@
     <li class="message {{#talk}}talk{{/talk}} {{#event}}event{{/event}}" data-owner="{{ownerID}}">
         <div class="name">{{name}}</div>
         <div class="text">
-            {{^event}}<div class="bubble">{{/event}}
-                {{text}}
+            {{^event}}<div class="bubble fragments">{{/event}}
+                <div class="fragment">{{text}}</div>
             {{^event}}</div>{{/event}}
         </div>
     </li>
+</script>
+
+<script id="js-tmpl-message-fragment" type="text/html">
+    <div class="fragment">{{text}}</div>
 </script>
 
 <script id="js-tmpl-user-list-item" type="text/html">

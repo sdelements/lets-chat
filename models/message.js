@@ -3,7 +3,8 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 var messageSchema = new Schema({
-    owner: String,
+    ownerID: String,
+    owner: String, // TODO: Make the owner fields only IDs
     text: String,
     posted: {
         type: Date,

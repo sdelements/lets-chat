@@ -13,6 +13,7 @@ function Client() {
     this.$messages = $('#chat .messages');
     this.templates = {
         message: $('#js-tmpl-message').html(),
+        messageFragment: $('#js-tmpl-message-fragment').html(),
         useritem: $('#js-tmpl-user-list-item').html(),
         imagemessage: $('#js-tmpl-image-message').html()
     };
@@ -51,15 +52,6 @@ function Client() {
         });
     };
 
-    /** this.linkify = function(text) {
-        var replaceText, replacePattern1, replacePattern2, replacePattern3;
-        replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-        replacedText = text.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
-        replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-        replacedText = replacedText.replace(replacePattern2, '');
-        return replacedText;
-    } **/
-
     this.parseContent = function (text, meta) {
         // TODO: Fix this regex
         var imagePattern = /(\bhttps?:\/\/[0-9a-z.\/\-]{0,64}[.](jpe?g|png|gif))\b/gim;
@@ -78,7 +70,7 @@ function Client() {
     this.addMessages = function (data) {
         var messages = self.$messages;
         $.each(data, function (i, message) {
-            self.addMessage(message, { prepend: true });
+            self.addMessage(message);
         });
     };
 
@@ -91,23 +83,36 @@ function Client() {
         var messages = self.$messages;
         var vars = {
             text: message.text,
-            name: message.name
+            name: message.name,
+            ownerID: message.ownerID
         };
-        var html = Mustache.to_html(self.templates.message, vars);
-        // Parse special content like images and links
-        html = self.parseContent(html, { name: message.name });
-        // If we still have content, lets proceed.
-        if ($.trim(html)) {
-            if (options.prepend) {
+        var lastMessage = self.$messages.children('.message:last');
+        // Should we add a new message or add to a previous one?
+        if (message.ownerID == lastMessage.data('owner')
+          && lastMessage.data('owner')) {
+            var html = Mustache.to_html(self.templates.messageFragment, vars);
+            html = self.parseContent(html, {
+                name: message.name 
+            });
+            // We'll need to appent to a div called
+            // fragments inside a message.
+            if (options.prepend)
+                lastMessage.find('.fragments').prepend(html);
+            else
+                lastMessage.find('.fragments').append(html);
+        } else {
+            var html = Mustache.to_html(self.templates.message, vars);
+            html = self.parseContent(html, {
+                name: message.name
+            });
+            if (options.prepend)
                 messages.prepend(html);
-            }
-            else {
+            else
                 messages.append(html);
-            }
-            self.scrollMessagesDown();
-            if (!self.windowFocus) {
-                self.sound.play('message');
-            }
+        }
+        self.scrollMessagesDown();
+        if (!self.windowFocus) {
+            self.sound.play('message');
         }
     };
 
@@ -154,10 +159,10 @@ function Client() {
     };
 
     this.sendMessage = function () {
-        var textarea = self.$entry.find('textarea');
+        var textarea = self.$entry.find('input[type="text"]');
         var text = $.trim(textarea.val());
         self.socket.emit('message',  {
-            name: self.user.name || 'Anonymoose',
+            name: self.user.name || 'Anonymous',
             text: text
         });
         textarea.val('');
@@ -246,10 +251,10 @@ function Client() {
 
     this.$entry.find('button').bind('click', function () {
         self.sendMessage();
-        self.$entry.find('textarea').focus();
+        self.$entry.find('input[type="text"]').focus();
     });
 
-    this.$entry.find('textarea').bind('keyup', function (e) {
+    this.$entry.find('input[type="text"]').bind('keyup', function (e) {
         var textarea = $(this);
         if (e.which === 13 && $.trim(textarea.val())) {
             self.sendMessage();

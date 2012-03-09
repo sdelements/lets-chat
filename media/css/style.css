@@ -1,4 +1,3 @@
-/* This beautiful CSS-File has been crafted with LESS (lesscss.org) and compiled by simpLESS (wearekiss.com/simpless) */
 /*********************
  * LCB Styles
  *********************/
@@ -112,6 +111,7 @@ textarea {
 }
 .message .name {
   padding: 5px;
+  padding-right: 10px;
 }
 .message .name {
   font-weight: bold;
@@ -120,7 +120,7 @@ textarea {
   float: left;
 }
 .message .text {
-  margin-left: 110px;
+  margin-left: 20px;
   overflow: hidden;
 }
 .message .thumbnail {
@@ -145,7 +145,6 @@ textarea {
   padding: 5px;
 }
 #entry {
-  height: 100px;
   position: fixed;
   right: 0;
   bottom: 0;
@@ -153,13 +152,13 @@ textarea {
   border-top: 1px #ccc solid;
 }
 #entry .inner {
+  min-height: 50px;
   background: #ffffff url('../img/grid_noise.png');
   padding: 10px;
   overflow: hidden;
 }
-#entry textarea {
-  height: 78px;
-  width: 75%;
+#entry input {
+  width: 70%;
   display: block;
   float: left;
   margin: 0;

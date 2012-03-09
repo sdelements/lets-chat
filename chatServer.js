@@ -60,8 +60,6 @@ var ChatServer = function (app, sessionStore) {
                 };
                 self.sendClientList();
             });
-            // Add to clients list
-
 
             // Bind ping
             client.on('ping', function (data) {
@@ -69,6 +67,7 @@ var ChatServer = function (app, sessionStore) {
             });
 
             client.on('message', function (data) {
+                data.ownerID = userData._id;
                 // Send message to everyone
                 self.io.sockets.emit('message', data);
                 self.saveMessage(data);
@@ -90,7 +89,7 @@ var ChatServer = function (app, sessionStore) {
                 self.sendClientList();
             });
 
-            console.log("Send off message");
+            console.log('Sending message');
 
             // Send off an announcement
             self.io.sockets.emit('join', {
@@ -99,7 +98,7 @@ var ChatServer = function (app, sessionStore) {
                            userData.lastName + ') Signed in'
             });
 
-            console.log("Done");
+            console.log('Done');
         });
 
     };
@@ -117,17 +116,19 @@ var ChatServer = function (app, sessionStore) {
                     id: doc._id,
                     name: doc.owner,
                     text: doc.text,
-                    posted: doc.posted
+                    posted: doc.posted,
+                    ownerID: doc.ownerID
                 });
             });
+            data.reverse();
             client.emit('message history', data);
         });
     };
 
     this.saveMessage = function (message) {
-        console.log('Saving message...');
         new MessageModel({
-            owner: message.name,
+            ownerID: message.ownerID,
+            owner: message.name, // TODO: Take this out and use only ID
             text: message.text
         }).save();
     };
