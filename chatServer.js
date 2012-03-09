@@ -49,7 +49,7 @@ var ChatServer = function (app, sessionStore) {
     this.setupListeners = function () {
         // New client
         this.io.sockets.on('connection', function (client) {
-            console.log('What a nice client bro...');
+            console.log('A client has joined...');
             var hs = client.handshake;
             var userData = hs.session.user;
             // TODO: Do we need to use private ID here?
@@ -89,16 +89,14 @@ var ChatServer = function (app, sessionStore) {
                 self.sendClientList();
             });
 
-            console.log('Sending message');
-
             // Send off an announcement
-            self.io.sockets.emit('join', {
+            client.broadcast.emit('join', {
                 name: 'System',
-                text: userData.displayName + '(' + userData.firstName + ' '  +
-                           userData.lastName + ') Signed in'
+                text: userData.firstName + ' '
+                    + userData.lastName + ' '
+                    + '(' + userData.displayName + ')' + ' has signed in'
             });
 
-            console.log('Done');
         });
 
     };
