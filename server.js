@@ -65,7 +65,7 @@ var Server = function (config) {
                     'next': req.param('next', ''),
                     'errors': errors
                 };
-                return mustache.to_html(self.template('loginTemplate.html'), cxt);
+                return mustache.to_html(self.template('login.html'), cxt);
             };
             if (req.method === "POST") {
                 var form = forms.loginForm.bind(req.body);
@@ -114,8 +114,8 @@ var Server = function (config) {
                 'port': self.config.port,
                 'media_url': self.config.media_url,
                 'site_title': self.config.site_title,
-                'page_title': "Development",
-                'jsTemplates': self.template('jsTemplates.html'),
+                'page_title': 'Development',
+                'js_templates': self.template('js-templates.html'),
                 'user': req.session.user.displayName
             };
             res.send(mustache.to_html(self.template('chat.html'), cxt, {
