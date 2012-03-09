@@ -3,6 +3,7 @@ var mustache = require('mustache')
 var fs = require('fs')
 var forms = require('forms')
 var _ = require('underscore')
+var passwordHasher = require('password-hash')
 var MemoryStore = express.session.MemoryStore
 var User = require('./models/auth.js')
 //var connect = require('connect')
@@ -52,30 +53,37 @@ var Server = function (config) {
         }))
         app.use(express.static(__dirname + '/media'))
 
-        app.get('/login', function (req, res) {
-            cxt = {
-                'site_title': "Let's Chat Bro",
-                'media_url': config.media_url,
-                'next': req.param('next', '') 
-            }
-            res.send(mustache.to_html(self.template('loginTemplate.html'), cxt))
-        })
-
-        app.post('/login', function (req, res) {
-            var form = forms.loginForm.bind(req.body)
-            console.log(form.data.username + " " + form.data.password)
-            var user = User.findOne({'username': form.data.username, 
-                                     'password': form.data.password
-                                    }).run(function (error, user) {
-                if (user) {
-                    req.session.user = user
-                    req.session.save()
-                    res.redirect(form.data.next)
-                } else {
-                    res.redirect('/login' + 
-                        form.data.next ? '?next=' + form.data.next:'')
+        app.all('/login', function (req, res) {
+            var render_login_page = function(errors) {
+                cxt = {
+                    'site_title': "Let's Chat Bro",
+                    'media_url': config.media_url,
+                    'next': req.param('next', ''),
+                    'errors': errors
                 }
-            })
+                return mustache.to_html(self.template('loginTemplate.html'), 
+                                        cxt)
+            }
+            if (req.method === "POST"){
+                var form = forms.loginForm.bind(req.body)
+                if (form.isValid()) {
+                    User.findOne({'username': form.data.username}
+                                    ).run(function (error, user) {
+                        if (user && passwordHasher.verify(
+                                form.data.password, user.password)) {
+                            req.session.user = user
+                            req.session.save()
+                            res.redirect(form.data.next)
+                        } else {
+                            res.send(render_login_page())
+                        }
+                    })
+                } else {
+                    res.send(render_login_page())
+                }
+            } else {
+            res.send(render_login_page())
+            }
         })
 
         app.all('/logout', function (req, res) {
@@ -85,9 +93,10 @@ var Server = function (config) {
 
         app.post('/register', function (req, res) {
             var form = forms.registrationForm.bind(req.body)
+            var passwordHash = passwordHasher.generate(form.data.password)
             var user = new User({
                 'username': form.data.username, 
-                'password': form.data.password,
+                'password': passwordHash,
                 'firstName': form.data.firstName,
                 'lastName': form.data.lastName,
                 'displayName': form.data.firstName
