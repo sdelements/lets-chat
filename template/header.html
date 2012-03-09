@@ -6,16 +6,16 @@
 <link rel="stylesheet" type="text/css" href="{{media_url}}/css/bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="{{media_url}}/css/bootstrap-custom.css" />
 <link rel="stylesheet" type="text/css" href="{{media_url}}/css/style.css" />
-<script src="{{media_url}}/js/jquery.min.js" type="text/javascript"></script>
-<script src="{{media_url}}/js/jquery.url.js" type="text/javascript"></script>
-<script src="{{media_url}}/js/mustache.js" type="text/javascript"></script>
-<script src="{{media_url}}/js/soundmanager2-jsmin.js" type="text/javascript"></script>
-<script src="{{media_url}}/js/bootstrap-transition.js" type="text/javascript"></script>
-<script src="{{media_url}}/js/bootstrap-modal.js" type="text/javascript"></script>
-<script src="{{media_url}}/js/bootstrap-buttons.js" type="text/javascript"></script>
+<script src="{{media_url}}/js/lib/jquery.min.js" type="text/javascript"></script>
+<script src="{{media_url}}/js/lib/jquery.url.js" type="text/javascript"></script>
+<script src="{{media_url}}/js/lib/mustache.js" type="text/javascript"></script>
+<script src="{{media_url}}/js/lib/soundmanager2-jsmin.js" type="text/javascript"></script>
+<script src="{{media_url}}/js/lib/bootstrap-transition.js" type="text/javascript"></script>
+<script src="{{media_url}}/js/lib/bootstrap-modal.js" type="text/javascript"></script>
+<script src="{{media_url}}/js/lib/bootstrap-buttons.js" type="text/javascript"></script>
 <script src="/socket.io/socket.io.js" type="text/javascript"></script>
 <script type="text/javascript">
-    connection = {
+    var connection = {
         'host': "{{host}}",
         'port': {{port}}
     }
@@ -24,12 +24,14 @@
     soundManager.url = '{{media_url}}/swf/';
     soundManager.flashVersion = 9;
     soundManager.useFlashBlock = false;
-    var SFX_URL = '{{media_url}}/sfx/';
-    var SFX_VOLUME = 40
-    var SFX_LIBRARY = {
-        message: 'message.mp3',
-        event: 'event.mp3'
-    };
+    var SFX = {
+        URL: '{{media_url}}/sfx/',
+        VOLUME: 40,
+        LIBRARY: {
+            message: 'message.mp3',
+            event: 'event.mp3'
+        }
+    }
     var user = "{{user}}"
 </script>
 <script src="{{media_url}}/js/sounds.js" type="text/javascript"></script>
