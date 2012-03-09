@@ -30,7 +30,7 @@ var Server = function (config) {
     this.template = (function (templateRoot) {
         var cache = {};
         return function (file) {
-            if (cache[file]) {
+            if (cache[file] && !config.debug) {
                 return cache[file];
             } else {
                 cache[file] = fs.readFileSync(templateRoot + file).toString();

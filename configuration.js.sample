@@ -1,4 +1,5 @@
 var config = {
+	debug: false,
     db: 'letschatbro', // Mongo DB Name
     cookie_secret: 'KeyBoard Cat', // Random secret string
     hostname: '', // The hostname to listen on. Blank will listen for anything.
