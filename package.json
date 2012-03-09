@@ -13,7 +13,6 @@
         "server"
     ],
     "dependencies": {
-        /* TODO: freeze dependencies */
         "async": "*",
         "connect": "*",
         "express": "*",
@@ -24,7 +23,7 @@
         "socket.io": "*",
         "underscore": "*"
     },
-    "license": "TODO", /* TODO: Pick a license. MIT? */
+    "license": "TODO",
     "engine": {
         "node": ">=0.6"
     }
