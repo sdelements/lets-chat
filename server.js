@@ -51,8 +51,8 @@ var Server = function (config) {
         app.use(express.cookieParser());
         app.use(express.session({
             key: 'express.sid',
-            cookie: {httpOnly: false}, // We have to turn off httpOnly for websockets
-            secret: "DerpDerpDerp",
+            cookie: { httpOnly: false }, // We have to turn off httpOnly for websockets
+            secret: 'DerpDerpDerp',
             store: sessionStore
         }));
         app.use(express.static(__dirname + '/media'));
@@ -60,7 +60,7 @@ var Server = function (config) {
         app.all('/login', function (req, res) {
             var render_login_page = function (errors) {
                 var cxt = {
-                    'site_title': "Let's Chat Bro",
+                    'site_title': self.config.site_title,
                     'media_url': config.media_url,
                     'next': req.param('next', ''),
                     'errors': errors
@@ -70,7 +70,7 @@ var Server = function (config) {
             if (req.method === "POST") {
                 var form = forms.loginForm.bind(req.body);
                 if (form.isValid()) {
-                    User.findOne({'username': form.data.username}).run(function (error, user) {
+                    User.findOne({ 'username': form.data.username }).run(function (error, user) {
                         if (user && passwordHasher.verify(form.data.password, user.password)) {
                             req.session.user = user;
                             req.session.save();
