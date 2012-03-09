@@ -33,30 +33,24 @@ textarea {
   -webkit-box-sizing: border-box;
   -khtml-box-sizing: border-box;
 }
-/* Login Page */
-body#auth {
-  background: #333;
-}
-div#auth {
-  margin-top: 100px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 400px;
+.page-login {
   background: #222222 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAFVBMVEUqKiopKSkoKCgjIyMuLi4kJCQtLS0dJckpAAAAO0lEQVR42iXLAQoAUQhCQSvr/kfe910jHIikElsl5qVFa1iE5f0Pom/CNZdbNM6756lQ41NInMfuFPgAHVEAlGk4lvIAAAAASUVORK5CYII=');
-  color: #fff ;
+}
+.page-login #logo {
   text-align: center;
-  border-radius: 15px;
+  margin-top: 50px;
 }
-div#auth h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-label {
-  color: #ffffff;
+.page-login form {
+  background: #fff;
+  width: 500px;
+  display: block;
+  margin: 20px auto;
+  border-radius: 7px;
 }
-div#register {
+.page-login form .message {
+  display: none;
+}
+.page-login .register {
   display: none;
 }
 #sidebar {
