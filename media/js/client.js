@@ -76,9 +76,7 @@ function Client() {
 
     this.addMessage = function (message, options) {
         if (typeof options === 'undefined') {
-            options = {
-                prepend: false
-            };
+            options = {};
         }
         var messages = self.$messages;
         var vars = {
@@ -89,26 +87,20 @@ function Client() {
         var lastMessage = self.$messages.children('.message:last');
         // Should we add a new message or add to a previous one?
         if (message.ownerID == lastMessage.data('owner')
-          && lastMessage.data('owner')) {
-            var html = Mustache.to_html(self.templates.messageFragment, vars);
-            html = self.parseContent(html, {
-                name: message.name 
-            });
-            // We'll need to appent to a div called
-            // fragments inside a message.
-            if (options.prepend)
-                lastMessage.find('.fragments').prepend(html);
-            else
+           && lastMessage.data('owner')) {
+                var html = Mustache.to_html(self.templates.messageFragment, vars);
+                html = self.parseContent(html, {
+                    name: message.name 
+                });
+                // We'll need to appent to a div called
+                // fragments inside a message.
                 lastMessage.find('.fragments').append(html);
         } else {
             var html = Mustache.to_html(self.templates.message, vars);
             html = self.parseContent(html, {
                 name: message.name
             });
-            if (options.prepend)
-                messages.prepend(html);
-            else
-                messages.append(html);
+            messages.append(html);
         }
         self.scrollMessagesDown();
         if (!self.windowFocus) {
