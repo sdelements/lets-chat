@@ -1,4 +1,4 @@
-{
+
     // Settings
     "passfail"      : false,  // Stop on first error.
     "maxerr"        : 20 ,    // Maximum error before stopping.
@@ -61,6 +61,6 @@
     "sub"           : false,  // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
     "trailing"      : true,   // Prohibit trailing whitespaces.
     "white"         : true,   // Check against strict whitespace and indentation rules.
-    "indent"        : 2       // Specify indentation spacing
+    "indent"        : 4       // Specify indentation spacing
 }
 
