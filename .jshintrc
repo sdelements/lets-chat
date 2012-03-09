@@ -1,4 +1,4 @@
-
+{
     // Settings
     "passfail"      : false,  // Stop on first error.
     "maxerr"        : 20 ,    // Maximum error before stopping.

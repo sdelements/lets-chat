@@ -66,7 +66,6 @@ var ChatServer = function (app, sessionStore) {
             // Bind ping
             client.on('ping', function (data) {
                 client.emit('ping', {});
-                console.log('Got ping...');
             });
 
             client.on('message', function (data) {

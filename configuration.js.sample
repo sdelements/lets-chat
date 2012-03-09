@@ -7,4 +7,4 @@ var config = {
     media_path: 'media', // Location of the static files
 }
 
-module.exports = config
+module.exports = config;
