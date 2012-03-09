@@ -1,18 +1,18 @@
 {
     // Settings
     "passfail"      : false,  // Stop on first error.
-    "maxerr"        : 20 ,    // Maximum error before stopping.
+    "maxerr"        : 20,    // Maximum error before stopping.
 
 
     // Predefined globals whom JSHint will ignore.
-    "browser"       : false,   // Standard browser globals e.g. `window`, `document`.
+    "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
 
     "node"          : true,
     "rhino"         : false,
     "couch"         : false,
     "wsh"           : false,   // Windows Scripting Host.
 
-    "jquery"        : false,
+    "jquery"        : true,
     "prototypejs"   : false,
     "mootools"      : false,
     "dojo"          : false,
