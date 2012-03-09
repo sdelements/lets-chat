@@ -1,0 +1,32 @@
+{
+    "name": "lcb",
+    "version": "0.0.1",
+    "author": "Houssam Haider <houssam@sdelements.com>",
+    "contributors": [
+        {"name": "Jeffery Bain", "email": "jeff@sdelements.com"},
+        {"name": "Ramanan Sivaranjan", "email": "ramanan@sdelements.com"}
+    ],
+    "keywords": [
+        "brogramming",
+        "chat",
+        "http",
+        "server"
+    ],
+    "dependencies": {
+        /* TODO: freeze dependencies */
+        "async": "*",
+        "connect": "*",
+        "express": "*",
+        "forms": "*",
+        "mongodb": "*",
+        "mongoose": "*",
+        "mustache": "*",
+        "socket.io": "*",
+        "underscore": "*"
+    },
+    "license": "TODO", /* TODO: Pick a license. MIT? */
+    "engine": {
+        "node": ">=0.6"
+    }
+}
+
