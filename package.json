@@ -20,6 +20,7 @@
         "mongodb": "*",
         "mongoose": "*",
         "mustache": "*",
+        "password-hash": "*",
         "socket.io": "*",
         "underscore": "*"
     },
