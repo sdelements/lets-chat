@@ -1,149 +1,144 @@
+//
 // Letschatbro Server
-// libraries
+//
+
+
 var async = require('async');
 var mongoose = require('mongoose');
-var parseCookie = require('connect').utils.parseCookie
-var Session = require('connect').middleware.session.Session
-// Load models
+var parseCookie = require('connect').utils.parseCookie;
+var Session = require('connect').middleware.session.Session;
+
 var MessageModel = require('./models/message.js');
-var User = require('./models/auth.js')
+var User = require('./models/auth.js');
 
 var ChatServer = function (app, sessionStore) {
+    var self = this;
 
-	var self = this;
-	
-	// Setup vars
-	this.clients = {};
+    this.clients = {};
 
-	this.init = function() {
-
-		console.log('Starting up bro...');
-        // connect to db
+    this.init = function () {
+        console.log('Starting up bro...');
         mongoose.connect('mongodb://localhost/letschatbro');
-		// Listening
-		this.io = require('socket.io').listen(app);
-	    this.io.set('log level', 0)
-        // This will parse out session info for connections
+        this.io = require('socket.io').listen(app);
+        this.io.set('log level', 0);
         this.io.set('authorization', function (data, accept) {
-            // This function courtesy of danielbaulig.de
-            // check if there's a cookie header
+            // This function, courtesy of danielbaulig.de, will parse out session
+            // info for connections.
             if (data.headers.cookie) {
                 // if there is, parse the cookie
                 data.cookie = parseCookie(data.headers.cookie);
                 data.sessionID = data.cookie['express.sid'];
-                data.sessionStore = sessionStore
+                data.sessionStore = sessionStore;
                 sessionStore.get(data.sessionID, function (err, session) {
                     if (err || !session) {
-                        accept("Error with Sessions", false)
+                        accept("Error with Sessions", false);
                     } else {
-                        data.session = new Session(data, session)
-                        accept(null, true)
+                        data.session = new Session(data, session);
+                        accept(null, true);
                     }
-                })   
+                });
             } else {
                 // if there isn't, turn down the connection
                 return accept('No cookie transmitted.', false);
             }
-        })
-		// Setup listeners
-		this.setupListeners();
+        });
+        // Setup listeners
+        this.setupListeners();
+    };
 
-	}
-
-
-
-	this.setupListeners = function () {
-
-		// New client
-		this.io.sockets.on('connection', function (client) {
-			console.log('What a nice client bro...');
-            var hs = client.handshake
-            var userData = hs.session.user
-			User.findById(userData._id, function (err, user) {
-			    self.clients[client.id] = {
+    this.setupListeners = function () {
+        // New client
+        this.io.sockets.on('connection', function (client) {
+            console.log('What a nice client bro...');
+            var hs = client.handshake;
+            var userData = hs.session.user;
+            // TODO: Do we need to use private ID here?
+            User.findById(userData._id, function (err, user) {
+                self.clients[client.id] = {
                     user: user,
-				    sid: null
-			    }
-			    self.sendClientList();
-            })
+                    sid: null
+                };
+                self.sendClientList();
+            });
             // Add to clients list
 
 
-			// Bind ping
-			client.on('ping', function(data) {
-				client.emit('ping', {});
-				console.log('Got ping...');
-			});
+            // Bind ping
+            client.on('ping', function (data) {
+                client.emit('ping', {});
+                console.log('Got ping...');
+            });
 
-			client.on('message', function(data) {
-				// Send message to everyone
-				self.io.sockets.emit('message', data);
-				self.saveMessage(data);
-			});
+            client.on('message', function (data) {
+                // Send message to everyone
+                self.io.sockets.emit('message', data);
+                self.saveMessage(data);
+            });
 
-			client.on('message history', function(data) {
-				self.sendMessageHistory(client);
-			});
-			
-			client.on('set name', function(data) {
-				var user = self.clients[client.id].user
+            client.on('message history', function (data) {
+                self.sendMessageHistory(client);
+            });
+
+            client.on('set name', function (data) {
+                var user = self.clients[client.id].user;
                 user.displayName = data.name;
-                user.save()
-				self.sendClientList(); // TODO: Change this to a general change
-			});
+                user.save();
+                self.sendClientList(); // TODO: Change this to a general change
+            });
 
-			client.on('disconnect', function() {
-				delete self.clients[client.id];
-				self.sendClientList();
-			});
-    
-            console.log("Send off message")
-			// Send off an announcement
-			self.io.sockets.emit('join', {
-				name: 'System',
-				text: userData.displayName + '(' + userData.firstName + ' '  + 
-                    userData.lastName + ') Signed in'
-			});
+            client.on('disconnect', function () {
+                delete self.clients[client.id];
+                self.sendClientList();
+            });
 
-            console.log("Done")
+            console.log("Send off message");
 
-		});
+            // Send off an announcement
+            self.io.sockets.emit('join', {
+                name: 'System',
+                text: userData.displayName + '(' + userData.firstName + ' '  +
+                           userData.lastName + ') Signed in'
+            });
 
-	}
-	
-	this.sendClientList = function() {
-		self.io.sockets.emit('user list', { users: self.clients });
-	}
+            console.log("Done");
+        });
 
-	this.sendMessageHistory = function(client, query) {
-		MessageModel.find().limit(30).sort('posted', -1).run(function(err, docs) {
-			var data = [];
-			docs.forEach(function(doc) {
-				data.push({
-					id: doc._id,
-					name: doc.owner,
-					text: doc.text,
-					posted: doc.posted
-				})
-			});
-			client.emit('message history', data);
-		});
-	}
+    };
 
-	this.saveMessage = function(message) {
-		console.log('Saving message...');
-		new MessageModel({
-			owner: message.name,
-			text: message.text
-		}).save();
-	} 
+    this.sendClientList = function () {
+        self.io.sockets.emit('user list', { users: self.clients });
+    };
 
-	// Cleanup
-	this.die = function() {
-		console.log('Holy shit bro, we goin down...');
-	}
+    this.sendMessageHistory = function (client, query) {
+        MessageModel.find().limit(30).sort('posted', -1).run(function (err, docs) {
+            var data = [];
+            docs.forEach(function (doc) {
+                data.push({
+                    // TODO: Do we need to use private ID here?
+                    id: doc._id,
+                    name: doc.owner,
+                    text: doc.text,
+                    posted: doc.posted
+                });
+            });
+            client.emit('message history', data);
+        });
+    };
 
-    this.init()
-}
+    this.saveMessage = function (message) {
+        console.log('Saving message...');
+        new MessageModel({
+            owner: message.name,
+            text: message.text
+        }).save();
+    };
 
-module.exports = ChatServer
+    // Cleanup
+    this.die = function () {
+        console.log('Holy shit bro, we goin down...');
+    };
+
+    this.init();
+};
+
+module.exports = ChatServer;

@@ -1,10 +1,7 @@
-// load our stuff
-var Server = require('./server.js')
+var Server = require('./server.js');
+var config = require('./configuration.js');
 
-// config
-var config = require('./configuration.js')
+var app = new Server(config);
 
-var app = new Server(config)
+app.start();
 
-// Start it all
-app.start()

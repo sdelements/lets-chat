@@ -8,7 +8,10 @@ var userSchema = new Schema({
     firstName: String,
     lastName: String,
     displayName: String,
-    joined: { type: Date, default: Date.now }
+    joined: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);
