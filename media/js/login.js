@@ -1,5 +1,5 @@
-$(document).ready(function() {
-    $('#login .toggle-register').click(function() {
+$(function () {
+    $('#login .toggle-register').click(function () {
         var $register = $('#login .register');
         var $form = $('#login form');
         var $link = $('#login .toggle-register');
@@ -13,4 +13,4 @@ $(document).ready(function() {
             $link.text('Actually, I have an account.');
         }
     });
-})
+});
