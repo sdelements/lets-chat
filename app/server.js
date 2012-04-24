@@ -6,7 +6,6 @@ var mustache = require('mustache');
 var passwordHasher = require('password-hash');
 
 var ChatServer = require('./chatServer.js');
-var config = require('./configuration.js');
 var forms = require('./forms.js');
 
 var User = require('./models/auth.js');
