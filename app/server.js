@@ -112,7 +112,7 @@ var Server = function (config) {
 		res.redirect(req.param('next'));
 	});
 	
-	// Home
+	// Home Sweet Home
 	app.get('/', requireLogin, function (req, res) {
 		var cxt = {
 			'host': self.config.hostname,
@@ -130,9 +130,17 @@ var Server = function (config) {
 	});
 
     this.start = function () {
-		mongoose.connect('mongodb://' + self.config.db_host + '/' + self.config.db_name);
+
+		// Connect to mongo
+		var db = 'mongodb://' + self.config.db_host + '/' + self.config.db_name;
+		mongoose.connect(db, function(err) {
+			if (err) throw err;
+		});
+
+		// Go go go!
         self.app.listen(config.port);
         self.chatServer = new ChatServer(self.app, self.sessionStore).start();
+
     };
 
 };
