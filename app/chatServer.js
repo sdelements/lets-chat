@@ -2,9 +2,7 @@
 // Letschatbro Server
 //
 
-
 var async = require('async');
-var mongoose = require('mongoose');
 var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
 
@@ -12,15 +10,17 @@ var MessageModel = require('./models/message.js');
 var User = require('./models/auth.js');
 
 var ChatServer = function (app, sessionStore) {
+
     var self = this;
 
     this.clients = {};
 
-    this.init = function () {
-        console.log('Starting up bro...');
-        mongoose.connect('mongodb://localhost/letschatbro');
+    this.start = function () {
+		
         this.io = require('socket.io').listen(app);
+		
         this.io.set('log level', 0);
+		
         this.io.set('authorization', function (data, accept) {
             // This function, courtesy of danielbaulig.de, will parse out session
             // info for connections.
@@ -42,11 +42,14 @@ var ChatServer = function (app, sessionStore) {
                 return accept('No cookie transmitted.', false);
             }
         });
+		
         // Setup listeners
         this.setupListeners();
+		
     };
 
     this.setupListeners = function () {
+	
         // New client
         this.io.sockets.on('connection', function (client) {
             console.log('A client has joined...');
@@ -131,12 +134,6 @@ var ChatServer = function (app, sessionStore) {
         }).save();
     };
 
-    // Cleanup
-    this.die = function () {
-        console.log('Holy shit bro, we goin down...');
-    };
-
-    this.init();
 };
 
 module.exports = ChatServer;

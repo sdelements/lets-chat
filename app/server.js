@@ -1,6 +1,6 @@
 var _ = require('underscore');
+var mongoose = require('mongoose');
 var express = require('express');
-var forms = require('forms');
 var fs = require('fs');
 var mustache = require('mustache');
 var passwordHasher = require('password-hash');
@@ -32,104 +32,109 @@ var Server = function (config) {
             if (cache[file] && !config.debug) {
                 return cache[file];
             } else {
-                cache[file] = fs.readFileSync(templateRoot + file).toString();
+                cache[file] = fs.readFileSync('views/' + file).toString();
                 return cache[file];
             }
         };
     }(config.templateRoot));
 
-    this.init = function () {
+	// Setup express
+	var app = express.createServer();
+	self.app = app;
 
-        var app = express.createServer();
-        self.app = app;
-
-        var sessionStore = new MemoryStore();
-        self.sessionStore = sessionStore;
-
-        app.use(express.bodyParser());
-        app.use(express.cookieParser());
-        app.use(express.session({
-            key: 'express.sid',
-            cookie: { httpOnly: false }, // We have to turn off httpOnly for websockets
-            secret: 'DerpDerpDerp',
-            store: sessionStore
-        }));
-        app.use(express.static(__dirname + '/media'));
-
-        app.all('/login', function (req, res) {
-            var render_login_page = function (errors) {
-                var cxt = {
-                    'site_title': self.config.site_title,
-                    'media_url': config.media_url,
-                    'next': req.param('next', ''),
-                    'errors': errors
-                };
-                return mustache.to_html(self.template('login.html'), cxt);
-            };
-            if (req.method === "POST") {
-                var form = forms.loginForm.bind(req.body);
-                if (form.isValid()) {
-                    User.findOne({ 'username': form.data.username }).run(function (error, user) {
-                        if (user && passwordHasher.verify(form.data.password, user.password)) {
-                            req.session.user = user;
-                            req.session.save();
-                            res.redirect(form.data.next);
-                        } else {
-                            res.send(render_login_page());
-                        }
-                    });
-                } else {
-                    res.send(render_login_page());
-                }
-            } else {
-                res.send(render_login_page());
-            }
-            // TODO: fix the if statement logic here
-        });
-
-        app.all('/logout', function (req, res) {
-            req.session.destroy();
-            res.redirect('/login');
-        });
-
-        app.post('/register', function (req, res) {
-            var form = forms.registrationForm.bind(req.body);
-            var passwordHash = passwordHasher.generate(form.data.password);
-            var user = new User({
-                'username': form.data.username,
-                'password': passwordHash,
-                'firstName': form.data.firstName,
-                'lastName': form.data.lastName,
-                'displayName': form.data.firstName
-            }).save();
-            req.session.user = user;
-            req.session.save();
-            res.redirect(req.param('next'));
-        });
-
-        app.get('/', requireLogin, function (req, res) {
-            var cxt = {
-                'host': self.config.hostname,
-                'port': self.config.port,
-                'media_url': self.config.media_url,
-                'site_title': self.config.site_title,
-                'page_title': 'Development',
-                'js_templates': self.template('js-templates.html'),
-                'user': req.session.user.displayName
-            };
-            res.send(mustache.to_html(self.template('chat.html'), cxt, {
-                'header': self.template('header.html'),
-                'footer': self.template('footer.html')
-            }));
-        });
-    };
+	var sessionStore = new MemoryStore();
+	self.sessionStore = sessionStore;
+	
+	// Express options
+	app.use(express.bodyParser());
+	app.use(express.cookieParser());
+	app.use(express.session({
+		key: 'express.sid',
+		cookie: {
+			httpOnly: false // We have to turn off httpOnly for websockets
+		}, 
+		secret: self.config.cookie_secret,
+		store: sessionStore
+	}));
+	app.use('/media', express.static('media'));
+	
+	// Login
+	app.all('/login', function (req, res) {
+		var render_login_page = function (errors) {
+			var cxt = {
+				'sitename': self.config.sitename,
+				'media_url': self.config.media_url,
+				'next': req.param('next', ''),
+				'errors': errors
+			};
+			return mustache.to_html(self.template('login.html'), cxt);
+		};
+		if (req.method === 'POST') {
+			var form = forms.loginForm.bind(req.body);
+			if (form.isValid()) {
+				User.findOne({ 'username': form.data.username }).run(function (error, user) {
+					if (user && passwordHasher.verify(form.data.password, user.password)) {
+						req.session.user = user;
+						req.session.save();
+						res.redirect(form.data.next);
+					} else {
+						res.send(render_login_page());
+					}
+				});
+			} else {
+				res.send(render_login_page());
+			}
+		} else {
+			res.send(render_login_page());
+		}
+		// TODO: fix the if statement logic here
+	});
+	
+	// Logout
+	app.all('/logout', function (req, res) {
+		req.session.destroy();
+		res.redirect('/login');
+	});
+	
+	// Register
+	app.post('/register', function (req, res) {
+		var form = forms.registrationForm.bind(req.body);
+		var passwordHash = passwordHasher.generate(form.data.password);
+		var user = new User({
+			'username': form.data.username,
+			'password': passwordHash,
+			'firstName': form.data.firstName,
+			'lastName': form.data.lastName,
+			'displayName': form.data.firstName
+		}).save();
+		req.session.user = user;
+		req.session.save();
+		res.redirect(req.param('next'));
+	});
+	
+	// Home
+	app.get('/', requireLogin, function (req, res) {
+		var cxt = {
+			'host': self.config.hostname,
+			'port': self.config.port,
+			'media_url': self.config.media_url,
+			'sitename': self.config.sitename,
+			'page_title': 'Development',
+			'js_templates': self.template('js-templates.html'),
+			'user': req.session.user.displayName
+		};
+		res.send(mustache.to_html(self.template('chat.html'), cxt, {
+			'header': self.template('header.html'),
+			'footer': self.template('footer.html')
+		}));
+	});
 
     this.start = function () {
+		mongoose.connect('mongodb://' + self.config.db_host + '/' + self.config.db_name);
         self.app.listen(config.port);
-        self.chatServer = new ChatServer(self.app, self.sessionStore);
+        self.chatServer = new ChatServer(self.app, self.sessionStore).start();
     };
 
-    this.init();
 };
 
 module.exports = Server;

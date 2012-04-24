@@ -6,9 +6,15 @@ var validators = forms.validators;
 var widgets = forms.widgets;
 
 var loginFields = {
-    username: fields.string({required: true}),
-    password: fields.password({required: true}),
-    next: fields.string({required: false, widget: widgets.hidden})
+    username: fields.string({
+		required: true
+	}),
+    password: fields.password({
+		required: true
+	}),
+    next: fields.string({
+		required: false, widget: widgets.hidden
+	})
 };
 
 var loginForm = forms.create(loginFields);
