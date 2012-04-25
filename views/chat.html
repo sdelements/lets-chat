@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 
+{% block page_name %}Chat{% endblock %}
+
+{% block page_js %}
+	<script src="{{media_url}}/js/client.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block body_class %}page-chat{% endblock %}
+
 {% block content %}
-	<div id="page-client">
+	<div id="client">
 		<div class="full-span-side">
 			<div id="sidebar">
 				<div class="inner">
@@ -48,22 +56,7 @@
 		</div><!-- full-span-side end -->
 		<div class="full-span-main">
 			<div id="chat">
-				<ul class="messages">
-					<!-- <li class="message talk">
-						<div class="name">Houssam</div>
-						<div class="text">
-							<div class="bubble">
-								You should be able to delete stuff that shows up on multiple pages. We know how fix that, we do it on the project edit page.
-							</div>
-						</div>
-					</li>
-					<li class="message event">
-						<div class="name">Pratik</div>
-						<div class="text">
-							has entered the building
-						</div>
-					</li> -->
-				</ul>
+				<ul class="messages"></ul>
 				<div id="entry" class="entry full-span-main">
 					<div class="inner">
 						<input type="text" name="talk" />
@@ -75,4 +68,56 @@
 			</div><!-- chat end -->
 		</div><!-- full-span-view end -->
 	</div>
+{% endblock %}
+
+{% block page_assets %}
+	<div id="modals">
+		<div id="set-name" class="modal hide fade">
+			<div class="modal-header">
+				<a href="#" class="close" data-dismiss="modal">&times;</a>
+				<h3>Set Name</h3>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="handle">Name</label>
+						<div class="controls">
+							<input id="handle" class="required" name="handle" size="12" type="text" minlength="4" maxlength="12">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn btn-primary save" data-dismiss="modal">Set Name</a>
+				<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+			</div>
+		</div>
+	</div>
+	{% raw %}
+		<div id="js-templates">
+			<script id="js-tmpl-message" type="text/html">
+				<li class="message {{#talk}}talk{{/talk}} {{#event}}event{{/event}}" data-owner="{{ownerID}}">
+					<div class="name">{{name}}</div>
+					<div class="text">
+						{{^event}}<div class="bubble fragments">{{/event}}
+							<div class="fragment">{{text}}</div>
+						{{^event}}</div>{{/event}}
+					</div>
+				</li>
+			</script>
+			<script id="js-tmpl-message-fragment" type="text/html">
+				<div class="fragment">{{text}}</div>
+			</script>
+			<script id="js-tmpl-user-list-item" type="text/html">
+				<li class="user">
+					<div class="name">{{name}}</div>
+				</li>
+			</script>
+			<script id="js-tmpl-image-message" type="text/html">
+				<a class="thumbnail" href="{{url}}">
+					<img src="{{url}}" />
+				</a>
+			</script>
+		</div>
+	{% endraw %}
 {% endblock %}

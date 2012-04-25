@@ -1,7 +1,6 @@
 var config = {
 
 	// Server
-	sitename: 'Let\'s Chat Bro',
 	hostname: '',
 	port: 5000,
 

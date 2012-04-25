@@ -2,33 +2,15 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<title>{{page_title}} - {{sitename}}</title>
+<title>{% block page_name %}{% endblock %} - Let's Chat Bro</title>
 	<link rel="stylesheet" type="text/css" href="{{media_url}}/css/style.css" />
 	<script src="{{media_url}}/js/lib/jquery.js" type="text/javascript"></script>
 	<script src="{{media_url}}/js/lib/bootstrap.js" type="text/javascript"></script>
 	<script src="{{media_url}}/js/lib/jquery.url.js" type="text/javascript"></script>
+	{% block page_js %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
 {% block content %}{% endblock %}
-	<div id="set-name" class="modal hide fade">
-		<div class="modal-header">
-			<a href="#" class="close" data-dismiss="modal">&times;</a>
-			<h3>Set Name</h3>
-		</div>
-		<div class="modal-body">
-			<div class="form-horizontal">
-				<div class="control-group">
-					<label class="control-label" for="handle">Name</label>
-					<div class="controls">
-						<input id="handle" class="required" name="handle" size="12" type="text" minlength="4" maxlength="12">
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<a href="#" class="btn btn-primary save" data-dismiss="modal">Set Name</a>
-			<a href="#" class="btn" data-dismiss="modal">Cancel</a>
-		</div>
-	</div>
+{% block page_assets %}{% endblock %}
 </body>
 </html>

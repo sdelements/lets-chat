@@ -44,15 +44,6 @@ var Server = function (config) {
 	app.set('view options', {
 		layout: false // Prevents express from fucking up our extend/block tags
 	});
-	this.template = (function () { // Template cache helper
-		var cache = {};
-		return function (file) {
-			if (!cache[file] || config.debug == true) {
-				cache[file] = swig.compileFile(file);
-			}
-			return cache[file];
-		};
-	}());
 	
 	// Express options
 	app.use(express.bodyParser());
@@ -70,8 +61,7 @@ var Server = function (config) {
 	// Login
 	app.all('/login', function (req, res) {
 		var render_login_page = function (errors) {
-			return self.template('login.html').render({
-				'sitename': self.config.sitename,
+			return swig.compileFile('login.html').render({
 				'media_url': self.config.media_url,
 				'next': req.param('next', ''),
 				'errors': errors
@@ -122,13 +112,10 @@ var Server = function (config) {
 	
 	// Home Sweet Home
 	app.get('/', requireLogin, function (req, res) {
-		var view = self.template('chat.html').render({
+		var view = swig.compileFile('chat.html').render({
+			'media_url': self.config.media_url,
 			'host': self.config.hostname,
 			'port': self.config.port,
-			'media_url': self.config.media_url,
-			'sitename': self.config.sitename,
-			'page_title': 'Development',
-			// 'js_templates': self.template('js-templates.html'),
 			'user': req.session.user.displayName
 		});
 		res.send(view);
