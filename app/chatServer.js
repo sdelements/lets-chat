@@ -2,7 +2,6 @@
 // Letschatbro Server
 //
 
-var async = require('async');
 var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
 
