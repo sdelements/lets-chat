@@ -1,8 +1,7 @@
 var _ = require('underscore');
 var mongoose = require('mongoose');
 var express = require('express');
-var fs = require('fs');
-var mustache = require('mustache');
+var swig = require('swig');
 var passwordHasher = require('password-hash');
 
 var ChatServer = require('./chatServer.js');
@@ -26,24 +25,34 @@ var Server = function (config) {
 
     this.config = config;
 
-    this.template = (function (templateRoot) {
-        var cache = {};
-        return function (file) {
-            if (cache[file] && !config.debug) {
-                return cache[file];
-            } else {
-                cache[file] = fs.readFileSync('views/' + file).toString();
-                return cache[file];
-            }
-        };
-    }(config.templateRoot));
-
-	// Setup express
+	// Setup server
 	var app = express.createServer();
 	self.app = app;
-
+	
+	// Setup sessions
 	var sessionStore = new MemoryStore();
 	self.sessionStore = sessionStore;
+	
+	// Setup template stuffs
+	app.register('.html', swig);
+	app.set('view engine', 'html');
+	swig.init({
+		root: 'views',
+		allowErrors: true // allows errors to be thrown and caught by express
+	});
+	app.set('views', 'views');
+	app.set('view options', {
+		layout: false // Prevents express from fucking up our extend/block tags
+	});
+	this.template = (function () { // Template cache helper
+		var cache = {};
+		return function (file) {
+			if (!cache[file] || config.debug == true) {
+				cache[file] = swig.compileFile(file);
+			}
+			return cache[file];
+		};
+	}());
 	
 	// Express options
 	app.use(express.bodyParser());
@@ -61,13 +70,12 @@ var Server = function (config) {
 	// Login
 	app.all('/login', function (req, res) {
 		var render_login_page = function (errors) {
-			var cxt = {
+			return self.template('login.html').render({
 				'sitename': self.config.sitename,
 				'media_url': self.config.media_url,
 				'next': req.param('next', ''),
 				'errors': errors
-			};
-			return mustache.to_html(self.template('login.html'), cxt);
+			});
 		};
 		if (req.method === 'POST') {
 			var form = forms.loginForm.bind(req.body);
@@ -114,19 +122,16 @@ var Server = function (config) {
 	
 	// Home Sweet Home
 	app.get('/', requireLogin, function (req, res) {
-		var cxt = {
+		var view = self.template('chat.html').render({
 			'host': self.config.hostname,
 			'port': self.config.port,
 			'media_url': self.config.media_url,
 			'sitename': self.config.sitename,
 			'page_title': 'Development',
-			'js_templates': self.template('js-templates.html'),
+			// 'js_templates': self.template('js-templates.html'),
 			'user': req.session.user.displayName
-		};
-		res.send(mustache.to_html(self.template('chat.html'), cxt, {
-			'header': self.template('header.html'),
-			'footer': self.template('footer.html')
-		}));
+		});
+		res.send(view);
 	});
 
     this.start = function () {

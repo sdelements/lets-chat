@@ -1,63 +1,54 @@
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <title>Login - {{site_title}}</title>
-    <link rel="stylesheet" type="text/css" href="{{media_url}}/css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="{{media_url}}/css/style.css" />
-    <script src="{{media_url}}/js/lib/jquery.min.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/login.js" type="text/javascript"></script>
-</head>
-<body class="page-login">
-    <div id="login">
-        <h1 id="logo">
-            <img src="{{media_url}}/img/logo.png" alt="Let's Chat Bro" />
-        </h1>
-        <form class="form-horizontal" action="/login" method="post">
-            <input type="hidden" name="next" value="{{next}}" />
-            <div class="modal-header">
-                <h3>Login</h3>
-            </div>
-            <div class="modal-body">
-                <div class="control-group">
-                    <label class="control-label" for="form-username">Username</label>
-                    <div class="controls">
-                        <input id="form-username" name="username" type="text" />
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="form-password">Password</label>
-                    <div class="controls">
-                        <input id="form-password" name="password" type="password" />
-                    </div>
-                </div>
-                <div class="register">
-                    <div class="control-group">
-                        <label class="control-label" for="form-confirm-password">Password</label>
-                        <div class="controls">
-                            <input id="form-confirm-password" name="confirmPassword" type="password" />
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="form-first-name">First Name</label>
-                        <div class="controls">
-                            <input id="form-first-name" name="firstName" type="text" />
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="form-last-name">Last Name</label>
-                        <div class="controls">
-                            <input id="form-last-name" name="lastName" type="text" />
-                        </div>
-                    </div>
-                </div><!-- register end -->
-                <p class="message alert alert-error"></p>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="toggle-register">New? Create an account</a>
-                <input type="submit" class="btn btn-success" name="submit" value="Login">
-            </div>
-        </form>
-    </div><!-- login end -->
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+	<div id="page-login">
+		<h1 id="logo">
+			<img src="{{media_url}}/img/logo.png" alt="Let's Chat Bro" />
+		</h1>
+		<form class="form-horizontal" action="/login" method="post">
+			<input type="hidden" name="next" value="{{next}}" />
+			<div class="modal-header">
+				<h3>Login</h3>
+			</div>
+			<div class="modal-body">
+				<div class="control-group">
+					<label class="control-label" for="form-username">Username</label>
+					<div class="controls">
+						<input id="form-username" name="username" type="text" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="form-password">Password</label>
+					<div class="controls">
+						<input id="form-password" name="password" type="password" />
+					</div>
+				</div>
+				<div class="register">
+					<div class="control-group">
+						<label class="control-label" for="form-confirm-password">Password</label>
+						<div class="controls">
+							<input id="form-confirm-password" name="confirmPassword" type="password" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="form-first-name">First Name</label>
+						<div class="controls">
+							<input id="form-first-name" name="firstName" type="text" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="form-last-name">Last Name</label>
+						<div class="controls">
+							<input id="form-last-name" name="lastName" type="text" />
+						</div>
+					</div>
+				</div><!-- register end -->
+				<p class="message alert alert-error"></p>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="toggle-register">New? Create an account</a>
+				<input type="submit" class="btn btn-success" name="submit" value="Login">
+			</div>
+		</form>
+	</div><!-- login end -->
+{% endblock %}

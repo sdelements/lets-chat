@@ -19,7 +19,7 @@
         "forms": "*",
         "mongodb": "*",
         "mongoose": "*",
-        "mustache": "*",
+        "swig": "*",
         "password-hash": "*",
         "socket.io": "*",
         "underscore": "*"
