@@ -1,4 +1,4 @@
-var Client = (function ($, SoundSystem, Mustache, io, connection) {
+var Client = (function ($, Mustache, io, connection) {
 
     var module = {};
 
@@ -21,7 +21,6 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
         };
         this.user = {'name': user};
         this.windowFocus = true;
-        this.sound = new SoundSystem.SoundSystem();
 
         // GUI Related stuffs
         //************************
@@ -106,9 +105,6 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
                 messages.append(html);
             }
             self.scrollMessagesDown();
-            if (!self.windowFocus) {
-                self.sound.play('message');
-            }
         };
 
         this.addImage = function (image) {
@@ -120,9 +116,6 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
             var html = Mustache.to_html(self.templates.imagemessage, vars);
             messages.append(html);
             self.scrollMessagesDown();
-            if (!self.windowFocus) {
-                self.sound.play('message');
-            }
         };
 
         this.scrollMessagesDown = function () {
@@ -265,5 +258,5 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
 
     return module;
 
-}(jQuery, SoundSystem, Mustache, io, connection));
+}(jQuery, Mustache, io, connection));
 
