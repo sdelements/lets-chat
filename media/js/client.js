@@ -25,12 +25,6 @@ var Client = (function ($, Mustache, io, connection) {
         // GUI Related stuffs
         //************************
 
-        // Cheap fix until I think of something better.
-        this.updateMessagesHeight = function () {
-            var height = $(document).height() - this.$entry.outerHeight() - 10;
-            self.$messages.height(height);
-        };
-
         this.updateStatus = function (status) {
             this.$status.find('.message').html(status);
         };
@@ -167,10 +161,6 @@ var Client = (function ($, Mustache, io, connection) {
         // Initialization / Connection
         //************************
         this.init = function () {
-            // Cheesy fix until I do something better
-            $(window).bind('resize load', function () {
-                self.updateMessagesHeight();
-            });
 
             // Set window state for client
             $(window).blur(function () {
@@ -199,6 +189,7 @@ var Client = (function ($, Mustache, io, connection) {
             // Get message history
             self.getMessageHistory();
             self.scrollMessagesDown();
+
         };
 
         // Startup!
