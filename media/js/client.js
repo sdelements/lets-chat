@@ -140,14 +140,12 @@ var Client = (function ($, Mustache, io, connection) {
             }
         };
 
-        this.sendMessage = function () {
-            var textarea = self.$entry.find('input[type="text"]');
-            var text = $.trim(textarea.val());
+        this.sendMessage = function (message) {
+            var text = $.trim(message);
             self.socket.emit('message',  {
                 name: self.user.name || 'Anonymous',
                 text: text
             });
-            textarea.val('');
         };
 
         this.getMessageHistory = function (query) {
@@ -228,15 +226,17 @@ var Client = (function ($, Mustache, io, connection) {
         // GUI Listeners
         //************************
 
-        this.$entry.find('button').bind('click', function () {
-            self.sendMessage();
-            self.$entry.find('input[type="text"]').focus();
+        this.$entry.find('.send').bind('click', function () {
+            self.sendMessage(self.$entry.find('textarea').val());
+            self.$entry.find('textarea').focus().val('');
         });
 
-        this.$entry.find('input[type="text"]').bind('keyup', function (e) {
+        this.$entry.find('textarea').bind('keydown', function (e) {
             var textarea = $(this);
             if (e.which === 13 && $.trim(textarea.val())) {
-                self.sendMessage();
+                self.sendMessage(self.$entry.find('textarea').val());
+				self.$entry.find('textarea').focus().val('')
+				return false;
             }
         });
 
@@ -250,4 +250,3 @@ var Client = (function ($, Mustache, io, connection) {
     return module;
 
 }(jQuery, Mustache, io, connection));
-
