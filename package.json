@@ -15,7 +15,8 @@
     "dependencies": {
         "connect": "*",
         "express": "*",
-        "forms": "*",
+		"express-namespace: "*",
+        "express-form": "*",
         "mongoose": "*",
         "swig": "*",
         "password-hash": "*",

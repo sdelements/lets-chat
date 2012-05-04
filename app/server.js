@@ -1,11 +1,12 @@
 var _ = require('underscore');
 var mongoose = require('mongoose');
-var express = require('express');
+var express = require('express'); require('express-namespace');
+var formValidators = require('./formValidators.js')
+
 var swig = require('swig');
 var passwordHasher = require('password-hash');
 
 var ChatServer = require('./chatServer.js');
-var forms = require('./forms.js');
 
 var User = require('./models/auth.js');
 
@@ -58,58 +59,6 @@ var Server = function (config) {
 	}));
 	app.use('/media', express.static('media'));
 	
-	// Login
-	app.all('/login', function (req, res) {
-		var render_login_page = function (errors) {
-			return swig.compileFile('login.html').render({
-				'media_url': self.config.media_url,
-				'next': req.param('next', ''),
-				'errors': errors
-			});
-		};
-		if (req.method === 'POST') {
-			var form = forms.loginForm.bind(req.body);
-			if (form.isValid()) {
-				User.findOne({ 'username': form.data.username }).run(function (error, user) {
-					if (user && passwordHasher.verify(form.data.password, user.password)) {
-						req.session.user = user;
-						req.session.save();
-						res.redirect(form.data.next);
-					} else {
-						res.send(render_login_page());
-					}
-				});
-			} else {
-				res.send(render_login_page());
-			}
-		} else {
-			res.send(render_login_page());
-		}
-		// TODO: fix the if statement logic here
-	});
-	
-	// Logout
-	app.all('/logout', function (req, res) {
-		req.session.destroy();
-		res.redirect('/login');
-	});
-	
-	// Register
-	app.post('/register', function (req, res) {
-		var form = forms.registrationForm.bind(req.body);
-		var passwordHash = passwordHasher.generate(form.data.password);
-		var user = new User({
-			'username': form.data.username,
-			'password': passwordHash,
-			'firstName': form.data.firstName,
-			'lastName': form.data.lastName,
-			'displayName': form.data.firstName
-		}).save();
-		req.session.user = user;
-		req.session.save();
-		res.redirect(req.param('next'));
-	});
-	
 	// Home Sweet Home
 	app.get('/', requireLogin, function (req, res) {
 		var view = swig.compileFile('chat.html').render({
@@ -119,6 +68,86 @@ var Server = function (config) {
 			'user': req.session.user.displayName
 		});
 		res.send(view);
+	});
+	
+	// Login
+	app.get('/login', function (req, res) {
+		var render_login_page = function (errors) {
+			return swig.compileFile('login.html').render({
+				'media_url': self.config.media_url,
+				'next': req.param('next', ''),
+				'errors': errors
+			});
+		};
+		res.send(render_login_page());
+		// TODO: fix the if statement logic here
+	});
+	
+	// Logout
+	app.all('/logout', function (req, res) {
+		req.session.destroy();
+		res.redirect('/');
+	});
+	
+	// Ajax
+	app.namespace('/ajax', function() {
+		// Login
+		app.post('/login', formValidators.login, function(req, res) {
+			var form = req.form;
+			if (form.isValid) {
+				User.findOne({ 'email': form.email }).run(function (error, user) {
+					if (user && passwordHasher.verify(form.password, user.password)) {
+						req.session.user = user;
+						req.session.save();
+						res.send({
+							status: 'success',
+							message: 'Logging you in...'
+						});
+					} else {
+						res.send({
+							status: 'error',
+							message: 'Incorrect login credentials.'
+						});
+					}
+				});
+			} else {
+				res.send({
+					status: 'error',
+					message: 'Some fields did not validate',
+					errors: req.form.errors
+				})
+			}
+		});
+
+		// Register
+		app.post('/register', formValidators.registration, function(req, res) {
+			var form = req.form;
+			if (form.isValid) {
+				// TODO: Check if email is unique
+				var passwordHash = passwordHasher.generate(form.password);
+				var user = new User({
+					'email': form.email,
+					'password': passwordHash,
+					'firstName': form['first-name'],
+					'lastName': form['last-name'],
+					'displayName': form['first-name']
+				}).save(function(err, user) {
+					req.session.user = user;
+					req.session.save();
+					res.send({
+						status: 'success',
+						message: 'You\'ve been successfully registered.'
+					})
+				});
+			} else {
+				res.send({
+					status: 'error',
+					message: 'Some fields did not validate',
+					errors: req.form.errors
+				})
+			}
+		});
+
 	});
 
     this.start = function () {
