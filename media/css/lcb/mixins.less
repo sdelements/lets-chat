@@ -1,0 +1,27 @@
+// Thanks to https://github.com/maccman/
+
+.box-flex (@s: 0) {
+	box-flex: @s;
+	-webkit-box-flex: @s;
+	-moz-box-flex: @s;
+}
+
+.horizontal-box() {
+	display: -webkit-box;
+	display: -moz-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-align: stretch;
+	-webkit-box-pack: left;
+	-moz-box-orient: horizontal;
+	-moz-box-align: stretch;
+	-moz-box-pack: left;  
+}
+
+.vertical-box() {
+	display: -webkit-box;
+	display: -moz-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-align: stretch;
+	-moz-box-orient: vertical;
+	-moz-box-align: stretch;
+}

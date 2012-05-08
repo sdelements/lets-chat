@@ -1,0 +1,22 @@
+var config = {
+
+	// Server
+	hostname: '',
+	port: 5000,
+	
+	// Database
+	db_host: 'localhost',
+	db_name: '',
+	db_user: '',
+	db_password: '',
+
+	// Security
+	cookie_secret: 'pleasechangeme',
+
+	// Misc
+	debug: false,
+	media_url: '/media'
+
+}
+
+module.exports = config;

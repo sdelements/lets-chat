@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block page_name %}Chat{% endblock %}
+
+{% block page_js %}
+	<script type="text/javascript">
+		var connection = {
+			'host': '{{host}}',
+			'port': {{port}}
+		}
+		var user = '{{user}}'
+	</script>
+	<script src="{{media_url}}/js/client.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(function () {
+			var client = new Client.Client();
+		});
+	</script>
+{% endblock %}
+
+{% block body_class %}page-chat{% endblock %}
+
+{% block content %}
+	<div id="client">
+		<div id="sidebar">
+			<div class="inner">
+				<h1>Development</h1>
+				<p>Peace, love, and eternal brogramming.</p>
+				<div class="clear">
+					<div class="btn-group buttons">
+						<a class="btn" href="#">
+							<i class="icon-comment"></i>
+						</a>
+						<a class="btn" href="#">
+							<i class="icon-eye-close"></i>
+						</a>
+						<a class="btn" href="#">
+							<i class="icon-cog"></i>
+						</a>
+					</div>
+				</div>
+				<ul id="user-list"></ul>
+				<div style="clear: both; padding-top: 10px; text-align: right;">
+					<a data-toggle="modal" href="#set-name" class="btn">Set Username</a>
+					<a href="/logout" class="btn btn-danger">Logout</a>
+				</div>
+				<div id="status">
+					<span class="message"></span>
+					<span class="ping"></span>
+				</div>
+			</div>
+		</div><!-- sidebar end -->
+		<div id="content">
+			<div id="chat">
+				<ul class="messages"></ul>
+				<div id="entry" class="entry">
+					<textarea type="text" name="talk"></textarea>
+					<div class="buttons">
+						<button class="send btn btn-success">Send</button>
+					</div>
+				</div>
+			</div><!-- chat end -->
+		</div>
+	</div>
+{% endblock %}
+
+{% block page_assets %}
+	<div id="modals">
+		<div id="set-name" class="modal hide fade">
+			<div class="modal-header">
+				<a href="#" class="close" data-dismiss="modal">&times;</a>
+				<h3>Set Name</h3>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="handle">Name</label>
+						<div class="controls">
+							<input id="handle" class="required" name="handle" size="12" type="text" minlength="4" maxlength="12">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn btn-primary save" data-dismiss="modal">Set Name</a>
+				<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+			</div>
+		</div>
+	</div>
+	{% raw %}
+		<div id="js-templates">
+			<script id="js-tmpl-message" type="text/html">
+				<li class="message {{#talk}}talk{{/talk}} {{#event}}event{{/event}}" data-owner="{{ownerID}}">
+					<div class="name">{{name}}</div>
+					<div class="text">
+						{{^event}}<div class="bubble fragments">{{/event}}
+							<div class="fragment">{{text}}</div>
+						{{^event}}</div>{{/event}}
+					</div>
+				</li>
+			</script>
+			<script id="js-tmpl-message-fragment" type="text/html">
+				<div class="fragment">{{text}}</div>
+			</script>
+			<script id="js-tmpl-user-list-item" type="text/html">
+				<li class="user">
+					<div class="name">{{name}}</div>
+				</li>
+			</script>
+			<script id="js-tmpl-image-message" type="text/html">
+				<a class="thumbnail" href="{{url}}">
+					<img src="{{url}}" />
+				</a>
+			</script>
+		</div>
+	{% endraw %}
+{% endblock %}

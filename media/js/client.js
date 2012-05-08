@@ -1,4 +1,4 @@
-var Client = (function ($, SoundSystem, Mustache, io, connection) {
+var Client = (function ($, Mustache, io, connection) {
 
     var module = {};
 
@@ -21,16 +21,9 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
         };
         this.user = {'name': user};
         this.windowFocus = true;
-        this.sound = new SoundSystem.SoundSystem();
 
         // GUI Related stuffs
         //************************
-
-        // Cheap fix until I think of something better.
-        this.updateMessagesHeight = function () {
-            var height = $(document).height() - this.$entry.outerHeight() - 10;
-            self.$messages.height(height);
-        };
 
         this.updateStatus = function (status) {
             this.$status.find('.message').html(status);
@@ -106,9 +99,6 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
                 messages.append(html);
             }
             self.scrollMessagesDown();
-            if (!self.windowFocus) {
-                self.sound.play('message');
-            }
         };
 
         this.addImage = function (image) {
@@ -120,9 +110,6 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
             var html = Mustache.to_html(self.templates.imagemessage, vars);
             messages.append(html);
             self.scrollMessagesDown();
-            if (!self.windowFocus) {
-                self.sound.play('message');
-            }
         };
 
         this.scrollMessagesDown = function () {
@@ -153,14 +140,12 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
             }
         };
 
-        this.sendMessage = function () {
-            var textarea = self.$entry.find('input[type="text"]');
-            var text = $.trim(textarea.val());
+        this.sendMessage = function (message) {
+            var text = $.trim(message);
             self.socket.emit('message',  {
                 name: self.user.name || 'Anonymous',
                 text: text
             });
-            textarea.val('');
         };
 
         this.getMessageHistory = function (query) {
@@ -174,10 +159,6 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
         // Initialization / Connection
         //************************
         this.init = function () {
-            // Cheesy fix until I do something better
-            $(window).bind('resize load', function () {
-                self.updateMessagesHeight();
-            });
 
             // Set window state for client
             $(window).blur(function () {
@@ -206,6 +187,7 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
             // Get message history
             self.getMessageHistory();
             self.scrollMessagesDown();
+
         };
 
         // Startup!
@@ -244,15 +226,17 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
         // GUI Listeners
         //************************
 
-        this.$entry.find('button').bind('click', function () {
-            self.sendMessage();
-            self.$entry.find('input[type="text"]').focus();
+        this.$entry.find('.send').bind('click', function () {
+            self.sendMessage(self.$entry.find('textarea').val());
+            self.$entry.find('textarea').focus().val('');
         });
 
-        this.$entry.find('input[type="text"]').bind('keyup', function (e) {
+        this.$entry.find('textarea').bind('keydown', function (e) {
             var textarea = $(this);
             if (e.which === 13 && $.trim(textarea.val())) {
-                self.sendMessage();
+                self.sendMessage(self.$entry.find('textarea').val());
+				self.$entry.find('textarea').focus().val('')
+				return false;
             }
         });
 
@@ -265,5 +249,4 @@ var Client = (function ($, SoundSystem, Mustache, io, connection) {
 
     return module;
 
-}(jQuery, SoundSystem, Mustache, io, connection));
-
+}(jQuery, Mustache, io, connection));
