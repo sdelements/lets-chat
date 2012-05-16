@@ -44,6 +44,7 @@ var Server = function (config) {
 		self.app.register('.html', swig);
 		self.app.set('view engine', 'html');
 		swig.init({
+			cache: false,
 			root: 'views',
 			allowErrors: true // allows errors to be thrown and caught by express
 		});

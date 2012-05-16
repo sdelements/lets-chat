@@ -21,7 +21,29 @@
 {% block body_class %}page-chat{% endblock %}
 
 {% block content %}
+	<header>
+		<ul class="tabs">
+			<li class="tab selected"><a href=#>Development</a></li>
+			<li class="tab"><a href=#>Random Stuff <span class="badge badge-important">46</span></a></li>
+			<li class="tab"><a href=#>Github <span class="badge badge-important">6</span></a></li>
+		</ul>
+		<a href="#" class="user">
+			<img src="{{ media_url }}/img/mercury.png" />
+			<span class="name">Houssam Haidar</span>
+		</a>
+	</header>
 	<div id="client">
+		<div id="content">
+			<div id="chat">
+				<ul class="messages"></ul>
+				<div id="entry" class="entry">
+					<textarea type="text" name="talk"></textarea>
+					<div class="buttons">
+						<button class="send btn btn-success">Send</button>
+					</div>
+				</div>
+			</div><!-- chat end -->
+		</div>
 		<div id="sidebar">
 			<div class="inner">
 				<h1>Development</h1>
@@ -50,17 +72,6 @@
 				</div>
 			</div>
 		</div><!-- sidebar end -->
-		<div id="content">
-			<div id="chat">
-				<ul class="messages"></ul>
-				<div id="entry" class="entry">
-					<textarea type="text" name="talk"></textarea>
-					<div class="buttons">
-						<button class="send btn btn-success">Send</button>
-					</div>
-				</div>
-			</div><!-- chat end -->
-		</div>
 	</div>
 {% endblock %}
 
