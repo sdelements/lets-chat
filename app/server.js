@@ -33,6 +33,7 @@ var Server = function (config) {
 
 	// Setup session store
 	self.sessionStore = new MongoStore({
+		host: self.config.db_host,
 		db: self.config.db_name
     });
 
