@@ -1,3 +1,0 @@
-<Files *.php>
-	Deny from all
-</Files>

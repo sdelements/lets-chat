@@ -52,7 +52,7 @@ var Server = function (config) {
 		self.app.set('view options', {
 			layout: false // Prevents express from fucking up our extend/block tags
 		});
-		
+
 		// Express options
 		self.app.use(express.bodyParser());
 		self.app.use(express.cookieParser());

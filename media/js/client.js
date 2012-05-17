@@ -7,6 +7,7 @@ var Client = (function ($, Mustache, io, connection) {
         var self = this;
 
         // Setup vars
+		this.$tabs = $('#tabs')
         this.$sidebar = $('#sidebar');
         this.$chat = $('#chat');
         this.$status = $('#status');
@@ -82,7 +83,7 @@ var Client = (function ($, Mustache, io, connection) {
             var lastMessage = self.$messages.children('.message:last');
             var html = '';
             // Should we add a new message or add to a previous one?
-            if (message.ownerID === lastMessage.data('owner') &&
+            if (false && message.ownerID === lastMessage.data('owner') &&
                     lastMessage.data('owner')) {
                 html = Mustache.to_html(self.templates.messageFragment, vars);
                 html = self.parseContent(html, {
@@ -225,6 +226,11 @@ var Client = (function ($, Mustache, io, connection) {
 
         // GUI Listeners
         //************************
+		
+		this.$tabs.find('.tab').live('click', function() {
+			$(this).siblings().removeClass('selected');
+			$(this).addClass('selected');
+		});
 
         this.$entry.find('.send').bind('click', function () {
             self.sendMessage(self.$entry.find('textarea').val());

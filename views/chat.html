@@ -22,7 +22,7 @@
 
 {% block content %}
 	<header class="navbar">
-		<ul class="tabs">
+		<ul id="tabs" class="tabs">
 			<li class="tab selected"><a href=#>Development</a></li>
 			<li class="tab"><a href=#>Random Stuff <span class="badge badge-important">46</span></a></li>
 			<li class="tab"><a href=#>Github <span class="badge badge-important">6</span></a></li>
@@ -31,6 +31,7 @@
 			<a data-toggle="dropdown" href="#">
 				<img src="{{ media_url }}/img/mercury.png" />
 				<span class="name">Houssam Haidar</span>
+				<b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
 				<li><a data-toggle="modal" href="#set-name" >Set Username</a></li>
@@ -105,11 +106,16 @@
 		<div id="js-templates">
 			<script id="js-tmpl-message" type="text/html">
 				<li class="message {{#talk}}talk{{/talk}} {{#event}}event{{/event}}" data-owner="{{ownerID}}">
-					<div class="name">{{name}}</div>
-					<div class="text">
-						{{^event}}<div class="bubble fragments">{{/event}}
-							<div class="fragment">{{text}}</div>
-						{{^event}}</div>{{/event}}
+					<div class="side">
+						<img class="avatar" src="/media/img/mercury.png" />
+					</div>
+					<div class="meta">
+						<div class="name">{{name}}</div>
+						<div class="text">
+							{{^event}}<div class="fragments">{{/event}}
+								<div class="fragment">{{text}}</div>
+							{{^event}}</div>{{/event}}
+						</div>
 					</div>
 				</li>
 			</script>

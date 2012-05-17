@@ -128,25 +128,35 @@ body {
 	}
 	.border-radius(5px);
 	.messages {
-		background: #f2f2f2;
-		margin:0;
+		background: #fff;
+		margin: 0;
+		padding-top: 7px;
 		.border-radius(5px 5px 0 0);
 	}
 	.message {
-		margin-bottom: 5px;
-		list-style: none;
+		border-bottom: 1px #eee solid;
+		padding: 7px;
+		padding-top: 0;
+		margin-bottom: 7px;
 		display: block;
-		.name {
-			padding: 5px;
-			padding-right: 10px;
-			font-weight: bold;
-			width: 100px;
-			text-align: right;
+		.clearfix;
+		&:last-child {
+			border-bottom: none;
+		}
+		.side {
+			margin-right: 7px;
 			float: left;
 		}
-		.text {
-			margin-left: 20px;
-			overflow: hidden;
+		.meta {
+			margin-left: 40px;
+		}
+		.name {
+			font-weight: bold;
+			color: #aaa;
+		}
+		.avatar {
+			width: 30px;
+			height: 30px;
 		}
 		.thumbnail {
 			display: inline-block;
@@ -154,13 +164,6 @@ body {
 			img {
 				max-width: 350px;
 			}
-		}
-		.bubble {
-			padding: 5px;
-			border: 1px #eee solid;
-			border-radius: 4px;
-			-webkit-border-radius: 4px;
-			-moz-borader-radius: 4px;
 		}
 		&.event {
 			background: #f9ffb5;
@@ -230,6 +233,13 @@ header {
 		position: relative;
 		.dropdown-menu {
 			margin: 5px 5px 0 0;
+		}
+		.caret {
+			border-top-color: #fff;
+			border-bottom-color: #fff;
+			margin: 0;
+			margin-top: -2px;
+			vertical-align: middle;
 		}
 		a {
 			display: block;
