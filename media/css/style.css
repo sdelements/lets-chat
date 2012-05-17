@@ -4515,15 +4515,25 @@ header .tabs .selected a {
 header .user {
   height: 40px;
   line-height: 40px;
-  color: #bbb;
-  display: block;
+  float: right;
   padding: 0 10px;
   border-left: 1px #111 solid;
-  float: right;
+  position: relative;
 }
-header .user:hover {
-  color: #fff;
+header .user .dropdown-menu {
+  margin: 5px 5px 0 0;
+}
+header .user a {
+  display: block;
+}
+header .user a:hover {
   text-decoration: none;
+}
+header .user a:hover .name {
+  color: #fff;
+}
+header .user a .name {
+  color: #bbb;
 }
 header .user img {
   margin-top: -4px;

@@ -21,16 +21,23 @@
 {% block body_class %}page-chat{% endblock %}
 
 {% block content %}
-	<header>
+	<header class="navbar">
 		<ul class="tabs">
 			<li class="tab selected"><a href=#>Development</a></li>
 			<li class="tab"><a href=#>Random Stuff <span class="badge badge-important">46</span></a></li>
 			<li class="tab"><a href=#>Github <span class="badge badge-important">6</span></a></li>
 		</ul>
-		<a href="#" class="user">
-			<img src="{{ media_url }}/img/mercury.png" />
-			<span class="name">Houssam Haidar</span>
-		</a>
+		<div class="user dropdown pull-right">
+			<a data-toggle="dropdown" href="#">
+				<img src="{{ media_url }}/img/mercury.png" />
+				<span class="name">Houssam Haidar</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a data-toggle="modal" href="#set-name" >Set Username</a></li>
+				<li class="divider"></li>
+				<li><a href="/logout">Logout</a></li>
+			</ul>
+		</div>
 	</header>
 	<div id="client">
 		<div id="content">
@@ -62,10 +69,6 @@
 					</div>
 				</div>
 				<ul id="user-list"></ul>
-				<div style="clear: both; padding-top: 10px; text-align: right;">
-					<a data-toggle="modal" href="#set-name" class="btn">Set Username</a>
-					<a href="/logout" class="btn btn-danger">Logout</a>
-				</div>
 				<div id="status">
 					<span class="message"></span>
 					<span class="ping"></span>
