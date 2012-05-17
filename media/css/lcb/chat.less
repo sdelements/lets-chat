@@ -1,12 +1,34 @@
-// Layout
+// General
 
 .bg-atomic-noise {
 	background: #222 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAFVBMVEUqKiopKSkoKCgjIyMuLi4kJCQtLS0dJckpAAAAO0lEQVR42iXLAQoAUQhCQSvr/kfe910jHIikElsl5qVFa1iE5f0Pom/CNZdbNM6756lQ41NInMfuFPgAHVEAlGk4lvIAAAAASUVORK5CYII=');
 }
 
 body {
-	.bg-atomic-noise
+	.bg-atomic-noise();
 }
+
+*::-webkit-scrollbar {
+	width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+	.border-radius(5px);
+	.box-shadow(inset 0 0 6px rgba(0,0,0,0.3));
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: #aaa;
+	height: 20px;
+	.border-radius(5px);
+	.box-shadow(inset 0 0 6px rgba(0,0,0,0.5));
+}
+
+.avatar {
+	.border-radius(3px);
+}
+
+// Layout
 
 #client {
 	position: absolute;
@@ -69,6 +91,36 @@ body {
 	p, h1 {
 		color: #fff;
 	}
+	.item-list {
+		border: 1px #444 solid;
+		.border-radius(5px);
+		h3 {
+			background: #222 url('../img/header.png');
+			padding: 3px 5px;
+			font-size: 14px;
+			font-weight: normal;
+		}
+		ul {
+			max-height: 170px;
+			background: #f2f2f2;
+			color: #555;
+			margin: 0;
+			overflow-y: auto;
+			.border-radius(5px);
+		}
+		li {
+			margin: 5px;
+			margin-bottom: 0;
+			display: block;
+			&:last-child {
+				border-bottom: 0;
+				margin-bottom: 5px;
+			}
+		}
+		img {
+			.size(35px, 35px);
+		}
+	}
 }
 
 // Userlist
@@ -111,21 +163,6 @@ body {
 
 #chat {
 	margin: 15px;
-	*::-webkit-scrollbar {
-		width: 10px;
-	}
-
-	*::-webkit-scrollbar-track {
-		.border-radius(5px);
-		.box-shadow(inset 0 0 6px rgba(0,0,0,0.3));
-	}
-
-	*::-webkit-scrollbar-thumb {
-		background-color: #aaa;
-		height: 20px;
-		.border-radius(5px);
-		.box-shadow(inset 0 0 6px rgba(0,0,0,0.5));
-	}
 	.border-radius(5px);
 	.messages {
 		background: #fff;
@@ -157,6 +194,7 @@ body {
 		.avatar {
 			width: 30px;
 			height: 30px;
+			margin-top: 5px;
 		}
 		.thumbnail {
 			display: inline-block;

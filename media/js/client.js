@@ -83,7 +83,7 @@ var Client = (function ($, Mustache, io, connection) {
             var lastMessage = self.$messages.children('.message:last');
             var html = '';
             // Should we add a new message or add to a previous one?
-            if (false && message.ownerID === lastMessage.data('owner') &&
+            if (message.ownerID === lastMessage.data('owner') &&
                     lastMessage.data('owner')) {
                 html = Mustache.to_html(self.templates.messageFragment, vars);
                 html = self.parseContent(html, {
