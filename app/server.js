@@ -1,16 +1,18 @@
 var _ = require('underscore');
-var mongoose = require('mongoose');
-var express = require('express'); require('express-namespace');
-var formValidators = require('./formValidators.js')
 
+var express = require('express');
+var express_namespace = require('express-namespace');
+var mongoose = require('mongoose');
+var MongoStore = require('connect-mongo')(express);
 var swig = require('swig');
 var passwordHasher = require('password-hash');
 
+// App stuff
+var formValidators = require('./formValidators.js')
 var ChatServer = require('./chatServer.js');
 
-var User = require('./models/auth.js');
-
-var MemoryStore = express.session.MemoryStore;
+// Models
+var User = require('./models/user.js');
 
 var requireLogin = function (req, res, next) {
     if (req.session.user) {
@@ -24,43 +26,52 @@ var Server = function (config) {
 
     var self = this;
 
-    this.config = config;
+    self.config = config;
 
 	// Setup server
-	var app = express.createServer();
-	self.app = app;
+	self.app = express.createServer();
+
+	// Setup session store
+	self.sessionStore = new MongoStore({
+		host: self.config.db_host,
+		db: self.config.db_name
+    });
+
+	// Configuration
+	self.app.configure(function() {
 	
-	// Setup sessions
-	var sessionStore = new MemoryStore();
-	self.sessionStore = sessionStore;
+		// Setup template stuffs
+		self.app.register('.html', swig);
+		self.app.set('view engine', 'html');
+		swig.init({
+			cache: false,
+			root: 'views',
+			allowErrors: true // allows errors to be thrown and caught by express
+		});
+		self.app.set('views', 'views');
+		self.app.set('view options', {
+			layout: false // Prevents express from fucking up our extend/block tags
+		});
+
+		// Express options
+		self.app.use(express.bodyParser());
+		self.app.use(express.cookieParser());
+		self.app.use(express.session({
+			key: 'express.sid',
+			cookie: {
+				httpOnly: false // We have to turn off httpOnly for websockets
+			}, 
+			secret: self.config.cookie_secret,
+			store: self.sessionStore
+		}));
+		self.app.use('/media', express.static('media'));
+		
+		self.app.use(self.app.router);
 	
-	// Setup template stuffs
-	app.register('.html', swig);
-	app.set('view engine', 'html');
-	swig.init({
-		root: 'views',
-		allowErrors: true // allows errors to be thrown and caught by express
 	});
-	app.set('views', 'views');
-	app.set('view options', {
-		layout: false // Prevents express from fucking up our extend/block tags
-	});
-	
-	// Express options
-	app.use(express.bodyParser());
-	app.use(express.cookieParser());
-	app.use(express.session({
-		key: 'express.sid',
-		cookie: {
-			httpOnly: false // We have to turn off httpOnly for websockets
-		}, 
-		secret: self.config.cookie_secret,
-		store: sessionStore
-	}));
-	app.use('/media', express.static('media'));
 	
 	// Home Sweet Home
-	app.get('/', requireLogin, function (req, res) {
+	self.app.get('/', requireLogin, function (req, res) {
 		var view = swig.compileFile('chat.html').render({
 			'media_url': self.config.media_url,
 			'host': self.config.hostname,
@@ -69,9 +80,9 @@ var Server = function (config) {
 		});
 		res.send(view);
 	});
-	
+
 	// Login
-	app.get('/login', function (req, res) {
+	self.app.get('/login', function (req, res) {
 		var render_login_page = function (errors) {
 			return swig.compileFile('login.html').render({
 				'media_url': self.config.media_url,
@@ -84,15 +95,15 @@ var Server = function (config) {
 	});
 	
 	// Logout
-	app.all('/logout', function (req, res) {
+	self.app.all('/logout', function (req, res) {
 		req.session.destroy();
 		res.redirect('/');
 	});
-	
+
 	// Ajax
-	app.namespace('/ajax', function() {
+	self.app.namespace('/ajax', function() {
 		// Login
-		app.post('/login', formValidators.login, function(req, res) {
+		self.app.post('/login', formValidators.login, function(req, res) {
 			var form = req.form;
 			if (form.isValid) {
 				User.findOne({ 'email': form.email }).run(function (error, user) {
@@ -120,17 +131,17 @@ var Server = function (config) {
 		});
 
 		// Register
-		app.post('/register', formValidators.registration, function(req, res) {
+		self.app.post('/register', formValidators.registration, function(req, res) {
 			var form = req.form;
 			if (form.isValid) {
 				// TODO: Check if email is unique
 				var passwordHash = passwordHasher.generate(form.password);
 				var user = new User({
-					'email': form.email,
-					'password': passwordHash,
-					'firstName': form['first-name'],
-					'lastName': form['last-name'],
-					'displayName': form['first-name']
+					email: form.email,
+					password: passwordHash,
+					firstName: form['first-name'],
+					lastName: form['last-name'],
+					displayName: form['first-name']
 				}).save(function(err, user) {
 					req.session.user = user;
 					req.session.save();
