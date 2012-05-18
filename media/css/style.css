@@ -4478,6 +4478,7 @@ body {
   overflow: hidden;
 }
 #chat .message .thumbnail img {
+  height: 250px;
   max-width: 350px;
 }
 #chat .message.event {
