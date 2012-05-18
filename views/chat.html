@@ -69,18 +69,9 @@
 						</a>
 					</div>
 				</div>
-				<ul id="user-list"></ul>
 				<div class="item-list">
 					<h3><i class="icon-white icon-user"></i> Who's here</h3>
-					<ul>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-					</ul>
+					<ul id="user-list"></ul>
 				</div>
 				<div id="status">
 					<span class="message"></span>
@@ -135,8 +126,9 @@
 				<div class="fragment">{{text}}</div>
 			</script>
 			<script id="js-tmpl-user-list-item" type="text/html">
-				<li class="user">
-					<div class="name">{{name}}</div>
+                <li class="user" data-id="{{uid}}">
+                    <img class="avatar" src="{{avatar}}">
+                    <span class="name">{{name}}</span></li>
 				</li>
 			</script>
 			<script id="js-tmpl-image-message" type="text/html">

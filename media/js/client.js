@@ -37,14 +37,15 @@ var Client = (function ($, Mustache, io, connection) {
         };
 
         this.updateUserlist = function (users) {
-            var userlist = self.$userList;
-            userlist.empty();
+            var $userlist = self.$userList;
+            $userlist.empty();
             $.each(users, function (i, user) {
                 var vars = {
+                    avatar: '/media/img/mercury.png', // Temporary
                     name: user.user.displayName
                 };
                 var html = Mustache.to_html(self.templates.useritem, vars);
-                userlist.append(html);
+                $userlist.append(html);
             });
         };
 
