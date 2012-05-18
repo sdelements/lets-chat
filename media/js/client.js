@@ -54,7 +54,7 @@ var Client = (function ($, Mustache, io, connection) {
             var imagePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b/gim;
             var linkPattern =  /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
             if (text.match(imagePattern)) {
-                text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" onload="client.scrollMessagesDown();" /></a>');
+                text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" alt="$1" /></a>');
             } else {
                 text = text.replace(linkPattern, '<a href="$1" target="_blank">$1</a>');
             }

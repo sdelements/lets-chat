@@ -4249,6 +4249,9 @@ textarea {
   border-color: #d6e9c6;
   color: #468847;
 }
+.modal form {
+  margin-bottom: 0;
+}
 .bg-atomic-noise {
   background: #222222 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAFVBMVEUqKiopKSkoKCgjIyMuLi4kJCQtLS0dJckpAAAAO0lEQVR42iXLAQoAUQhCQSvr/kfe910jHIikElsl5qVFa1iE5f0Pom/CNZdbNM6756lQ41NInMfuFPgAHVEAlGk4lvIAAAAASUVORK5CYII=');
 }
@@ -4474,6 +4477,7 @@ body {
   margin-top: 5px;
 }
 #chat .message .thumbnail {
+  margin-top: 5px;
   display: inline-block;
   overflow: hidden;
 }
