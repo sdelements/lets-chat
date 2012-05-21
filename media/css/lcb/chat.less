@@ -1,5 +1,9 @@
 // General
 
+.modal form {
+	margin-bottom: 0;
+}
+
 .bg-atomic-noise {
 	background: #222 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAFVBMVEUqKiopKSkoKCgjIyMuLi4kJCQtLS0dJckpAAAAO0lEQVR42iXLAQoAUQhCQSvr/kfe910jHIikElsl5qVFa1iE5f0Pom/CNZdbNM6756lQ41NInMfuFPgAHVEAlGk4lvIAAAAASUVORK5CYII=');
 }
@@ -92,6 +96,7 @@ body {
 		color: #fff;
 	}
 	.item-list {
+		margin-top: 10px;
 		border: 1px #444 solid;
 		.border-radius(5px);
 		h3 {
@@ -117,27 +122,12 @@ body {
 				margin-bottom: 5px;
 			}
 		}
-		img {
+		.avatar {
 			.size(35px, 35px);
+			margin-right: 5px;
 		}
 	}
 }
-
-// Userlist
-
-#user-list {
-	padding: 0;
-	margin: 0;
-	margin-top: 10px;
-	li {
-		padding: 5px 8px;
-		margin-bottom: 3px;
-		border: 1px #444 solid;
-		display: block;
-		border-radius: 4px;
-	}
-}
-
 // Status
 
 #status { //TODO: Fix
@@ -197,9 +187,11 @@ body {
 			margin-top: 5px;
 		}
 		.thumbnail {
+			margin-top: 5px;
 			display: inline-block;
 			overflow: hidden;
 			img {
+				height: 250px;
 				max-width: 350px;
 			}
 		}

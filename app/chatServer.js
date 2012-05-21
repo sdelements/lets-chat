@@ -6,7 +6,7 @@ var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
 
 var MessageModel = require('./models/message.js');
-var User = require('./models/auth.js');
+var User = require('./models/user.js');
 
 var ChatServer = function (app, sessionStore) {
 

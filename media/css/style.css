@@ -1,4 +1,3 @@
-/* This beautiful CSS-File has been crafted with LESS (lesscss.org) and compiled by simpLESS (wearekiss.com/simpless) */
 /*********************
  * LCB Styles
  *********************/
@@ -4276,6 +4275,9 @@ textarea {
   border-color: #d6e9c6;
   color: #468847;
 }
+.modal form {
+  margin-bottom: 0;
+}
 .bg-atomic-noise {
   background: #222222 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAFVBMVEUqKiopKSkoKCgjIyMuLi4kJCQtLS0dJckpAAAAO0lEQVR42iXLAQoAUQhCQSvr/kfe910jHIikElsl5qVFa1iE5f0Pom/CNZdbNM6756lQ41NInMfuFPgAHVEAlGk4lvIAAAAASUVORK5CYII=');
 }
@@ -4393,6 +4395,7 @@ body {
   color: #fff;
 }
 #sidebar .item-list {
+  margin-top: 10px;
   border: 1px #444 solid;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -4423,21 +4426,10 @@ body {
   border-bottom: 0;
   margin-bottom: 5px;
 }
-#sidebar .item-list img {
+#sidebar .item-list .avatar {
   width: 35px;
   height: 35px;
-}
-#user-list {
-  padding: 0;
-  margin: 0;
-  margin-top: 10px;
-}
-#user-list li {
-  padding: 5px 8px;
-  margin-bottom: 3px;
-  border: 1px #444 solid;
-  display: block;
-  border-radius: 4px;
+  margin-right: 5px;
 }
 #status {
   background: #444;
@@ -4511,10 +4503,12 @@ body {
   margin-top: 5px;
 }
 #chat .message .thumbnail {
+  margin-top: 5px;
   display: inline-block;
   overflow: hidden;
 }
 #chat .message .thumbnail img {
+  height: 250px;
   max-width: 350px;
 }
 #chat .message.event {

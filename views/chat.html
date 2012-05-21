@@ -34,6 +34,7 @@
 				<b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
+                <li><a data-toggle="modal" href="#edit-profile" >Profile Settings</a></li>
 				<li><a data-toggle="modal" href="#set-name" >Set Username</a></li>
 				<li class="divider"></li>
 				<li><a href="/logout">Logout</a></li>
@@ -69,18 +70,15 @@
 						</a>
 					</div>
 				</div>
-				<ul id="user-list"></ul>
 				<div class="item-list">
 					<h3><i class="icon-white icon-user"></i> Who's here</h3>
-					<ul>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-						<li><img class="avatar" src="/media/img/mercury.png"> Houssam Haidar</li>
-					</ul>
+					<ul id="user-list"></ul>
+				</div>
+                <div class="item-list">
+					<h3><i class="icon-white icon-film"></i> Media</h3>
+					<ul id="media-list">
+                        <li>None yet...</li>
+                    </ul>
 				</div>
 				<div id="status">
 					<span class="message"></span>
@@ -93,6 +91,44 @@
 
 {% block page_assets %}
 	<div id="modals">
+        <div id="edit-profile" class="modal hide fade">
+            <form class="validate form-horizontal" action="/ajax/update-profile" method="post">
+                <input type="hidden" name="next" value="{{next}}" />
+                <div class="modal-header">
+                    <h3>Profile Settings</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="control-group">
+                        <label class="control-label">Display Name</label>
+                        <div class="controls">
+                            <input class="required" name="display-name" type="text" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Email</label>
+                        <div class="controls">
+                            <input class="required email" name="email" type="text" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Current Password</label>
+                        <div class="controls">
+                            <input class="required" name="current-password" type="password" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Password</label>
+                        <div class="controls">
+                            <input name="password" type="password" />
+                        </div>
+                    </div>
+                    <p class="response"></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" name="submit" value="Save">
+                </div>
+            </form>
+        </div>
 		<div id="set-name" class="modal hide fade">
 			<div class="modal-header">
 				<a href="#" class="close" data-dismiss="modal">&times;</a>
@@ -135,8 +171,9 @@
 				<div class="fragment">{{text}}</div>
 			</script>
 			<script id="js-tmpl-user-list-item" type="text/html">
-				<li class="user">
-					<div class="name">{{name}}</div>
+                <li class="user" data-id="{{uid}}">
+                    <img class="avatar" src="{{avatar}}">
+                    <span class="name">{{name}}</span></li>
 				</li>
 			</script>
 			<script id="js-tmpl-image-message" type="text/html">

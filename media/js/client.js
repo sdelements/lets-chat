@@ -37,26 +37,24 @@ var Client = (function ($, Mustache, io, connection) {
         };
 
         this.updateUserlist = function (users) {
-            var userlist = self.$userList;
-            userlist.empty();
+            var $userlist = self.$userList;
+            $userlist.empty();
             $.each(users, function (i, user) {
                 var vars = {
+                    avatar: '/media/img/mercury.png', // Temporary
                     name: user.user.displayName
                 };
                 var html = Mustache.to_html(self.templates.useritem, vars);
-                userlist.append(html);
+                $userlist.append(html);
             });
         };
 
         this.parseContent = function (text, meta) {
             // TODO: Fix this regex
-            var imagePattern = /(\bhttps?:\/\/[0-9a-z.\/\-]{0,64}[.](jpe?g|png|gif))\b/gim;
+            var imagePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b/gim;
             var linkPattern =  /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
             if (text.match(imagePattern)) {
-                /** $.each(text.match(imagePattern), function(index, url) {
-                    self.addImage({ url: url, name: meta.name });
-                }); **/
-                text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" onload="client.scrollMessagesDown();" /></a>');
+                text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" alt="$1" /></a>');
             } else {
                 text = text.replace(linkPattern, '<a href="$1" target="_blank">$1</a>');
             }
@@ -101,7 +99,8 @@ var Client = (function ($, Mustache, io, connection) {
             }
             self.scrollMessagesDown();
         };
-
+        
+        // TODO: What the shit is this
         this.addImage = function (image) {
             var messages = self.$messages;
             var vars = {
@@ -129,6 +128,7 @@ var Client = (function ($, Mustache, io, connection) {
             var html = Mustache.to_html(self.templates.message, vars);
             var messages = self.$messages;
             messages.append(html);
+            console.log('derp');
             self.scrollMessagesDown();
         };
 

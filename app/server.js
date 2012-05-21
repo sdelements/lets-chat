@@ -12,7 +12,7 @@ var formValidators = require('./formValidators.js')
 var ChatServer = require('./chatServer.js');
 
 // Models
-var User = require('./models/auth.js');
+var User = require('./models/user.js');
 
 var requireLogin = function (req, res, next) {
     if (req.session.user) {
@@ -137,11 +137,11 @@ var Server = function (config) {
 				// TODO: Check if email is unique
 				var passwordHash = passwordHasher.generate(form.password);
 				var user = new User({
-					'email': form.email,
-					'password': passwordHash,
-					'firstName': form['first-name'],
-					'lastName': form['last-name'],
-					'displayName': form['first-name']
+					email: form.email,
+					password: passwordHash,
+					firstName: form['first-name'],
+					lastName: form['last-name'],
+					displayName: form['first-name']
 				}).save(function(err, user) {
 					req.session.user = user;
 					req.session.save();
