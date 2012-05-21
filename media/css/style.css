@@ -4182,6 +4182,31 @@ a.badge:hover {
   color: inherit;
   margin: 0;
 }
+.btn.loading {
+  background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.25, rgba(0, 0, 0, 0.1)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(0, 0, 0, 0.1)), color-stop(0.75, rgba(0, 0, 0, 0.1)), color-stop(0.75, transparent), to(transparent));
+  background-image: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%, transparent 75%, transparent);
+  background-size: 50px 50px;
+  -moz-background-size: 50px 50px;
+  -webkit-background-size: 50px 50px;
+  -webkit-animation: animate-stripes 2s linear infinite;
+  -moz-animation: animate-stripes 2s linear infinite;
+}
+@-webkit-keyframes animate-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -50px 0;
+  }
+}
+@-moz-keyframes animate-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -50px 0;
+  }
+}
 body {
   background: #fff;
 }
@@ -4237,6 +4262,7 @@ textarea {
   -moz-border-radius: 4px;
   border-radius: 4px;
   color: #c09853;
+  text-align: center;
   display: none;
   margin-bottom: 0;
 }
