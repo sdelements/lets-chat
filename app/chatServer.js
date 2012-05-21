@@ -2,6 +2,8 @@
 // Letschatbro Server
 //
 
+var _ = require('underscore');
+
 var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
 
@@ -14,74 +16,27 @@ var ChatServer = function (app, sessionStore) {
 
     this.clients = {};
 
-    this.setupListeners = function () {
-
-        // New client
-        this.io.sockets.on('connection', function (client) {
-            console.log('A client has joined...');
-            var hs = client.handshake;
-            var userData = hs.session.user;
-
-            // TODO: Do we need to use private ID here?
-            UserModel.findById(userData._id, function (err, user) {
-                self.clients[client.id] = {
-                    user: user,
-                    sid: null
-                };
-                self.sendClientList();
-            });
-
-            // Bind ping
-            client.on('ping', function (data) {
-                client.emit('ping', {});
-            });
-
-            client.on('message', function (incomingMessage) {
-				// Set user id on incoming message
-                incomingMessage.owner = userData._id;
-                // Save message
-				var message = self.saveMessage(incomingMessage);
-				// Create outgoing message
-				var outgoingMessage = {
-					id: message._id,
-					owner: message.owner,
-					name: userData.displayName,
-					text: message.text,
-					posted: message.posted
+	// TODO: It might be a good idea to not send the whole list
+	this.getUserList = function () {
+		var users = {};
+		_.each(self.clients, function (client) {
+			var id = client.user._id;
+			if (!users[id]) {
+				users[id] = {
+					id: client.user._id,
+					firstName: client.user.firstName,
+					lastName: client.user.lastName,
+					displayName: client.user.displayName
 				}
-                self.io.sockets.emit('message', outgoingMessage);
-            });
-
-            client.on('message history', function (data) {
-                self.sendMessageHistory(client);
-            });
-
-            client.on('set name', function (data) {
-                var user = self.clients[client.id].user;
-                user.displayName = data.name;
-                user.save();
-                self.sendClientList(); // TODO: Change this to a general change
-            });
-
-            client.on('disconnect', function () {
-                delete self.clients[client.id];
-                self.sendClientList();
-            });
-
-            // Send off an announcement
-            client.broadcast.emit('join', {
-                name: 'System',
-                text: userData.firstName + userData.lastName + ' has signed in'
-            });
-
-        });
-
-    };
-
-    this.sendClientList = function () {
-        self.io.sockets.emit('user list', {
-			users: self.clients
+			}
 		});
+		return users;
+	};
+
+    this.sendUserList = function () {
+        self.io.sockets.emit('user list', {
+			users: self.getUserList()
+        });
     };
 
     this.sendMessageHistory = function (client) {
@@ -116,6 +71,70 @@ var ChatServer = function (app, sessionStore) {
         })
 		message.save();
 		return message;
+    };
+	
+    this.setupListeners = function () {
+
+        // New client
+        this.io.sockets.on('connection', function (client) {
+            console.log('A client has joined...');
+            var hs = client.handshake;
+            var userData = hs.session.user;
+
+            // TODO: Do we need to use private ID here?
+            UserModel.findById(userData._id, function (err, user) {
+                self.clients[client.id] = {
+                    user: user,
+                    sid: null
+                };
+                self.sendUserList();
+            });
+
+            // Bind ping
+            client.on('ping', function (data) {
+                client.emit('ping', {});
+            });
+
+            client.on('message', function (incomingMessage) {
+				// Set user id on incoming message
+                incomingMessage.owner = userData._id;
+                // Save message
+				var message = self.saveMessage(incomingMessage);
+				// Create outgoing message
+				var outgoingMessage = {
+					id: message._id,
+					owner: message.owner,
+					name: userData.displayName,
+					text: message.text,
+					posted: message.posted
+				}
+                self.io.sockets.emit('message', outgoingMessage);
+            });
+
+            client.on('message history', function (data) {
+                self.sendMessageHistory(client);
+            });
+
+            client.on('set name', function (data) {
+                var user = self.clients[client.id].user;
+                user.displayName = data.name;
+                user.save();
+                self.sendUserList(); // TODO: Change this to a general change
+            });
+
+            client.on('disconnect', function () {
+                delete self.clients[client.id];
+                self.sendUserList();
+            });
+
+            // Send off an announcement
+            client.broadcast.emit('join', {
+                name: 'System',
+                text: userData.firstName + userData.lastName + ' has signed in'
+            });
+
+        });
+
     };
 
     this.start = function () {

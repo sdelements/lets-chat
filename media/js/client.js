@@ -43,8 +43,9 @@ var Client = (function ($, Mustache, io, connection) {
             $userlist.empty();
             $.each(users, function (i, user) {
                 var vars = {
-                    avatar: '/media/img/mercury.png', // Temporary
-                    name: user.user.displayName
+					id: user.id,
+                    name: user.displayName,
+					avatar: '/media/img/mercury.png' // Temporary
                 };
                 var html = Mustache.to_html(self.templates.useritem, vars);
                 $userlist.append(html);
@@ -223,7 +224,7 @@ var Client = (function ($, Mustache, io, connection) {
         });
 
         this.socket.on('user list', function (data) {
-            self.updateUserlist(data.users);
+			self.updateUserlist(data.users);
         });
 
         // GUI Listeners
