@@ -85,8 +85,12 @@ var ChatServer = function (app, sessionStore) {
     };
 
     this.sendMessageHistory = function (client) {
-        MessageModel.find().populate('owner')
-			.limit(30).sort('posted', -1)
+		// Setup query date
+		var today = new Date()
+		var yesterday = new Date(today).setDate(today.getDate() - 1)
+		// Let's find some messages
+        MessageModel.where('posted').gte(yesterday)
+			.sort('posted', -1).populate('owner')
 			.run(function (err, messages) {
 				var data = [];
 				if (messages) {
