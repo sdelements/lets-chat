@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
-var userSchema = new Schema({
+var UserSchema = new Schema({
     email: String,
     password: String,
     firstName: String,
@@ -11,7 +11,11 @@ var userSchema = new Schema({
     joined: {
         type: Date,
         default: Date.now
-    }
+    },
+	messages: [{
+		type: Schema.ObjectId,
+		ref: 'Message' 
+	}]
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', UserSchema);

@@ -79,14 +79,16 @@ var Client = (function ($, Mustache, io, connection) {
             var $messages = self.$messages;
 			var atBottom = self.checkScrollLocked();
             var vars = {
-                text: message.text,
-                name: message.name,
-                owner: message.ownerID
+				id: message.id,
+				owner: message.owner,
+				name: message.name,
+				text: message.text,
+				posted: message.posted
             };
             var lastMessage = $messages.children('.message:last');
             var html;
             // Should we add a new message or add to a previous one?
-            if (message.ownerID === lastMessage.data('owner') &&
+            if (message.owner === lastMessage.data('owner') &&
                     lastMessage.data('owner')) {
                 html = Mustache.to_html(self.templates.messageFragment, vars);
                 html = self.parseContent(html);

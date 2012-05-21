@@ -153,7 +153,7 @@
 	{% raw %}
 		<div id="js-templates">
 			<script id="js-tmpl-message" type="text/html">
-				<li class="message" data-id="{{id}}" data-owner="{{owner}}" data-timestamp="{{timestamp}}" data-room="{{room}}">
+				<li class="message" data-id="{{id}}" data-owner="{{owner}}" data-posted="{{posted}}" data-room="{{room}}">
 					<div class="side">
 						<img class="avatar" src="/media/img/mercury.png" />
 					</div>
@@ -168,7 +168,7 @@
 				</li>
 			</script>
 			<script id="js-tmpl-message-fragment" type="text/html">
-				<div class="fragment">{{text}}</div>
+				<div class="fragment" data-id="{{id}}" data-posted="{{posted}}">{{text}}</div>
 			</script>
 			<script id="js-tmpl-event" type="text/html">
 				<li class="message event">

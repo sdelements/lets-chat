@@ -141,7 +141,7 @@ var Server = function (config) {
 					password: passwordHash,
 					firstName: form['first-name'],
 					lastName: form['last-name'],
-					displayName: form['first-name']
+					displayName: form['first-name'] + ' ' + form['last-name']
 				}).save(function(err, user) {
 					req.session.user = user;
 					req.session.save();
