@@ -4471,8 +4471,6 @@ body {
 #chat .message {
   border-bottom: 1px #eee solid;
   padding: 7px;
-  padding-top: 0;
-  margin-bottom: 7px;
   display: block;
   *zoom: 1;
 }
@@ -4483,6 +4481,9 @@ body {
 }
 #chat .message:after {
   clear: both;
+}
+#chat .message:first-child {
+  padding-top: 0;
 }
 #chat .message:last-child {
   border-bottom: none;
@@ -4512,13 +4513,10 @@ body {
   height: 250px;
   max-width: 350px;
 }
-#chat .message.event {
+#chat .event {
   background: #f9ffb5;
-}
-#chat .message.event .name,
-#chat .message.event .text {
-  background: none;
-  padding: 5px;
+  padding: 7px;
+  border-bottom: 1px #eee solid;
 }
 #client {
   top: 41px;

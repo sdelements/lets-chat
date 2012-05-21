@@ -94,9 +94,7 @@ var ChatServer = function (app, sessionStore) {
             // Send off an announcement
             client.broadcast.emit('join', {
                 name: 'System',
-                text: userData.firstName + ' '
-                    + userData.lastName + ' '
-                    + '(' + userData.displayName + ')' + ' has signed in'
+                text: userData.firstName + userData.lastName + ' has signed in'
             });
 
         });
@@ -104,7 +102,9 @@ var ChatServer = function (app, sessionStore) {
     };
 
     this.sendClientList = function () {
-        self.io.sockets.emit('user list', { users: self.clients });
+        self.io.sockets.emit('user list', {
+			users: self.clients
+		});
     };
 
     this.sendMessageHistory = function (client, query) {

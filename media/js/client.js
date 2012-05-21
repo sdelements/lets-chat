@@ -14,7 +14,9 @@ var Client = (function ($, Mustache, io, connection) {
         this.$entry = $('#entry');
         this.$userList = $('#user-list');
         this.$messages = $('#chat .messages');
+		
         this.templates = {
+			event: $('#js-tmpl-event').html(),
             message: $('#js-tmpl-message').html(),
             messageFragment: $('#js-tmpl-message-fragment').html(),
             useritem: $('#js-tmpl-user-list-item').html(),
@@ -49,7 +51,7 @@ var Client = (function ($, Mustache, io, connection) {
             });
         };
 
-        this.parseContent = function (text, meta) {
+        this.parseContent = function (text) {
             // TODO: Fix this regex
             var imagePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b/gim;
             var linkPattern =  /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
@@ -60,6 +62,11 @@ var Client = (function ($, Mustache, io, connection) {
             }
             return text;
         };
+		
+		// TODO: We'll need to make this work for multiple rooms
+		this.checkScrollLocked = function () {
+			return self.$messages[0].scrollHeight - self.$messages.scrollTop() <= self.$messages.outerHeight()
+		};
 
         this.addMessages = function (data) {
             var messages = self.$messages;
@@ -68,36 +75,33 @@ var Client = (function ($, Mustache, io, connection) {
             });
         };
 
-        this.addMessage = function (message, options) {
-            if (typeof options === 'undefined') {
-                options = {};
-            }
-            var messages = self.$messages;
+        this.addMessage = function (message) {
+            var $messages = self.$messages;
+			var atBottom = self.checkScrollLocked();
             var vars = {
                 text: message.text,
                 name: message.name,
-                ownerID: message.ownerID
+                owner: message.ownerID
             };
-            var lastMessage = self.$messages.children('.message:last');
-            var html = '';
+            var lastMessage = $messages.children('.message:last');
+            var html;
             // Should we add a new message or add to a previous one?
             if (message.ownerID === lastMessage.data('owner') &&
                     lastMessage.data('owner')) {
                 html = Mustache.to_html(self.templates.messageFragment, vars);
-                html = self.parseContent(html, {
-                    name: message.name
-                });
+                html = self.parseContent(html);
                 // We'll need to appent to a div called
                 // fragments inside a message.
                 lastMessage.find('.fragments').append(html);
             } else {
                 html = Mustache.to_html(self.templates.message, vars);
-                html = self.parseContent(html, {
-                    name: message.name
-                });
-                messages.append(html);
+                html = self.parseContent(html);
+                $messages.append(html);
             }
-            self.scrollMessagesDown();
+			// Maintain scroll position
+			if (atBottom) {
+				self.scrollMessagesDown();
+			}
         };
         
         // TODO: What the shit is this
@@ -113,22 +117,18 @@ var Client = (function ($, Mustache, io, connection) {
         };
 
         this.scrollMessagesDown = function () {
-            var messages = self.$messages;
-            messages.prop({
-                scrollTop: messages.prop('scrollHeight')
-            });
+            var $messages = self.$messages;
+			$messages.prop({
+				scrollTop: $messages.prop('scrollHeight')
+			});
         };
 
-        this.addEvent = function (data) {
+        this.addEvent = function (event) {
             var vars = {
-                text: data.text,
-                name: data.name,
-                event: true
+                text: event.text
             };
-            var html = Mustache.to_html(self.templates.message, vars);
-            var messages = self.$messages;
-            messages.append(html);
-            console.log('derp');
+            var html = Mustache.to_html(self.templates.event, vars);
+            self.$messages.append(html);
             self.scrollMessagesDown();
         };
 

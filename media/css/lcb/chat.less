@@ -163,10 +163,11 @@ body {
 	.message {
 		border-bottom: 1px #eee solid;
 		padding: 7px;
-		padding-top: 0;
-		margin-bottom: 7px;
 		display: block;
 		.clearfix;
+		&:first-child {
+			padding-top: 0;
+		}
 		&:last-child {
 			border-bottom: none;
 		}
@@ -195,15 +196,11 @@ body {
 				max-width: 350px;
 			}
 		}
-		&.event {
-			background: #f9ffb5;
-		}
-		&.event {
-			.name, .text {
-				background: none;
-				padding: 5px;
-			}
-		}
+	}
+	.event {
+		background: #f9ffb5;
+		padding: 7px;
+		border-bottom: 1px #eee solid;
 	}
 }
 

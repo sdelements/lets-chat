@@ -153,22 +153,27 @@
 	{% raw %}
 		<div id="js-templates">
 			<script id="js-tmpl-message" type="text/html">
-				<li class="message {{#talk}}talk{{/talk}} {{#event}}event{{/event}}" data-owner="{{ownerID}}">
+				<li class="message" data-id="{{id}}" data-owner="{{owner}}" data-timestamp="{{timestamp}}" data-room="{{room}}">
 					<div class="side">
 						<img class="avatar" src="/media/img/mercury.png" />
 					</div>
 					<div class="meta">
 						<div class="name">{{name}}</div>
 						<div class="text">
-							{{^event}}<div class="fragments">{{/event}}
+							<div class="fragments">
 								<div class="fragment">{{text}}</div>
-							{{^event}}</div>{{/event}}
+							</div>
 						</div>
 					</div>
 				</li>
 			</script>
 			<script id="js-tmpl-message-fragment" type="text/html">
 				<div class="fragment">{{text}}</div>
+			</script>
+			<script id="js-tmpl-event" type="text/html">
+				<li class="message event">
+					<div class="text">{{text}}</div>
+				</li>
 			</script>
 			<script id="js-tmpl-user-list-item" type="text/html">
                 <li class="user" data-id="{{uid}}">
