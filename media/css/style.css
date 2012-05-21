@@ -1,3 +1,4 @@
+/* This beautiful CSS-File has been crafted with LESS (lesscss.org) and compiled by simpLESS (wearekiss.com/simpless) */
 /*********************
  * LCB Styles
  *********************/
@@ -4580,7 +4581,7 @@ header .tabs .tab a:hover {
 }
 header .tabs .selected a {
   position: relative;
-  z-index: 9999;
+  z-index: 999;
   opacity: 1;
   filter: alpha(opacity=100);
 }
