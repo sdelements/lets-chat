@@ -4488,6 +4488,9 @@ body {
 #chat .message:last-child {
   border-bottom: none;
 }
+#chat .message .text {
+  word-wrap: break-word;
+}
 #chat .message .side {
   margin-right: 7px;
   float: left;
