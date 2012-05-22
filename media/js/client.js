@@ -100,9 +100,10 @@ var Client = (function ($, Mustache, io, connection) {
             } else {
                 html = Mustache.to_html(self.templates.message, vars);
 				// Parse the text without disturbing the HTML
-				var parsedContent = self.parseContent($(html).find('.text').html());
-                $(html).find('.text').html(parsedContent);
-                $messages.append(html);
+                var $html = $(html);
+				var parsedContent = self.parseContent($html.find('.text').html());
+                $html.find('.text').html(parsedContent);
+                $messages.append($html);
             }
 			// Maintain scroll position
 			if (atBottom) {
