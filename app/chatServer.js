@@ -72,7 +72,7 @@ var ChatServer = function (app, sessionStore) {
 		message.save();
 		return message;
     };
-	
+
     this.setupListeners = function () {
 
         // New client
@@ -130,7 +130,7 @@ var ChatServer = function (app, sessionStore) {
             // Send off an announcement
             client.broadcast.emit('join', {
                 name: 'System',
-                text: userData.firstName + userData.lastName + ' has signed in'
+                text: userData.displayName + ' has signed in'
             });
 
         });
@@ -138,7 +138,7 @@ var ChatServer = function (app, sessionStore) {
     };
 
     this.start = function () {
-		
+
         this.io = require('socket.io').listen(app);
 
         this.io.set('log level', 0);
