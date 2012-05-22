@@ -23,8 +23,9 @@
         "password-hash": "*",
         "socket.io": "*",
         "underscore": "*"
+		"node_hash": "*",
     },
-    "license": "TODO",
+    "license": "MIT",
     "engine": {
         "node": ">=0.6"
     }

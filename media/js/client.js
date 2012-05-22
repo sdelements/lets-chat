@@ -45,7 +45,7 @@ var Client = (function ($, Mustache, io, connection) {
                 var vars = {
 					id: user.id,
                     name: user.displayName,
-					avatar: '/media/img/mercury.png' // Temporary
+					avatar: user.avatar
                 };
                 var html = Mustache.to_html(self.templates.useritem, vars);
                 $userlist.append(html);
@@ -82,6 +82,7 @@ var Client = (function ($, Mustache, io, connection) {
             var vars = {
 				id: message.id,
 				owner: message.owner,
+				avatar: message.avatar,
 				name: message.name,
 				text: message.text,
 				posted: message.posted
@@ -98,7 +99,9 @@ var Client = (function ($, Mustache, io, connection) {
                 lastMessage.find('.fragments').append(html);
             } else {
                 html = Mustache.to_html(self.templates.message, vars);
-                html = self.parseContent(html);
+				// Parse the text without disturbing the HTML
+				var parsedContent = self.parseContent($(html).find('.text').html());
+                $(html).find('.text').html(parsedContent);
                 $messages.append(html);
             }
 			// Maintain scroll position

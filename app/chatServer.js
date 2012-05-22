@@ -3,6 +3,7 @@
 //
 
 var _ = require('underscore');
+var hash = require('node_hash');
 
 var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
@@ -24,6 +25,7 @@ var ChatServer = function (app, sessionStore) {
 			if (!users[id]) {
 				users[id] = {
 					id: client.user._id,
+					avatar: hash.md5(client.user.email),
 					firstName: client.user.firstName,
 					lastName: client.user.lastName,
 					displayName: client.user.displayName
@@ -53,6 +55,7 @@ var ChatServer = function (app, sessionStore) {
 						data.push({
 							id: message._id,
 							owner: message.owner._id,
+							avatar: hash.md5(message.owner.email),
 							name: message.owner.displayName,
 							text: message.text,
 							posted: message.posted
@@ -85,7 +88,7 @@ var ChatServer = function (app, sessionStore) {
             UserModel.findById(userData._id, function (err, user) {
                 self.clients[client.id] = {
                     user: user,
-                    sid: null
+                    sid: null // What the shit is this
                 };
                 self.sendUserList();
             });
@@ -104,6 +107,7 @@ var ChatServer = function (app, sessionStore) {
 				var outgoingMessage = {
 					id: message._id,
 					owner: message.owner,
+					avatar: hash.md5(userData.email),
 					name: userData.displayName,
 					text: message.text,
 					posted: message.posted

@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(express);
 var swig = require('swig');
 var passwordHasher = require('password-hash');
+var hash = require('node_hash');
 
 // App stuff
 var formValidators = require('./formValidators.js')
@@ -72,11 +73,17 @@ var Server = function (config) {
 	
 	// Home Sweet Home
 	self.app.get('/', requireLogin, function (req, res) {
+		var user = req.session.user;
 		var view = swig.compileFile('chat.html').render({
-			'media_url': self.config.media_url,
-			'host': self.config.hostname,
-			'port': self.config.port,
-			'user': req.session.user.displayName
+			media_url: self.config.media_url,
+			host: self.config.hostname,
+			port: self.config.port,
+			user_id: user._id,
+			user_email: user.email,
+			user_avatar: hash.md5(user.email),
+			user_displayname: user.displayName,
+			user_lastname: user.lastName,
+			user_firstname: user.firstName
 		});
 		res.send(view);
 	});
@@ -93,7 +100,7 @@ var Server = function (config) {
 		res.send(render_login_page());
 		// TODO: fix the if statement logic here
 	});
-	
+
 	// Logout
 	self.app.all('/logout', function (req, res) {
 		req.session.destroy();
