@@ -1,17 +1,19 @@
 var config = {
 
 	// Server
-	hostname: '',
+	hostname: '', // Not required
 	port: 5000,
 	
 	// Database
 	db_host: 'localhost',
-	db_name: '',
+	db_name: 'letschatbro',
 	db_user: '',
 	db_password: '',
 
 	// Security
-	cookie_secret: 'pleasechangeme',
+	// Please change these!
+	cookie_secret: 'KeyBoard Cat',
+	password_salt: 'Hello. Yes, This is Dog',
 
 	// Misc
 	debug: false,

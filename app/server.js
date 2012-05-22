@@ -5,7 +5,6 @@ var express_namespace = require('express-namespace');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(express);
 var swig = require('swig');
-var passwordHasher = require('password-hash');
 var hash = require('node_hash');
 
 // App stuff
@@ -114,7 +113,8 @@ var Server = function (config) {
 			var form = req.form;
 			if (form.isValid) {
 				User.findOne({ 'email': form.email }).run(function (error, user) {
-					if (user && passwordHasher.verify(form.password, user.password)) {
+					var hashedPassword = hash.sha256(form.password, self.config.password_salt)
+					if (user && hashedPassword === user.password) {
 						req.session.user = user;
 						req.session.save();
 						res.send({
@@ -142,10 +142,10 @@ var Server = function (config) {
 			var form = req.form;
 			if (form.isValid) {
 				// TODO: Check if email is unique
-				var passwordHash = passwordHasher.generate(form.password);
+				var hashedPassword = hash.sha256(form.password, self.config.password_salt)
 				var user = new User({
 					email: form.email,
-					password: passwordHash,
+					password: hashedPassword,
 					firstName: form['first-name'],
 					lastName: form['last-name'],
 					displayName: form['first-name'] + ' ' + form['last-name']

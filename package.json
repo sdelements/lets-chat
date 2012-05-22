@@ -20,7 +20,6 @@
         "connect-mongo": "*",
         "mongoose": "*",
         "swig": "*",
-        "password-hash": "*",
         "socket.io": "*",
         "underscore": "*"
 		"node_hash": "*",
