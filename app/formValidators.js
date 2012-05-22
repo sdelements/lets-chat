@@ -10,11 +10,12 @@ var login = form (
 	field('password')
 		.trim()
 		.required()
-)
+);
 
 var registration = form (
 	field('email')
 		.trim()
+        .toLowerCase()
 		.required()
 		.isEmail()
 	,
@@ -28,14 +29,12 @@ var registration = form (
 		.trim()
 		.required()
 		.maxLength(24)
-		.isAlphanumeric()
 	,
 	field('last-name')
 		.trim()
 		.required()
 		.maxLength(24)
-		.isAlphanumeric()
-)
+);
 
 module.exports = {
     'login': login,
