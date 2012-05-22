@@ -119,13 +119,6 @@ var ChatServer = function (app, sessionStore) {
                 self.sendMessageHistory(client);
             });
 
-            client.on('set name', function (data) {
-                var user = self.clients[client.id].user;
-                user.displayName = data.name;
-                user.save();
-                self.sendUserList(); // TODO: Change this to a general change
-            });
-
             client.on('disconnect', function () {
                 delete self.clients[client.id];
                 self.sendUserList();

@@ -4,11 +4,11 @@
 
 {% block page_js %}
 	<script type="text/javascript">
+        // TODO: This shouldn't be global
 		var connection = {
 			'host': '{{host}}',
 			'port': {{port}}
 		}
-		var user = '{{user}}'
 	</script>
 	<script src="{{media_url}}/js/client.js" type="text/javascript"></script>
 	<script type="text/javascript">
@@ -30,7 +30,7 @@
 		<div class="user dropdown pull-right">
 			<a data-toggle="dropdown" href="#">
 				<img class="avatar" src="http://www.gravatar.com/avatar/{{ user_avatar }}?s=50" />
-				<span class="name">Houssam Haidar</span>
+				<span class="name">{{ user_firstname }} {{ user_lastname }}</span>
 				<b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">

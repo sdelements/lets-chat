@@ -22,7 +22,7 @@ var Client = (function ($, Mustache, io, connection) {
             useritem: $('#js-tmpl-user-list-item').html(),
             imagemessage: $('#js-tmpl-image-message').html()
         };
-        this.user = {'name': user};
+
         this.windowFocus = true;
 
         // GUI Related stuffs
@@ -139,19 +139,9 @@ var Client = (function ($, Mustache, io, connection) {
             self.scrollMessagesDown();
         };
 
-        this.setName = function (name) {
-            if ($.trim(name)) {
-                self.user.name = $.trim(name);
-                self.socket.emit('set name',  {
-                    name: self.user.name
-                });
-            }
-        };
-
         this.sendMessage = function (message) {
             var text = $.trim(message);
             self.socket.emit('message',  {
-                name: self.user.name || 'Anonymous',
                 text: text
             });
         };
@@ -249,11 +239,6 @@ var Client = (function ($, Mustache, io, connection) {
             }
         });
 
-        //TEMPORARY
-        $('#set-name').click(function () {
-            var name = $('#handle').val();
-            self.setName(name);
-        });
     };
 
     return module;

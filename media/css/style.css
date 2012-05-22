@@ -4287,6 +4287,7 @@ body {
 }
 *::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 *::-webkit-scrollbar-track {
   -webkit-border-radius: 5px;
@@ -4298,7 +4299,6 @@ body {
 }
 *::-webkit-scrollbar-thumb {
   background-color: #aaa;
-  height: 20px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
