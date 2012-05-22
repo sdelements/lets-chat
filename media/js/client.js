@@ -223,10 +223,6 @@ var Client = (function ($, Mustache, io, connection) {
             self.addMessages(data);
         });
 
-        this.socket.on('join', function (data) {
-            self.addEvent(data);
-        });
-
         this.socket.on('user list', function (data) {
 			self.updateUserlist(data.users);
         });

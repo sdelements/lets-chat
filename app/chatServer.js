@@ -131,12 +131,6 @@ var ChatServer = function (app, sessionStore) {
                 self.sendUserList();
             });
 
-            // Send off an announcement
-            client.broadcast.emit('join', {
-                name: 'System',
-                text: userData.displayName + ' has signed in'
-            });
-
         });
 
     };
