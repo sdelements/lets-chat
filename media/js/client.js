@@ -154,6 +154,18 @@ var Client = (function ($, Mustache, io, connection) {
             self.$messages.empty();
         };
 
+		this.updateMessageTimestamps = function (){
+			self.$messages.find('.message').each(function () {
+				var now = moment();
+				var posted = $(this).data('posted');
+				var $time = $(this).find('time');
+				// We'll need to compensate a few seconds
+				if (moment(now).diff(posted, 'minutes', true) > 0.5) {
+					$time.text(moment(posted).fromNow(true));
+				}
+			});
+		};
+
         // Initialization / Connection
         //************************
         this.init = function () {
@@ -186,6 +198,11 @@ var Client = (function ($, Mustache, io, connection) {
             self.getMessageHistory();
             self.scrollMessagesDown();
 
+			// Setup moment.js message timestamps
+			setInterval(function () {
+				self.updateMessageTimestamps();
+			}, 10 * 1000);
+
         };
 
         // Startup!
@@ -211,6 +228,7 @@ var Client = (function ($, Mustache, io, connection) {
 
         this.socket.on('message history', function (data) {
             self.addMessages(data);
+			self.updateMessageTimestamps();
         });
 
         this.socket.on('user list', function (data) {

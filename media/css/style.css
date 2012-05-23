@@ -4498,9 +4498,17 @@ body {
 #chat .message .meta {
   margin-left: 40px;
 }
+#chat .message .top {
+  overflow: hidden;
+}
 #chat .message .name {
   font-weight: bold;
   color: #aaa;
+  float: left;
+}
+#chat .message time {
+  color: #bbb;
+  float: right;
 }
 #chat .message .avatar {
   width: 30px;

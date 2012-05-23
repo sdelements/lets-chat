@@ -183,10 +183,13 @@
 						<img class="avatar" src="http://www.gravatar.com/avatar/{{avatar}}?s=50" />
 					</div>
 					<div class="meta">
-						<div class="name">{{name}}</div>
+						<div class="top">
+							<div class="name">{{name}}</div>
+							<time></time>
+						</div>
 						<div class="text">
 							<div class="fragments">
-								<div class="fragment">{{text}}</div>
+								<div class="fragment" data-id="{{id}}" data-posted="{{posted}}">{{text}}</div>
 							</div>
 						</div>
 					</div>
