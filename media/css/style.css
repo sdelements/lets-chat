@@ -4548,7 +4548,8 @@ header:after {
   clear: both;
 }
 header .tabs {
-  margin-top: 11px;
+  margin: 0;
+  padding: 11px 0 0 25px;
   float: left;
   display: block;
   overflow: hidden;
@@ -4562,10 +4563,11 @@ header .tabs .badge {
   border-radius: 7px;
 }
 header .tabs .tab {
-  display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: inline-block;
+  overflow: visible;
   margin-right: 5px;
 }
 header .tabs .tab a {
@@ -4593,6 +4595,9 @@ header .tabs .selected a {
   z-index: 999;
   opacity: 1;
   filter: alpha(opacity=100);
+  -webkit-box-shadow: 0 0 8px #111111;
+  -moz-box-shadow: 0 0 8px #111111;
+  box-shadow: 0 0 8px #111111;
 }
 header .user {
   height: 40px;

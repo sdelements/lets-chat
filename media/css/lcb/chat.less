@@ -225,7 +225,8 @@ header {
 	height: 40px;
 	.clearfix;
 	.tabs {
-		margin-top: 11px;
+		margin: 0;
+		padding: 11px 0 0 25px;
 		float: left;
 		display: block;
 		.text-overflow();
@@ -234,8 +235,9 @@ header {
 			.border-radius(7px);
 		}
 		.tab {
-			display: inline-block;
 			.text-overflow();
+			display: inline-block;
+			overflow: visible;
 			a {
 				.bg-atomic-noise();
 				height: 30px;
@@ -245,7 +247,6 @@ header {
 				border: 1px #444 solid;
 				border-bottom: none;
 				display: block;
-				
 				.border-radius(4px 4px 0 0);
 				.opacity(60);
 				&:hover {
@@ -259,6 +260,7 @@ header {
 			position: relative;
 			z-index: 999;
 			.opacity(100);
+			.box-shadow(0 0 8px #111);
 		}
 	}
 	.user {
