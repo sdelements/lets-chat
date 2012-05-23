@@ -80,7 +80,7 @@ var ChatServer = function (app, sessionStore) {
 
         // New client
         this.io.sockets.on('connection', function (client) {
-            console.log('A client has joined...');
+
             var hs = client.handshake;
             var userData = hs.session.user;
 
