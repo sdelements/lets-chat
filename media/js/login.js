@@ -1,23 +1,3 @@
-<<<<<<< HEAD
-$(function () {
-    $('#login .toggle-register').click(function () {
-        var $register = $('#login .register');
-        var $form = $('#login form');
-        var $link = $('#login .toggle-register');
-        var $button = $('#login .btn')
-        if ($register.is(':visible')) {
-            $form.attr('action', '/login');
-            $register.slideUp();
-            $link.text('New? Create an account.');
-            $button.val('Login')
-        } else {
-            $form.attr('action', '/register');
-            $register.slideDown();
-            $link.text('Actually, I have an account.');
-            $button.val('Register')
-        }
-    });
-=======
 jQuery.validator.setDefaults({
 	onkeyup: false,
 	errorClass: 'error',
@@ -54,7 +34,6 @@ jQuery.validator.setDefaults({
 		else { elem.qtip('destroy'); }
 	},
 	success: $.noop // Odd workaround for errorPlacement not firing!
->>>>>>> origin/master
 });
 
 $.validator.addMethod('alphanumeric', function(value, element) {
@@ -62,10 +41,11 @@ $.validator.addMethod('alphanumeric', function(value, element) {
 }, 'Only letters and numbers are allowed');
 
 $(document).ready(function() {
-	
+
 	var submitForm = function(form, callbacks) {
 		var self = this;
 		this.$form = $(form);
+		this.$indicator = $(form).find('.indicator');
 		this.setMessage = function(text, type, delay) {
 			self.$form.find('.response').each(function () {
 				var isError = type == 'error' ? true : false;
@@ -79,6 +59,7 @@ $(document).ready(function() {
 				}
 			});
 		}
+		this.$indicator.addClass('loading');
 		$.ajax({
 			type: 'POST',
 			url: $form.attr('action'),
@@ -92,13 +73,16 @@ $(document).ready(function() {
 					window.location = '/';
 				}
 			},
-			// TODO: Maybe warn the user about a server issue?
 			error: function(res) {
-				self.setMessage(res.message, res.status);
+				self.setMessage('A server error has occured.', 'error');
+			},
+			complete: function() {
+				self.$indicator.removeClass('loading');
 			}
 		})
 	}
 
+	// Setup validator
 	$('form.validate').each(function() {
 		$(this).validate({
 			submitHandler: function(form) {
@@ -107,4 +91,12 @@ $(document).ready(function() {
 		});
 	});
 
+	// Toggle register
+	$('.toggle-register').on('click', function(e) {
+		e.preventDefault();
+		$('form.login, form.register').each(function() {
+			$(this).find('input').qtip('destroy');
+			$(this).toggle();
+		});
+	});
 });

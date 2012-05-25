@@ -1,3 +1,4 @@
+/* This beautiful CSS-File has been crafted with LESS (lesscss.org) and compiled by simpLESS (wearekiss.com/simpless) */
 /*********************
  * LCB Styles
  *********************/
@@ -4181,6 +4182,31 @@ a.badge:hover {
   color: inherit;
   margin: 0;
 }
+.btn.loading {
+  background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.25, rgba(0, 0, 0, 0.1)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(0, 0, 0, 0.1)), color-stop(0.75, rgba(0, 0, 0, 0.1)), color-stop(0.75, transparent), to(transparent));
+  background-image: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%, transparent 75%, transparent);
+  background-size: 50px 50px;
+  -moz-background-size: 50px 50px;
+  -webkit-background-size: 50px 50px;
+  -webkit-animation: animate-stripes 2s linear infinite;
+  -moz-animation: animate-stripes 2s linear infinite;
+}
+@-webkit-keyframes animate-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -50px 0;
+  }
+}
+@-moz-keyframes animate-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -50px 0;
+  }
+}
 body {
   background: #fff;
 }
@@ -4236,6 +4262,7 @@ textarea {
   -moz-border-radius: 4px;
   border-radius: 4px;
   color: #c09853;
+  text-align: center;
   display: none;
   margin-bottom: 0;
 }
@@ -4260,6 +4287,7 @@ body {
 }
 *::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 *::-webkit-scrollbar-track {
   -webkit-border-radius: 5px;
@@ -4271,7 +4299,6 @@ body {
 }
 *::-webkit-scrollbar-thumb {
   background-color: #aaa;
-  height: 20px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -4444,8 +4471,6 @@ body {
 #chat .message {
   border-bottom: 1px #eee solid;
   padding: 7px;
-  padding-top: 0;
-  margin-bottom: 7px;
   display: block;
   *zoom: 1;
 }
@@ -4457,8 +4482,14 @@ body {
 #chat .message:after {
   clear: both;
 }
+#chat .message:first-child {
+  padding-top: 0;
+}
 #chat .message:last-child {
   border-bottom: none;
+}
+#chat .message .text {
+  word-wrap: break-word;
 }
 #chat .message .side {
   margin-right: 7px;
@@ -4467,9 +4498,17 @@ body {
 #chat .message .meta {
   margin-left: 40px;
 }
+#chat .message .top {
+  overflow: hidden;
+}
 #chat .message .name {
   font-weight: bold;
   color: #aaa;
+  float: left;
+}
+#chat .message time {
+  color: #bbb;
+  float: right;
 }
 #chat .message .avatar {
   width: 30px;
@@ -4485,13 +4524,10 @@ body {
   height: 250px;
   max-width: 350px;
 }
-#chat .message.event {
+#chat .event {
   background: #f9ffb5;
-}
-#chat .message.event .name,
-#chat .message.event .text {
-  background: none;
-  padding: 5px;
+  padding: 7px;
+  border-bottom: 1px #eee solid;
 }
 #client {
   top: 41px;
@@ -4512,7 +4548,8 @@ header:after {
   clear: both;
 }
 header .tabs {
-  margin-top: 11px;
+  margin: 0;
+  padding: 11px 0 0 25px;
   float: left;
   display: block;
   overflow: hidden;
@@ -4526,10 +4563,11 @@ header .tabs .badge {
   border-radius: 7px;
 }
 header .tabs .tab {
-  display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: inline-block;
+  overflow: visible;
   margin-right: 5px;
 }
 header .tabs .tab a {
@@ -4554,9 +4592,12 @@ header .tabs .tab a:hover {
 }
 header .tabs .selected a {
   position: relative;
-  z-index: 9999;
+  z-index: 999;
   opacity: 1;
   filter: alpha(opacity=100);
+  -webkit-box-shadow: 0 0 8px #111111;
+  -moz-box-shadow: 0 0 8px #111111;
+  box-shadow: 0 0 8px #111111;
 }
 header .user {
   height: 40px;

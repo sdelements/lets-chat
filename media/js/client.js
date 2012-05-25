@@ -14,13 +14,15 @@ var Client = (function ($, Mustache, io, connection) {
         this.$entry = $('#entry');
         this.$userList = $('#user-list');
         this.$messages = $('#chat .messages');
+		
         this.templates = {
+			event: $('#js-tmpl-event').html(),
             message: $('#js-tmpl-message').html(),
             messageFragment: $('#js-tmpl-message-fragment').html(),
             useritem: $('#js-tmpl-user-list-item').html(),
             imagemessage: $('#js-tmpl-image-message').html()
         };
-        this.user = {'name': user};
+
         this.windowFocus = true;
 
         // GUI Related stuffs
@@ -41,15 +43,16 @@ var Client = (function ($, Mustache, io, connection) {
             $userlist.empty();
             $.each(users, function (i, user) {
                 var vars = {
-                    avatar: '/media/img/mercury.png', // Temporary
-                    name: user.user.displayName
+					id: user.id,
+                    name: user.displayName,
+					avatar: user.avatar
                 };
                 var html = Mustache.to_html(self.templates.useritem, vars);
                 $userlist.append(html);
             });
         };
 
-        this.parseContent = function (text, meta) {
+        this.parseContent = function (text) {
             // TODO: Fix this regex
             var imagePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b/gim;
             var linkPattern =  /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
@@ -60,6 +63,11 @@ var Client = (function ($, Mustache, io, connection) {
             }
             return text;
         };
+		
+		// TODO: We'll need to make this work for multiple rooms
+		this.checkScrollLocked = function () {
+			return self.$messages[0].scrollHeight - self.$messages.scrollTop() <= self.$messages.outerHeight()
+		};
 
         this.addMessages = function (data) {
             var messages = self.$messages;
@@ -68,36 +76,39 @@ var Client = (function ($, Mustache, io, connection) {
             });
         };
 
-        this.addMessage = function (message, options) {
-            if (typeof options === 'undefined') {
-                options = {};
-            }
-            var messages = self.$messages;
+        this.addMessage = function (message) {
+            var $messages = self.$messages;
+			var atBottom = self.checkScrollLocked();
             var vars = {
-                text: message.text,
-                name: message.name,
-                ownerID: message.ownerID
+				id: message.id,
+				owner: message.owner,
+				avatar: message.avatar,
+				name: message.name,
+				text: message.text,
+				posted: message.posted
             };
-            var lastMessage = self.$messages.children('.message:last');
-            var html = '';
+            var lastMessage = $messages.children('.message:last');
+            var html;
             // Should we add a new message or add to a previous one?
-            if (message.ownerID === lastMessage.data('owner') &&
+            if (message.owner === lastMessage.data('owner') &&
                     lastMessage.data('owner')) {
                 html = Mustache.to_html(self.templates.messageFragment, vars);
-                html = self.parseContent(html, {
-                    name: message.name
-                });
+                html = self.parseContent(html);
                 // We'll need to appent to a div called
                 // fragments inside a message.
                 lastMessage.find('.fragments').append(html);
             } else {
                 html = Mustache.to_html(self.templates.message, vars);
-                html = self.parseContent(html, {
-                    name: message.name
-                });
-                messages.append(html);
+				// Parse the text without disturbing the HTML
+                var $html = $(html);
+				var parsedContent = self.parseContent($html.find('.text').html());
+                $html.find('.text').html(parsedContent);
+                $messages.append($html);
             }
-            self.scrollMessagesDown();
+			// Maintain scroll position
+			if (atBottom) {
+				self.scrollMessagesDown();
+			}
         };
         
         // TODO: What the shit is this
@@ -113,38 +124,24 @@ var Client = (function ($, Mustache, io, connection) {
         };
 
         this.scrollMessagesDown = function () {
-            var messages = self.$messages;
-            messages.prop({
-                scrollTop: messages.prop('scrollHeight')
-            });
+            var $messages = self.$messages;
+			$messages.prop({
+				scrollTop: $messages.prop('scrollHeight')
+			});
         };
 
-        this.addEvent = function (data) {
+        this.addEvent = function (event) {
             var vars = {
-                text: data.text,
-                name: data.name,
-                event: true
+                text: event.text
             };
-            var html = Mustache.to_html(self.templates.message, vars);
-            var messages = self.$messages;
-            messages.append(html);
-            console.log('derp');
+            var html = Mustache.to_html(self.templates.event, vars);
+            self.$messages.append(html);
             self.scrollMessagesDown();
-        };
-
-        this.setName = function (name) {
-            if ($.trim(name)) {
-                self.user.name = $.trim(name);
-                self.socket.emit('set name',  {
-                    name: self.user.name
-                });
-            }
         };
 
         this.sendMessage = function (message) {
             var text = $.trim(message);
             self.socket.emit('message',  {
-                name: self.user.name || 'Anonymous',
                 text: text
             });
         };
@@ -156,6 +153,18 @@ var Client = (function ($, Mustache, io, connection) {
         this.clearMessages = function (options) {
             self.$messages.empty();
         };
+
+		this.updateMessageTimestamps = function (){
+			self.$messages.find('.message').each(function () {
+				var now = moment();
+				var posted = $(this).data('posted');
+				var $time = $(this).find('time');
+				// We'll need to compensate a few seconds
+				if (moment(now).diff(posted, 'minutes', true) > 0.5) {
+					$time.text(moment(posted).fromNow(true));
+				}
+			});
+		};
 
         // Initialization / Connection
         //************************
@@ -189,6 +198,11 @@ var Client = (function ($, Mustache, io, connection) {
             self.getMessageHistory();
             self.scrollMessagesDown();
 
+			// Setup moment.js message timestamps
+			setInterval(function () {
+				self.updateMessageTimestamps();
+			}, 10 * 1000);
+
         };
 
         // Startup!
@@ -214,14 +228,11 @@ var Client = (function ($, Mustache, io, connection) {
 
         this.socket.on('message history', function (data) {
             self.addMessages(data);
-        });
-
-        this.socket.on('join', function (data) {
-            self.addEvent(data);
+			self.updateMessageTimestamps();
         });
 
         this.socket.on('user list', function (data) {
-            self.updateUserlist(data.users);
+			self.updateUserlist(data.users);
         });
 
         // GUI Listeners
@@ -246,11 +257,6 @@ var Client = (function ($, Mustache, io, connection) {
             }
         });
 
-        //TEMPORARY
-        $('#set-name').click(function () {
-            var name = $('#handle').val();
-            self.setName(name);
-        });
     };
 
     return module;

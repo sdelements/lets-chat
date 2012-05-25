@@ -2,9 +2,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
-var messageSchema = new Schema({
-    ownerID: String,
-    owner: String, // TODO: Make the owner fields only IDs
+var MessageSchema = new Schema({
+	owner: {
+		type: Schema.ObjectId,
+		ref: 'User' 
+	},
     text: String,
     posted: {
         type: Date,
@@ -12,4 +14,4 @@ var messageSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Messages', messageSchema);
+module.exports = mongoose.model('Message', MessageSchema);

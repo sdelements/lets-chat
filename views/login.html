@@ -14,10 +14,10 @@
 		<h1 id="logo">
 			<img src="{{media_url}}/img/logo.png" alt="Let's Chat Bro" />
 		</h1>
-		<form class="validate form-horizontal" action="/ajax/login" method="post">
+		<form class="login validate form-horizontal" action="/ajax/login" method="post">
 			<input type="hidden" name="next" value="{{next}}" />
 			<div class="modal-header">
-				<h3>Login</h3>
+				<h3>Let's get you signed in</h3>
 			</div>
 			<div class="modal-body">
 				<div class="control-group">
@@ -35,13 +35,14 @@
 				<p class="response"></p>
 			</div>
 			<div class="modal-footer">
-				<input type="submit" class="btn btn-success" name="submit" value="Login">
+				<div class="pull-left"><a class="toggle-register" href="#">I need an account</a></div>
+				<input type="submit" class="btn btn-success indicator" name="submit" value="Login">
 			</div>
 		</form>
-		<form class="validate form-horizontal" action="/ajax/register" method="post">
+		<form class="register validate form-horizontal" action="/ajax/register" method="post" style="display: none;">
 			<input type="hidden" name="next" value="{{next}}" />
 			<div class="modal-header">
-				<h3>Register</h3>
+				<h3>Let's get you signed up</h3>
 			</div>
 			<div class="modal-body">
 				<div class="control-group">
@@ -59,19 +60,20 @@
 				<div class="control-group">
 					<label class="control-label">First Name</label>
 					<div class="controls">
-						<input class="required alphanumeric" name="first-name" type="text" minlength="4" maxlength="24" />
+						<input class="required" name="first-name" type="text" maxlength="24" />
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">Last Name</label>
 					<div class="controls">
-						<input class="required alphanumeric" name="last-name" type="text" minlength="4" maxlength="24" />
+						<input class="required" name="last-name" type="text" maxlength="24" />
 					</div>
 				</div>
 				<p class="response"></p>
 			</div>
 			<div class="modal-footer">
-				<input type="submit" class="btn btn-success" name="submit" value="Login">
+				<div class="pull-left"><a class="toggle-register" href="#">I already I have account</a></div>
+				<input type="submit" class="btn btn-success indicator" name="submit" value="Register">
 			</div>
 		</form>
 	</div><!-- login end -->
