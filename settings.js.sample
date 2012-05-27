@@ -3,7 +3,7 @@ var config = {
 	// Server
 	hostname: '', // Not required
 	port: 5000,
-	
+
 	// Database
 	db_host: 'localhost',
 	db_name: 'letschatbro',
@@ -17,7 +17,14 @@ var config = {
 
 	// Misc
 	debug: false,
-	media_url: '/media'
+	media_url: '/media',
+
+	// Allowed file types
+	allowed_file_types: [
+		'image/jpeg',
+		'image/png',
+		'image/gif',
+	]
 
 }
 
