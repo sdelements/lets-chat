@@ -13,13 +13,16 @@ var Client = (function ($, Mustache, io, connection) {
         this.$status = $('#status');
         this.$entry = $('#entry');
         this.$userList = $('#user-list');
+		this.$fileList = $('#file-list');
         this.$messages = $('#chat .messages');
-		
+		this.$fileupload = $('#fileupload');
+
         this.templates = {
 			event: $('#js-tmpl-event').html(),
             message: $('#js-tmpl-message').html(),
             messageFragment: $('#js-tmpl-message-fragment').html(),
             useritem: $('#js-tmpl-user-list-item').html(),
+			fileitem: $('#js-tmpl-file-list-item').html(),
             imagemessage: $('#js-tmpl-image-message').html()
         };
 
@@ -63,7 +66,7 @@ var Client = (function ($, Mustache, io, connection) {
             }
             return text;
         };
-		
+
 		// TODO: We'll need to make this work for multiple rooms
 		this.checkScrollLocked = function () {
 			return self.$messages[0].scrollHeight - self.$messages.scrollTop() <= self.$messages.outerHeight()
@@ -110,7 +113,7 @@ var Client = (function ($, Mustache, io, connection) {
 				self.scrollMessagesDown();
 			}
         };
-        
+
         // TODO: What the shit is this
         this.addImage = function (image) {
             var messages = self.$messages;
@@ -147,7 +150,11 @@ var Client = (function ($, Mustache, io, connection) {
         };
 
         this.getMessageHistory = function (query) {
-            self.socket.emit('message history', {});
+            self.socket.emit('message history');
+        };
+
+        this.getFileHistory = function (query) {
+            self.socket.emit('file history');
         };
 
         this.clearMessages = function (options) {
@@ -165,6 +172,96 @@ var Client = (function ($, Mustache, io, connection) {
 				}
 			});
 		};
+
+		this.addFile = function (file) {
+			var vars = {
+				url: file.url,
+				id: file.id,
+				name: file.name,
+				type: file.type,
+				size: file.size,
+				uploaded: file.uploaded
+			};
+			var html = Mustache.to_html(self.templates.fileitem, vars);
+			self.$fileList.prepend(html);
+		}
+
+		this.addFiles = function (files) {
+            $.each(files, function (i, file) {
+                self.addFile(file);
+            });
+		}
+
+		// Socket Listeners
+		//************************
+		this.setupSocketListeners = function () {
+
+			this.socket.on('connect', function (data) {
+				self.updateStatus('Connected.');
+			});
+
+			this.socket.on('ping', function (data) {
+				self.updatePing();
+			});
+
+			this.socket.on('disconnect', function (data) {
+				self.updateStatus('Disconnected.');
+			});
+
+			this.socket.on('message', function (data) {
+				self.addMessage(data);
+			});
+
+			this.socket.on('message history', function (data) {
+				self.addMessages(data);
+				self.updateMessageTimestamps();
+			});
+
+			this.socket.on('file', function (file) {
+				self.addFile(file);
+			});
+
+			this.socket.on('file history', function (data) {
+				self.addFiles(data);
+			});
+
+			this.socket.on('user list', function (data) {
+				self.updateUserlist(data.users);
+			});
+
+		}
+
+        // GUI Listeners
+        //************************
+		this.setupGUIListeners = function () {
+
+			this.$tabs.find('.tab').live('click', function () {
+				$(this).siblings().removeClass('selected');
+				$(this).addClass('selected');
+			});
+
+			this.$entry.find('.send').bind('click', function () {
+				self.sendMessage(self.$entry.find('textarea').val());
+				self.$entry.find('textarea').focus().val('');
+			});
+
+			this.$entry.find('textarea').bind('keydown', function (e) {
+				var textarea = $(this);
+				if (e.which === 13 && $.trim(textarea.val())) {
+					self.sendMessage(self.$entry.find('textarea').val());
+					self.$entry.find('textarea').focus().val('')
+					return false;
+				}
+			});
+
+			// File uploads
+			// TODO: Add proper drag and drop
+			this.$fileupload.fileupload();
+			$(document).bind('drop dragover', function (e) {
+				e.preventDefault();
+			});
+
+		}
 
         // Initialization / Connection
         //************************
@@ -195,67 +292,25 @@ var Client = (function ($, Mustache, io, connection) {
             }, 1000);
 
             // Get message history
-            self.getMessageHistory();
-            self.scrollMessagesDown();
+            this.getMessageHistory();
+            this.scrollMessagesDown();
 
+			// Grab files
+			this.getFileHistory();
+			
 			// Setup moment.js message timestamps
 			setInterval(function () {
 				self.updateMessageTimestamps();
 			}, 10 * 1000);
 
+			// Setup listeners
+			this.setupSocketListeners();
+			this.setupGUIListeners();
+
         };
 
         // Startup!
         this.init();
-
-        // Socket Listeners
-        //************************
-        this.socket.on('connect', function (data) {
-            self.updateStatus('Connected.');
-        });
-
-        this.socket.on('ping', function (data) {
-            self.updatePing();
-        });
-
-        this.socket.on('disconnect', function (data) {
-            self.updateStatus('Disconnected.');
-        });
-
-        this.socket.on('message', function (data) {
-            self.addMessage(data);
-        });
-
-        this.socket.on('message history', function (data) {
-            self.addMessages(data);
-			self.updateMessageTimestamps();
-        });
-
-        this.socket.on('user list', function (data) {
-			self.updateUserlist(data.users);
-        });
-
-        // GUI Listeners
-        //************************
-		
-		this.$tabs.find('.tab').live('click', function() {
-			$(this).siblings().removeClass('selected');
-			$(this).addClass('selected');
-		});
-
-        this.$entry.find('.send').bind('click', function () {
-            self.sendMessage(self.$entry.find('textarea').val());
-            self.$entry.find('textarea').focus().val('');
-        });
-
-        this.$entry.find('textarea').bind('keydown', function (e) {
-            var textarea = $(this);
-            if (e.which === 13 && $.trim(textarea.val())) {
-                self.sendMessage(self.$entry.find('textarea').val());
-				self.$entry.find('textarea').focus().val('')
-				return false;
-            }
-        });
 
     };
 

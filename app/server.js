@@ -1,7 +1,12 @@
+//
+// Letschatbro Server
+//
+
 var _ = require('underscore');
 
+var fs = require('fs');
 var express = require('express');
-var express_namespace = require('express-namespace');
+var expressNamespace = require('express-namespace');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(express);
 var swig = require('swig');
@@ -13,7 +18,9 @@ var ChatServer = require('./chatServer.js');
 
 // Models
 var User = require('./models/user.js');
+var File = require('./models/file.js');
 
+// TODO: We should require login on all routes
 var requireLogin = function (req, res, next) {
     if (req.session.user) {
         next();
@@ -38,8 +45,8 @@ var Server = function (config) {
     });
 
 	// Configuration
-	self.app.configure(function() {
-	
+	self.app.configure(function () {
+
 		// Setup template stuffs
 		self.app.register('.html', swig);
 		self.app.set('view engine', 'html');
@@ -53,7 +60,6 @@ var Server = function (config) {
 			layout: false // Prevents express from fucking up our extend/block tags
 		});
 
-		// Express options
 		self.app.use(express.bodyParser());
 		self.app.use(express.cookieParser());
 		self.app.use(express.session({
@@ -64,12 +70,14 @@ var Server = function (config) {
 			secret: self.config.cookie_secret,
 			store: self.sessionStore
 		}));
+
+		// Static directory
 		self.app.use('/media', express.static('media'));
-		
+
 		self.app.use(self.app.router);
 	
 	});
-	
+
 	// Home Sweet Home
 	self.app.get('/', requireLogin, function (req, res) {
 		var user = req.session.user;
@@ -107,9 +115,9 @@ var Server = function (config) {
 	});
 
 	// Ajax
-	self.app.namespace('/ajax', function() {
+	self.app.namespace('/ajax', function () {
 		// Login
-		self.app.post('/login', formValidators.login, function(req, res) {
+		self.app.post('/login', formValidators.login, function (req, res) {
 			var form = req.form;
 			if (form.isValid) {
 				User.findOne({ 'email': form.email }).run(function (error, user) {
@@ -138,7 +146,7 @@ var Server = function (config) {
 		});
 
 		// Register
-		self.app.post('/register', formValidators.registration, function(req, res) {
+		self.app.post('/register', formValidators.registration, function (req, res) {
 			var form = req.form;
 			if (form.isValid) {
 				// TODO: Check if email is unique
@@ -166,6 +174,61 @@ var Server = function (config) {
 			}
 		});
 
+		// File uploadin'
+		self.app.post('/upload-file', function (req, res) {
+			var moveUpload = function (path, newPath, callback) {
+				fs.readFile(path, function (err, data) {
+					fs.writeFile(newPath, data, function (err) {
+						callback();
+					});
+				});
+			}
+			_.each(req.files, function (file) {
+				var owner = req.session.user;
+				var allowed_file_types = self.config.allowed_file_types;
+				// Check MIME Type
+				if (_.include(allowed_file_types, file.type)) {
+					// Save the file
+					new File({
+						owner: owner._id,
+						name: file.name,
+						type: file.type,
+						size: file.size
+					}).save(function(err, savedFile) {
+						// Let's move the upload now
+						// TODO: We shouldn't be hardcoding the paths
+						moveUpload(file.path, 'uploads/' + savedFile._id, function () {
+							// Let the clients know about the new file
+							self.chatServer.sendFile({
+								url: '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name),
+								id: savedFile._id,
+								name: savedFile.name,
+								type: savedFile.type,
+								size: savedFile.size,
+								uploaded: savedFile.uploaded
+							});
+							res.send({
+								status: 'success',
+								message: 'File has been saved!'
+							});
+						});
+					});
+				} else {
+					res.send({
+						status: 'error',
+						message: 'The MIME type ' + file.type + ' is not allowed'
+					});
+				}
+			});
+		});
+	});
+
+	// View files
+	self.app.get('/files/:id/:name', function (req, res) {
+		File.findById(req.params.id, function (err, file) {
+			res.contentType(file.type);
+			res.sendfile('uploads/' + file._id);
+		});
 	});
 
     this.start = function () {
@@ -179,6 +242,8 @@ var Server = function (config) {
 		// Go go go!
         self.app.listen(config.port);
         self.chatServer = new ChatServer(self.app, self.sessionStore).start();
+
+		return this;
 
     };
 

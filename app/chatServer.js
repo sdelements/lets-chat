@@ -1,5 +1,5 @@
 //
-// Letschatbro Server
+// Letschatbro Chat Server
 //
 
 var _ = require('underscore');
@@ -8,8 +8,10 @@ var hash = require('node_hash');
 var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
 
+// Models
 var MessageModel = require('./models/message.js');
 var UserModel = require('./models/user.js');
+var FileModel = require('./models/file.js');
 
 var ChatServer = function (app, sessionStore) {
 
@@ -67,6 +69,29 @@ var ChatServer = function (app, sessionStore) {
         });
     };
 
+	this.sendFileHistory = function (client) {
+		var files = [];
+		FileModel.find().run(function(err, results) {
+			if (results) {
+				results.forEach(function (file) {
+					files.push({
+						url: '/files/' + file._id + '/' + encodeURIComponent(file.name),
+						id: file._id,
+						name: file.name,
+						type: file.type,
+						size: file.size,
+						uploaded: file.uploaded
+					});
+				});
+			}
+			client.emit('file history', files);
+		});
+	}
+
+	this.sendFile = function (file) {
+		self.io.sockets.emit('file', file);
+	}
+
     this.saveMessage = function (data) {
         var message = new MessageModel({
             owner: data.owner,
@@ -119,6 +144,10 @@ var ChatServer = function (app, sessionStore) {
                 self.sendMessageHistory(client);
             });
 
+            client.on('file history', function (data) {
+                self.sendFileHistory(client);
+            });
+
             client.on('disconnect', function () {
                 delete self.clients[client.id];
                 self.sendUserList();
@@ -158,7 +187,9 @@ var ChatServer = function (app, sessionStore) {
 
         // Setup listeners
         this.setupListeners();
-		
+
+		return this;
+
     };
 
 };

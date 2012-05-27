@@ -77,9 +77,8 @@
 				</div>
                 <div class="item-list">
 					<h3><i class="icon-white icon-film"></i> Media</h3>
-					<ul id="media-list">
-                        <li>None yet...</li>
-                    </ul>
+					<ul id="file-list"></ul>
+					<input id="fileupload" type="file" name="file" data-url="/ajax/upload-file" />
 				</div>
 				<div id="status">
 					<span class="message"></span>
@@ -205,8 +204,14 @@
 			</script>
 			<script id="js-tmpl-user-list-item" type="text/html">
                 <li class="user" data-id="{{uid}}">
-                    <img class="avatar" src="http://www.gravatar.com/avatar/{{avatar}}?s=50">
+                    <img class="avatar" src="http://www.gravatar.com/avatar/{{avatar}}?s=50" />
                     <span class="name">{{name}}</span></li>
+				</li>
+			</script>
+			<script id="js-tmpl-file-list-item" type="text/html">
+                <li class="file" data-id="{{uid}}" data-uploaded="{{uploaded}}" data-size="{{size}}>
+                    <img class="icon" src="{{icon}}" />
+                    <a class="name" href="{{url}}" target="_blank">{{name}}</a>
 				</li>
 			</script>
 			<script id="js-tmpl-image-message" type="text/html">
