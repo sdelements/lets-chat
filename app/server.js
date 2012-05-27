@@ -149,28 +149,38 @@ var Server = function (config) {
 		self.app.post('/register', formValidators.registration, function (req, res) {
 			var form = req.form;
 			if (form.isValid) {
-				// TODO: Check if email is unique
-				var hashedPassword = hash.sha256(form.password, self.config.password_salt)
-				var user = new User({
-					email: form.email,
-					password: hashedPassword,
-					firstName: form['first-name'],
-					lastName: form['last-name'],
-					displayName: form['first-name'] + ' ' + form['last-name']
-				}).save(function(err, user) {
-					req.session.user = user;
-					req.session.save();
-					res.send({
-						status: 'success',
-						message: 'You\'ve been successfully registered.'
-					})
+				User.findOne({ 'email': form.email }).run(function (error, user) {
+					// Check if a user with this email exists
+					if (user) {
+						res.send({
+							status: 'error',
+							message: 'That email is already in use.'
+						});
+						return;
+					}
+					// We're good, lets save!
+					var hashedPassword = hash.sha256(form.password, self.config.password_salt)
+					var user = new User({
+						email: form.email,
+						password: hashedPassword,
+						firstName: form['first-name'],
+						lastName: form['last-name'],
+						displayName: form['first-name'] + ' ' + form['last-name']
+					}).save(function(err, user) {
+						req.session.user = user;
+						req.session.save();
+						res.send({
+							status: 'success',
+							message: 'You\'ve been successfully registered.'
+						})
+					});
 				});
 			} else {
 				res.send({
 					status: 'error',
 					message: 'Some fields did not validate',
 					errors: req.form.errors
-				})
+				});
 			}
 		});
 
