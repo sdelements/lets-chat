@@ -26,8 +26,7 @@ var Client = (function ($, Mustache, io, connection) {
             message: $('#js-tmpl-message').html(),
             messageFragment: $('#js-tmpl-message-fragment').html(),
             useritem: $('#js-tmpl-user-list-item').html(),
-			fileitem: $('#js-tmpl-file-list-item').html(),
-            imagemessage: $('#js-tmpl-image-message').html()
+			fileitem: $('#js-tmpl-file-list-item').html()
         };
 
         this.windowFocus = true;
@@ -118,18 +117,6 @@ var Client = (function ($, Mustache, io, connection) {
 			if (atBottom) {
 				self.scrollMessagesDown();
 			}
-        };
-
-        // TODO: What the shit is this
-        this.addImage = function (image) {
-            var messages = self.$messages;
-            var vars = {
-                url: image.url,
-                name: image.name
-            };
-            var html = Mustache.to_html(self.templates.imagemessage, vars);
-            messages.append(html);
-            self.scrollMessagesDown();
         };
 
         this.scrollMessagesDown = function () {
@@ -266,7 +253,6 @@ var Client = (function ($, Mustache, io, connection) {
 			});
 
 			// File uploads
-			// TODO: Add proper drag and drop
 			this.$files.find('.toggle-upload').bind('click', function(e) {
 				e.preventDefault();
 				$(this).toggleClass('open');
@@ -315,7 +301,7 @@ var Client = (function ($, Mustache, io, connection) {
 
 			// Grab files
 			this.getFileHistory();
-			
+
 			// Setup moment.js message timestamps
 			setInterval(function () {
 				self.updateMessageTimestamps();

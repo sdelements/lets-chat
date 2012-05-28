@@ -45,6 +45,7 @@ var ChatServer = function (app, sessionStore) {
 
     this.sendMessageHistory = function (client) {
 		// Setup query date
+		// TODO: Start using moment.js for date operations
 		var today = new Date()
 		var yesterday = new Date(today).setDate(today.getDate() - 1)
 		// Let's find some messages
