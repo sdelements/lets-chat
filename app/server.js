@@ -112,7 +112,6 @@ var Server = function (config) {
 			});
 		};
 		res.send(render_login_page());
-		// TODO: fix the if statement logic here
 	});
 
 	// Logout
@@ -213,8 +212,7 @@ var Server = function (config) {
 						size: file.size
 					}).save(function(err, savedFile) {
 						// Let's move the upload now
-						// TODO: We shouldn't be hardcoding the paths
-						moveUpload(file.path, 'uploads/' + savedFile._id, function () {
+						moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function () {
 							// Let the clients know about the new file
 							self.chatServer.sendFile({
 								url: '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name),
@@ -245,7 +243,7 @@ var Server = function (config) {
 	self.app.get('/files/:id/:name', function (req, res) {
 		File.findById(req.params.id, function (err, file) {
 			res.contentType(file.type);
-			res.sendfile('uploads/' + file._id);
+			res.sendfile(self.config.uploads_dir + '/' + file._id);
 		});
 	});
 

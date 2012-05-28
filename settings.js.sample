@@ -19,6 +19,7 @@ var config = {
 	// Misc
 	debug: false,
 	media_url: '/media',
+	uploads_dir: 'uploads',
 
 	// Allowed file types
 	allowed_file_types: [
