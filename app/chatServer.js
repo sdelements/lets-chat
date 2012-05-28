@@ -110,6 +110,14 @@ var ChatServer = function (app, sessionStore) {
             var hs = client.handshake;
             var userData = hs.session.user;
 
+			// Send user data to client
+			client.emit('user data', {
+				id: userData._id,
+				displayName: userData.displayName,
+				firstName: userData.firstName,
+				lastName: userData.lastName
+			});
+
             // TODO: Do we need to use private ID here?
             UserModel.findById(userData._id, function (err, user) {
                 self.clients[client.id] = {

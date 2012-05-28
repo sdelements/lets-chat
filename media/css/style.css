@@ -4425,7 +4425,7 @@ body {
   margin-left: 5px;
 }
 #sidebar {
-  max-width: 250px;
+  width: 230px;
   color: #fff;
   margin: 20px;
   margin-left: 5px;
@@ -4562,7 +4562,6 @@ body {
 #chat .messages {
   background: #fff;
   margin: 0;
-  padding-top: 7px;
   -webkit-border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;
@@ -4581,8 +4580,8 @@ body {
 #chat .message:after {
   clear: both;
 }
-#chat .message:first-child {
-  padding-top: 0;
+#chat .message.own {
+  background-color: #fcffd8;
 }
 #chat .message:last-child {
   border-bottom: none;
@@ -4615,6 +4614,7 @@ body {
   margin-top: 5px;
 }
 #chat .message .thumbnail {
+  background-color: #fff;
   margin-top: 5px;
   display: inline-block;
   overflow: hidden;

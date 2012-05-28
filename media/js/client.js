@@ -6,6 +6,9 @@ var Client = (function ($, Mustache, io, connection) {
 
         var self = this;
 
+		// Keeps current user metadata
+		this.user = {};
+
         // Setup vars
 		this.$tabs = $('#tabs')
         this.$sidebar = $('#sidebar');
@@ -81,6 +84,7 @@ var Client = (function ($, Mustache, io, connection) {
         };
 
         this.addMessage = function (message) {
+			console.log(self.user.id );
             var $messages = self.$messages;
 			var atBottom = self.checkScrollLocked();
             var vars = {
@@ -89,10 +93,12 @@ var Client = (function ($, Mustache, io, connection) {
 				avatar: message.avatar,
 				name: message.name,
 				text: message.text,
-				posted: message.posted
+				posted: message.posted,
+				own: self.user.id === message.owner // Does the current user own this?
             };
             var lastMessage = $messages.children('.message:last');
             var html;
+
             // Should we add a new message or add to a previous one?
             if (message.owner === lastMessage.data('owner') &&
                     lastMessage.data('owner')) {
@@ -200,6 +206,10 @@ var Client = (function ($, Mustache, io, connection) {
 
 			this.socket.on('connect', function (data) {
 				self.updateStatus('Connected.');
+			});
+
+			this.socket.on('user data', function (user) {
+				self.user = user;
 			});
 
 			this.socket.on('ping', function (data) {

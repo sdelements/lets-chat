@@ -83,7 +83,7 @@ body {
 // Sidebar
 
 #sidebar {
-	max-width: 250px;
+	width: 230px;
 	color: #fff;
 	margin: 20px;
 	margin-left: 5px;
@@ -215,7 +215,6 @@ body {
 	.messages {
 		background: #fff;
 		margin: 0;
-		padding-top: 7px;
 		.border-radius(5px 5px 0 0);
 	}
 	.message {
@@ -223,8 +222,8 @@ body {
 		padding: 7px;
 		display: block;
 		.clearfix;
-		&:first-child {
-			padding-top: 0;
+		&.own {
+			background-color: #fcffd8;
 		}
 		&:last-child {
 			border-bottom: none;
@@ -257,6 +256,7 @@ body {
 			margin-top: 5px;
 		}
 		.thumbnail {
+			background-color: #fff;
 			margin-top: 5px;
 			display: inline-block;
 			overflow: hidden;
