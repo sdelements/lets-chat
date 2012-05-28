@@ -84,7 +84,6 @@ var Client = (function ($, Mustache, io, connection) {
         };
 
         this.addMessage = function (message) {
-			console.log(self.user.id );
             var $messages = self.$messages;
 			var atBottom = self.checkScrollLocked();
             var vars = {
@@ -273,7 +272,9 @@ var Client = (function ($, Mustache, io, connection) {
 				$(this).toggleClass('open');
 				self.$files.find('.upload').toggle();
 			});
-			this.$fileupload.fileupload();
+			this.$fileupload.fileupload({
+				dropZone: self.$files
+			});
 			$(document).bind('drop dragover', function (e) {
 				e.preventDefault();
 			});
