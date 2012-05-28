@@ -13,6 +13,7 @@ var Client = (function ($, Mustache, io, connection) {
         this.$status = $('#status');
         this.$entry = $('#entry');
         this.$userList = $('#user-list');
+		this.$files = $('#files');
 		this.$fileList = $('#file-list');
         this.$messages = $('#chat .messages');
 		this.$fileupload = $('#fileupload');
@@ -179,8 +180,9 @@ var Client = (function ($, Mustache, io, connection) {
 				id: file.id,
 				name: file.name,
 				type: file.type,
-				size: file.size,
-				uploaded: file.uploaded
+				size: Math.floor(file.size / 1024),
+				uploaded: file.uploaded,
+				owner: file.owner
 			};
 			var html = Mustache.to_html(self.templates.fileitem, vars);
 			self.$fileList.prepend(html);
@@ -256,6 +258,11 @@ var Client = (function ($, Mustache, io, connection) {
 
 			// File uploads
 			// TODO: Add proper drag and drop
+			this.$files.find('.toggle-upload').bind('click', function(e) {
+				e.preventDefault();
+				$(this).toggleClass('open');
+				self.$files.find('.upload').toggle();
+			});
 			this.$fileupload.fileupload();
 			$(document).bind('drop dragover', function (e) {
 				e.preventDefault();

@@ -215,7 +215,8 @@ var Server = function (config) {
 								name: savedFile.name,
 								type: savedFile.type,
 								size: savedFile.size,
-								uploaded: savedFile.uploaded
+								uploaded: savedFile.uploaded,
+								owner: owner.displayName
 							});
 							res.send({
 								status: 'success',

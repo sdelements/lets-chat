@@ -83,6 +83,7 @@ body {
 // Sidebar
 
 #sidebar {
+	max-width: 250px;
 	color: #fff;
 	margin: 20px;
 	margin-left: 5px;
@@ -99,10 +100,19 @@ body {
 		border: 1px #444 solid;
 		.border-radius(5px);
 		h3 {
-			background: #222 url('../img/header.png');
-			padding: 3px 5px;
 			font-size: 14px;
 			font-weight: normal;
+		}
+		.top {
+			background: #222 url('../img/header.png') repeat-x;
+			padding: 3px 5px;
+			h3 {
+				display: inline;
+			}
+			.btn {
+				padding: 2px 6px;
+				float: right;
+			}
 		}
 		ul {
 			max-height: 170px;
@@ -117,6 +127,7 @@ body {
 			margin-bottom: 0;
 			display: block;
 			word-wrap: break-word;
+			.clearfix();
 			&:last-child {
 				border-bottom: 0;
 				margin-bottom: 5px;
@@ -128,6 +139,53 @@ body {
 		}
 	}
 }
+
+// Files
+
+#files {
+	form, input {
+		margin:0;
+	}
+	.toggle-upload {
+		.icon-remove {
+			display: none;
+		}
+		&.open {
+			.icon-plus {
+				display: none;
+			}
+			.icon-remove {
+				display: inline-block;
+			}
+		}
+	}
+	.upload {
+		background: #222;
+		border-top: 1px #000 solid;
+	}
+	form {
+		padding: 5px;
+		border-top: 1px #333 solid;
+	}
+	.file {
+		.icon {
+			margin-top: 2px;
+			float: left;
+		}
+		.meta {
+			line-height: 130%;
+			margin-left: 20px;
+			a {
+				display: block;
+			}
+			span {
+				color: #777;
+				font-size: 11px;
+			}
+		}
+	}
+}
+
 // Status
 
 #status { //TODO: Fix

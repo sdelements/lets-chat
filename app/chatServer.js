@@ -71,7 +71,7 @@ var ChatServer = function (app, sessionStore) {
 
 	this.sendFileHistory = function (client) {
 		var files = [];
-		FileModel.find().run(function(err, results) {
+		FileModel.find().populate('owner').run(function(err, results) {
 			if (results) {
 				results.forEach(function (file) {
 					files.push({
@@ -80,7 +80,8 @@ var ChatServer = function (app, sessionStore) {
 						name: file.name,
 						type: file.type,
 						size: file.size,
-						uploaded: file.uploaded
+						uploaded: file.uploaded,
+						owner: file.owner.displayName
 					});
 				});
 			}
