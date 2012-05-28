@@ -35,14 +35,21 @@ var Server = function (config) {
 
     self.config = config;
 
-	// Setup server
+	// Mongo URL
+	self.mongoURL = 'mongodb://'
+		+ self.config.db_user
+		+ ':' + self.config.db_password
+		+ '@' + self.config.db_host 
+		+ ':' + self.config.db_port 
+		+ '/' + self.config.db_name;
+
+	// Create server
 	self.app = express.createServer();
 
 	// Setup session store
 	self.sessionStore = new MongoStore({
-		host: self.config.db_host,
-		db: self.config.db_name
-    });
+		url: self.mongoURL
+	});
 
 	// Configuration
 	self.app.configure(function () {
@@ -244,15 +251,13 @@ var Server = function (config) {
 
     this.start = function () {
 
-		// Connect to mongo
-		var db = 'mongodb://' + self.config.db_host + '/' + self.config.db_name;
-		mongoose.connect(db, function(err) {
+		// Connect to mongo and start listening
+		mongoose.connect(self.mongoURL, function(err) {
 			if (err) throw err;
+			// Go go go!
+			self.app.listen(config.port);
+			self.chatServer = new ChatServer(self.app, self.sessionStore).start();
 		});
-
-		// Go go go!
-        self.app.listen(config.port);
-        self.chatServer = new ChatServer(self.app, self.sessionStore).start();
 
 		return this;
 

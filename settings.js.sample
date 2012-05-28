@@ -6,6 +6,7 @@ var config = {
 
 	// Database
 	db_host: 'localhost',
+	db_port: 27017,
 	db_name: 'letschatbro',
 	db_user: '',
 	db_password: '',
