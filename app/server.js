@@ -191,6 +191,7 @@ var Server = function (config) {
 		});
 
 		// File uploadin'
+        // TODO: Some proper error handling
 		self.app.post('/upload-file', function (req, res) {
 			var moveUpload = function (path, newPath, callback) {
 				fs.readFile(path, function (err, data) {
@@ -212,7 +213,8 @@ var Server = function (config) {
 						size: file.size
 					}).save(function(err, savedFile) {
 						// Let's move the upload now
-						moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function () {
+						moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function (err) {
+                            console.log(err)
 							// Let the clients know about the new file
 							self.chatServer.sendFile({
 								url: '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name),
