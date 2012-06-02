@@ -1,5 +1,5 @@
 body {
-	.bg-atomic-noise();
+	.bg-dark();
 }
 
 textarea {
@@ -27,7 +27,7 @@ header {
 			display: inline-block;
 			overflow: visible;
 			a {
-				.bg-atomic-noise();
+				.bg-dark();
 				height: 30px;
 				line-height: 30px;
 				color: #fff;
@@ -84,6 +84,21 @@ header {
 			.size(28px, 28px);
 			margin-right: 5px;
 			vertical-align: middle;
+		}
+	}
+}
+
+.modal {
+	.response {
+		.alert;
+		text-align: center;
+		display: none;
+		margin-bottom: 0;
+		&.error {
+			.alert-error;
+		}
+		&.success {
+			.alert-success;
 		}
 	}
 }
