@@ -1,3 +1,16 @@
+// General
+
+.clear {
+	overflow: hidden;
+}
+
+// Backgrounds
+
+.bg-atomic-noise {
+	background: #222 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAFVBMVEUqKiopKSkoKCgjIyMuLi4kJCQtLS0dJckpAAAAO0lEQVR42iXLAQoAUQhCQSvr/kfe910jHIikElsl5qVFa1iE5f0Pom/CNZdbNM6756lQ41NInMfuFPgAHVEAlGk4lvIAAAAASUVORK5CYII=');
+}
+
+// CSS3 Flex layout mixins
 // Thanks to https://github.com/maccman/
 
 .box-flex (@s: 0) {
@@ -6,7 +19,7 @@
 	-moz-box-flex: @s;
 }
 
-.horizontal-box() {
+.horizontal-box {
 	display: box;
 	display: -webkit-box;
 	display: -moz-box;
@@ -21,7 +34,7 @@
 	-moz-box-pack: left;
 }
 
-.vertical-box() {
+.vertical-box {
 	display: box;
 	display: -webkit-box;
 	display: -moz-box;
@@ -31,4 +44,27 @@
 	-webkit-box-align: stretch;
 	-moz-box-orient: vertical;
 	-moz-box-align: stretch;
+}
+
+// Fancy scrollbars
+
+.fancy-scrollbars {
+	*::-webkit-scrollbar {
+		.size(10px, 10px);
+	}
+	*::-webkit-scrollbar-track {
+		.border-radius(5px);
+		.box-shadow(inset 0 0 6px rgba(0,0,0,0.3));
+	}
+	*::-webkit-scrollbar-thumb {
+		background-color: #aaa;
+		.border-radius(5px);
+		.box-shadow(inset 0 0 6px rgba(0,0,0,0.5));
+	}
+}
+
+// Avatars
+
+.avatar {
+	.border-radius(3px);
 }
