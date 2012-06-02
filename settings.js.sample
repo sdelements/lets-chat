@@ -1,7 +1,7 @@
 var config = {
 
 	// Server
-	hostname: '', // Not required
+	host: '', // Not required
 	port: 5000,
 
 	// Database

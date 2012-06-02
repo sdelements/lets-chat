@@ -214,7 +214,6 @@ var Server = function (config) {
 					}).save(function(err, savedFile) {
 						// Let's move the upload now
 						moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function (err) {
-                            console.log(err)
 							// Let the clients know about the new file
 							self.chatServer.sendFile({
 								url: '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name),
@@ -255,7 +254,7 @@ var Server = function (config) {
 		mongoose.connect(self.mongoURL, function(err) {
 			if (err) throw err;
 			// Go go go!
-			self.app.listen(config.port);
+			self.app.listen(config.port, config.host);
 			self.chatServer = new ChatServer(self.app, self.sessionStore).start();
 		});
 
