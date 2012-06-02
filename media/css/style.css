@@ -4424,7 +4424,7 @@ header .user img {
   margin-right: 5px;
   vertical-align: middle;
 }
-.modal .response {
+.modal-body .response {
   padding: 8px 35px 8px 14px;
   margin-bottom: 18px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
@@ -4438,12 +4438,12 @@ header .user img {
   display: none;
   margin-bottom: 0;
 }
-.modal .response.error {
+.modal-body .response.error {
   background-color: #f2dede;
   border-color: #eed3d7;
   color: #b94a48;
 }
-.modal .response.success {
+.modal-body .response.success {
   background-color: #dff0d8;
   border-color: #d6e9c6;
   color: #468847;
