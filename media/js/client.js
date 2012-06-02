@@ -256,9 +256,12 @@ var Client = (function ($, Mustache, io, connection) {
 
 			this.$entry.find('textarea').bind('keydown', function (e) {
 				var textarea = $(this);
-				if (e.which === 13 && $.trim(textarea.val())) {
-					self.sendMessage(self.$entry.find('textarea').val());
-					self.$entry.find('textarea').focus().val('')
+				if (e.which === 13) {
+                    // Send message if there's text
+                    if ($.trim(textarea.val())) {
+                        self.sendMessage(self.$entry.find('textarea').val());
+                    }
+                    self.$entry.find('textarea').focus().val('')
 					return false;
 				}
 			});
