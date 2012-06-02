@@ -1,3 +1,4 @@
+/* This beautiful CSS-File has been crafted with LESS (lesscss.org) and compiled by simpLESS (wearekiss.com/simpless) */
 /*********************
  * LCB Styles
  *********************/
@@ -4322,6 +4323,9 @@ textarea {
 .modal form {
   margin-bottom: 0;
 }
+.navbar {
+  margin-bottom: 0;
+}
 .bg-atomic-noise {
   background: #222222 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAFVBMVEUqKiopKSkoKCgjIyMuLi4kJCQtLS0dJckpAAAAO0lEQVR42iXLAQoAUQhCQSvr/kfe910jHIikElsl5qVFa1iE5f0Pom/CNZdbNM6756lQ41NInMfuFPgAHVEAlGk4lvIAAAAASUVORK5CYII=');
 }
@@ -4355,13 +4359,18 @@ body {
   border-radius: 3px;
 }
 #client {
+  width: 100%;
   position: absolute;
-  top: 0;
+  top: 41px;
+  left: 0;
   right: 0;
   bottom: 0;
-  left: 0;
+  display: box;
   display: -webkit-box;
   display: -moz-box;
+  box-orient: horizontal;
+  box-align: stretch;
+  box-pack: left;
   -webkit-box-orient: horizontal;
   -webkit-box-align: stretch;
   -webkit-box-pack: left;
@@ -4374,36 +4383,66 @@ body {
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
 }
-#content,
-#chat {
+#content {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
+  display: box;
   display: -webkit-box;
   display: -moz-box;
+  box-orient: vertical;
+  box-align: stretch;
   -webkit-box-orient: vertical;
   -webkit-box-align: stretch;
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
 }
-.messages {
+#chat {
+  box-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+  box-orient: vertical;
+  box-align: stretch;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+}
+#chat .messages {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   overflow: auto;
 }
-.entry {
+#entry {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
+  display: box;
   display: -webkit-box;
   display: -moz-box;
+  box-orient: horizontal;
+  box-align: stretch;
+  box-pack: left;
   -webkit-box-orient: horizontal;
   -webkit-box-align: stretch;
   -webkit-box-pack: left;
   -moz-box-orient: horizontal;
   -moz-box-align: stretch;
   -moz-box-pack: left;
+}
+#entry textarea {
+  box-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+}
+#entry .btn {
+  box-flex: 0;
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
 }
 #entry {
   background: #ffffff url('../img/grid_noise.png');
@@ -4417,9 +4456,6 @@ body {
   min-height: 70px;
   margin: 0;
   display: block;
-  box-flex: 1;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
 }
 #entry .btn {
   margin-left: 5px;
@@ -4570,15 +4606,7 @@ body {
   border-bottom: 1px #eee solid;
   padding: 7px;
   display: block;
-  *zoom: 1;
-}
-#chat .message:before,
-#chat .message:after {
-  display: table;
-  content: "";
-}
-#chat .message:after {
-  clear: both;
+  overflow: hidden;
 }
 #chat .message.own {
   background-color: #fcffd8;
@@ -4629,7 +4657,6 @@ body {
   border-bottom: 1px #eee solid;
 }
 #client {
-  top: 41px;
   border-top: 1px #444 solid;
 }
 header {

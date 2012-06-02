@@ -10,7 +10,9 @@ var Client = (function ($, Mustache, io, connection) {
 		this.user = {};
 
         // Setup vars
-		this.$tabs = $('#tabs')
+        this.$header = $('header');
+        this.$client = $('#client');
+		this.$tabs = $('#tabs');
         this.$sidebar = $('#sidebar');
         this.$chat = $('#chat');
         this.$status = $('#status');
@@ -33,6 +35,15 @@ var Client = (function ($, Mustache, io, connection) {
 
         // GUI Related stuffs
         //************************
+
+        this.adjustLayout = function() {
+            var offset = $(window).height() -
+                self.$header.outerHeight() -
+                parseInt(self.$chat.css('margin-top'), 10) -
+                parseInt(self.$chat.css('margin-bottom'), 10) -
+                self.$entry.outerHeight();
+            self.$messages.height(offset)
+        }
 
         this.updateStatus = function (status) {
             this.$status.find('.message').html(status);
@@ -270,6 +281,16 @@ var Client = (function ($, Mustache, io, connection) {
         // Initialization / Connection
         //************************
         this.init = function () {
+
+            // Flexible layout for non webkit browsers
+            // TODO: Throttle?
+            if ($.browser.webkit !== true) {
+                self.$client.css('position', 'static');
+                self.adjustLayout();
+                $(window).resize(function () {
+                    self.adjustLayout();
+                });
+            }
 
             // Set window state for client
             $(window).blur(function () {

@@ -4,6 +4,10 @@
 	margin-bottom: 0;
 }
 
+.navbar {
+	margin-bottom: 0;
+}
+
 .bg-atomic-noise {
 	background: #222 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAFVBMVEUqKiopKSkoKCgjIyMuLi4kJCQtLS0dJckpAAAAO0lEQVR42iXLAQoAUQhCQSvr/kfe910jHIikElsl5qVFa1iE5f0Pom/CNZdbNM6756lQ41NInMfuFPgAHVEAlGk4lvIAAAAASUVORK5CYII=');
 }
@@ -34,11 +38,12 @@ body {
 // Layout
 
 #client {
+	width: 100%;
 	position: absolute;
-	top: 0;
+	top: 41px;
+	left: 0;
 	right: 0;
 	bottom: 0;
-	left: 0;
 	.horizontal-box();
 }
 
@@ -46,20 +51,30 @@ body {
 	.box-flex(0);
 }
 
-#content,
+#content {
+	.box-flex(1);
+	.vertical-box();
+}
+
 #chat {
 	.box-flex(1);
 	.vertical-box();
 }
 
-.messages {
+#chat .messages {
 	.box-flex(1);
 	overflow: auto;
 }
 
-.entry  {
+#entry {
 	.box-flex(0);
 	.horizontal-box();
+	textarea {
+		.box-flex(1);
+	}
+	.btn {
+		.box-flex(0);
+	}
 }
 
 // Entry
@@ -73,7 +88,6 @@ body {
 		min-height: 70px;
 		margin: 0;
 		display: block;
-		.box-flex(1);
 	}
 	.btn {
 		margin-left: 5px;
@@ -221,7 +235,7 @@ body {
 		border-bottom: 1px #eee solid;
 		padding: 7px;
 		display: block;
-		.clearfix;
+		overflow: hidden;
 		&.own {
 			background-color: #fcffd8;
 		}
@@ -274,7 +288,7 @@ body {
 }
 
 #client {
-	top: 41px;
+	// top: 41px;
 	border-top: 1px #444 solid;
 }
 

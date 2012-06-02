@@ -7,19 +7,26 @@
 }
 
 .horizontal-box() {
+	display: box;
 	display: -webkit-box;
 	display: -moz-box;
+	box-orient: horizontal;
+	box-align: stretch;
+	box-pack: left;
 	-webkit-box-orient: horizontal;
 	-webkit-box-align: stretch;
 	-webkit-box-pack: left;
 	-moz-box-orient: horizontal;
 	-moz-box-align: stretch;
-	-moz-box-pack: left;  
+	-moz-box-pack: left;
 }
 
 .vertical-box() {
+	display: box;
 	display: -webkit-box;
 	display: -moz-box;
+	box-orient: vertical;
+	box-align: stretch;
 	-webkit-box-orient: vertical;
 	-webkit-box-align: stretch;
 	-moz-box-orient: vertical;
