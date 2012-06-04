@@ -6,27 +6,44 @@ var Client = (function ($, Mustache, io, connection) {
 
         var self = this;
 
+		// Keeps current user metadata
+		this.user = {};
+
         // Setup vars
-		this.$tabs = $('#tabs')
+        this.$header = $('header');
+        this.$client = $('#client');
+		this.$tabs = $('#tabs');
         this.$sidebar = $('#sidebar');
         this.$chat = $('#chat');
         this.$status = $('#status');
         this.$entry = $('#entry');
         this.$userList = $('#user-list');
+		this.$files = $('#files');
+		this.$fileList = $('#file-list');
         this.$messages = $('#chat .messages');
-		
+		this.$fileupload = $('#fileupload');
+
         this.templates = {
 			event: $('#js-tmpl-event').html(),
             message: $('#js-tmpl-message').html(),
             messageFragment: $('#js-tmpl-message-fragment').html(),
             useritem: $('#js-tmpl-user-list-item').html(),
-            imagemessage: $('#js-tmpl-image-message').html()
+			fileitem: $('#js-tmpl-file-list-item').html()
         };
 
         this.windowFocus = true;
 
         // GUI Related stuffs
         //************************
+
+        this.adjustLayout = function() {
+            var offset = $(window).height() -
+                self.$header.outerHeight() -
+                parseInt(self.$chat.css('margin-top'), 10) -
+                parseInt(self.$chat.css('margin-bottom'), 10) -
+                self.$entry.outerHeight();
+            self.$messages.height(offset)
+        }
 
         this.updateStatus = function (status) {
             this.$status.find('.message').html(status);
@@ -63,7 +80,7 @@ var Client = (function ($, Mustache, io, connection) {
             }
             return text;
         };
-		
+
 		// TODO: We'll need to make this work for multiple rooms
 		this.checkScrollLocked = function () {
 			return self.$messages[0].scrollHeight - self.$messages.scrollTop() <= self.$messages.outerHeight()
@@ -85,10 +102,12 @@ var Client = (function ($, Mustache, io, connection) {
 				avatar: message.avatar,
 				name: message.name,
 				text: message.text,
-				posted: message.posted
+				posted: message.posted,
+				own: self.user.id === message.owner // Does the current user own this?
             };
             var lastMessage = $messages.children('.message:last');
             var html;
+
             // Should we add a new message or add to a previous one?
             if (message.owner === lastMessage.data('owner') &&
                     lastMessage.data('owner')) {
@@ -109,18 +128,6 @@ var Client = (function ($, Mustache, io, connection) {
 			if (atBottom) {
 				self.scrollMessagesDown();
 			}
-        };
-        
-        // TODO: What the shit is this
-        this.addImage = function (image) {
-            var messages = self.$messages;
-            var vars = {
-                url: image.url,
-                name: image.name
-            };
-            var html = Mustache.to_html(self.templates.imagemessage, vars);
-            messages.append(html);
-            self.scrollMessagesDown();
         };
 
         this.scrollMessagesDown = function () {
@@ -147,7 +154,11 @@ var Client = (function ($, Mustache, io, connection) {
         };
 
         this.getMessageHistory = function (query) {
-            self.socket.emit('message history', {});
+            self.socket.emit('message history');
+        };
+
+        this.getFileHistory = function (query) {
+            self.socket.emit('file history');
         };
 
         this.clearMessages = function (options) {
@@ -166,9 +177,123 @@ var Client = (function ($, Mustache, io, connection) {
 			});
 		};
 
+		this.addFile = function (file) {
+			var vars = {
+				url: file.url,
+				id: file.id,
+				name: file.name,
+				type: file.type,
+				size: Math.floor(file.size / 1024),
+				uploaded: file.uploaded,
+				owner: file.owner
+			};
+			var html = Mustache.to_html(self.templates.fileitem, vars);
+			self.$fileList.prepend(html);
+		}
+
+		this.addFiles = function (files) {
+            $.each(files, function (i, file) {
+                self.addFile(file);
+            });
+		}
+
+		// Socket Listeners
+		//************************
+		this.setupSocketListeners = function () {
+
+			this.socket.on('connect', function (data) {
+				self.updateStatus('Connected.');
+			});
+
+			this.socket.on('user data', function (user) {
+				self.user = user;
+			});
+
+			this.socket.on('ping', function (data) {
+				self.updatePing();
+			});
+
+			this.socket.on('disconnect', function (data) {
+				self.updateStatus('Disconnected.');
+			});
+
+			this.socket.on('message', function (data) {
+				self.addMessage(data);
+			});
+
+			this.socket.on('message history', function (data) {
+				self.addMessages(data);
+				self.updateMessageTimestamps();
+			});
+
+			this.socket.on('file', function (file) {
+				self.addFile(file);
+			});
+
+			this.socket.on('file history', function (data) {
+				self.addFiles(data);
+			});
+
+			this.socket.on('user list', function (data) {
+				self.updateUserlist(data.users);
+			});
+
+		}
+
+        // GUI Listeners
+        //************************
+		this.setupGUIListeners = function () {
+
+			this.$tabs.find('.tab').live('click', function () {
+				$(this).siblings().removeClass('selected');
+				$(this).addClass('selected');
+			});
+
+			this.$entry.find('.send').bind('click', function () {
+				self.sendMessage(self.$entry.find('textarea').val());
+				self.$entry.find('textarea').focus().val('');
+			});
+
+			this.$entry.find('textarea').bind('keydown', function (e) {
+				var textarea = $(this);
+				if (e.which === 13) {
+                    // Send message if there's text
+                    if ($.trim(textarea.val())) {
+                        self.sendMessage(self.$entry.find('textarea').val());
+                    }
+                    self.$entry.find('textarea').focus().val('')
+					return false;
+				}
+			});
+
+			// File uploads
+			this.$files.find('.toggle-upload').bind('click', function(e) {
+				e.preventDefault();
+				$(this).toggleClass('open');
+				self.$files.find('.upload').toggle();
+			});
+			this.$fileupload.fileupload({
+				dropZone: self.$files
+			});
+			$(document).bind('drop dragover', function (e) {
+				e.preventDefault();
+			});
+
+		}
+
         // Initialization / Connection
         //************************
         this.init = function () {
+
+            // Flexible layout for non webkit browsers
+            // TODO: Throttle?
+            if ($.browser.webkit !== true) {
+                self.$client.css('position', 'static');
+                self.adjustLayout();
+                $(window).resize(function () {
+                    self.adjustLayout();
+                });
+            }
 
             // Set window state for client
             $(window).blur(function () {
@@ -195,67 +320,25 @@ var Client = (function ($, Mustache, io, connection) {
             }, 1000);
 
             // Get message history
-            self.getMessageHistory();
-            self.scrollMessagesDown();
+            this.getMessageHistory();
+            this.scrollMessagesDown();
+
+			// Grab files
+			this.getFileHistory();
 
 			// Setup moment.js message timestamps
 			setInterval(function () {
 				self.updateMessageTimestamps();
 			}, 10 * 1000);
 
+			// Setup listeners
+			this.setupSocketListeners();
+			this.setupGUIListeners();
+
         };
 
         // Startup!
         this.init();
-
-        // Socket Listeners
-        //************************
-        this.socket.on('connect', function (data) {
-            self.updateStatus('Connected.');
-        });
-
-        this.socket.on('ping', function (data) {
-            self.updatePing();
-        });
-
-        this.socket.on('disconnect', function (data) {
-            self.updateStatus('Disconnected.');
-        });
-
-        this.socket.on('message', function (data) {
-            self.addMessage(data);
-        });
-
-        this.socket.on('message history', function (data) {
-            self.addMessages(data);
-			self.updateMessageTimestamps();
-        });
-
-        this.socket.on('user list', function (data) {
-			self.updateUserlist(data.users);
-        });
-
-        // GUI Listeners
-        //************************
-		
-		this.$tabs.find('.tab').live('click', function() {
-			$(this).siblings().removeClass('selected');
-			$(this).addClass('selected');
-		});
-
-        this.$entry.find('.send').bind('click', function () {
-            self.sendMessage(self.$entry.find('textarea').val());
-            self.$entry.find('textarea').focus().val('');
-        });
-
-        this.$entry.find('textarea').bind('keydown', function (e) {
-            var textarea = $(this);
-            if (e.which === 13 && $.trim(textarea.val())) {
-                self.sendMessage(self.$entry.find('textarea').val());
-				self.$entry.find('textarea').focus().val('')
-				return false;
-            }
-        });
 
     };
 

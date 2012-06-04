@@ -1,7 +1,12 @@
+//
+// Letschatbro Server
+//
+
 var _ = require('underscore');
 
+var fs = require('fs');
 var express = require('express');
-var express_namespace = require('express-namespace');
+var expressNamespace = require('express-namespace');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(express);
 var swig = require('swig');
@@ -13,7 +18,9 @@ var ChatServer = require('./chatServer.js');
 
 // Models
 var User = require('./models/user.js');
+var File = require('./models/file.js');
 
+// TODO: We should require login on all routes
 var requireLogin = function (req, res, next) {
     if (req.session.user) {
         next();
@@ -28,32 +35,38 @@ var Server = function (config) {
 
     self.config = config;
 
-	// Setup server
+	// Mongo URL
+	self.mongoURL = 'mongodb://'
+		+ self.config.db_user
+		+ ':' + self.config.db_password
+		+ '@' + self.config.db_host 
+		+ ':' + self.config.db_port 
+		+ '/' + self.config.db_name;
+
+	// Create server
 	self.app = express.createServer();
 
 	// Setup session store
 	self.sessionStore = new MongoStore({
-		host: self.config.db_host,
-		db: self.config.db_name
-    });
+		url: self.mongoURL
+	});
 
 	// Configuration
-	self.app.configure(function() {
-	
+	self.app.configure(function () {
+
 		// Setup template stuffs
 		self.app.register('.html', swig);
 		self.app.set('view engine', 'html');
 		swig.init({
-			cache: false,
+			cache: !self.config.debug,
 			root: 'views',
-			allowErrors: true // allows errors to be thrown and caught by express
+			allowErrors: self.config.debug // allows errors to be thrown and caught by express
 		});
 		self.app.set('views', 'views');
 		self.app.set('view options', {
 			layout: false // Prevents express from fucking up our extend/block tags
 		});
 
-		// Express options
 		self.app.use(express.bodyParser());
 		self.app.use(express.cookieParser());
 		self.app.use(express.session({
@@ -64,12 +77,14 @@ var Server = function (config) {
 			secret: self.config.cookie_secret,
 			store: self.sessionStore
 		}));
+
+		// Static directory
 		self.app.use('/media', express.static('media'));
-		
+
 		self.app.use(self.app.router);
 	
 	});
-	
+
 	// Home Sweet Home
 	self.app.get('/', requireLogin, function (req, res) {
 		var user = req.session.user;
@@ -97,7 +112,6 @@ var Server = function (config) {
 			});
 		};
 		res.send(render_login_page());
-		// TODO: fix the if statement logic here
 	});
 
 	// Logout
@@ -107,9 +121,9 @@ var Server = function (config) {
 	});
 
 	// Ajax
-	self.app.namespace('/ajax', function() {
+	self.app.namespace('/ajax', function () {
 		// Login
-		self.app.post('/login', formValidators.login, function(req, res) {
+		self.app.post('/login', formValidators.login, function (req, res) {
 			var form = req.form;
 			if (form.isValid) {
 				User.findOne({ 'email': form.email }).run(function (error, user) {
@@ -138,47 +152,113 @@ var Server = function (config) {
 		});
 
 		// Register
-		self.app.post('/register', formValidators.registration, function(req, res) {
+		self.app.post('/register', formValidators.registration, function (req, res) {
 			var form = req.form;
 			if (form.isValid) {
-				// TODO: Check if email is unique
-				var hashedPassword = hash.sha256(form.password, self.config.password_salt)
-				var user = new User({
-					email: form.email,
-					password: hashedPassword,
-					firstName: form['first-name'],
-					lastName: form['last-name'],
-					displayName: form['first-name'] + ' ' + form['last-name']
-				}).save(function(err, user) {
-					req.session.user = user;
-					req.session.save();
-					res.send({
-						status: 'success',
-						message: 'You\'ve been successfully registered.'
-					})
+				User.findOne({ 'email': form.email }).run(function (error, user) {
+					// Check if a user with this email exists
+					if (user) {
+						res.send({
+							status: 'error',
+							message: 'That email is already in use.'
+						});
+						return;
+					}
+					// We're good, lets save!
+					var hashedPassword = hash.sha256(form.password, self.config.password_salt)
+					var user = new User({
+						email: form.email,
+						password: hashedPassword,
+						firstName: form['first-name'],
+						lastName: form['last-name'],
+						displayName: form['first-name'] + ' ' + form['last-name']
+					}).save(function(err, user) {
+						req.session.user = user;
+						req.session.save();
+						res.send({
+							status: 'success',
+							message: 'You\'ve been successfully registered.'
+						})
+					});
 				});
 			} else {
 				res.send({
 					status: 'error',
 					message: 'Some fields did not validate',
 					errors: req.form.errors
-				})
+				});
 			}
 		});
 
+		// File uploadin'
+        // TODO: Some proper error handling
+		self.app.post('/upload-file', function (req, res) {
+			var moveUpload = function (path, newPath, callback) {
+				fs.readFile(path, function (err, data) {
+					fs.writeFile(newPath, data, function (err) {
+						callback();
+					});
+				});
+			}
+			_.each(req.files, function (file) {
+				var owner = req.session.user;
+				var allowed_file_types = self.config.allowed_file_types;
+				// Check MIME Type
+				if (_.include(allowed_file_types, file.type)) {
+					// Save the file
+					new File({
+						owner: owner._id,
+						name: file.name,
+						type: file.type,
+						size: file.size
+					}).save(function(err, savedFile) {
+						// Let's move the upload now
+						moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function (err) {
+							// Let the clients know about the new file
+							self.chatServer.sendFile({
+								url: '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name),
+								id: savedFile._id,
+								name: savedFile.name,
+								type: savedFile.type,
+								size: savedFile.size,
+								uploaded: savedFile.uploaded,
+								owner: owner.displayName
+							});
+							res.send({
+								status: 'success',
+								message: 'File has been saved!'
+							});
+						});
+					});
+				} else {
+					res.send({
+						status: 'error',
+						message: 'The MIME type ' + file.type + ' is not allowed'
+					});
+				}
+			});
+		});
+	});
+
+	// View files
+	self.app.get('/files/:id/:name', function (req, res) {
+		File.findById(req.params.id, function (err, file) {
+			res.contentType(file.type);
+			res.sendfile(self.config.uploads_dir + '/' + file._id);
+		});
 	});
 
     this.start = function () {
 
-		// Connect to mongo
-		var db = 'mongodb://' + self.config.db_host + '/' + self.config.db_name;
-		mongoose.connect(db, function(err) {
+		// Connect to mongo and start listening
+		mongoose.connect(self.mongoURL, function(err) {
 			if (err) throw err;
+			// Go go go!
+			self.app.listen(config.port, config.host);
+			self.chatServer = new ChatServer(self.app, self.sessionStore).start();
 		});
 
-		// Go go go!
-        self.app.listen(config.port);
-        self.chatServer = new ChatServer(self.app, self.sessionStore).start();
+		return this;
 
     };
 

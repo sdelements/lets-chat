@@ -1,0 +1,60 @@
+.messages {
+	background: #fff;
+	margin: 0;
+	.border-radius(5px 5px 0 0);
+}
+.messages .message {
+	border-bottom: 1px #eee solid;
+	padding: 7px;
+	display: block;
+	overflow: hidden;
+	&.own {
+		background-color: #fcffd8;
+	}
+	&:last-child {
+		border-bottom: none;
+	}
+	.text {
+		word-wrap: break-word;
+	}
+	.side {
+		margin-right: 7px;
+		float: left;
+	}
+	.meta {
+		margin-left: 40px;
+	}
+	.top {
+		overflow: hidden;
+	}
+	.name {
+		font-weight: bold;
+		color: #aaa;
+		float: left;
+	}
+	time {
+		color: #bbb;
+		float: right;
+	}
+	.avatar {
+		width: 30px;
+		height: 30px;
+		margin-top: 5px;
+	}
+	.thumbnail {
+		background-color: #fff;
+		margin-top: 5px;
+		display: inline-block;
+		overflow: hidden;
+		img {
+			height: 250px;
+			max-width: 350px;
+		}
+	}
+}
+
+.messages .event {
+	background: #f9ffb5;
+	padding: 7px;
+	border-bottom: 1px #eee solid;
+}

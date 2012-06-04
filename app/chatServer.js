@@ -1,5 +1,5 @@
 //
-// Letschatbro Server
+// Letschatbro Chat Server
 //
 
 var _ = require('underscore');
@@ -8,8 +8,10 @@ var hash = require('node_hash');
 var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
 
+// Models
 var MessageModel = require('./models/message.js');
 var UserModel = require('./models/user.js');
+var FileModel = require('./models/file.js');
 
 var ChatServer = function (app, sessionStore) {
 
@@ -43,6 +45,7 @@ var ChatServer = function (app, sessionStore) {
 
     this.sendMessageHistory = function (client) {
 		// Setup query date
+		// TODO: Start using moment.js for date operations
 		var today = new Date()
 		var yesterday = new Date(today).setDate(today.getDate() - 1)
 		// Let's find some messages
@@ -67,6 +70,30 @@ var ChatServer = function (app, sessionStore) {
         });
     };
 
+	this.sendFileHistory = function (client) {
+		var files = [];
+		FileModel.find().populate('owner').run(function(err, results) {
+			if (results) {
+				results.forEach(function (file) {
+					files.push({
+						url: '/files/' + file._id + '/' + encodeURIComponent(file.name),
+						id: file._id,
+						name: file.name,
+						type: file.type,
+						size: file.size,
+						uploaded: file.uploaded,
+						owner: file.owner.displayName
+					});
+				});
+			}
+			client.emit('file history', files);
+		});
+	}
+
+	this.sendFile = function (file) {
+		self.io.sockets.emit('file', file);
+	}
+
     this.saveMessage = function (data) {
         var message = new MessageModel({
             owner: data.owner,
@@ -83,6 +110,14 @@ var ChatServer = function (app, sessionStore) {
 
             var hs = client.handshake;
             var userData = hs.session.user;
+
+			// Send user data to client
+			client.emit('user data', {
+				id: userData._id,
+				displayName: userData.displayName,
+				firstName: userData.firstName,
+				lastName: userData.lastName
+			});
 
             // TODO: Do we need to use private ID here?
             UserModel.findById(userData._id, function (err, user) {
@@ -117,6 +152,10 @@ var ChatServer = function (app, sessionStore) {
 
             client.on('message history', function (data) {
                 self.sendMessageHistory(client);
+            });
+
+            client.on('file history', function (data) {
+                self.sendFileHistory(client);
             });
 
             client.on('disconnect', function () {
@@ -158,7 +197,9 @@ var ChatServer = function (app, sessionStore) {
 
         // Setup listeners
         this.setupListeners();
-		
+
+		return this;
+
     };
 
 };

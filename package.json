@@ -21,8 +21,8 @@
         "mongoose": "*",
         "swig": "*",
         "socket.io": "*",
-        "underscore": "*"
-		"node_hash": "*",
+        "underscore": "*",
+		"node_hash": "*"
     },
     "license": "MIT",
     "engine": {
