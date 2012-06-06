@@ -13,7 +13,7 @@
         "server"
     ],
     "dependencies": {
-        "connect": "*",
+        "connect": "2.2.2",
         "express": "*",
         "express-namespace": "*",
         "express-form": "*",
