@@ -3,10 +3,10 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 var MessageSchema = new Schema({
-	owner: {
+    owner: {
 		type: Schema.ObjectId,
 		ref: 'User' 
-	},
+    },
     text: String,
     posted: {
         type: Date,
