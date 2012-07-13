@@ -5,9 +5,14 @@ var ObjectId = Schema.ObjectId;
 var MessageSchema = new Schema({
     owner: {
 		type: Schema.ObjectId,
-		ref: 'User' 
+		ref: 'User',
+        required: true
     },
-    text: String,
+    text: {
+        type: String,
+        required: true,
+        trim: true
+    },
     posted: {
         type: Date,
         default: Date.now
