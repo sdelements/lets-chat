@@ -31,8 +31,6 @@ var UserSchema = new Schema({
         required: true,
         trim: true,
         validate: [function(v) {
-            console.log(v.length);
-            console.log(v.length <= 24);
             return (v.length <= 24);
         }, 'invalid first name']
     },
