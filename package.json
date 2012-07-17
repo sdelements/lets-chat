@@ -14,7 +14,7 @@
     ],
     "dependencies": {
         "connect": "2.2.2",
-        "express": "*",
+        "express": "2.5.9",
         "express-namespace": "*",
         "connect-mongo": "*",
         "validator": "*",
