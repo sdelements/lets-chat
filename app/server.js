@@ -189,6 +189,42 @@ var Server = function (config) {
             });
 		});
 
+		// Add Room
+		self.app.post('/add-room', requireLogin, function (req, res) {
+            var form = req.body;
+            models.room.findOne({
+                'name': form.name
+            }).run(function (error, room) {
+                // Check if the same room name exists
+                if (room) {
+                    res.send({
+                        status: 'error',
+                        message: 'That room name is already in use.'
+                    });
+                    return;
+                }
+                // Save time
+                var room = new models.room({
+                    name: form.name,
+                    description: form.description,
+                    owner: req.session.user._id
+                }).save(function(err, room) {
+                    if (err) {
+                        res.send({
+                            status: 'error',
+                            message: 'Some fields did not validate',
+                            errors: err
+                        });
+                        return;
+                    }
+                    res.send({
+                        status: 'success',
+                        message: 'The room has been created'
+                    });
+                });
+            });
+		});
+
 		// File uploadin'
         // TODO: Some proper error handling
 		self.app.post('/upload-file', function (req, res) {

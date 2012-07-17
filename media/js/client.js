@@ -6,8 +6,9 @@ var Client = (function ($, Mustache, io, connection) {
 
         var self = this;
 
-		// Keeps current user metadata
+		// Client Data
 		this.user = {};
+        this.rooms = [];
 
         // Setup vars
         this.$header = $('header');
@@ -22,6 +23,8 @@ var Client = (function ($, Mustache, io, connection) {
 		this.$fileList = $('#file-list');
         this.$messages = $('#chat .messages');
 		this.$fileupload = $('#fileupload');
+        this.$addRoom = $('.add-room');
+        this.$roomTab = $('#rooms-menu .room');
 
         this.templates = {
 			event: $('#js-tmpl-event').html(),
@@ -30,6 +33,10 @@ var Client = (function ($, Mustache, io, connection) {
             useritem: $('#js-tmpl-user-list-item').html(),
 			fileitem: $('#js-tmpl-file-list-item').html()
         };
+
+        this.modals = {
+            newRoom: $('#new-room')
+        }
 
         this.windowFocus = true;
 
@@ -68,7 +75,11 @@ var Client = (function ($, Mustache, io, connection) {
                 $userlist.append(html);
             });
         };
-
+        
+        this.switchRoom = function (room) {
+            console.log(room);
+        };
+        
         this.parseContent = function (text) {
             // TODO: Fix this regex
             var imagePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b/gim;
@@ -278,6 +289,14 @@ var Client = (function ($, Mustache, io, connection) {
 			$(document).bind('drop dragover', function (e) {
 				e.preventDefault();
 			});
+
+            // Rooms
+            this.$addRoom.bind('click', function() {
+                self.modals.newRoom.modal('show');
+            });
+            this.$roomTab.bind('click', function() {
+                self.switchRoom($(this).data('room'));
+            });
 
 		}
 
