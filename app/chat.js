@@ -43,16 +43,45 @@ var ChatServer = function (app, sessionStore) {
             }
         });
 
-        this.io.sockets.on('connection', function (client) {
+        this.io.sockets.on('connection', function(client) {
         
             var hs = client.handshake;
             var userData = hs.session.user;
             
-            client.on('rooms:join', function (room) {
-
-                client.set('room', room);
+            client.set('profile', {
+                cid: client.id,
+                id: userData._id,
+                email: userData.email,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                displayName: userData.displayName,
+                joined: userData.joined,
+                avatar: hash.md5(userData.email)
+            });
+            
+            client.on('room:join', function(room) {
                 client.join(room);
-                
+                client.get('profile', function(err, profile) {
+                    self.io.sockets.in(room).emit('user:join', profile);
+                });
+            });
+            
+            client.on('room:users', function(room) {
+                var users = {};
+                var clients = self.io.sockets.clients(room);
+                clients.forEach(function(client) {
+                    client.get('profile', function(err, profile)  {
+                        if (err) {
+                            // No profile?
+                            return;
+                        }
+                        users[hash.md5(client.id)] = profile;
+                    });
+                });
+                client.emit('room:users', users);
+            });
+            
+            client.on('room:history', function(room) {
                 // Send room history
                 var today = new Date()
                 var yesterday = new Date(today).setDate(today.getDate() - 1)
@@ -74,11 +103,10 @@ var ChatServer = function (app, sessionStore) {
                             });
                         }
                         messages.reverse();
-                        client.emit('room:history', messages)
+                        client.emit('messages:history', messages)
                 });
-
             });
-
+            
             client.on('messages:add', function (data) {
                 var message = new models.message({
                     room: data.room,
@@ -112,7 +140,9 @@ var ChatServer = function (app, sessionStore) {
             });
 
             client.on('disconnect', function () {
-            
+                self.io.sockets.emit('user:disconnect', {
+                    'cid': client.id
+                });
             });
             
         });

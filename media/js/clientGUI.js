@@ -37,7 +37,6 @@ var ClientGUI = function(client) {
             self.$messages.height(offset)
         },
         checkScrollLocked: function() {
-            console.log(self.$messages);
             return self.$messages[0].scrollHeight - self.$messages.scrollTop() <= self.$messages.outerHeight()
         },
         scrollMessagesDown: function() {
@@ -76,22 +75,23 @@ var ClientGUI = function(client) {
     this.userlist = {
         init: function (users) {
             var $userlist = self.$userList;
-            $userlist.empty();
+            self.$userlist.empty();
             $.each(users, function (i, user) {
-                var vars = {
-                    id: user.id,
-                    name: user.displayName,
-                    avatar: user.avatar
-                };
                 self.userlist.add(user);
             });
         },
         add: function(user) {
-            var html = Mustache.to_html(self.templates.useritem, user);
+            var vars = {
+                id: user.id,
+                cid: user.cid,
+                name: user.displayName,
+                avatar: user.avatar
+            };
+            var html = Mustache.to_html(self.templates.useritem, vars);
             self.$userlist.append(html);
         },
-        remove: function(id) {
-            self.$userlist.find('[data-id="' + id + '"]').remove();
+        remove: function(cid) {
+            self.$userlist.find('[data-cid="' + cid + '"]').remove();
         }
     };
     
