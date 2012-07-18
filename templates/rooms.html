@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block page_name %}Rooms{% endblock %}
+
+{% block body_class %}page-rooms{% endblock %}
+
+{% block content %}
+    <h1><img src="{{ media_url }}/img/rooms.png" alt="Rooms" /></h1>
+	<ul class="rooms">
+        {% for room in rooms %}
+            <li class="room">
+                <div class="inner">
+                    <a href="/rooms/{{ room.slug }}">
+                        <div class="name">{{ room.name }}</div>
+                        <div class="description">{{ room.description }}</div>
+                    </a>
+                </div>
+            </li>
+        {% endfor %}
+	</ul><!-- login end -->
+{% endblock %}
+
+{% block page_assets %}
+{% endblock %}

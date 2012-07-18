@@ -1,0 +1,43 @@
+.page-rooms {
+    width: 700px;
+    margin: 20px auto;
+    h1 {
+        text-align:center;
+        margin-bottom: 40px;
+    }
+    .rooms {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+    .room {
+        width: 33%;
+        display: block;
+        float: left;
+        .opacity(50);
+        .transition(opacity .2s linear);
+        &:hover {
+            .opacity(100);
+        }
+        a {
+            height: 100px;
+            padding: 10px;
+            margin-right: 10px;
+            border-top: 4px #ccc solid;
+            display: block;
+            .box-sizing(border-box);
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        .name {
+            color: #fff;
+            font-size: 20px;
+        }
+        .description {
+            color: #ddd;
+            font-size: 10px;
+            margin-top: 5px;
+        }
+    }
+}

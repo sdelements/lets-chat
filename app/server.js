@@ -81,7 +81,17 @@ var Server = function (config) {
 
 	});
 
-	// Home Sweet Home
+	// Rooms
+    self.app.get('/rooms/?', requireLogin, function (req, res) {
+        models.room.find().exec(function(err, rooms) {
+            var view = swig.compileFile('rooms.html').render({
+                media_url: self.config.media_url,
+                rooms: rooms
+            });
+            res.send(view);
+        });
+    });
+
 	self.app.get('/rooms/:slug', requireLogin, function (req, res) {
         var slug = req.params.slug;
 		var user = req.session.user;
@@ -102,7 +112,9 @@ var Server = function (config) {
                 media_url: self.config.media_url,
                 room: {
                     id: room._id,
-                    slug: room.slug
+                    slug: room.slug,
+                    name: room.name,
+                    description: room.description
                 },
                 host: self.config.hostname,
                 port: self.config.port,

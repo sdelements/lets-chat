@@ -26,7 +26,7 @@
 	<header class="navbar">
 		<ul id="rooms-menu" class="tabs">
 			<li class="tab selected">
-                <a class="room" data-room="dev">Development</a>
+                <a class="room" data-room="dev">{{ room.name }}</a>
             </li>
 			<li class="tab">
                 <a class="room" data-room="random">
@@ -71,7 +71,7 @@
         </div><!-- content end -->
 		<div id="sidebar">
 			<div class="inner">
-				<h1>Development</h1>
+				<h1>{{ room.name }}</h1>
 				<p>Where does the code go.</p>
 				<div class="clear">
 					<div class="btn-group buttons">

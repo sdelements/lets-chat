@@ -4521,6 +4521,58 @@ header .user img {
   -moz-border-radius: 7px;
   border-radius: 7px;
 }
+.page-rooms {
+  width: 700px;
+  margin: 20px auto;
+}
+.page-rooms h1 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.page-rooms .rooms {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+.page-rooms .room {
+  width: 33%;
+  display: block;
+  float: left;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -webkit-transition: opacity 0.2s linear;
+  -moz-transition: opacity 0.2s linear;
+  -ms-transition: opacity 0.2s linear;
+  -o-transition: opacity 0.2s linear;
+  transition: opacity 0.2s linear;
+}
+.page-rooms .room:hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.page-rooms .room a {
+  height: 100px;
+  padding: 10px;
+  margin-right: 10px;
+  border-top: 4px #ccc solid;
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.page-rooms .room a:hover {
+  text-decoration: none;
+}
+.page-rooms .room .name {
+  color: #fff;
+  font-size: 20px;
+}
+.page-rooms .room .description {
+  color: #ddd;
+  font-size: 10px;
+  margin-top: 5px;
+}
 #client {
   width: 100%;
   position: absolute;
