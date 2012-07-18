@@ -1,366 +1,62 @@
-var Client = (function ($, Mustache, io, connection) {
+var Client = function(config) {
 
-    var module = {};
+    var self = this;
 
-    module.Client = function Client() {
+    this.config = config;
 
-        var self = this;
+    this.state = {
+        user: {}, // TODO: Add something here
+        room: self.config.room
+    }
 
-		// Client Data
-		this.user = {};
-        this.rooms = [];
+    this.gui = new ClientGUI(this);
 
-        // Setup vars
-        this.$header = $('header');
-        this.$client = $('#client');
-		this.$tabs = $('#tabs');
-        this.$sidebar = $('#sidebar');
-        this.$chat = $('#chat');
-        this.$status = $('#status');
-        this.$entry = $('#entry');
-        this.$userList = $('#user-list');
-		this.$files = $('#files');
-		this.$fileList = $('#file-list');
-        this.$messages = $('#chat .messages');
-		this.$fileupload = $('#fileupload');
-        this.$addRoom = $('.add-room');
-        this.$roomTab = $('#rooms-menu .room');
-
-        this.templates = {
-			event: $('#js-tmpl-event').html(),
-            message: $('#js-tmpl-message').html(),
-            messageFragment: $('#js-tmpl-message-fragment').html(),
-            useritem: $('#js-tmpl-user-list-item').html(),
-			fileitem: $('#js-tmpl-file-list-item').html()
-        };
-
-        this.modals = {
-            newRoom: $('#new-room')
-        }
-
-        this.windowFocus = true;
-
-        // GUI Related stuffs
-        //************************
-
-        this.adjustLayout = function() {
-            var offset = $(window).height() -
-                self.$header.outerHeight() -
-                parseInt(self.$chat.css('margin-top'), 10) -
-                parseInt(self.$chat.css('margin-bottom'), 10) -
-                self.$entry.outerHeight();
-            self.$messages.height(offset)
-        }
-
-        this.updateStatus = function (status) {
-            this.$status.find('.message').html(status);
-        };
-
-        this.updatePing = function (status) {
-            var d = new Date();
-            var ping = (d - self.last_ping) + 'ms';
-            self.$status.find('.ping').html(ping);
-        };
-
-        this.updateUserlist = function (users) {
-            var $userlist = self.$userList;
-            $userlist.empty();
-            $.each(users, function (i, user) {
-                var vars = {
-					id: user.id,
-                    name: user.displayName,
-					avatar: user.avatar
-                };
-                var html = Mustache.to_html(self.templates.useritem, vars);
-                $userlist.append(html);
-            });
-        };
-        
-        this.switchRoom = function (room) {
-            console.log(room);
-        };
-        
-        this.parseContent = function (text) {
-            // TODO: Fix this regex
-            var imagePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b/gim;
-            var linkPattern =  /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-            if (text.match(imagePattern)) {
-                text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" alt="$1" /></a>');
-            } else {
-                text = text.replace(linkPattern, '<a href="$1" target="_blank">$1</a>');
-            }
-            return text;
-        };
-
-		// TODO: We'll need to make this work for multiple rooms
-		this.checkScrollLocked = function () {
-			return self.$messages[0].scrollHeight - self.$messages.scrollTop() <= self.$messages.outerHeight()
-		};
-
-        this.addMessages = function (data) {
-            var messages = self.$messages;
-            $.each(data, function (i, message) {
-                self.addMessage(message);
-            });
-        };
-
-        this.addMessage = function (message) {
-            var $messages = self.$messages;
-			var atBottom = self.checkScrollLocked();
-            var vars = {
-				id: message.id,
-				owner: message.owner,
-				avatar: message.avatar,
-				name: message.name,
-				text: message.text,
-				posted: message.posted,
-				own: self.user.id === message.owner // Does the current user own this?
-            };
-            var lastMessage = $messages.children('.message:last');
-            var html;
-
-            // Should we add a new message or add to a previous one?
-            if (message.owner === lastMessage.data('owner') &&
-                    lastMessage.data('owner')) {
-                html = Mustache.to_html(self.templates.messageFragment, vars);
-                html = self.parseContent(html);
-                // We'll need to appent to a div called
-                // fragments inside a message.
-                lastMessage.find('.fragments').append(html);
-            } else {
-                html = Mustache.to_html(self.templates.message, vars);
-				// Parse the text without disturbing the HTML
-                var $html = $(html);
-				var parsedContent = self.parseContent($html.find('.text').html());
-                $html.find('.text').html(parsedContent);
-                $messages.append($html);
-            }
-			// Maintain scroll position
-			if (atBottom) {
-				self.scrollMessagesDown();
-			}
-        };
-
-        this.scrollMessagesDown = function () {
-            var $messages = self.$messages;
-			$messages.prop({
-				scrollTop: $messages.prop('scrollHeight')
-			});
-        };
-
-        this.addEvent = function (event) {
-            var vars = {
-                text: event.text
-            };
-            var html = Mustache.to_html(self.templates.event, vars);
-            self.$messages.append(html);
-            self.scrollMessagesDown();
-        };
-
-        this.sendMessage = function (message) {
-            var text = $.trim(message);
-            self.socket.emit('message',  {
-                text: text
-            });
-        };
-
-        this.getMessageHistory = function (query) {
-            self.socket.emit('message history');
-        };
-
-        this.getFileHistory = function (query) {
-            self.socket.emit('file history');
-        };
-
-        this.clearMessages = function (options) {
-            self.$messages.empty();
-        };
-
-		this.updateMessageTimestamps = function (){
-			self.$messages.find('.message').each(function () {
-				var now = moment();
-				var posted = $(this).data('posted');
-				var $time = $(this).find('time');
-				// We'll need to compensate a few seconds
-				if (moment(now).diff(posted, 'minutes', true) > 0.5) {
-					$time.text(moment(posted).fromNow(true));
-				}
-			});
-		};
-
-		this.addFile = function (file) {
-			var vars = {
-				url: file.url,
-				id: file.id,
-				name: file.name,
-				type: file.type,
-				size: Math.floor(file.size / 1024),
-				uploaded: file.uploaded,
-				owner: file.owner
-			};
-			var html = Mustache.to_html(self.templates.fileitem, vars);
-			self.$fileList.prepend(html);
-		}
-
-		this.addFiles = function (files) {
-            $.each(files, function (i, file) {
-                self.addFile(file);
-            });
-		}
-
-		// Socket Listeners
-		//************************
-		this.setupSocketListeners = function () {
-
-			this.socket.on('connect', function (data) {
-				self.updateStatus('Connected.');
-			});
-
-			this.socket.on('user data', function (user) {
-				self.user = user;
-			});
-
-			this.socket.on('ping', function (data) {
-				self.updatePing();
-			});
-
-			this.socket.on('disconnect', function (data) {
-				self.updateStatus('Disconnected.');
-			});
-
-			this.socket.on('message', function (data) {
-				self.addMessage(data);
-			});
-
-			this.socket.on('message history', function (data) {
-				self.addMessages(data);
-				self.updateMessageTimestamps();
-			});
-
-			this.socket.on('file', function (file) {
-				self.addFile(file);
-			});
-
-			this.socket.on('file history', function (data) {
-				self.addFiles(data);
-			});
-
-			this.socket.on('user list', function (data) {
-				self.updateUserlist(data.users);
-			});
-
-		}
-
-        // GUI Listeners
-        //************************
-		this.setupGUIListeners = function () {
-
-			this.$tabs.find('.tab').live('click', function () {
-				$(this).siblings().removeClass('selected');
-				$(this).addClass('selected');
-			});
-
-			this.$entry.find('.send').bind('click', function () {
-				self.sendMessage(self.$entry.find('textarea').val());
-				self.$entry.find('textarea').focus().val('');
-			});
-
-			this.$entry.find('textarea').bind('keydown', function (e) {
-				var textarea = $(this);
-				if (e.which === 13) {
-                    // Send message if there's text
-                    if ($.trim(textarea.val())) {
-                        self.sendMessage(self.$entry.find('textarea').val());
-                    }
-                    self.$entry.find('textarea').focus().val('')
-					return false;
-				}
-			});
-
-			// File uploads
-			this.$files.find('.toggle-upload').bind('click', function(e) {
-				e.preventDefault();
-				$(this).toggleClass('open');
-				self.$files.find('.upload').toggle();
-			});
-			this.$fileupload.fileupload({
-				dropZone: self.$files
-			});
-			$(document).bind('drop dragover', function (e) {
-				e.preventDefault();
-			});
-
-            // Rooms
-            this.$addRoom.bind('click', function() {
-                self.modals.newRoom.modal('show');
-            });
-            this.$roomTab.bind('click', function() {
-                self.switchRoom($(this).data('room'));
-            });
-
-		}
-
-        // Initialization / Connection
-        //************************
-        this.init = function () {
-
-            // Flexible layout for non webkit browsers
-            // TODO: Throttle?
-            if ($.browser.webkit !== true) {
-                self.$client.css('position', 'static');
-                self.adjustLayout();
-                $(window).resize(function () {
-                    self.adjustLayout();
+    this.room = {
+        messages: {
+            add: function(message) {
+                self.socket.emit('messages:add',  {
+                    room: self.state.room,
+                    text: $.trim(message)
                 });
             }
+        }
+    }
 
-            // Set window state for client
-            $(window).blur(function () {
-                self.windowFocus = false;
-            });
-            $(window).focus(function () {
-                self.windowFocus = true;
-            });
+    this.listen = function() {
 
-            // Update status
-            this.updateStatus('Connecting...');
+        var config = self.config;
 
-            // TODO: Why the hell didn't I add this to config?
-            this.socket = io.connect(connection.host, {
-                reconnect: true,
-                transports: ['websocket', 'flashsocket']
-            });
+        self.socket = io.connect(config.host, {
+            reconnect: true,
+            transports: config.transports
+        });
+        
+        self.socket.on('connect', function () {
+            self.socket.emit('rooms:join', self.state.room);
+            self.socket.emit('session:get');
+        });
 
-            // Setup ping timer
-            this.pingTimer = setInterval(function () {
-                var d = new Date();
-                self.last_ping = d.getTime();
-                self.socket.emit('ping', {});
-            }, 1000);
+        self.socket.on('session:user', function(user) {
+            self.state.user = user;
+        });
 
-            // Get message history
-            this.getMessageHistory();
-            this.scrollMessagesDown();
+        self.socket.on('messages:new', function(message) {
+            console.log(message);
+            self.gui.messages.add(message);
+        });
 
-			// Grab files
-			this.getFileHistory();
+        self.socket.on('room:history', function(messages) {
+            self.gui.messages.init(messages);
+        });
 
-			// Setup moment.js message timestamps
-			setInterval(function () {
-				self.updateMessageTimestamps();
-			}, 10 * 1000);
+    }
 
-			// Setup listeners
-			this.setupSocketListeners();
-			this.setupGUIListeners();
-
-        };
-
-        // Startup!
-        this.init();
-
+    this.start = function() {
+        self.listen();
+        return self;
     };
 
-    return module;
+    // Go
+    return this;
 
-}(jQuery, Mustache, io, connection));
+};

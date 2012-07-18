@@ -1,8 +1,15 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
+var slug = require ('slug');
 
 var RoomSchema = new Schema({
+    slug: {
+        type: String,
+        required: true,
+        trim: true,
+        set: slug
+    },
     name: {
         type: String,
         required: true,

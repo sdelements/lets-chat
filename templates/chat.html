@@ -3,17 +3,19 @@
 {% block page_name %}Chat{% endblock %}
 
 {% block page_js %}
-	<script type="text/javascript">
-        // TODO: This shouldn't be global
-		var connection = {
-			'host': '{{host}}',
-			'port': {{port}}
-		}
-	</script>
+    <script src="{{media_url}}/js/lib/underscore.js" type="text/javascript"></script>
+    <script src="{{media_url}}/js/lib/backbone.js" type="text/javascript"></script>
+    <script src="{{media_url}}/js/clientGUI.js" type="text/javascript"></script>
 	<script src="{{media_url}}/js/client.js" type="text/javascript"></script>
 	<script type="text/javascript">
-		$(function () {
-			var client = new Client.Client();
+		$(function() {
+            var config = {
+                room: '{{room.id}}',
+                host: '{{host}}',
+                port: {{port}},
+                transports: ['websocket', 'flashsocket']
+            }
+			client = new Client(config).start();
 		});
 	</script>
 {% endblock %}
@@ -277,7 +279,7 @@
 				</li>
 			</script>
 			<script id="js-tmpl-user-list-item" type="text/html">
-                <li class="user" data-id="{{uid}}">
+                <li class="user" data-id="{{id}}">
                     <img class="avatar" src="http://www.gravatar.com/avatar/{{avatar}}?s=50" />
                     <span class="name">{{name}}</span></li>
 				</li>

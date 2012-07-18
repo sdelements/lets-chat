@@ -82,20 +82,40 @@ var Server = function (config) {
 	});
 
 	// Home Sweet Home
-	self.app.get('/', requireLogin, function (req, res) {
+	self.app.get('/rooms/:slug', requireLogin, function (req, res) {
+        var slug = req.params.slug;
 		var user = req.session.user;
-		var view = swig.compileFile('chat.html').render({
-			media_url: self.config.media_url,
-			host: self.config.hostname,
-			port: self.config.port,
-			user_id: user._id,
-			user_email: user.email,
-			user_avatar: hash.md5(user.email),
-			user_displayname: user.displayName,
-			user_lastname: user.lastName,
-			user_firstname: user.firstName
-		});
-		res.send(view);
+        var room;
+        models.room.findOne({
+            slug: slug
+        }).exec(function (err, doc) {
+            if (!doc) {
+                room = new models.room({
+                    slug: slug,
+                    name: slug,
+                    owner: user._id
+                }).save();
+                return;
+            }
+            room = doc;
+            var view = swig.compileFile('chat.html').render({
+                media_url: self.config.media_url,
+                room: {
+                    id: room._id,
+                    slug: room.slug
+                },
+                host: self.config.hostname,
+                port: self.config.port,
+                user_id: user._id,
+                user_email: user.email,
+                user_avatar: hash.md5(user.email),
+                user_displayname: user.displayName,
+                user_lastname: user.lastName,
+                user_firstname: user.firstName
+            });
+            res.send(view);
+        });
+
 	});
 
 	// Login
@@ -123,7 +143,7 @@ var Server = function (config) {
 			var form = req.body;
             models.user.findOne({
                 'email': form.email 
-            }).run(function (err, user) {
+            }).exec(function (err, user) {
                 if (err) {
                     res.send({
                         status: 'error',
@@ -153,7 +173,7 @@ var Server = function (config) {
 		self.app.post('/register', function (req, res) {
 
             var form = req.body;
-            models.user.findOne({ 'email': form.email }).run(function (error, user) {
+            models.user.findOne({ 'email': form.email }).exec(function (error, user) {
                 // Check if a user with this email exists
                 if (user) {
                     res.send({
@@ -194,7 +214,7 @@ var Server = function (config) {
             var form = req.body;
             models.room.findOne({
                 'name': form.name
-            }).run(function (error, room) {
+            }).exec(function (error, room) {
                 // Check if the same room name exists
                 if (room) {
                     res.send({
@@ -205,6 +225,7 @@ var Server = function (config) {
                 }
                 // Save time
                 var room = new models.room({
+                    slug: form.name,
                     name: form.name,
                     description: form.description,
                     owner: req.session.user._id
@@ -218,6 +239,7 @@ var Server = function (config) {
                         return;
                     }
                     res.send({
+                        room: room,
                         status: 'success',
                         message: 'The room has been created'
                     });
