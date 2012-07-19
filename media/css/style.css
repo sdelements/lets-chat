@@ -4863,3 +4863,50 @@ header .user .dropdown-menu a:hover {
 #client {
   border-top: 1px #444 solid;
 }
+@media (max-width: 700px) {
+  header .tabs {
+    width: 80%;
+  }
+  header .user {
+    max-width: 20%;
+  }
+  header .user .name {
+    display: none;
+  }
+  #sidebar {
+    width: auto;
+  }
+  #sidebar h1,
+  #sidebar p {
+    display: none;
+  }
+  #sidebar .btn-group {
+    display: none;
+  }
+  #sidebar .btn-group .btn {
+    display: block;
+    float: none;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin: 0;
+    margin-bottom: 3px;
+  }
+  #sidebar #files {
+    display: none;
+  }
+  #sidebar .item-list {
+    text-align: center;
+  }
+  #sidebar .item-list ul {
+    max-height: none;
+  }
+  #sidebar .item-list .avatar {
+    max-width: none;
+    margin: 0;
+  }
+  #sidebar .item-list .name,
+  #sidebar .item-list .text {
+    display: none;
+  }
+}
