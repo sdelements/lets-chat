@@ -174,6 +174,23 @@ var ClientGUI = function(client) {
         $(document).bind('drop dragover', function (e) {
             e.preventDefault();
         });
+        
+        // Window stuffs
+        if ($.browser.webkit !== true) {
+            self.$client.css('position', 'static');
+            self.layout.adjust();
+            $(window).resize(function () {
+                self.layout.adjust();
+            });
+        }
+
+        // Set window state for client
+        $(window).blur(function () {
+            self.windowFocus = false;
+        });
+        $(window).focus(function () {
+            self.windowFocus = true;
+        });
 
     }();
     
