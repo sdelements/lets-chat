@@ -4336,37 +4336,47 @@ header:after {
   clear: both;
 }
 header .tabs {
-  margin: 0;
+  width: 60%;
   padding: 11px 0 0 25px;
   float: left;
-  display: block;
   overflow: hidden;
-  text-overflow: ellipsis;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+header .tabs ul {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: table;
+  border-collapse: collapse;
+  table-layout: fixed;
   white-space: nowrap;
 }
-header .tabs .badge {
-  padding: 1px 7px;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 7px;
+header .tabs li {
+  display: table-cell;
 }
 header .tabs .tab {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: inline-block;
   overflow: visible;
   margin-right: 5px;
 }
+header .tabs .tab.fixed {
+  width: 50px;
+  text-align: center;
+}
 header .tabs .tab a {
   background: #222222 url('../img/dark_noise.png');
+  max-width: 150px;
   height: 30px;
   line-height: 30px;
   color: #fff;
-  padding: 0 20px;
+  padding: 0 10px;
+  margin: 0 2px;
   border: 1px #444 solid;
   border-bottom: none;
   display: block;
+  position: relative;
   -webkit-border-radius: 4px 4px 0 0;
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
@@ -4387,13 +4397,33 @@ header .tabs .selected a {
   -moz-box-shadow: 0 0 8px #111111;
   box-shadow: 0 0 8px #111111;
 }
+header .tabs .text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+header .tabs .badge {
+  padding: 1px 7px;
+  position: absolute;
+  top: 7px;
+  right: 6px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+}
 header .user {
+  max-width: 30%;
   height: 40px;
   line-height: 40px;
   float: right;
   padding: 0 10px;
   border-left: 1px #111 solid;
   position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
 }
 header .user .dropdown-menu {
   margin: 5px 5px 0 0;
@@ -4406,7 +4436,11 @@ header .user .caret {
   vertical-align: middle;
 }
 header .user a {
+  color: #fff;
   display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 header .user a:hover {
   text-decoration: none;
@@ -4422,6 +4456,9 @@ header .user img {
   height: 28px;
   margin-right: 5px;
   vertical-align: middle;
+}
+header .user .dropdown {
+  color: #333;
 }
 .modal-body .response {
   padding: 8px 35px 8px 14px;
