@@ -4336,7 +4336,7 @@ header:after {
   clear: both;
 }
 header .tabs {
-  width: 60%;
+  width: 70%;
   padding: 11px 0 0 25px;
   float: left;
   overflow: hidden;
@@ -4346,20 +4346,15 @@ header .tabs {
   box-sizing: border-box;
 }
 header .tabs ul {
-  width: 100%;
   padding: 0;
   margin: 0;
-  display: table;
-  border-collapse: collapse;
-  table-layout: fixed;
-  white-space: nowrap;
-}
-header .tabs li {
-  display: table-cell;
+  display: block;
 }
 header .tabs .tab {
+  width: 20%;
+  max-width: 200px;
+  display: inline-block;
   overflow: visible;
-  margin-right: 5px;
 }
 header .tabs .tab.fixed {
   width: 50px;
@@ -4367,12 +4362,10 @@ header .tabs .tab.fixed {
 }
 header .tabs .tab a {
   background: #222222 url('../img/dark_noise.png');
-  max-width: 150px;
   height: 30px;
   line-height: 30px;
   color: #fff;
   padding: 0 10px;
-  margin: 0 2px;
   border: 1px #444 solid;
   border-bottom: none;
   display: block;
@@ -4425,7 +4418,7 @@ header .user {
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
-header .user .dropdown-menu {
+header .user .dropdown {
   margin: 5px 5px 0 0;
 }
 header .user .caret {
@@ -4457,8 +4450,15 @@ header .user img {
   margin-right: 5px;
   vertical-align: middle;
 }
-header .user .dropdown {
+header .user .dropdown-menu {
+  margin-right: 5px;
+}
+header .user .dropdown-menu,
+header .user .dropdown-menu a {
   color: #333;
+}
+header .user .dropdown-menu a:hover {
+  color: #fff;
 }
 .modal-body .response {
   padding: 8px 35px 8px 14px;
