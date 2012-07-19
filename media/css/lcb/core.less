@@ -10,14 +10,16 @@ textarea {
 header {
 	background: #222 url('../img/header.png');
 	border-bottom: 1px #000 solid;
-	height: 40px;
-	.clearfix;
+    height: 42px;
+    .clearfix;
 	.tabs {
         width: 70%;
+        line-height: 0;
 		padding: 11px 0 0 25px;
         float: left;
-        overflow: hidden;
+        .clearfix();
         .text-overflow();
+        overflow: visible;
         .box-sizing(border-box);
         ul {
             padding: 0;
@@ -43,6 +45,7 @@ header {
 				border-bottom: none;
 				display: block;
                 position: relative;
+                .text-overflow();
 				.border-radius(4px 4px 0 0);
 				.opacity(60);
 				&:hover {
@@ -51,16 +54,20 @@ header {
 				}
 			}
 		}
+        .selected {
+            .bg-dark();
+            position: relative;
+            z-index: 999;
+            padding-bottom: 2px;
+            margin-bottom: -2px;
+            .border-radius(5px 5px 0 0);
+        }
 		.selected a {
 			position: relative;
 			z-index: 999;
+            .box-shadow(0 0 5px #222);
 			.opacity(100);
-			.box-shadow(0 0 8px #111);
 		}
-        .text {
-            display: block;
-            .text-overflow();
-        }
 		.badge {
 			padding: 1px 7px;
             position: absolute;
@@ -70,9 +77,10 @@ header {
 		}
 	}
 	.user {
+        background: #222 url('../img/header.png');
         max-width: 30%;
-		height: 40px;
-		line-height: 40px;
+		height: 42px;
+		line-height: 42px;
 		float: right;
 		padding: 0 10px;
 		border-left: 1px #111 solid;
@@ -103,7 +111,7 @@ header {
 			}
 		}
 		img {
-			.size(28px, 28px);
+			.square(32px);
 			margin-right: 5px;
 			vertical-align: middle;
 		}
