@@ -59,6 +59,10 @@ var ChatServer = function (app, sessionStore) {
                 avatar: hash.md5(userData.email)
             });
             
+            client.on('ping', function() {
+                client.emit('ping');
+            });
+            
             client.on('room:join', function(room) {
                 client.join(room);
                 client.get('profile', function(err, profile) {

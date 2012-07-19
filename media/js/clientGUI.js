@@ -62,10 +62,8 @@ var ClientGUI = function(client) {
     }
     
     this.info = {
-        updatePing: function () {
-            var d = new Date();
-            var ping = (d - self.last_ping) + 'ms';
-            self.$status.find('.ping').html(ping);
+        updatePing: function (ping) {
+            self.$status.find('.ping').html(ping + 'ms');
         },
         updateStatus: function(status) {
             self.$status.find('.message').html(status);
