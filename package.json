@@ -13,11 +13,11 @@
         "server"
     ],
     "dependencies": {
-        "connect": "*",
-        "express": "*",
+        "connect": "2.2.2",
+        "express": "2.5.9",
         "express-namespace": "*",
-        "express-form": "*",
         "connect-mongo": "*",
+        "validator": "*",
         "mongoose": "*",
         "swig": "*",
         "socket.io": "*",

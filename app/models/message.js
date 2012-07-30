@@ -3,11 +3,16 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 var MessageSchema = new Schema({
-	owner: {
+    owner: {
 		type: Schema.ObjectId,
-		ref: 'User' 
-	},
-    text: String,
+		ref: 'User',
+        required: true
+    },
+    text: {
+        type: String,
+        required: true,
+        trim: true
+    },
     posted: {
         type: Date,
         default: Date.now

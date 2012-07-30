@@ -8,17 +8,15 @@ var fs = require('fs');
 var express = require('express');
 var expressNamespace = require('express-namespace');
 var mongoose = require('mongoose');
-var MongoStore = require('connect-mongo')(express);
+var mongoStore = require('connect-mongo')(express);
 var swig = require('swig');
 var hash = require('node_hash');
 
 // App stuff
-var formValidators = require('./formValidators.js')
-var ChatServer = require('./chatServer.js');
+var ChatServer = require('./chat.js');
 
 // Models
-var User = require('./models/user.js');
-var File = require('./models/file.js');
+var models = require('./models/models.js');
 
 // TODO: We should require login on all routes
 var requireLogin = function (req, res, next) {
@@ -47,7 +45,7 @@ var Server = function (config) {
 	self.app = express.createServer();
 
 	// Setup session store
-	self.sessionStore = new MongoStore({
+	self.sessionStore = new mongoStore({
 		url: self.mongoURL
 	});
 
@@ -56,13 +54,11 @@ var Server = function (config) {
 
 		// Setup template stuffs
 		self.app.register('.html', swig);
-		self.app.set('view engine', 'html');
 		swig.init({
 			cache: !self.config.debug,
-			root: 'views',
+			root: 'templates',
 			allowErrors: self.config.debug // allows errors to be thrown and caught by express
 		});
-		self.app.set('views', 'views');
 		self.app.set('view options', {
 			layout: false // Prevents express from fucking up our extend/block tags
 		});
@@ -82,7 +78,7 @@ var Server = function (config) {
 		self.app.use('/media', express.static('media'));
 
 		self.app.use(self.app.router);
-	
+
 	});
 
 	// Home Sweet Home
@@ -123,71 +119,74 @@ var Server = function (config) {
 	// Ajax
 	self.app.namespace('/ajax', function () {
 		// Login
-		self.app.post('/login', formValidators.login, function (req, res) {
-			var form = req.form;
-			if (form.isValid) {
-				User.findOne({ 'email': form.email }).run(function (error, user) {
-					var hashedPassword = hash.sha256(form.password, self.config.password_salt)
-					if (user && hashedPassword === user.password) {
-						req.session.user = user;
-						req.session.save();
-						res.send({
-							status: 'success',
-							message: 'Logging you in...'
-						});
-					} else {
-						res.send({
-							status: 'error',
-							message: 'Incorrect login credentials.'
-						});
-					}
-				});
-			} else {
-				res.send({
-					status: 'error',
-					message: 'Some fields did not validate',
-					errors: req.form.errors
-				})
-			}
+		self.app.post('/login', function (req, res) {
+			var form = req.body;
+            models.user.findOne({
+                'email': form.email 
+            }).run(function (err, user) {
+                if (err) {
+                    res.send({
+                        status: 'error',
+                        message: 'Some fields did not validate',
+                        errors: err
+                    });
+                    return;
+                }
+                var hashedPassword = hash.sha256(form.password, self.config.password_salt)
+                if (user && hashedPassword === user.password) {
+                    req.session.user = user;
+                    req.session.save();
+                    res.send({
+                        status: 'success',
+                        message: 'Logging you in...'
+                    });
+                } else {
+                    res.send({
+                        status: 'error',
+                        message: 'Incorrect login credentials.'
+                    });
+                }
+            });
 		});
 
 		// Register
-		self.app.post('/register', formValidators.registration, function (req, res) {
-			var form = req.form;
-			if (form.isValid) {
-				User.findOne({ 'email': form.email }).run(function (error, user) {
-					// Check if a user with this email exists
-					if (user) {
-						res.send({
-							status: 'error',
-							message: 'That email is already in use.'
-						});
-						return;
-					}
-					// We're good, lets save!
-					var hashedPassword = hash.sha256(form.password, self.config.password_salt)
-					var user = new User({
-						email: form.email,
-						password: hashedPassword,
-						firstName: form['first-name'],
-						lastName: form['last-name'],
-						displayName: form['first-name'] + ' ' + form['last-name']
-					}).save(function(err, user) {
-						req.session.user = user;
-						req.session.save();
-						res.send({
-							status: 'success',
-							message: 'You\'ve been successfully registered.'
-						})
-					});
-				});
-			} else {
-				res.send({
-					status: 'error',
-					message: 'Some fields did not validate',
-					errors: req.form.errors
-				});
-			}
+		self.app.post('/register', function (req, res) {
+
+            var form = req.body;
+            models.user.findOne({ 'email': form.email }).run(function (error, user) {
+                // Check if a user with this email exists
+                if (user) {
+                    res.send({
+                        status: 'error',
+                        message: 'That email is already in use.'
+                    });
+                    return;
+                }
+                // We're good, lets save!
+                var hashedPassword = hash.sha256(form.password, self.config.password_salt)
+                var user = new models.user({
+                    email: form.email,
+                    password: hashedPassword,
+                    firstName: form['first-name'],
+                    lastName: form['last-name'],
+                    displayName: form['first-name'] + ' ' + form['last-name']
+                }).save(function(err, user) {
+                    if (err) {
+                        res.send({
+                            status: 'error',
+                            message: 'Some fields did not validate',
+                            errors: err
+                        });
+                        return;
+                    }
+                    req.session.user = user;
+                    req.session.save();
+                    res.send({
+                        status: 'success',
+                        message: 'You\'ve been successfully registered.'
+                    });
+                });
+            });
 		});
 
 		// File uploadin'
@@ -206,7 +205,7 @@ var Server = function (config) {
 				// Check MIME Type
 				if (_.include(allowed_file_types, file.type)) {
 					// Save the file
-					new File({
+					new models.file({
 						owner: owner._id,
 						name: file.name,
 						type: file.type,
@@ -242,13 +241,13 @@ var Server = function (config) {
 
 	// View files
 	self.app.get('/files/:id/:name', function (req, res) {
-		File.findById(req.params.id, function (err, file) {
+		models.file.findById(req.params.id, function (err, file) {
 			res.contentType(file.type);
 			res.sendfile(self.config.uploads_dir + '/' + file._id);
 		});
 	});
 
-    this.start = function () {
+    self.start = function () {
 
 		// Connect to mongo and start listening
 		mongoose.connect(self.mongoURL, function(err) {

@@ -9,9 +9,7 @@ var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
 
 // Models
-var MessageModel = require('./models/message.js');
-var UserModel = require('./models/user.js');
-var FileModel = require('./models/file.js');
+var models = require('./models/models.js');
 
 var ChatServer = function (app, sessionStore) {
 
@@ -49,7 +47,7 @@ var ChatServer = function (app, sessionStore) {
 		var today = new Date()
 		var yesterday = new Date(today).setDate(today.getDate() - 1)
 		// Let's find some messages
-        MessageModel.where('posted').gte(yesterday)
+        models.message.where('posted').gte(yesterday)
 			.sort('posted', -1).populate('owner')
 			.run(function (err, messages) {
 				var data = [];
@@ -72,7 +70,7 @@ var ChatServer = function (app, sessionStore) {
 
 	this.sendFileHistory = function (client) {
 		var files = [];
-		FileModel.find().populate('owner').run(function(err, results) {
+		models.file.find().populate('owner').run(function(err, results) {
 			if (results) {
 				results.forEach(function (file) {
 					files.push({
@@ -95,7 +93,7 @@ var ChatServer = function (app, sessionStore) {
 	}
 
     this.saveMessage = function (data) {
-        var message = new MessageModel({
+        var message = new models.message({
             owner: data.owner,
             text: data.text
         })
@@ -120,7 +118,7 @@ var ChatServer = function (app, sessionStore) {
 			});
 
             // TODO: Do we need to use private ID here?
-            UserModel.findById(userData._id, function (err, user) {
+            models.user.findById(userData._id, function (err, user) {
                 self.clients[client.id] = {
                     user: user,
                     sid: null // What the shit is this
