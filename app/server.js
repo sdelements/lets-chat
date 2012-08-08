@@ -82,6 +82,34 @@ var Server = function (config) {
 	});
 
 	// Rooms
+    self.app.get('/', requireLogin, function(req, res) {
+        var user = req.session.user;
+        var vars = {
+            media_url: self.config.media_url,
+            host: self.config.hostname,
+            port: self.config.port,
+            user_id: user._id,
+            user_email: user.email,
+            user_avatar: hash.md5(user.email),
+            user_displayname: user.displayName,
+            user_lastname: user.lastName,
+            user_firstname: user.firstName
+        }
+        models.room.find().exec(function(err, rooms) {
+            vars.rooms = rooms;
+            var view = swig.compileFile('chat.html').render(vars);
+            res.send(view);
+        });
+    });
+    
+    /** 
+    self.app.get('/rooms/:id.json', requireLogin, function(req, res) {
+        models.room.findById(
+        res.send('derp');
+    });
+    ***/
+    
+    /***
     self.app.get('/rooms/?', requireLogin, function (req, res) {
         models.room.find().exec(function(err, rooms) {
             var view = swig.compileFile('rooms.html').render({
@@ -129,6 +157,7 @@ var Server = function (config) {
         });
 
 	});
+    **/
 
 	// Login
 	self.app.get('/login', function (req, res) {

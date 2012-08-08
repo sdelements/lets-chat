@@ -4587,12 +4587,12 @@ header .user .dropdown-menu a:hover {
   text-align: center;
   margin-bottom: 40px;
 }
-.page-rooms .rooms {
+.rooms-list {
   padding: 0;
   margin: 0;
   overflow: hidden;
 }
-.page-rooms .room {
+.rooms-list .room {
   width: 33%;
   display: block;
   float: left;
@@ -4604,11 +4604,11 @@ header .user .dropdown-menu a:hover {
   -o-transition: opacity 0.2s linear;
   transition: opacity 0.2s linear;
 }
-.page-rooms .room:hover {
+.rooms-list .room:hover {
   opacity: 1;
   filter: alpha(opacity=100);
 }
-.page-rooms .room a {
+.rooms-list .room a {
   height: 100px;
   padding: 10px;
   margin-right: 10px;
@@ -4619,14 +4619,14 @@ header .user .dropdown-menu a:hover {
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
-.page-rooms .room a:hover {
+.rooms-list .room a:hover {
   text-decoration: none;
 }
-.page-rooms .room .name {
+.rooms-list .room .name {
   color: #fff;
   font-size: 20px;
 }
-.page-rooms .room .description {
+.rooms-list .room .description {
   color: #ddd;
   font-size: 10px;
   margin-top: 5px;
@@ -4651,12 +4651,27 @@ header .user .dropdown-menu a:hover {
   -moz-box-align: stretch;
   -moz-box-pack: left;
 }
-#sidebar {
+.view {
+  width: 100%;
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+  box-orient: horizontal;
+  box-align: stretch;
+  box-pack: left;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  -webkit-box-pack: left;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  -moz-box-pack: left;
+}
+.sidebar {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
 }
-#content {
+.main {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
@@ -4670,7 +4685,7 @@ header .user .dropdown-menu a:hover {
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
 }
-#chat {
+.chat {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
@@ -4684,13 +4699,13 @@ header .user .dropdown-menu a:hover {
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
 }
-#chat .messages {
+.chat .messages {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   overflow: auto;
 }
-#entry {
+.entry {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
@@ -4707,17 +4722,17 @@ header .user .dropdown-menu a:hover {
   -moz-box-align: stretch;
   -moz-box-pack: left;
 }
-#entry textarea {
+.entry textarea {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
 }
-#entry .btn {
+.entry .btn {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
 }
-#entry {
+.entry {
   background: #ffffff url('../img/grid_noise.png');
   padding: 10px;
   border-top: 1px #ccc solid;
@@ -4725,15 +4740,15 @@ header .user .dropdown-menu a:hover {
   -moz-border-radius: 0 0 5px 5px;
   border-radius: 0 0 5px 5px;
 }
-#entry textarea {
+.entry textarea {
   min-height: 70px;
   margin: 0;
   display: block;
 }
-#entry .btn {
+.entry .btn {
   margin-left: 5px;
 }
-#sidebar {
+.sidebar {
   width: 230px;
   color: #fff;
   margin: 20px;
@@ -4741,36 +4756,36 @@ header .user .dropdown-menu a:hover {
   position: relative;
   z-index: 999;
 }
-#sidebar .buttons {
+.sidebar .buttons {
   float: left;
 }
-#sidebar p,
-#sidebar h1 {
+.sidebar p,
+.sidebar h1 {
   color: #fff;
 }
-#sidebar .item-list {
+.sidebar .item-list {
   margin-top: 10px;
   border: 1px #444 solid;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-#sidebar .item-list h3 {
+.sidebar .item-list h3 {
   font-size: 14px;
   font-weight: normal;
 }
-#sidebar .item-list .top {
+.sidebar .item-list .top {
   background: #222222 url('../img/header.png') repeat-x;
   padding: 3px 5px;
 }
-#sidebar .item-list .top h3 {
+.sidebar .item-list .top h3 {
   display: inline;
 }
-#sidebar .item-list .top .btn {
+.sidebar .item-list .top .btn {
   padding: 2px 6px;
   float: right;
 }
-#sidebar .item-list ul {
+.sidebar .item-list ul {
   max-height: 170px;
   background: #f2f2f2;
   color: #555;
@@ -4780,91 +4795,91 @@ header .user .dropdown-menu a:hover {
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-#sidebar .item-list li {
+.sidebar .item-list li {
   margin: 5px;
   margin-bottom: 0;
   display: block;
   word-wrap: break-word;
   *zoom: 1;
 }
-#sidebar .item-list li:before,
-#sidebar .item-list li:after {
+.sidebar .item-list li:before,
+.sidebar .item-list li:after {
   display: table;
   content: "";
 }
-#sidebar .item-list li:after {
+.sidebar .item-list li:after {
   clear: both;
 }
-#sidebar .item-list li:last-child {
+.sidebar .item-list li:last-child {
   border-bottom: 0;
   margin-bottom: 5px;
 }
-#sidebar .item-list .avatar {
+.sidebar .item-list .avatar {
   width: 35px;
   height: 35px;
   margin-right: 5px;
 }
-#files form,
-#files input {
+.files form,
+.files input {
   margin: 0;
 }
-#files .toggle-upload .icon-remove {
+.files .toggle-upload .icon-remove {
   display: none;
 }
-#files .toggle-upload.open .icon-plus {
+.files .toggle-upload.open .icon-plus {
   display: none;
 }
-#files .toggle-upload.open .icon-remove {
+.files .toggle-upload.open .icon-remove {
   display: inline-block;
 }
-#files .upload {
+.files .upload {
   background: #222;
   border-top: 1px #000 solid;
 }
-#files form {
+.files form {
   padding: 5px;
   border-top: 1px #333 solid;
 }
-#files .file .icon {
+.files .file .icon {
   margin-top: 2px;
   float: left;
 }
-#files .file .meta {
+.files .file .meta {
   line-height: 130%;
   margin-left: 20px;
 }
-#files .file .meta a {
+.files .file .meta a {
   display: block;
 }
-#files .file .meta span {
+.files .file .meta span {
   color: #777;
   font-size: 11px;
 }
-#status {
+.status {
   font-size: 12px;
   position: fixed;
   bottom: 15px;
   right: 15px;
 }
-#status .message {
+.status .message {
   margin-right: 10px;
   float: left;
 }
-#status .ping {
+.status .ping {
   text-align: right;
   float: right;
 }
-#chat {
+.chat {
   margin: 15px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-#chat *::-webkit-scrollbar {
+.chat *::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
-#chat *::-webkit-scrollbar-track {
+.chat *::-webkit-scrollbar-track {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -4872,7 +4887,7 @@ header .user .dropdown-menu a:hover {
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
-#chat *::-webkit-scrollbar-thumb {
+.chat *::-webkit-scrollbar-thumb {
   background-color: #aaa;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -4883,6 +4898,18 @@ header .user .dropdown-menu a:hover {
 }
 #client {
   border-top: 1px #444 solid;
+}
+.rooms-list {
+  border: 1px #333 solid;
+  overflow: auto;
+  margin: 10px;
+  padding: 20px;
+  box-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 @media (max-width: 700px) {
   header .tabs {

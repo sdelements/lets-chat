@@ -1,3 +1,86 @@
+var RoomModel = Backbone.Model.extend({
+    initialize: function() {
+        this.view = new RoomView(this);
+        this.bind('remove', function() {
+            this.destroy();
+            this.view.remove();
+        });
+    }
+});
+
+var RoomsCollection = Backbone.Collection.extend({
+    model: RoomModel
+});
+
+var ClientView = Backbone.View.extend({
+    el: 'body',
+    initialize: function(client) {
+        this.client = client;
+    },
+    switchRoom: function(id) {
+        var $tabLink = this.$('#rooms-menu a').filter('[data-id=' + id + ']');
+        if ($tabLink.length == 0) {
+            $tabLink = this.$('#rooms-menu a[data-id=home]');
+        }
+        $tabLink.closest('li')
+          .addClass('selected')
+          .siblings().removeClass('selected');
+        var room = this.client.rooms.get(id);
+        room.view.render();
+    }
+});
+
+var RoomView = Backbone.View.extend({
+    el: '#room',
+    events: {
+        'click .entry .send': function() {
+            console.log('send message!');
+        },
+        'keydown textarea': function() {
+            console.log('entery key send message!');
+        }
+    },
+    initialize: function(model) {
+        var self = this;
+        this.model = model;
+        model.bind('change:name', function(model, name) {
+            self.updateName(name);
+        });
+    },
+    render: function() {
+        var self = this;
+        var template = $('#js-tmpl-room').html();
+        var html = Mustache.to_html(template, this.model.toJSON());
+        $(this.el).html(html);
+        // Add users
+        // this.userlist.init(this.model.get('users');
+    },
+    userlist: {
+        init: function(users) {
+            _.each(users, function(user) {
+                this.userlist.add(user);
+            });
+        },
+        add: function(user) {
+            var template = $('#js-tmpl-user-item').html();
+            var html = Mustache.to_html(template, user);
+            this.$('.user-list').append(html);
+        },
+        remove: function(cid) {
+            this.$('.user-list').find('[data-cid="' + cid + '"]').remove();
+        }
+    },
+    updateName: function(name) {
+        this.$('#sidebar .meta .name').text(name);
+    },
+    updateDescription: function(description) {
+        this.$('#sidebar .meta .description').text(description);
+    }
+});
+
+
+/***
+
 var ClientGUI = function(client) {
 
     var self = this;
@@ -195,3 +278,5 @@ var ClientGUI = function(client) {
     return this;
 
 };
+
+**/
