@@ -12,12 +12,32 @@ var RoomsCollection = Backbone.Collection.extend({
     model: RoomModel
 });
 
+var TabsView = Backbone.View.extend({
+    el: '#rooms-menu',
+    initialize: function(rooms) {
+        this.rooms = rooms;
+    },
+    render: function() {
+        _.each(this.rooms, function(room) {
+            console.log(loog);
+        });
+    },
+    add: function(tab) {
+        
+    }
+});
+
 var ClientView = Backbone.View.extend({
     el: 'body',
     initialize: function(client) {
         this.client = client;
+        this.tabs = new TabsView(this.rooms)
+    },
+    addRoom: function(room) {
+        
     },
     switchRoom: function(id) {
+        var room = this.client.rooms.get(id);
         var $tabLink = this.$('#rooms-menu a').filter('[data-id=' + id + ']');
         if ($tabLink.length == 0) {
             $tabLink = this.$('#rooms-menu a[data-id=home]');
@@ -25,56 +45,74 @@ var ClientView = Backbone.View.extend({
         $tabLink.closest('li')
           .addClass('selected')
           .siblings().removeClass('selected');
-        var room = this.client.rooms.get(id);
-        room.view.render();
+        if (room) {
+            room.view.show();
+        } else {
+            $('#room-list').show().siblings().hide();
+        }
     }
 });
 
-var RoomView = Backbone.View.extend({
+var UserListView = Backbone.View.extend({
     el: '#room',
+    initialize: function(roomView) {
+        this.roomView = roomView
+        this.render();
+    },
+    render: function(users) {
+        var self = this;
+        this.$('.user-list').html('');
+        _.each(users, function(user) {
+            self.add(user);
+        });
+    },
+    add: function(user) {
+        var template = $('#js-tmpl-user-item').html();
+        var html = Mustache.to_html(template, user);
+        this.$('.user-list').append(html);
+    },
+    remove: function(cid) {
+        this.$('.user-list').find('[data-cid="' + cid + '"]').remove();
+    },
+});
+
+var RoomView = Backbone.View.extend({
+    className: 'view',
     events: {
         'click .entry .send': function() {
             console.log('send message!');
         },
         'keydown textarea': function() {
-            console.log('entery key send message!');
+            console.loga('entery key send message!');
         }
     },
     initialize: function(model) {
         var self = this;
         this.model = model;
-        model.bind('change:name', function(model, name) {
-            self.updateName(name);
+        this.userlist = new UserListView(this);
+        model.on('change:users', function(model, users) {
+            self.userlist.render(users);
         });
     },
     render: function() {
         var self = this;
         var template = $('#js-tmpl-room').html();
         var html = Mustache.to_html(template, this.model.toJSON());
-        $(this.el).html(html);
+        this.$el.html(html);
+        $('.views').append(this.$el);
         // Add users
-        // this.userlist.init(this.model.get('users');
+        this.userlist.render(this.model.get('users'));
     },
-    userlist: {
-        init: function(users) {
-            _.each(users, function(user) {
-                this.userlist.add(user);
-            });
-        },
-        add: function(user) {
-            var template = $('#js-tmpl-user-item').html();
-            var html = Mustache.to_html(template, user);
-            this.$('.user-list').append(html);
-        },
-        remove: function(cid) {
-            this.$('.user-list').find('[data-cid="' + cid + '"]').remove();
+    show: function() {
+        // We'll need to render if its not in dom
+        if ($('.views').find(this.$el).length <= 0) {
+            this.render();
         }
+        this.$el.siblings().hide();
+        this.$el.show();
     },
-    updateName: function(name) {
-        this.$('#sidebar .meta .name').text(name);
-    },
-    updateDescription: function(description) {
-        this.$('#sidebar .meta .description').text(description);
+    hide: function() {
+        this.$el.hide();
     }
 });
 

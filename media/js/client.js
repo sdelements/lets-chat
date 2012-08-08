@@ -44,8 +44,13 @@ var Client = function(config) {
             reconnect: true,
             transports: config.transports
         });
-        self.socket.on('room:newuser', function(newuser) {
-            // console.log(newuser);
+        self.socket.on('room:newuser', function(data) {
+            var room = self.rooms.get(data.room);
+            room.set('users', data.users);
+        });
+        self.socket.on('room:removeuser', function(data) {
+            var room = self.rooms.get(data.room);
+            room.set('users', data.users);
         });
         /** self.socket.on('room:meta', function(room) {
             var model = self.rooms.get(room._id);

@@ -25,7 +25,7 @@ var ChatServer = function (app, sessionStore) {
                     // No profile?
                     return;
                 }
-                users[hash.md5(client.id)] = profile;
+                users[profile.cid] = profile;
             });
         });
         return users;
@@ -64,7 +64,7 @@ var ChatServer = function (app, sessionStore) {
             var userData = hs.session.user;
             
             client.set('profile', {
-                cid: client.id,
+                cid: hash.md5(client.id),
                 id: userData._id,
                 email: userData.email,
                 firstName: userData.firstName,
@@ -78,27 +78,31 @@ var ChatServer = function (app, sessionStore) {
                 client.emit('ping');
             });
             
-            client.on('room:join', function(room, fn) {
-                client.join(room);
-                client.get('profile', function(err, profile) {
-                    var newuser = profile;
-                    newuser.room = room;
-                    self.io.sockets.in(room).emit('room:newuser', newuser);
-                });
-                // Send back Room meta
-                models.room.findById(room, function (err, room) {
+            client.on('room:join', function(id, fn) {
+                models.room.findById(id, function (err, room) {
                     if (err) {
                         // Oh shit
                         return;
                     }
+                    client.join(id);
+                    // Send back Room meta to client
                     fn({
                         id: room._id,
                         name: room.name,
                         description: room.description,
                         users: self.getUserlist(room._id)
                     });
+                    // Hey everyone, look who it is
+                    // TODO: Make this not send the whole list
+                    client.get('profile', function(err, profile) {
+                        var data = {};
+                        data.users = self.getUserlist();
+                        data.room = id;
+                        self.io.sockets.in(id).emit('room:newuser', data);
+                    });
                 });
             });
+
             /**
             client.on('room:meta', function(room) {
                 models.room.findById(room, function (err, room) {
@@ -114,7 +118,7 @@ var ChatServer = function (app, sessionStore) {
                 });
             });
             ***/
-            
+            /** 
             client.on('room:userlist', function(room) {
                 var users = self.getUserlist(room);
                 var userlist = {
@@ -188,24 +192,16 @@ var ChatServer = function (app, sessionStore) {
                 });
             });
             
+            **/
+            
         });
         
     };
 
     this.start = function () {
-
-        // Populate Rooms
-        models.room.find(function (err, rooms) {
-            rooms.forEach(function (room) {
-                self.rooms[room._id] = room;
-            });
-        });
-
         // Setup listeners
         this.listen();
-
 		return this;
-
     };
 
 };

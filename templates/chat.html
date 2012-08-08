@@ -33,6 +33,7 @@
 {% block body_class %}page-chat{% endblock %}
 
 {% block content %}
+<div id="client">
 	<header class="navbar">
         <div id="rooms-menu" class="tabs">
             <ul>
@@ -63,8 +64,8 @@
 			</ul>
 		</div>
 	</header>
-	<div id="client">
-        <div class="view" data-id="room-list" style="display: none;">
+	<div class="views">
+        <div id="room-list" class="view" style="display: none;">
             <div class="main">
                 <ul class="room-list list">
                     {% for room in rooms %}
@@ -86,9 +87,8 @@
                 </a>
             </div>
         </div><!-- view end -->
-        <div id="room" class="view">
-        </div><!-- room end -->
-	</div><!-- client end -->
+	</div><!-- views end -->
+</div><!-- client end -->
 {% endblock %}
 
 {% block page_assets %}
