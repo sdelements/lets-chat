@@ -5,8 +5,9 @@
 {% block page_js %}
     <script src="{{media_url}}/js/lib/underscore.js" type="text/javascript"></script>
     <script src="{{media_url}}/js/lib/backbone.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/clientGUI.js" type="text/javascript"></script>
-	<script src="{{media_url}}/js/client.js" type="text/javascript"></script>
+    <script src="{{media_url}}/js/models.js" type="text/javascript"></script>
+	<script src="{{media_url}}/js/views.js" type="text/javascript"></script>
+    <script src="{{media_url}}/js/controllers.js" type="text/javascript"></script>
 	<script type="text/javascript">
         var client;
 		$(function() {
@@ -26,6 +27,11 @@
                 }
             }
 			client = new Client(config).start();
+            
+            _.each(config.rooms, function(room) {
+                client.joinRoom(room.id);
+            });
+            
 		});
 	</script>
 {% endblock %}
@@ -37,16 +43,9 @@
 	<header class="navbar">
         <div id="rooms-menu" class="tabs">
             <ul>
-                <li class="fixed tab">
+                <li class="fixed tab" data-id="home">
                     <a href="#!/" class="home" data-id="home"><i class="icon-th icon-white"></i></a>
                 </li>
-                {% for room in rooms %}
-                    <li class="tab">
-                        <a class="room" href="#!/room/{{ room._id }}" data-id="{{ room._id }}">
-                            <span class="text">{{ room.name }}</span>
-                        </a>
-                    </li>
-                {% endfor %}
             </ul>
         </div>
 		<div class="user dropdown pull-right">
@@ -64,8 +63,8 @@
 			</ul>
 		</div>
 	</header>
-	<div class="views">
-        <div id="room-list" class="view" style="display: none;">
+	<div id="panes" class="views">
+        <div id="room-list" data-id="home" class="view" style="display: none;">
             <div class="main">
                 <ul class="room-list list">
                     {% for room in rooms %}

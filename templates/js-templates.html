@@ -1,5 +1,13 @@
 {% raw %}
 <div id="js-templates">
+    <script id="js-tmpl-tab" type="text/html">
+        <li class="tab" data-id="{{ id }}">
+            <a class="room" href="#!/room/{{ id }}" data-id="{{ id }}">
+                <span class="text">{{ name }}</span>
+                <span class="close">&times;</span>
+            </a>
+        </li>
+    </script>
     <script id="js-tmpl-message" type="text/html">
         <li class="message {{#own}}own{{/own}}" data-id="{{id}}" data-owner="{{owner}}" data-posted="{{posted}}" data-room="{{room}}">
             <div class="side">

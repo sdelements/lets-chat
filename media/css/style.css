@@ -4397,6 +4397,16 @@ header .tabs .tab a:hover {
   opacity: 1;
   filter: alpha(opacity=100);
 }
+header .tabs .tab a:hover .close {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+header .tabs .tab .close {
+  height: 30px;
+  line-height: 30px;
+  color: #aaa;
+  font-weight: normal;
+}
 header .tabs .selected {
   background: #222222 url('../img/dark_noise.png');
   position: relative;
