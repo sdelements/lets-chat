@@ -1,21 +1,12 @@
 var Client = function(config) {
 
     var self = this;
-    
+
     //
-    // DOM Elements
+    // Global Notifications
     //
-    this.dom = {
-        $templates: $('#js-templates')
-    }
-    
-    //
-    // Templates
-    //
-    this.templates = function(id) {
-        var $template = self.dom.$templates.find('#js-tmpl-' + id);
-        return $template.html()
-    }
+    this.notifications = {}
+    _.extend(this.notifications, Backbone.Events);
     
     //
     // Room Collection
@@ -26,16 +17,19 @@ var Client = function(config) {
     // Client View
     //
     this.view = new ClientView({
-        templates: this.templates,
-        rooms: this.rooms
+        rooms: this.rooms,
+        notifications: this.notifications
     });
     
     //
-    // Room actions
+    // Chat actions
     //
     this.joinRoom = function(id, switchRoom) {
-        self.socket.emit('room:join', id, function(room) {
+        self.socket.emit('rooms:join', id, function(room) {
             self.rooms.add(room);
+            self.getRoomHistory({
+                room: id
+            });
             if (switchRoom) {
                 self.view.switchView(id)
             }
@@ -55,6 +49,28 @@ var Client = function(config) {
             self.joinRoom(id, true);
         }
     }
+    this.getRoomHistory = function(options) {
+        self.socket.emit('messages:get', {
+            room: options.room
+        }, function(messages) {
+            console.log(messages);
+        });
+    }
+    this.addMessage = function(data) {
+        console.log(data);
+        var add = function(message) {
+            var room = self.rooms.get(message.room);
+            room.messages.add(message);
+        }
+        if ($.isArray(data)) {
+            _.each(data, add); 
+        } else {
+            add(data);
+        }
+    }
+    this.sendMessage = function(message) {
+        self.socket.emit('messages:new', message);
+    }
     
     //
     // Connection
@@ -63,6 +79,9 @@ var Client = function(config) {
         self.socket = io.connect(config.host, {
             reconnect: true,
             transports: config.transports
+        });
+        self.socket.on('messages:new', function(message) {
+            self.addMessage(message);
         });
     }
     
@@ -90,7 +109,10 @@ var Client = function(config) {
     // Bubbled View events
     //
     this.viewListen = function() {
-        self.view.tabs.on('tabclosed', function(data) {
+        this.notifications.on('newmessage', function(message) {
+            self.sendMessage(message);
+        });
+        this.notifications.on('tabclosed', function(data) {
             self.leaveRoom(data.id);
         });
     }

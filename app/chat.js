@@ -78,7 +78,58 @@ var ChatServer = function (app, sessionStore) {
                 client.emit('ping');
             });
             
-            client.on('room:join', function(id, fn) {
+            client.on('messages:get', function(query) {
+                var today = new Date()
+                query.from = query.from || new Date(today).setDate(today.getDate() - 1)
+                query.room = query.room || '';
+                models.message.where('posted').gte(query.from)
+                    .where('room').equals(query.room)
+                    .sort('posted', -1).populate('owner')
+                    .exec(function (err, docs) {
+                        var messages = [];
+                        if (docs) {
+                            docs.forEach(function (message) {
+                                messages.push({
+                                    room: message.room,
+                                    id: message._id,
+                                    owner: message.owner._id,
+                                    avatar: hash.md5(message.owner.email),
+                                    name: message.owner.displayName,
+                                    text: message.text,
+                                    posted: message.posted
+                                });
+                            });
+                        }
+                        messages.reverse();
+                        client.emit('messages:new', messages)
+                });
+            });
+            
+            client.on('messages:new', function(data) {
+                var message = new models.message({
+                    room: data.room,
+                    owner: userData._id,
+                    text: data.text
+                });
+                message.save(function(err, message) {
+                    if (err) {
+                        // Shit we're on fire!
+                        return;
+                    }
+                    var outgoingMessage = {
+                        id: message._id,
+                        owner: message.owner,
+                        avatar: hash.md5(userData.email),
+                        name: userData.displayName,
+                        text: message.text,
+                        posted: message.posted,
+                        room: message.room
+                    }
+                    self.io.sockets.in(message.room).emit('messages:new', outgoingMessage);
+                });
+            });
+            
+            client.on('rooms:join', function(id, fn) {
                 models.room.findById(id, function (err, room) {
                     if (err) {
                         // Oh shit
@@ -98,7 +149,7 @@ var ChatServer = function (app, sessionStore) {
                         var data = {};
                         data.users = self.getUserlist();
                         data.room = id;
-                        self.io.sockets.in(id).emit('room:newuser', data);
+                        self.io.sockets.in(id).emit('rooms:userjoin', data);
                     });
                 });
             });

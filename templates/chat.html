@@ -26,10 +26,11 @@
                     {% endfor %}
                 }
             }
-			client = new Client(config).start();
+            
+			window.app = new Client(config).start();
             
             _.each(config.rooms, function(room) {
-                client.joinRoom(room.id);
+                window.app.joinRoom(room.id);
             });
             
 		});
