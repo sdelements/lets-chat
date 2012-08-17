@@ -26,19 +26,35 @@ var RoomView = Backbone.View.extend({
         this.$el.html(html);
         this.$el.attr('data-id', this.model.id);
         this.$el.hide();
+        this.$messages = this.$('.messages');
         return this.$el;
     },
-    addMessage: function(message) {
+    checkScrollLocked: function() {
+        return false;
+        // return this.$messages[0].scrollHeight - this.$messages.scrollTop() <= this.$messages.outerHeight();
+    },
+    scrollMessagesDown: function() {
+        this.$messages.prop({
+            scrollTop: this.$messages.prop('scrollHeight')
+        });
+    },
+    addMessage: function(message, forceScroll) {
+        var atBottom = this.checkScrollLocked();
         var html = Mustache.to_html(this.messageTemplate, message);
-        this.$('.messages').append(html);
+        this.$messages.append(html);
+        if (atBottom && !message.multiple) {
+            this.scrollMessagesDown();
+        }
     },
     sendMessage: function(e) {
         if (e.keyCode != 13) return;
+        e.preventDefault();
         $textarea = $(e.currentTarget);
         this.notifications.trigger('newmessage', {
             room: this.model.id,
             text: $.trim($textarea.val())
         });
+        $textarea.val('');
     }
 });
 
@@ -60,9 +76,17 @@ var TabsView = Backbone.View.extend({
           .addClass('selected')
           .siblings().removeClass('selected');
     },
+    setBadge: function(id, value) {
+        this.$el.find('.tab[data-id=' + id + '] .badge').text(value)
+    },
     add: function(room) {
+        i = 0;
+        var self = this;
         var tab = Mustache.to_html(this.template, room.toJSON());
         this.$el.append(tab);
+        room.messages.bind('add', function(message) {
+            self.setBadge(message.get('room'), i++);
+        });
     },
     remove: function(id) {
         this.$el.find('.tab[data-id=' + id + ']').remove();

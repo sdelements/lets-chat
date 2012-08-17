@@ -52,18 +52,18 @@ var Client = function(config) {
     this.getRoomHistory = function(options) {
         self.socket.emit('messages:get', {
             room: options.room
-        }, function(messages) {
-            console.log(messages);
         });
     }
     this.addMessage = function(data) {
-        console.log(data);
-        var add = function(message) {
+        var add = function(message, multiple) {
             var room = self.rooms.get(message.room);
+            message.multiple = true;
             room.messages.add(message);
         }
         if ($.isArray(data)) {
-            _.each(data, add); 
+            _.each(data, function(message) {
+                add(message, true);
+            }); 
         } else {
             add(data);
         }
