@@ -63,7 +63,6 @@ var RoomView = Backbone.View.extend({
 //
 var TabsMenuView = Backbone.View.extend({
     el: '#rooms-menu ul',
-    last: 'home',
     events: {
         'click .tab .close': 'tabclosed'
     },
@@ -94,6 +93,10 @@ var TabsMenuView = Backbone.View.extend({
         this.notifications.trigger('tabclosed', {
             id: $tab.data('id')
         });
+    },
+    next: function(id) {
+        var $tab = this.$el.find('.tab[data-id=' + id + ']');
+        return $tab.next().length > 0 ? $tab.next().data('id') : $tab.prev().data('id');
     }
 });
 
@@ -111,7 +114,6 @@ var TabsView = Backbone.View.extend({
         });
     },
     select: function(id) {
-        this.views[id].unread = 0;
         this.current = id;
         this.menu.select(id);
         this.$('.view').hide();
@@ -126,19 +128,15 @@ var TabsView = Backbone.View.extend({
         this.menu.add(room);
         this.views[room.id] = view;
         this.$el.append($pane);
-        view.unread = 0;
         //
         // Room Events
         //
         room.messages.bind('add', function(message) {
-            if (self.current !=  room.id) {
-                self.menu.setUnread(message.get('room'), ++view.unread);
-            }
         });
     },
     remove: function(id) {
         if (this.current == id) {
-            this.select(this.menu.last)
+            this.select(this.menu.next(id))
         }
         this.menu.remove(id);
         this.views[id].remove();
