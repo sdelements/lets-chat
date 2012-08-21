@@ -59,9 +59,9 @@ var RoomView = Backbone.View.extend({
 });
 
 //
-// Tabs
+// Tabs Menu
 //
-var TabsView = Backbone.View.extend({
+var TabsMenuView = Backbone.View.extend({
     el: '#rooms-menu ul',
     last: 'home',
     events: {
@@ -80,13 +80,9 @@ var TabsView = Backbone.View.extend({
         this.$el.find('.tab[data-id=' + id + '] .badge').text(value)
     },
     add: function(room) {
-        i = 0;
         var self = this;
         var tab = Mustache.to_html(this.template, room.toJSON());
         this.$el.append(tab);
-        room.messages.bind('add', function(message) {
-            self.setBadge(message.get('room'), i++);
-        });
     },
     remove: function(id) {
         this.$el.find('.tab[data-id=' + id + ']').remove();
@@ -104,35 +100,47 @@ var TabsView = Backbone.View.extend({
 //
 // Panes Manager
 //
-var PanesView = Backbone.View.extend({
+var TabsView = Backbone.View.extend({
     el: '#panes',
     current: '',
     views: {},
     initialize: function(templates) {
         this.notifications = this.options.notifications;
-        this.tabs = new TabsView({
+        this.menu = new TabsMenuView({
             notifications: this.notifications
         });
     },
     select: function(id) {
+        this.views[id].unread = 0;
         this.current = id;
-        this.tabs.select(id);
+        this.menu.select(id);
         this.$('.view').hide();
         this.$('.view[data-id=' + id + ']')
             .show()
             .siblings().hide();
     },
     add: function(view) {
+        var self = this;
         var $pane = view.render();
-        this.tabs.add(view.model);
-        this.views[view.model.id] = view;
+        var room = view.model;
+        this.menu.add(room);
+        this.views[room.id] = view;
         this.$el.append($pane);
+        view.unread = 0;
+        //
+        // Room Events
+        //
+        room.messages.bind('add', function(message) {
+            if (self.current !=  room.id) {
+                self.menu.setUnread(message.get('room'), ++view.unread);
+            }
+        });
     },
     remove: function(id) {
         if (this.current == id) {
-            this.select(this.tabs.last)
+            this.select(this.menu.last)
         }
-        this.tabs.remove(id);
+        this.menu.remove(id);
         this.views[id].remove();
         delete this.views[id];
     }
@@ -153,14 +161,14 @@ var ClientView = Backbone.View.extend({
         //
         // Subviews
         //
-        this.panes = new PanesView({
+        this.tabs = new TabsView({
             notifications: this.notifications
         });
         //
         // New Room
         //
         this.rooms.bind('add', function(room) {
-            self.panes.add(new RoomView({
+            self.tabs.add(new RoomView({
                 notifications: self.notifications,
                 model: room
             }));
@@ -169,14 +177,14 @@ var ClientView = Backbone.View.extend({
         // Leaving Room
         //
         this.rooms.bind('remove', function(room) {
-            self.panes.remove(room.id);
+            self.tabs.remove(room.id);
         });
     },
     switchView: function(id) {
         if (id) {
-            this.panes.select(id);
+            this.tabs.select(id);
         } else {
-            this.panes.select('home');
+            this.tabs.select('home');
         }
     }
 });
