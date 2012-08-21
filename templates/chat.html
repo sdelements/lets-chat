@@ -15,16 +15,7 @@
                 room: '{{room.id}}',
                 host: '{{host}}',
                 port: {{port}},
-                transports: ['websocket', 'flashsocket'],
-                rooms: {
-                    {% for room in rooms %}
-                        '{{ room._id }}': {
-                            id: '{{ room.id }}',
-                            name: '{{ room.name }}',
-                            description: '{{ room.description }}'
-                        },
-                    {% endfor %}
-                }
+                transports: ['websocket', 'flashsocket']
             }
             
 			window.app = new Client(config).start();

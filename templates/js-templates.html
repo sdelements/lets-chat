@@ -10,7 +10,7 @@
         </li>
     </script>
     <script id="js-tmpl-message" type="text/html">
-        <li class="message {{#own}}own{{/own}}" data-id="{{id}}" data-owner="{{owner}}" data-posted="{{posted}}" data-room="{{room}}">
+        <li class="message {{#own}}own{{/own}} {{#fragment}}fragment{{/fragment}}" data-id="{{id}}" data-owner="{{owner}}" data-posted="{{posted}}" data-room="{{room}}">
             <div class="side">
                 <img class="avatar" src="http://www.gravatar.com/avatar/{{avatar}}?s=50" />
             </div>
@@ -19,11 +19,7 @@
                     <div class="name">{{name}}</div>
                     <time></time>
                 </div>
-                <div class="text">
-                    <div class="fragments">
-                        <div class="fragment" data-id="{{id}}" data-posted="{{posted}}">{{text}}</div>
-                    </div>
-                </div>
+                <div class="text">{{{ text }}}</div>
             </div>
         </li>
     </script>

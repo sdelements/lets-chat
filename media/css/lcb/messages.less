@@ -1,18 +1,19 @@
 .messages {
 	background: #fff;
 	margin: 0;
-	.border-radius(5px 5px 0 0);
+	.border-radius(4px 4px 0 0);
 }
-.messages .message {
-	border-bottom: 1px #eee solid;
+
+.message {
+	border-top: 1px #eee solid;
 	padding: 7px;
 	display: block;
 	overflow: hidden;
 	&.own {
 		background-color: #fcffd8;
 	}
-	&:last-child {
-		border-bottom: none;
+	&:first-child {
+		border-top: none;
 	}
 	.text {
 		word-wrap: break-word;
@@ -51,9 +52,17 @@
 			max-width: 350px;
 		}
 	}
+    &.fragment {
+        padding-top: 0;
+        border-top: none;
+        .avatar,
+        .top {
+            display: none;
+        }
+    }
 }
 
-.messages .event {
+.event {
 	background: #f9ffb5;
 	padding: 7px;
 	border-bottom: 1px #eee solid;

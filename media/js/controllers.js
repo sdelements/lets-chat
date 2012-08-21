@@ -55,17 +55,17 @@ var Client = function(config) {
         });
     }
     this.addMessage = function(data) {
-        var add = function(message, multiple) {
-            var room = self.rooms.get(message.room);
-            message.multiple = true;
-            room.messages.add(message);
-        }
         if ($.isArray(data)) {
             _.each(data, function(message) {
-                add(message, true);
-            }); 
+                var room = self.rooms.get(message.room);
+                room.messages.add(message, {
+                    silent: true
+                });
+                room.messages.trigger('addsilent', message);
+            });
         } else {
-            add(data);
+            var room = self.rooms.get(data.room);
+            room.messages.add(data);
         }
     }
     this.sendMessage = function(message) {

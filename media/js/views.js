@@ -6,6 +6,8 @@ var RoomView = Backbone.View.extend({
     events: {
         'keypress .entry textarea': 'sendMessage'
     },
+    lastMessageUser: false,
+    scrollLocked: true,
     initialize: function() {
         var self = this;
         //
@@ -20,29 +22,57 @@ var RoomView = Backbone.View.extend({
         this.model.messages.bind('add', function(message) {
             self.addMessage(message.toJSON());
         });
+        this.model.messages.bind('addsilent', function(message) {
+            self.addMessage(message, true);
+        });
     },
     render: function() {
+        var self = this;
         var html = Mustache.to_html(this.template, this.model.toJSON());
         this.$el.html(html);
         this.$el.attr('data-id', this.model.id);
         this.$el.hide();
         this.$messages = this.$('.messages');
+        //
+        // Message Scroll Lock
+        //
+        this.$messages.on('scroll', function() {
+            self.updateScrollLock();
+        });
         return this.$el;
     },
-    checkScrollLocked: function() {
-        return false;
-        // return this.$messages[0].scrollHeight - this.$messages.scrollTop() <= this.$messages.outerHeight();
+    updateScrollLock: function() {
+        this.scrollLocked = this.$messages[0].scrollHeight -
+          this.$messages.scrollTop() - 5 <= this.$messages.outerHeight();
+        return this.scrollLocked;
     },
     scrollMessagesDown: function() {
         this.$messages.prop({
             scrollTop: this.$messages.prop('scrollHeight')
         });
     },
-    addMessage: function(message, forceScroll) {
-        var atBottom = this.checkScrollLocked();
-        var html = Mustache.to_html(this.messageTemplate, message);
-        this.$messages.append(html);
-        if (atBottom && !message.multiple) {
+    formatContent: function(text) {
+        // TODO: Fix this regex
+        var imagePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b/gim;
+        var linkPattern =  /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+        if (text.match(imagePattern)) {
+            text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" alt="$1" /></a>');
+        } else {
+            text = text.replace(linkPattern, '<a href="$1" target="_blank">$1</a>');
+        }
+        return text;
+    },
+    addMessage: function(message, noScroll) {
+        if (this.lastMessageUser === message.owner) {
+            message.fragment = true;
+        }
+        var $html = $(Mustache.to_html(this.messageTemplate, message));
+        var $text = $html.find('.text');
+        $text.html(this.formatContent($text.text()));
+        this.$messages.append($html);
+        this.lastMessageUser = message.owner;
+        if (this.scrollLocked && !noScroll) {
+            console.log('herp');
             this.scrollMessagesDown();
         }
     },
@@ -70,22 +100,31 @@ var TabsMenuView = Backbone.View.extend({
         this.template = $('#js-tmpl-tab').html()
         this.notifications = this.options.notifications
     },
+    render: function() {
+        //
+        // Tab size fix
+        //
+        var $tabs = this.$('.tab:not(.fixed)');
+        $tabs.width(100 / $tabs.length + '%');
+    },
     select: function(id) {
-        this.$el.find('.tab[data-id=' + id + ']')
+        this.$('.tab[data-id=' + id + ']')
           .addClass('selected')
           .siblings().removeClass('selected');
     },
     setBadge: function(id, value) {
-        this.$el.find('.tab[data-id=' + id + '] .badge').text(value)
+        this.$('.tab[data-id=' + id + '] .badge').text(value)
     },
     add: function(room) {
         var self = this;
         var tab = Mustache.to_html(this.template, room.toJSON());
         this.$el.append(tab);
+        this.render();
     },
     remove: function(id) {
         this.$el.find('.tab[data-id=' + id + ']').remove();
         this.last = this.$el.find('.tab:last').data('id');
+        this.render();
     },
     tabclosed: function(e) {
         e.preventDefault();
@@ -95,7 +134,7 @@ var TabsMenuView = Backbone.View.extend({
         });
     },
     next: function(id) {
-        var $tab = this.$el.find('.tab[data-id=' + id + ']');
+        var $tab = this.$('.tab[data-id=' + id + ']');
         return $tab.next().length > 0 ? $tab.next().data('id') : $tab.prev().data('id');
     }
 });
@@ -120,6 +159,9 @@ var TabsView = Backbone.View.extend({
         this.$('.view[data-id=' + id + ']')
             .show()
             .siblings().hide();
+        if (this.views[id].scrollLocked) {
+            this.views[id].scrollMessagesDown();
+        }
     },
     add: function(view) {
         var self = this;

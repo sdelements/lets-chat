@@ -4209,22 +4209,16 @@ a.badge:hover {
   -moz-box-align: stretch;
 }
 .fancy-scrollbars *::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
 }
 .fancy-scrollbars *::-webkit-scrollbar-track {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 .fancy-scrollbars *::-webkit-scrollbar-thumb {
   background-color: #aaa;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
@@ -4518,60 +4512,68 @@ header .user .dropdown-menu a:hover {
 .messages {
   background: #fff;
   margin: 0;
-  -webkit-border-radius: 5px 5px 0 0;
-  -moz-border-radius: 5px 5px 0 0;
-  border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
 }
-.messages .message {
-  border-bottom: 1px #eee solid;
+.message {
+  border-top: 1px #eee solid;
   padding: 7px;
   display: block;
   overflow: hidden;
 }
-.messages .message.own {
+.message.own {
   background-color: #fcffd8;
 }
-.messages .message:last-child {
-  border-bottom: none;
+.message:first-child {
+  border-top: none;
 }
-.messages .message .text {
+.message .text {
   word-wrap: break-word;
 }
-.messages .message .side {
+.message .side {
   margin-right: 7px;
   float: left;
 }
-.messages .message .meta {
+.message .meta {
   margin-left: 40px;
 }
-.messages .message .top {
+.message .top {
   overflow: hidden;
 }
-.messages .message .name {
+.message .name {
   font-weight: bold;
   color: #aaa;
   float: left;
 }
-.messages .message time {
+.message time {
   color: #bbb;
   float: right;
 }
-.messages .message .avatar {
+.message .avatar {
   width: 30px;
   height: 30px;
   margin-top: 5px;
 }
-.messages .message .thumbnail {
+.message .thumbnail {
   background-color: #fff;
   margin-top: 5px;
   display: inline-block;
   overflow: hidden;
 }
-.messages .message .thumbnail img {
+.message .thumbnail img {
   height: 250px;
   max-width: 350px;
 }
-.messages .event {
+.message.fragment {
+  padding-top: 0;
+  border-top: none;
+}
+.message.fragment .avatar,
+.message.fragment .top {
+  display: none;
+}
+.event {
   background: #f9ffb5;
   padding: 7px;
   border-bottom: 1px #eee solid;
@@ -4746,9 +4748,9 @@ header .user .dropdown-menu a:hover {
   background: #ffffff url('../img/grid_noise.png');
   padding: 10px;
   border-top: 1px #ccc solid;
-  -webkit-border-radius: 0 0 5px 5px;
-  -moz-border-radius: 0 0 5px 5px;
-  border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
 }
 .entry textarea {
   min-height: 70px;
@@ -4881,27 +4883,21 @@ header .user .dropdown-menu a:hover {
 }
 .chat {
   margin: 15px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 .chat *::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
 }
 .chat *::-webkit-scrollbar-track {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 .chat *::-webkit-scrollbar-thumb {
   background-color: #aaa;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
