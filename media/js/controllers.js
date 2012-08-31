@@ -127,6 +127,7 @@ var Client = function(config) {
     this.route = function() {
         var Router = Backbone.Router.extend({
             routes: {
+                '!/room/home': 'list',
                 '!/room/:id': 'join',
                 '*path': 'list'
             },
