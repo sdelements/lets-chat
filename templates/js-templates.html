@@ -46,6 +46,16 @@
             </div>
         </li>
     </script>
+    <script id="js-tmpl-room-list-item" type="text/html">
+        <li class="room" data-id="{{ id }}">
+            <div class="inner">
+                <a href="#!/room/{{ id }}">
+                    <div class="name">{{ name }}</div>
+                    <div class="description">{{ description }}</div>
+                </a>
+            </div>
+        </li>
+    </script>
     <script id="js-tmpl-room" type="text/html">
             <div class="main">
                 <div class="chat">

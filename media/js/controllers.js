@@ -6,9 +6,14 @@ var Client = function(config) {
     // Global Notifications
     //
     this.notifications = _.extend({}, Backbone.Events);
-
+    
     //
-    // Room Collection
+    // Available Rooms Collections
+    //
+    this.availableRooms = new AvailableRoomsCollection();
+    
+    //
+    // Rooms Collection
     //
     this.rooms = new RoomsCollection();
 
@@ -16,6 +21,7 @@ var Client = function(config) {
     // Client View
     //
     this.view = new ClientView({
+        availableRooms: this.availableRooms,
         rooms: this.rooms,
         notifications: this.notifications
     });
@@ -38,16 +44,7 @@ var Client = function(config) {
         });
     }
     this.createRoom = function (room, switchRoom) {
-      self.socket.emit('rooms:create', room, function (room) {
-        var id = room.id;
-        self.rooms.add(room)
-        self.getRoomHistory({
-          room: id
-        });
-        if (switchRoom) {
-          self.view.switchView(id)
-        }
-      })
+      self.socket.emit('rooms:create', room)
     }
     this.leaveRoom = function(id) {
         var room = self.rooms.get(id);
@@ -74,7 +71,6 @@ var Client = function(config) {
         });
     }
     this.addUser = function(data) {
-        console.log(data);
         var add = function(user) {
             var room = self.rooms.get(user.room);
             room.users.add(user);
@@ -117,6 +113,9 @@ var Client = function(config) {
         self.socket.on('users:new', function(user) {
             self.addUser(user);
         });
+        self.socket.on('rooms:new', function(room) {
+            self.availableRooms.add(room);
+        });
     }
 
     //
@@ -143,6 +142,9 @@ var Client = function(config) {
     // Bubbled View events
     //
     this.viewListen = function() {
+        this.notifications.on('createroom', function(room) {
+            self.createRoom(room);
+        });
         this.notifications.on('newmessage', function(message) {
             self.sendMessage(message);
         });

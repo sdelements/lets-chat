@@ -1,6 +1,27 @@
 //
 // Userlist
 //
+var RoomListView = Backbone.View.extend({
+    el: '#room-list',
+    initialize: function() {
+        var self = this;
+        this.$list = this.$('.room-list');
+        this.template = $('#js-tmpl-room-list-item').html();
+        this.collection = this.options.collection;
+        this.collection.bind('add', function(room) {
+            self.add(room);
+        });
+    },
+    add: function(room) {
+        console.log(room);
+        var item = Mustache.to_html(this.template, room.toJSON());
+        this.$list.prepend(item);
+    }
+});
+
+//
+// Userlist
+//
 var UserListView = Backbone.View.extend({
     initialize: function() {
         this.model.bind('add', function(user) {
@@ -205,25 +226,34 @@ var TabsView = Backbone.View.extend({
     }
 });
 
-var NewRoomView = Backbone.View.extend({
-  el: '#new-room',
-  initialize: function () {
-    this.notifications = this.option.notifications;
+//
+// Create Room
+//
+var CreateRoomView = Backbone.View.extend({
+  el: '#create-room',
+  initialize: function() {
+    this.notifications = this.options.notifications;
   },
   events: {
-    'click form input[name="submit"]': 'createRoom'
+    'click .create': 'createRoom'
   },
-  show: function () {
-    this.$el.show()
+  clear: function() {
+    this.$('input[type="text"], textarea').val('');
   },
-  hide: function () {
-    this.$el.hide()
+  show: function() {
+    this.$el.modal('show');
   },
-  createRoom: function () {
+  hide: function() {
+    this.$el.modal('hide');
+  },
+  createRoom: function() {
     var room = {
-      name: this.$('input[name=""]').val(),
-      description: this.$('textarea[name=""]').val()
+      name: this.$('input[name="name"]').val(),
+      description: this.$('textarea[name="description"]').val()
     }
+    this.clear();
+    this.hide();
+    this.notifications.trigger('createroom', room);
     return false;
   }
 })
@@ -238,16 +268,24 @@ var ClientView = Backbone.View.extend({
         //
         // Vars
         //
+        this.availableRooms = this.options.availableRooms;
         this.rooms = this.options.rooms;
         this.notifications = this.options.notifications;
         //
         // Subviews
         //
+        this.roomList = new RoomListView({
+            collection: this.availableRooms
+        });
         this.tabs = new TabsView({
             notifications: this.notifications
         });
+        this.createRoom = new CreateRoomView({
+            notifications: this.notifications
+        });
         //
-        // New Room
+        //
+        // Joined Room
         //
         this.rooms.bind('add', function(room) {
             self.tabs.add(new RoomView({

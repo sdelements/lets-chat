@@ -159,20 +159,17 @@ var ChatServer = function (app, sessionStore) {
             });
 
             client.on('rooms:create', function (room, fn) {
-              models.rooms.insert({
+              var newroom = new models.room({
                 name: room.name,
                 description: room.description,
-              }, function (err, room) {
+                owner: userData._id
+              });
+              newroom.save(function (err, room) {
                 if (err) {
                   // We derped somehow
                   return;
                 }
-                fn({
-                  id: room._id,
-                  name: room.name,
-                  description: room.description,
-                  users: self.getUserlist(room._id)
-                });
+                self.io.sockets.emit('rooms:new', room);
               })
             })
 

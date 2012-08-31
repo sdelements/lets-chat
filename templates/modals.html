@@ -1,7 +1,8 @@
 <div id="modals">
-    <div id="new-room" class="modal hide fade">
+    <div id="create-room" class="modal hide">
         <form class="validate form-horizontal" action="/ajax/add-room" method="post">
             <div class="modal-header">
+                <a class="close">&times;</a>
                 <h3>New Room</h3>
             </div>
             <div class="modal-body">
@@ -20,7 +21,7 @@
                 <p class="response"></p>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-success" name="submit" value="Create Room">
+                <input type="submit" class="btn btn-success create" name="submit" value="Create Room">
             </div>
         </form>
     </div>
