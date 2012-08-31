@@ -1,4 +1,3 @@
-/* This beautiful CSS-File has been crafted with LESS (lesscss.org) and compiled by simpLESS (wearekiss.com/simpless) */
 /*********************
  * LCB Styles
  *********************/
@@ -4210,22 +4209,16 @@ a.badge:hover {
   -moz-box-align: stretch;
 }
 .fancy-scrollbars *::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
 }
 .fancy-scrollbars *::-webkit-scrollbar-track {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 .fancy-scrollbars *::-webkit-scrollbar-thumb {
   background-color: #aaa;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
@@ -4325,7 +4318,7 @@ textarea {
 header {
   background: #222222 url('../img/header.png');
   border-bottom: 1px #000 solid;
-  height: 40px;
+  height: 42px;
   *zoom: 1;
 }
 header:before,
@@ -4337,37 +4330,56 @@ header:after {
   clear: both;
 }
 header .tabs {
-  margin: 0;
+  width: 70%;
+  line-height: 0;
   padding: 11px 0 0 25px;
   float: left;
-  display: block;
+  *zoom: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: visible;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
 }
-header .tabs .badge {
-  padding: 1px 7px;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 7px;
+header .tabs:before,
+header .tabs:after {
+  display: table;
+  content: "";
+}
+header .tabs:after {
+  clear: both;
+}
+header .tabs ul {
+  padding: 0;
+  margin: 0;
+  display: block;
 }
 header .tabs .tab {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  width: 20%;
+  max-width: 200px;
   display: inline-block;
   overflow: visible;
-  margin-right: 5px;
+}
+header .tabs .tab.fixed {
+  width: 50px;
+  text-align: center;
 }
 header .tabs .tab a {
   background: #222222 url('../img/dark_noise.png');
   height: 30px;
   line-height: 30px;
   color: #fff;
-  padding: 0 20px;
+  padding: 0 10px;
   border: 1px #444 solid;
   border-bottom: none;
   display: block;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   -webkit-border-radius: 4px 4px 0 0;
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
@@ -4379,24 +4391,59 @@ header .tabs .tab a:hover {
   opacity: 1;
   filter: alpha(opacity=100);
 }
+header .tabs .tab a:hover .close {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+header .tabs .tab .close {
+  height: 30px;
+  line-height: 30px;
+  color: #aaa;
+  font-weight: normal;
+}
+header .tabs .selected {
+  background: #222222 url('../img/dark_noise.png');
+  position: relative;
+  z-index: 999;
+  padding-bottom: 2px;
+  margin-bottom: -2px;
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
 header .tabs .selected a {
   position: relative;
   z-index: 999;
+  -webkit-box-shadow: 0 0 5px #222222;
+  -moz-box-shadow: 0 0 5px #222222;
+  box-shadow: 0 0 5px #222222;
   opacity: 1;
   filter: alpha(opacity=100);
-  -webkit-box-shadow: 0 0 8px #111111;
-  -moz-box-shadow: 0 0 8px #111111;
-  box-shadow: 0 0 8px #111111;
+}
+header .tabs .badge {
+  padding: 1px 7px;
+  position: absolute;
+  top: 7px;
+  right: 6px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
 }
 header .user {
-  height: 40px;
-  line-height: 40px;
+  background: #222222 url('../img/header.png');
+  max-width: 30%;
+  height: 42px;
+  line-height: 42px;
   float: right;
   padding: 0 10px;
   border-left: 1px #111 solid;
   position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
 }
-header .user .dropdown-menu {
+header .user .dropdown {
   margin: 5px 5px 0 0;
 }
 header .user .caret {
@@ -4407,7 +4454,11 @@ header .user .caret {
   vertical-align: middle;
 }
 header .user a {
+  color: #fff;
   display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 header .user a:hover {
   text-decoration: none;
@@ -4419,10 +4470,20 @@ header .user a .name {
   color: #bbb;
 }
 header .user img {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   margin-right: 5px;
   vertical-align: middle;
+}
+header .user .dropdown-menu {
+  margin-right: 5px;
+}
+header .user .dropdown-menu,
+header .user .dropdown-menu a {
+  color: #333;
+}
+header .user .dropdown-menu a:hover {
+  color: #fff;
 }
 .modal-body .response {
   padding: 8px 35px 8px 14px;
@@ -4451,60 +4512,68 @@ header .user img {
 .messages {
   background: #fff;
   margin: 0;
-  -webkit-border-radius: 5px 5px 0 0;
-  -moz-border-radius: 5px 5px 0 0;
-  border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
 }
-.messages .message {
-  border-bottom: 1px #eee solid;
+.message {
+  border-top: 1px #eee solid;
   padding: 7px;
   display: block;
   overflow: hidden;
 }
-.messages .message.own {
+.message.own {
   background-color: #fcffd8;
 }
-.messages .message:last-child {
-  border-bottom: none;
+.message:first-child {
+  border-top: none;
 }
-.messages .message .text {
+.message .text {
   word-wrap: break-word;
 }
-.messages .message .side {
+.message .side {
   margin-right: 7px;
   float: left;
 }
-.messages .message .meta {
+.message .meta {
   margin-left: 40px;
 }
-.messages .message .top {
+.message .top {
   overflow: hidden;
 }
-.messages .message .name {
+.message .name {
   font-weight: bold;
   color: #aaa;
   float: left;
 }
-.messages .message time {
+.message time {
   color: #bbb;
   float: right;
 }
-.messages .message .avatar {
+.message .avatar {
   width: 30px;
   height: 30px;
   margin-top: 5px;
 }
-.messages .message .thumbnail {
+.message .thumbnail {
   background-color: #fff;
   margin-top: 5px;
   display: inline-block;
   overflow: hidden;
 }
-.messages .message .thumbnail img {
+.message .thumbnail img {
   height: 250px;
   max-width: 350px;
 }
-.messages .event {
+.message.fragment {
+  padding-top: 0;
+  border-top: none;
+}
+.message.fragment .avatar,
+.message.fragment .top {
+  display: none;
+}
+.event {
   background: #f9ffb5;
   padding: 7px;
   border-bottom: 1px #eee solid;
@@ -4522,10 +4591,68 @@ header .user img {
   -moz-border-radius: 7px;
   border-radius: 7px;
 }
-#client {
+#room-list {
+  display: block;
+}
+#room-list .top {
+  padding: 20px;
+  overflow: hidden;
+}
+#room-list .top h1 {
+  float: left;
+}
+#room-list .top .btn {
+  margin-top: 20px;
+  float: right;
+}
+.room-list {
+  overflow: hidden;
+}
+.room-list,
+.room-list ul,
+.room-list li {
+  padding: 0;
+  margin: 0;
+}
+.room-list .room {
+  background: #111;
+  width: 250px;
+  padding: 10px;
+  margin: 5px;
+  border-top: 3px #777 solid;
+  display: block;
+  float: left;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.room-list .name {
+  font-size: 20px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.room-list .description {
+  color: #777;
+}
+.room-list .user {
+  margin-right: 5px;
+  display: block;
+  float: left;
+}
+.room-list img {
+  width: 30px;
+  height: 30px;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
+}
+.views {
   width: 100%;
   position: absolute;
-  top: 41px;
+  top: 43px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -4542,12 +4669,27 @@ header .user img {
   -moz-box-align: stretch;
   -moz-box-pack: left;
 }
-#sidebar {
+.view {
+  width: 100%;
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+  box-orient: horizontal;
+  box-align: stretch;
+  box-pack: left;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  -webkit-box-pack: left;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  -moz-box-pack: left;
+}
+.sidebar {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
 }
-#content {
+.main {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
@@ -4561,7 +4703,7 @@ header .user img {
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
 }
-#chat {
+.chat {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
@@ -4575,13 +4717,13 @@ header .user img {
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
 }
-#chat .messages {
+.chat .messages {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   overflow: auto;
 }
-#entry {
+.entry {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
@@ -4598,33 +4740,33 @@ header .user img {
   -moz-box-align: stretch;
   -moz-box-pack: left;
 }
-#entry textarea {
+.entry textarea {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
 }
-#entry .btn {
+.entry .btn {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
 }
-#entry {
+.entry {
   background: #ffffff url('../img/grid_noise.png');
   padding: 10px;
   border-top: 1px #ccc solid;
-  -webkit-border-radius: 0 0 5px 5px;
-  -moz-border-radius: 0 0 5px 5px;
-  border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
 }
-#entry textarea {
+.entry textarea {
   min-height: 70px;
   margin: 0;
   display: block;
 }
-#entry .btn {
+.entry .btn {
   margin-left: 5px;
 }
-#sidebar {
+.sidebar {
   width: 230px;
   color: #fff;
   margin: 20px;
@@ -4632,36 +4774,36 @@ header .user img {
   position: relative;
   z-index: 999;
 }
-#sidebar .buttons {
+.sidebar .buttons {
   float: left;
 }
-#sidebar p,
-#sidebar h1 {
+.sidebar p,
+.sidebar h1 {
   color: #fff;
 }
-#sidebar .item-list {
+.sidebar .item-list {
   margin-top: 10px;
   border: 1px #444 solid;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-#sidebar .item-list h3 {
+.sidebar .item-list h3 {
   font-size: 14px;
   font-weight: normal;
 }
-#sidebar .item-list .top {
+.sidebar .item-list .top {
   background: #222222 url('../img/header.png') repeat-x;
   padding: 3px 5px;
 }
-#sidebar .item-list .top h3 {
+.sidebar .item-list .top h3 {
   display: inline;
 }
-#sidebar .item-list .top .btn {
+.sidebar .item-list .top .btn {
   padding: 2px 6px;
   float: right;
 }
-#sidebar .item-list ul {
+.sidebar .item-list ul {
   max-height: 170px;
   background: #f2f2f2;
   color: #555;
@@ -4671,107 +4813,161 @@ header .user img {
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-#sidebar .item-list li {
+.sidebar .item-list li {
   margin: 5px;
   margin-bottom: 0;
   display: block;
   word-wrap: break-word;
   *zoom: 1;
 }
-#sidebar .item-list li:before,
-#sidebar .item-list li:after {
+.sidebar .item-list li:before,
+.sidebar .item-list li:after {
   display: table;
   content: "";
 }
-#sidebar .item-list li:after {
+.sidebar .item-list li:after {
   clear: both;
 }
-#sidebar .item-list li:last-child {
+.sidebar .item-list li:last-child {
   border-bottom: 0;
   margin-bottom: 5px;
 }
-#sidebar .item-list .avatar {
+.sidebar .item-list .avatar {
   width: 35px;
   height: 35px;
   margin-right: 5px;
 }
-#files form,
-#files input {
+.files form,
+.files input {
   margin: 0;
 }
-#files .toggle-upload .icon-remove {
+.files .toggle-upload .icon-remove {
   display: none;
 }
-#files .toggle-upload.open .icon-plus {
+.files .toggle-upload.open .icon-plus {
   display: none;
 }
-#files .toggle-upload.open .icon-remove {
+.files .toggle-upload.open .icon-remove {
   display: inline-block;
 }
-#files .upload {
+.files .upload {
   background: #222;
   border-top: 1px #000 solid;
 }
-#files form {
+.files form {
   padding: 5px;
   border-top: 1px #333 solid;
 }
-#files .file .icon {
+.files .file .icon {
   margin-top: 2px;
   float: left;
 }
-#files .file .meta {
+.files .file .meta {
   line-height: 130%;
   margin-left: 20px;
 }
-#files .file .meta a {
+.files .file .meta a {
   display: block;
 }
-#files .file .meta span {
+.files .file .meta span {
   color: #777;
   font-size: 11px;
 }
-#status {
+.status {
   font-size: 12px;
   position: fixed;
   bottom: 15px;
   right: 15px;
 }
-#status .message {
+.status .message {
   margin-right: 10px;
   float: left;
 }
-#status .ping {
+.status .ping {
   text-align: right;
   float: right;
 }
-#chat {
+.chat {
   margin: 15px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
-#chat *::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+.chat *::-webkit-scrollbar {
+  width: 15px;
+  height: 15px;
 }
-#chat *::-webkit-scrollbar-track {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+.chat *::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
-#chat *::-webkit-scrollbar-thumb {
+.chat *::-webkit-scrollbar-thumb {
   background-color: #aaa;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 }
-#client {
+.views {
   border-top: 1px #444 solid;
+}
+.rooms-list {
+  border: 1px #333 solid;
+  overflow: auto;
+  margin: 10px;
+  padding: 20px;
+  box-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+@media (max-width: 700px) {
+  header .tabs {
+    width: 80%;
+    padding-left: 5px;
+  }
+  header .user {
+    max-width: 20%;
+  }
+  header .user .name {
+    display: none;
+  }
+  #sidebar {
+    width: auto;
+  }
+  #sidebar h1,
+  #sidebar p {
+    display: none;
+  }
+  #sidebar .btn-group {
+    display: none;
+  }
+  #sidebar .btn-group .btn {
+    display: block;
+    float: none;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin: 0;
+    margin-bottom: 3px;
+  }
+  #sidebar #files {
+    display: none;
+  }
+  #sidebar .item-list {
+    text-align: center;
+  }
+  #sidebar .item-list ul {
+    max-height: none;
+  }
+  #sidebar .item-list .avatar {
+    max-width: none;
+    margin: 0;
+  }
+  #sidebar .item-list .name,
+  #sidebar .item-list .text {
+    display: none;
+  }
 }

@@ -8,167 +8,32 @@ var hash = require('node_hash');
 var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
 
-// Models
 var models = require('./models/models.js');
 
 var ChatServer = function (app, sessionStore) {
 
     var self = this;
 
-    this.clients = {};
+    this.rooms = {};
 
-	// TODO: It might be a good idea to not send the whole list
-	this.getUserList = function () {
-		var users = {};
-		_.each(self.clients, function (client) {
-			var id = client.user._id;
-			if (!users[id]) {
-				users[id] = {
-					id: client.user._id,
-					avatar: hash.md5(client.user.email),
-					firstName: client.user.firstName,
-					lastName: client.user.lastName,
-					displayName: client.user.displayName
-				}
-			}
-		});
-		return users;
-	};
-
-    this.sendUserList = function () {
-        self.io.sockets.emit('user list', {
-			users: self.getUserList()
+    this.getUserList = function(room) {
+        var users = {};
+        var clients = self.io.sockets.clients(room);
+        clients.forEach(function(client) {
+            client.get('profile', function(err, profile)  {
+                if (err) {
+                    // No profile?
+                    return;
+                }
+                users[profile.cid] = profile;
+            });
         });
+        return users;
     };
 
-    this.sendMessageHistory = function (client) {
-		// Setup query date
-		// TODO: Start using moment.js for date operations
-		var today = new Date()
-		var yesterday = new Date(today).setDate(today.getDate() - 1)
-		// Let's find some messages
-        models.message.where('posted').gte(yesterday)
-			.sort('posted', -1).populate('owner')
-			.run(function (err, messages) {
-				var data = [];
-				if (messages) {
-					messages.forEach(function (message) {
-						data.push({
-							id: message._id,
-							owner: message.owner._id,
-							avatar: hash.md5(message.owner.email),
-							name: message.owner.displayName,
-							text: message.text,
-							posted: message.posted
-						});
-					});
-				}
-				data.reverse();
-				client.emit('message history', data);
-        });
-    };
-
-	this.sendFileHistory = function (client) {
-		var files = [];
-		models.file.find().populate('owner').run(function(err, results) {
-			if (results) {
-				results.forEach(function (file) {
-					files.push({
-						url: '/files/' + file._id + '/' + encodeURIComponent(file.name),
-						id: file._id,
-						name: file.name,
-						type: file.type,
-						size: file.size,
-						uploaded: file.uploaded,
-						owner: file.owner.displayName
-					});
-				});
-			}
-			client.emit('file history', files);
-		});
-	}
-
-	this.sendFile = function (file) {
-		self.io.sockets.emit('file', file);
-	}
-
-    this.saveMessage = function (data) {
-        var message = new models.message({
-            owner: data.owner,
-            text: data.text
-        })
-		message.save();
-		return message;
-    };
-
-    this.setupListeners = function () {
-
-        // New client
-        this.io.sockets.on('connection', function (client) {
-
-            var hs = client.handshake;
-            var userData = hs.session.user;
-
-			// Send user data to client
-			client.emit('user data', {
-				id: userData._id,
-				displayName: userData.displayName,
-				firstName: userData.firstName,
-				lastName: userData.lastName
-			});
-
-            // TODO: Do we need to use private ID here?
-            models.user.findById(userData._id, function (err, user) {
-                self.clients[client.id] = {
-                    user: user,
-                    sid: null // What the shit is this
-                };
-                self.sendUserList();
-            });
-
-            // Bind ping
-            client.on('ping', function (data) {
-                client.emit('ping', {});
-            });
-
-            client.on('message', function (incomingMessage) {
-				// Set user id on incoming message
-                incomingMessage.owner = userData._id;
-                // Save message
-				var message = self.saveMessage(incomingMessage);
-				// Create outgoing message
-				var outgoingMessage = {
-					id: message._id,
-					owner: message.owner,
-					avatar: hash.md5(userData.email),
-					name: userData.displayName,
-					text: message.text,
-					posted: message.posted
-				}
-                self.io.sockets.emit('message', outgoingMessage);
-            });
-
-            client.on('message history', function (data) {
-                self.sendMessageHistory(client);
-            });
-
-            client.on('file history', function (data) {
-                self.sendFileHistory(client);
-            });
-
-            client.on('disconnect', function () {
-                delete self.clients[client.id];
-                self.sendUserList();
-            });
-
-        });
-
-    };
-
-    this.start = function () {
+    this.listen = function () {
 
         this.io = require('socket.io').listen(app);
-
         this.io.set('log level', 0);
 
         this.io.set('authorization', function (data, accept) {
@@ -193,11 +58,232 @@ var ChatServer = function (app, sessionStore) {
             }
         });
 
+        this.io.sockets.on('connection', function(client) {
+
+            var hs = client.handshake;
+            var userData = hs.session.user;
+
+            client.set('profile', {
+                cid: hash.md5(client.id),
+                id: userData._id,
+                email: userData.email,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                displayName: userData.displayName,
+                joined: userData.joined,
+                avatar: hash.md5(userData.email)
+            });
+
+            client.on('ping', function() {
+                client.emit('ping');
+            });
+
+            client.on('messages:get', function(query) {
+                var today = new Date()
+                query.from = query.from || new Date(today).setDate(today.getDate() - 1)
+                query.room = query.room || '';
+                models.message.where('posted').gte(query.from)
+                    .where('room').equals(query.room)
+                    .sort('posted', -1).populate('owner')
+                    .exec(function (err, docs) {
+                        var messages = [];
+                        if (docs) {
+                            docs.forEach(function (message) {
+                                messages.push({
+                                    room: message.room,
+                                    id: message._id,
+                                    owner: message.owner._id,
+                                    avatar: hash.md5(message.owner.email),
+                                    name: message.owner.displayName,
+                                    text: message.text,
+                                    posted: message.posted
+                                });
+                            });
+                        }
+                        messages.reverse();
+                        client.emit('messages:new', messages)
+                });
+            });
+
+            client.on('messages:new', function(data) {
+                var message = new models.message({
+                    room: data.room,
+                    owner: userData._id,
+                    text: data.text
+                });
+                message.save(function(err, message) {
+                    if (err) {
+                        // Shit we're on fire!
+                        return;
+                    }
+                    var outgoingMessage = {
+                        id: message._id,
+                        owner: message.owner,
+                        avatar: hash.md5(userData.email),
+                        name: userData.displayName,
+                        text: message.text,
+                        posted: message.posted,
+                        room: message.room
+                    }
+                    self.io.sockets.in(message.room).emit('messages:new', outgoingMessage);
+                });
+            });
+            
+            client.on('users:get', function(data) {
+                var users = self.getUserList(data.room);
+                client.emit('users:new', users)
+            });
+
+            client.on('rooms:join', function(id, fn) {
+                models.room.findById(id, function (err, room) {
+                    if (err) {
+                        // Oh shit
+                        return;
+                    }
+                    client.join(id);
+                    // Send back Room meta to client
+                    fn({
+                        id: room._id,
+                        name: room.name,
+                        description: room.description
+                    });
+                    // Hey everyone, look who it is
+                    // TODO: Make this not send the whole list
+                    client.get('profile', function(err, profile) {
+                        var data = {};
+                        data.users = self.getUserList();
+                        data.room = id;
+                        self.io.sockets.in(id).emit('rooms:userjoin', data);
+                    });
+                });
+            });
+
+            client.on('rooms:create', function (room, fn) {
+              var newroom = new models.room({
+                name: room.name,
+                description: room.description,
+                owner: userData._id
+              });
+              newroom.save(function (err, room) {
+                if (err) {
+                  // We derped somehow
+                  return;
+                }
+                self.io.sockets.emit('rooms:new', room);
+              });
+            });
+            
+            client.on('rooms:list', function (query) {
+                models.room.find().exec(function(err, rooms) {
+                    if (err) {
+                        // Couldn't get rooms
+                        return;
+                    }
+                    _.each(rooms, function(room) {
+                        client.emit('rooms:new', room);
+                    });
+                });
+            });
+
+            /**
+            client.on('room:meta', function(room) {
+                models.room.findById(room, function (err, room) {
+                    if (err) {
+                        // Oh shit
+                        return;
+                    }
+                    client.emit('room:meta', {
+                        _id: room._id,
+                        name: room.name,
+                        description: room.description
+                    });
+                });
+            });
+            ***/
+            /**
+            client.on('room:userlist', function(room) {
+                var users = self.getUserlist(room);
+                var userlist = {
+                    room: room,
+                    users: users
+                }
+                client.emit('room:userlist', userlist);
+            });
+
+            client.on('room:history', function(room) {
+                // Send room history
+                var today = new Date()
+                var yesterday = new Date(today).setDate(today.getDate() - 1)
+                models.message.where('posted').gte(yesterday)
+                    .where('room').equals(room)
+                    .sort('posted', -1).populate('owner')
+                    .exec(function (err, docs) {
+                        var messages = [];
+                        if (docs) {
+                            docs.forEach(function (message) {
+                                messages.push({
+                                    id: message._id,
+                                    owner: message.owner._id,
+                                    avatar: hash.md5(message.owner.email),
+                                    name: message.owner.displayName,
+                                    text: message.text,
+                                    posted: message.posted
+                                });
+                            });
+                        }
+                        messages.reverse();
+                        client.emit('messages:history', messages)
+                });
+            });
+
+            client.on('messages:add', function (data) {
+                var message = new models.message({
+                    room: data.room,
+                    owner: userData._id,
+                    text: data.text
+                });
+                message.save(function(err, message) {
+                    if (err) {
+                        // Shit we're on fire!
+                        return;
+                    }
+                    var outgoingMessage = {
+                        id: message._id,
+                        owner: message.owner,
+                        avatar: hash.md5(userData.email),
+                        name: userData.displayName,
+                        text: message.text,
+                        posted: message.posted
+                    }
+                    self.io.sockets.in(message.room).emit('messages:new', outgoingMessage);
+                });
+            });
+
+            client.on('session:get', function () {
+                client.emit('session:user', {
+                    id: userData._id,
+                    displayName: userData.displayName,
+                    firstName: userData.firstName,
+                    lastName: userData.lastName
+                });
+            });
+
+            client.on('disconnect', function () {
+                self.io.sockets.emit('user:disconnect', {
+                    'cid': client.id
+                });
+            });
+
+            **/
+
+        });
+
+    };
+
+    this.start = function () {
         // Setup listeners
-        this.setupListeners();
-
+        this.listen();
 		return this;
-
     };
 
 };

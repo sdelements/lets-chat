@@ -1,0 +1,48 @@
+#room-list {
+    display: block;
+    .top {
+        padding: 20px;
+        overflow: hidden;
+        h1 {
+            float: left;
+        }
+        .btn {
+            margin-top: 20px;
+            float: right;
+        }
+    }
+}
+.room-list {
+    overflow: hidden;
+    &, ul, li {
+        padding: 0;
+        margin: 0;
+    }
+    .room {
+        background: #111;
+        width: 250px;
+        padding: 10px;
+        margin: 5px;
+        border-top: 3px #777 solid;
+        display: block;
+        float: left;
+        .box-sizing(border-box);
+    }
+    .name {
+        font-size: 20px;
+        display: block;
+        .text-overflow();
+    }
+    .description {
+        color: #777;
+    }
+    .user {
+        margin-right: 5px;
+        display: block;
+        float: left;
+    }
+    img {
+        .square(30px);
+        .border-radius(100%);
+    }
+}

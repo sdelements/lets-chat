@@ -22,7 +22,8 @@
         "swig": "*",
         "socket.io": "*",
         "underscore": "*",
-		"node_hash": "*"
+		"node_hash": "*",
+        "slug": "*"
     },
     "license": "MIT",
     "engine": {

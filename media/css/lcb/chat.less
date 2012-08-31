@@ -2,36 +2,41 @@
 
 // Layout
 
-#client {
+.views {
 	width: 100%;
 	position: absolute;
-	top: 41px;
+	top: 43px;
 	left: 0;
 	right: 0;
 	bottom: 0;
 	.horizontal-box();
 }
 
-#sidebar {
+.view {
+    width: 100%;
+    .horizontal-box();
+}
+
+.sidebar {
 	.box-flex(0);
 }
 
-#content {
+.main {
 	.box-flex(1);
 	.vertical-box();
 }
 
-#chat {
+.chat {
 	.box-flex(1);
 	.vertical-box();
 }
 
-#chat .messages {
+.chat .messages {
 	.box-flex(1);
 	overflow: auto;
 }
 
-#entry {
+.entry {
 	.box-flex(0);
 	.horizontal-box();
 	textarea {
@@ -44,11 +49,11 @@
 
 // Entry
 
-#entry {
+.entry {
 	background: #fff url('../img/grid_noise.png');
 	padding: 10px;
 	border-top: 1px #ccc solid;
-	.border-radius( 0 0 5px 5px);
+	.border-radius( 0 0 4px 4px);
 	textarea {
 		min-height: 70px;
 		margin: 0;
@@ -61,7 +66,7 @@
 
 // Sidebar
 
-#sidebar {
+.sidebar {
 	width: 230px;
 	color: #fff;
 	margin: 20px;
@@ -121,7 +126,7 @@
 
 // Files
 
-#files {
+.files {
 	form, input {
 		margin:0;
 	}
@@ -167,7 +172,7 @@
 
 // Status
 
-#status { // TODO: Fix
+.status { // TODO: Fix
 	font-size: 12px;
 	position: fixed;
 	bottom: 15px;
@@ -184,12 +189,23 @@
 
 // Chat
 
-#chat {
+.chat {
 	margin: 15px;
 	.fancy-scrollbars();
-	.border-radius(5px);
+	.border-radius(4px);
 }
 
-#client {
+.views {
 	border-top: 1px #444 solid;
+}
+
+// Lists
+
+.rooms-list {
+    border: 1px #333 solid;
+	overflow: auto;
+    margin: 10px;
+    padding: 20px;
+    .box-flex(1);
+    .border-radius(4px);
 }

@@ -1,0 +1,130 @@
+{% raw %}
+<div id="js-templates">
+    <script id="js-tmpl-tab" type="text/html">
+        <li class="tab" data-id="{{ id }}">
+            <a class="room" href="#!/room/{{ id }}" data-id="{{ id }}">
+                <span class="text">{{ name }}</span>
+                <span class="close">&times;</span>
+            </a>
+        </li>
+    </script>
+    <script id="js-tmpl-message" type="text/html">
+        <li class="message {{#own}}own{{/own}} {{#fragment}}fragment{{/fragment}}" data-id="{{id}}" data-owner="{{owner}}" data-posted="{{posted}}" data-room="{{room}}">
+            <div class="side">
+                <img class="avatar" src="http://www.gravatar.com/avatar/{{avatar}}?s=50" />
+            </div>
+            <div class="meta">
+                <div class="top">
+                    <div class="name">{{name}}</div>
+                    <time></time>
+                </div>
+                <div class="text">{{{ text }}}</div>
+            </div>
+        </li>
+    </script>
+    <script id="js-tmpl-message-fragment" type="text/html">
+        <div class="fragment" data-id="{{id}}" data-posted="{{posted}}">{{text}}</div>
+    </script>
+    <script id="js-tmpl-event" type="text/html">
+        <li class="message event">
+            <div class="text">{{text}}</div>
+        </li>
+    </script>
+    <script id="js-tmpl-user-item" type="text/html">
+        <li class="user" data-id="{{id}}" data-cid="{{cid}}">
+            <img class="avatar" src="http://www.gravatar.com/avatar/{{avatar}}?s=50" />
+            <span class="name">{{displayName}}</span></li>
+        </li>
+    </script>
+    <script id="js-tmpl-file-item" type="text/html">
+        <li class="file" data-id="{{uid}}" data-uploaded="{{uploaded}}" data-size="{{size}}">
+            <a href="{{url}}" class="icon"><i class="icon-file"></i></a>
+            <div class="meta">
+                <a class="name" href="{{url}}" target="_blank">{{name}}</a>
+                <span class="owner">via {{owner}}</span> &middot; <span class="size">{{size}}kb</span>
+            </div>
+        </li>
+    </script>
+    <script id="js-tmpl-room-list-item" type="text/html">
+        <li class="room" data-id="{{ _id }}">
+            <a class="name" href="#!/room/{{ _id }}">{{ name }}</a>
+            <p class="description">{{ description }}</p>
+            <ul class="users">
+                <li class="user">
+                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                </li>
+                <li class="user">
+                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                </li>
+                <li class="user">
+                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                </li>
+                <li class="user">
+                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                </li>
+                <li class="user">
+                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                </li>
+            </ul>
+        </li>
+    </script>
+    <script id="js-tmpl-room" type="text/html">
+            <div class="main">
+                <div class="chat">
+                    <ul class="messages"></ul>
+                    <div class="entry">
+                        <textarea type="text" name="talk"></textarea>
+                        <div class="buttons">
+                            <button class="send btn btn-success">Send</button>
+                        </div>
+                    </div>
+                </div><!-- chat end -->
+            </div><!-- content end -->
+            <div class="sidebar">
+                <div class="inner">
+                    <div class="meta">
+                        <h1 class="name">{{ name }}</h1>
+                        <p class="description">{{ description }}</p>
+                    </div>
+                    <div class="clear">
+                        <div class="btn-group buttons">
+                            <a class="btn" href="#">
+                                <i class="icon-comment"></i>
+                            </a>
+                            <a class="btn" href="#">
+                                <i class="icon-eye-close"></i>
+                            </a>
+                            <a class="btn" href="#">
+                                <i class="icon-cog"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="item-list">
+                        <div class="top">
+                            <h3><i class="icon-white icon-user"></i> <span class="text">Who's here</span></h3>
+                        </div>
+                        <ul class="user-list"></ul>
+                    </div>
+                    <div class="files item-list">
+                        <div class="top">
+                            <h3>
+                                <i class="icon-white icon-film"></i> <span class="text">Media</span>
+                            </h3>
+                            <a class="toggle-upload btn btn-dmb" href="#"><i class="icon-plus icon-white"></i><i class="icon-remove icon-white"></i></a>
+                        </div>
+                        <div class="upload hide">
+                            <form>
+                                <input id="fileupload" type="file" name="file" data-url="/ajax/upload-file" />
+                            </form>
+                        </div>
+                        <ul class="file-list"></ul>
+                    </div>
+                    <div class="status">
+                        <span class="message"></span>
+                        <span class="ping"></span>
+                    </div>
+                </div>
+            </div><!-- sidebar end -->
+    </script>
+</div>
+{% endraw %}

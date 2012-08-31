@@ -3,6 +3,11 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 var MessageSchema = new Schema({
+    room: {
+		type: Schema.ObjectId,
+		ref: 'Room',
+        required: true
+    },
     owner: {
 		type: Schema.ObjectId,
 		ref: 'User',

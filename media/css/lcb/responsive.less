@@ -1,0 +1,47 @@
+@media (max-width: 700px) {
+    header {
+        .tabs {
+            width: 80%;
+            padding-left: 5px;
+        }
+        .user {
+            max-width: 20%;
+            .name {
+                display: none;
+            }
+        }
+    }
+    #sidebar {
+        width: auto;
+        h1, p {
+            display: none;
+        }
+        .btn-group {
+            display: none;
+            .btn {
+                display: block;
+                float: none;
+                .border-radius(4px);
+                margin: 0;
+                margin-bottom: 3px;
+            }
+        }
+        #files {
+            display: none;
+        }
+        .item-list {
+            text-align: center;
+            ul {
+                max-height: none;
+            }
+            .avatar {
+                max-width: none;
+                margin: 0;
+            }
+            .name,
+            .text {
+                display: none;
+            }
+        }
+    }
+}
