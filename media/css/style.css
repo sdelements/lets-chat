@@ -4602,6 +4602,7 @@ header .user .dropdown-menu a:hover {
   float: left;
 }
 #room-list .top .btn {
+  margin-top: 20px;
   float: right;
 }
 .room-list {
