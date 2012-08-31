@@ -27,6 +27,9 @@ var Client = function(config) {
     this.joinRoom = function(id, switchRoom) {
         self.socket.emit('rooms:join', id, function(room) {
             self.rooms.add(room);
+            self.getRoomUsers({
+                room: id
+            });
             self.getRoomHistory({
                 room: id
             });
@@ -53,6 +56,23 @@ var Client = function(config) {
         self.socket.emit('messages:get', {
             room: options.room
         });
+    }
+    this.getRoomUsers = function(options) {
+        self.socket.emit('users:get', {
+            room: options.room
+        });
+    }
+    this.addUser = function(data) {
+        console.log(data);
+        var add = function(user) {
+            var room = self.rooms.get(user.room);
+            room.users.add(user);
+        }
+        if ($.isArray(data)) {
+            _.each(data, add);
+        } else {
+            add(data);
+        }
     }
     this.addMessage = function(data) {
         if ($.isArray(data)) {
@@ -82,6 +102,9 @@ var Client = function(config) {
         });
         self.socket.on('messages:new', function(message) {
             self.addMessage(message);
+        });
+        self.socket.on('users:new', function(user) {
+            self.addUser(user);
         });
     }
     
@@ -114,6 +137,12 @@ var Client = function(config) {
         });
         this.notifications.on('tabclosed', function(data) {
             self.leaveRoom(data.id);
+        });
+        this.notifications.on('navigate', function(id) {
+            self.router.navigate('!/room/'+ id, {
+                trigger: true,
+                replace: true
+            });
         });
     }
 

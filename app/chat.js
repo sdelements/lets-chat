@@ -16,7 +16,7 @@ var ChatServer = function (app, sessionStore) {
     
     this.rooms = {};
 
-    this.getUserlist = function(room) {
+    this.getUserList = function(room) {
         var users = {};
         var clients = self.io.sockets.clients(room);
         clients.forEach(function(client) {
@@ -129,6 +129,11 @@ var ChatServer = function (app, sessionStore) {
                 });
             });
             
+            client.on('users:get', function(data) {
+                var users = self.getUserList(data.room);
+                client.emit('users:new', users)
+            });
+            
             client.on('rooms:join', function(id, fn) {
                 models.room.findById(id, function (err, room) {
                     if (err) {
@@ -140,14 +145,13 @@ var ChatServer = function (app, sessionStore) {
                     fn({
                         id: room._id,
                         name: room.name,
-                        description: room.description,
-                        users: self.getUserlist(room._id)
+                        description: room.description
                     });
                     // Hey everyone, look who it is
                     // TODO: Make this not send the whole list
                     client.get('profile', function(err, profile) {
                         var data = {};
-                        data.users = self.getUserlist();
+                        data.users = self.getUserList();
                         data.room = id;
                         self.io.sockets.in(id).emit('rooms:userjoin', data);
                     });

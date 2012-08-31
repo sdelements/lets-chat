@@ -1,4 +1,15 @@
 //
+// Userlist
+//
+var UserListView = Backbone.View.extend({
+    initialize: function() {
+        this.model.bind('add', function(user) {
+            console.log(user)
+        })
+    }
+});
+
+//
 // Room
 //
 var RoomView = Backbone.View.extend({
@@ -16,6 +27,13 @@ var RoomView = Backbone.View.extend({
         this.template = $('#js-tmpl-room').html();
         this.messageTemplate = $('#js-tmpl-message').html();
         this.notifications = this.options.notifications;
+        //
+        // Subviews
+        this.userlist = new UserListView({
+            notifications: this.notifications,
+            model: this.model.users
+        });
+        //
         //
         // Model Bindings
         //
@@ -159,7 +177,7 @@ var TabsView = Backbone.View.extend({
         this.$('.view[data-id=' + id + ']')
             .show()
             .siblings().hide();
-        if (this.views[id].scrollLocked) {
+        if (this.views[id] && this.views[id].scrollLocked) {
             this.views[id].scrollMessagesDown();
         }
     },
@@ -178,7 +196,9 @@ var TabsView = Backbone.View.extend({
     },
     remove: function(id) {
         if (this.current == id) {
-            this.select(this.menu.next(id))
+            var next = this.menu.next(id);
+            this.select(next)
+            this.notifications.trigger('navigate', next);
         }
         this.menu.remove(id);
         this.views[id].remove();
