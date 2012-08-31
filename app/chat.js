@@ -128,16 +128,12 @@ var ChatServer = function (app, sessionStore) {
                     self.io.sockets.in(message.room).emit('messages:new', outgoingMessage);
                 });
             });
-<<<<<<< HEAD
             
             client.on('users:get', function(data) {
                 var users = self.getUserList(data.room);
                 client.emit('users:new', users)
             });
-            
-=======
 
->>>>>>> 8d96479014f98bbdb3402112abf7c2a734debb9a
             client.on('rooms:join', function(id, fn) {
                 models.room.findById(id, function (err, room) {
                     if (err) {
