@@ -90,7 +90,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
+
 	// Toggle register
 	$('.toggle-register').on('click', function(e) {
 		e.preventDefault();
