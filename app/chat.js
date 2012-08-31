@@ -13,7 +13,7 @@ var models = require('./models/models.js');
 var ChatServer = function (app, sessionStore) {
 
     var self = this;
-    
+
     this.rooms = {};
 
     this.getUserList = function(room) {
@@ -59,10 +59,10 @@ var ChatServer = function (app, sessionStore) {
         });
 
         this.io.sockets.on('connection', function(client) {
-        
+
             var hs = client.handshake;
             var userData = hs.session.user;
-            
+
             client.set('profile', {
                 cid: hash.md5(client.id),
                 id: userData._id,
@@ -73,11 +73,11 @@ var ChatServer = function (app, sessionStore) {
                 joined: userData.joined,
                 avatar: hash.md5(userData.email)
             });
-            
+
             client.on('ping', function() {
                 client.emit('ping');
             });
-            
+
             client.on('messages:get', function(query) {
                 var today = new Date()
                 query.from = query.from || new Date(today).setDate(today.getDate() - 1)
@@ -104,7 +104,7 @@ var ChatServer = function (app, sessionStore) {
                         client.emit('messages:new', messages)
                 });
             });
-            
+
             client.on('messages:new', function(data) {
                 var message = new models.message({
                     room: data.room,
@@ -128,12 +128,16 @@ var ChatServer = function (app, sessionStore) {
                     self.io.sockets.in(message.room).emit('messages:new', outgoingMessage);
                 });
             });
+<<<<<<< HEAD
             
             client.on('users:get', function(data) {
                 var users = self.getUserList(data.room);
                 client.emit('users:new', users)
             });
             
+=======
+
+>>>>>>> 8d96479014f98bbdb3402112abf7c2a734debb9a
             client.on('rooms:join', function(id, fn) {
                 models.room.findById(id, function (err, room) {
                     if (err) {
@@ -158,6 +162,24 @@ var ChatServer = function (app, sessionStore) {
                 });
             });
 
+            client.on('rooms:create', function (room, fn) {
+              models.rooms.insert({
+                name: room.name,
+                description: room.description,
+              }, function (err, room) {
+                if (err) {
+                  // We derped somehow
+                  return;
+                }
+                fn({
+                  id: room._id,
+                  name: room.name,
+                  description: room.description,
+                  users: self.getUserlist(room._id)
+                });
+              })
+            })
+
             /**
             client.on('room:meta', function(room) {
                 models.room.findById(room, function (err, room) {
@@ -173,7 +195,7 @@ var ChatServer = function (app, sessionStore) {
                 });
             });
             ***/
-            /** 
+            /**
             client.on('room:userlist', function(room) {
                 var users = self.getUserlist(room);
                 var userlist = {
@@ -182,7 +204,7 @@ var ChatServer = function (app, sessionStore) {
                 }
                 client.emit('room:userlist', userlist);
             });
-            
+
             client.on('room:history', function(room) {
                 // Send room history
                 var today = new Date()
@@ -208,7 +230,7 @@ var ChatServer = function (app, sessionStore) {
                         client.emit('messages:history', messages)
                 });
             });
-            
+
             client.on('messages:add', function (data) {
                 var message = new models.message({
                     room: data.room,
@@ -246,11 +268,11 @@ var ChatServer = function (app, sessionStore) {
                     'cid': client.id
                 });
             });
-            
+
             **/
-            
+
         });
-        
+
     };
 
     this.start = function () {

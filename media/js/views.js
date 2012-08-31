@@ -90,7 +90,6 @@ var RoomView = Backbone.View.extend({
         this.$messages.append($html);
         this.lastMessageUser = message.owner;
         if (this.scrollLocked && !noScroll) {
-            console.log('herp');
             this.scrollMessagesDown();
         }
     },
@@ -177,7 +176,7 @@ var TabsView = Backbone.View.extend({
         this.$('.view[data-id=' + id + ']')
             .show()
             .siblings().hide();
-        if (this.views[id] && this.views[id].scrollLocked) {
+        if (id !== 'home' && this.views[id].scrollLocked) {
             this.views[id].scrollMessagesDown();
         }
     },
@@ -205,6 +204,29 @@ var TabsView = Backbone.View.extend({
         delete this.views[id];
     }
 });
+
+var NewRoomView = Backbone.View.extend({
+  el: '#new-room',
+  initialize: function () {
+    this.notifications = this.option.notifications;
+  },
+  events: {
+    'click form input[name="submit"]': 'createRoom'
+  },
+  show: function () {
+    this.$el.show()
+  },
+  hide: function () {
+    this.$el.hide()
+  },
+  createRoom: function () {
+    var room = {
+      name: this.$('input[name=""]').val(),
+      description: this.$('textarea[name=""]').val()
+    }
+    return false;
+  }
+})
 
 //
 // Client
