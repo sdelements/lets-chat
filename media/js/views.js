@@ -13,7 +13,6 @@ var RoomListView = Backbone.View.extend({
         });
     },
     add: function(room) {
-        console.log(room);
         var item = Mustache.to_html(this.template, room.toJSON());
         this.$list.prepend(item);
     }

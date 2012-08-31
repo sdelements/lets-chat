@@ -61,12 +61,25 @@
                 <ul class="room-list list">
                     {% for room in rooms %}
                         <li class="room" data-id="{{ room._id }}">
-                            <div class="inner">
-                                <a href="#!/room/{{ room._id }}">
-                                    <div class="name">{{ room.name }}</div>
-                                    <div class="description">{{ room.description }}</div>
-                                </a>
-                            </div>
+                            <a class="name" href="#!/room/{{ room._id }}">{{ room.name }}</a>
+                            <p class="description">{{ room.description }}</p>
+                            <ul class="users">
+                                <li class="user">
+                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                                </li>
+                                <li class="user">
+                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                                </li>
+                                <li class="user">
+                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                                </li>
+                                <li class="user">
+                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                                </li>
+                                <li class="user">
+                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                                </li>
+                            </ul><!-- users end -->
                         </li>
                     {% endfor %}
                 </ul><!-- rooms list end -->

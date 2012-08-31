@@ -1,44 +1,33 @@
-.page-rooms {
-    width: 700px;
-    margin: 20px auto;
-    h1 {
-        text-align:center;
-        margin-bottom: 40px;
-    }
-}
-
-.rooms-list {
-    padding: 0;
-    margin: 0;
+.room-list {
+    padding: 10px;
     overflow: hidden;
-}
-.rooms-list .room {
-    width: 33%;
-    display: block;
-    float: left;
-    .opacity(50);
-    .transition(opacity .2s linear);
-    &:hover {
-        .opacity(100);
+    ul, li {
+        padding: 0;
+        margin: 0;
     }
-    a {
-        height: 100px;
+    .room {
+        background: #111;
+        width: 22%;
         padding: 10px;
-        margin-right: 10px;
-        border-top: 4px #ccc solid;
+        margin: 5px;
+        border-top: 3px #777 solid;
         display: block;
+        float: left;
         .box-sizing(border-box);
-        &:hover {
-            text-decoration: none;
-        }
     }
     .name {
-        color: #fff;
         font-size: 20px;
     }
     .description {
-        color: #ddd;
-        font-size: 10px;
-        margin-top: 5px;
+        color: #777;
+    }
+    .user {
+        margin-right: 5px;
+        display: block;
+        float: left;
+    }
+    img {
+        .square(30px);
+        .border-radius(100%);
     }
 }
