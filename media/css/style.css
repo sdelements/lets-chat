@@ -4591,10 +4591,23 @@ header .user .dropdown-menu a:hover {
   -moz-border-radius: 7px;
   border-radius: 7px;
 }
-.room-list {
-  padding: 10px;
+#room-list {
+  display: block;
+}
+#room-list .top {
+  padding: 20px;
   overflow: hidden;
 }
+#room-list .top h1 {
+  float: left;
+}
+#room-list .top .btn {
+  float: right;
+}
+.room-list {
+  overflow: hidden;
+}
+.room-list,
 .room-list ul,
 .room-list li {
   padding: 0;
@@ -4602,7 +4615,7 @@ header .user .dropdown-menu a:hover {
 }
 .room-list .room {
   background: #111;
-  width: 22%;
+  width: 250px;
   padding: 10px;
   margin: 5px;
   border-top: 3px #777 solid;
@@ -4615,6 +4628,10 @@ header .user .dropdown-menu a:hover {
 }
 .room-list .name {
   font-size: 20px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .room-list .description {
   color: #777;

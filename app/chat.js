@@ -170,8 +170,20 @@ var ChatServer = function (app, sessionStore) {
                   return;
                 }
                 self.io.sockets.emit('rooms:new', room);
-              })
-            })
+              });
+            });
+            
+            client.on('rooms:list', function (query) {
+                models.room.find().exec(function(err, rooms) {
+                    if (err) {
+                        // Couldn't get rooms
+                        return;
+                    }
+                    _.each(rooms, function(room) {
+                        client.emit('rooms:new', room);
+                    });
+                });
+            });
 
             /**
             client.on('room:meta', function(room) {

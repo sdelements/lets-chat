@@ -3,6 +3,7 @@
 {% block page_name %}Chat{% endblock %}
 
 {% block page_js %}
+    <script src="{{media_url}}/js/lib/masonry.js" type="text/javascript"></script>
     <script src="{{media_url}}/js/lib/underscore.js" type="text/javascript"></script>
     <script src="{{media_url}}/js/lib/backbone.js" type="text/javascript"></script>
     <script src="{{media_url}}/js/models.js" type="text/javascript"></script>
@@ -57,39 +58,37 @@
 	</header>
 	<div id="panes" class="views">
         <div id="room-list" data-id="home" class="view" style="display: none;">
-            <div class="main">
-                <ul class="room-list list">
-                    {% for room in rooms %}
-                        <li class="room" data-id="{{ room._id }}">
-                            <a class="name" href="#!/room/{{ room._id }}">{{ room.name }}</a>
-                            <p class="description">{{ room.description }}</p>
-                            <ul class="users">
-                                <li class="user">
-                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                                </li>
-                                <li class="user">
-                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                                </li>
-                                <li class="user">
-                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                                </li>
-                                <li class="user">
-                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                                </li>
-                                <li class="user">
-                                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                                </li>
-                            </ul><!-- users end -->
-                        </li>
-                    {% endfor %}
-                </ul><!-- rooms list end -->
-            </div><!-- main end -->
-            <div class="sidebar">
+            <div class="top">
                 <h1><img src="/media/img/rooms.png" alt="Rooms"></h1>
                 <a data-toggle="modal" href="#create-room" class="btn btn-success btn-large">
                     <i class="icon-plus icon-white"></i> Create Room
                 </a>
             </div>
+            <ul class="room-list list">
+                {% for room in rooms %}
+                    <li class="room" data-id="{{ room._id }}">
+                        <a class="name" href="#!/room/{{ room._id }}">{{ room.name }}</a>
+                        <p class="description">{{ room.description }}</p>
+                        <ul class="users">
+                            <li class="user">
+                                <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                            </li>
+                            <li class="user">
+                                <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                            </li>
+                            <li class="user">
+                                <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                            </li>
+                            <li class="user">
+                                <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                            </li>
+                            <li class="user">
+                                <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
+                            </li>
+                        </ul><!-- users end -->
+                    </li>
+                {% endfor %}
+            </ul><!-- rooms list end -->
         </div><!-- view end -->
 	</div><!-- views end -->
 </div><!-- client end -->

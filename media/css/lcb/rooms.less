@@ -1,13 +1,25 @@
+#room-list {
+    display: block;
+    .top {
+        padding: 20px;
+        overflow: hidden;
+        h1 {
+            float: left;
+        }
+        .btn {
+            float: right;
+        }
+    }
+}
 .room-list {
-    padding: 10px;
     overflow: hidden;
-    ul, li {
+    &, ul, li {
         padding: 0;
         margin: 0;
     }
     .room {
         background: #111;
-        width: 22%;
+        width: 250px;
         padding: 10px;
         margin: 5px;
         border-top: 3px #777 solid;
@@ -17,6 +29,8 @@
     }
     .name {
         font-size: 20px;
+        display: block;
+        .text-overflow();
     }
     .description {
         color: #777;

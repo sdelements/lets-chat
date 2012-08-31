@@ -107,6 +107,9 @@ var Client = function(config) {
             reconnect: true,
             transports: config.transports
         });
+        self.socket.on('connect', function() {
+            self.socket.emit('rooms:list', {});
+        });
         self.socket.on('messages:new', function(message) {
             self.addMessage(message);
         });

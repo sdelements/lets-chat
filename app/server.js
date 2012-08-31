@@ -95,11 +95,8 @@ var Server = function (config) {
             user_lastname: user.lastName,
             user_firstname: user.firstName
         }
-        models.room.find().exec(function(err, rooms) {
-            vars.rooms = rooms;
-            var view = swig.compileFile('chat.html').render(vars);
-            res.send(view);
-        });
+        var view = swig.compileFile('chat.html').render(vars);
+        res.send(view);
     });
     
     /** 

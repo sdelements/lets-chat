@@ -11,10 +11,15 @@ var RoomListView = Backbone.View.extend({
         this.collection.bind('add', function(room) {
             self.add(room);
         });
+        this.$list.masonry({
+            itemSelector: '.room',
+            isAnimated: true
+        });
     },
     add: function(room) {
         var item = Mustache.to_html(this.template, room.toJSON());
         this.$list.prepend(item);
+        this.$list.masonry('reload');
     }
 });
 
