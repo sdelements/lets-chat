@@ -1,5 +1,5 @@
 //
-// Userlist
+// Roomlist
 //
 var RoomListView = Backbone.View.extend({
     el: '#room-list',
@@ -27,10 +27,24 @@ var RoomListView = Backbone.View.extend({
 // Userlist
 //
 var UserListView = Backbone.View.extend({
+    // tagName: 'ul',
+    // className: 'user-list',
     initialize: function() {
+        var self = this;
+        this.template = $('#js-tmpl-user-item').html();
         this.model.bind('add', function(user) {
-            console.log(user)
-        })
+            self.add(user.toJSON());
+        });
+        this.model.bind('remove', function(user) {
+            self.remove(user.id);
+        });
+    },
+    add: function(user) {
+        var html = Mustache.to_html(this.template, user);
+        this.$el.append(html);
+    },
+    remove: function(id) {
+        this.$('.user[data-id=' + id + ']').remove();
     }
 });
 
@@ -59,7 +73,6 @@ var RoomView = Backbone.View.extend({
             model: this.model.users
         });
         //
-        //
         // Model Bindings
         //
         this.model.messages.bind('add', function(message) {
@@ -76,6 +89,10 @@ var RoomView = Backbone.View.extend({
         this.$el.attr('data-id', this.model.id);
         this.$el.hide();
         this.$messages = this.$('.messages');
+        //
+        // Set subview elements
+        //
+        this.userlist.setElement(this.$('.user-list'));
         //
         // Message Scroll Lock
         //

@@ -32,9 +32,6 @@ var Client = function(config) {
     this.joinRoom = function(id, switchRoom) {
         self.socket.emit('rooms:join', id, function(room) {
             self.rooms.add(room);
-            self.getRoomUsers({
-                room: id
-            });
             self.getRoomHistory({
                 room: id
             });
@@ -81,6 +78,14 @@ var Client = function(config) {
             add(data);
         }
     }
+    this.removeUser = function(user) {
+        var room = self.rooms.get(user.room);
+        if (room) {
+            var user = room.users.get(user.id)
+            room.users.remove(user);
+            console.log(room.users);
+        }
+    }
     this.addMessage = function(data) {
         if ($.isArray(data)) {
             _.each(data, function(message) {
@@ -115,6 +120,9 @@ var Client = function(config) {
         });
         self.socket.on('users:new', function(user) {
             self.addUser(user);
+        });
+        self.socket.on('users:leave', function(user) {
+            self.removeUser(user);
         });
         self.socket.on('rooms:new', function(room) {
             self.availableRooms.add(room);
