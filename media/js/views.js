@@ -83,6 +83,7 @@ var RoomView = Backbone.View.extend({
             self.addMessage(message.toJSON());
         });
         this.model.messages.bind('addsilent', function(message) {
+            // We're debouncing the scrolldown for performance
             self.addMessage(message, true);
         });
         this.model.users.bind('add', function(user, users) {
@@ -118,10 +119,25 @@ var RoomView = Backbone.View.extend({
           this.$messages.scrollTop() - 5 <= this.$messages.outerHeight();
         return this.scrollLocked;
     },
-    scrollMessagesDown: function() {
-        this.$messages.prop({
-            scrollTop: this.$messages.prop('scrollHeight')
-        });
+    scrollMessagesDown: function(debounce) {
+        var self = this;
+        var scrollDown = function() {
+            self.$messages.prop({
+                scrollTop: self.$messages.prop('scrollHeight')
+            });
+        }
+        // Just scroll down if no debounce
+        if (!debounce) {
+            return scrollDown();
+        }
+        // Set our debounced instance if its not set
+        if (!this.debouncedScrollDown) {
+            this.debouncedScrollDown = _.debounce(function(debounce) {
+                scrollDown();
+            }, 50);
+        }
+        // Debounce bro
+        return this.debouncedScrollDown(debounce);
     },
     formatContent: function(text) {
         // TODO: Fix this regex
@@ -134,7 +150,7 @@ var RoomView = Backbone.View.extend({
         }
         return text;
     },
-    addMessage: function(message, noScroll) {
+    addMessage: function(message, debounce) {
         if (this.lastMessageUser === message.owner) {
             message.fragment = true;
         }
@@ -143,8 +159,8 @@ var RoomView = Backbone.View.extend({
         $text.html(this.formatContent($text.text()));
         this.$messages.append($html);
         this.lastMessageUser = message.owner;
-        if (this.scrollLocked && !noScroll) {
-            this.scrollMessagesDown();
+        if (this.scrollLocked) {
+            this.scrollMessagesDown(debounce);
         }
     },
     sendMessage: function(e) {
@@ -233,9 +249,6 @@ var TabsView = Backbone.View.extend({
         // Trigger masonry fix event if home
         if (id === 'home') {
             this.notifications.trigger('homeselected');
-        }
-        if (id !== 'home' && this.views[id].scrollLocked) {
-            this.views[id].scrollMessagesDown();
         }
     },
     add: function(view) {
