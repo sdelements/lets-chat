@@ -11,12 +11,13 @@ var RoomListView = Backbone.View.extend({
         this.collection.bind('add', function(room) {
             self.add(room);
         });
+        self.$list.masonry({
+            itemSelector: '.room',
+            isAnimated: true
+        });
         // Masonry shim
         this.options.notifications.on('homeselected', function() {
-            self.$list.masonry({
-                itemSelector: '.room',
-                isAnimated: true
-            });
+            self.$list.masonry('reload');
         });
     },
     add: function(room) {
@@ -83,6 +84,14 @@ var RoomView = Backbone.View.extend({
         });
         this.model.messages.bind('addsilent', function(message) {
             self.addMessage(message, true);
+        });
+        this.model.users.bind('add', function(user, users) {
+            //
+            // Nick Complete
+            //
+            self.$('.entry textarea').nicknameTabComplete({
+                nicknames: _.pluck(users.toJSON(), 'safeName')
+            }); 
         });
     },
     render: function() {

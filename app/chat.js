@@ -163,7 +163,8 @@ var ChatServer = function (app, sessionStore) {
                             room: id,
                             id: hash.md5(client.id),
                             avatar: profile.avatar,
-                            name: profile.displayName
+                            name: profile.displayName,
+                            safeName: profile.displayName.replace(/\W/g, '')
                         });
                     });
                 });
@@ -183,7 +184,8 @@ var ChatServer = function (app, sessionStore) {
                             room: query.room,
                             id: hash.md5(user.id),
                             avatar: profile.avatar,
-                            name: profile.displayName
+                            name: profile.displayName,
+                            safeName: profile.displayName.replace(/\W/g, '')
                         });
                     });
                 });
