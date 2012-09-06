@@ -11,9 +11,12 @@ var RoomListView = Backbone.View.extend({
         this.collection.bind('add', function(room) {
             self.add(room);
         });
-        this.$list.masonry({
-            itemSelector: '.room',
-            isAnimated: true
+        // Masonry shim
+        this.options.notifications.on('homeselected', function() {
+            self.$list.masonry({
+                itemSelector: '.room',
+                isAnimated: true
+            });
         });
     },
     add: function(room) {
@@ -218,6 +221,10 @@ var TabsView = Backbone.View.extend({
         this.$('.view[data-id=' + id + ']')
             .show()
             .siblings().hide();
+        // Trigger masonry fix event if home
+        if (id === 'home') {
+            this.notifications.trigger('homeselected');
+        }
         if (id !== 'home' && this.views[id].scrollLocked) {
             this.views[id].scrollMessagesDown();
         }
@@ -296,7 +303,8 @@ var ClientView = Backbone.View.extend({
         // Subviews
         //
         this.roomList = new RoomListView({
-            collection: this.availableRooms
+            collection: this.availableRooms,
+            notifications: this.notifications
         });
         this.tabs = new TabsView({
             notifications: this.notifications
