@@ -4606,9 +4606,10 @@ header .user .dropdown-menu a:hover {
   float: right;
 }
 .room-list {
+  padding: 0 15px;
+  margin: 0;
   overflow: hidden;
 }
-.room-list,
 .room-list ul,
 .room-list li {
   padding: 0;

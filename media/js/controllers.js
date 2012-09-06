@@ -35,17 +35,21 @@ var Client = function(config) {
             self.getRoomHistory({
                 room: id
             });
+            self.getRoomUsers({
+                room: id
+            });
             if (switchRoom) {
                 self.view.switchView(id)
             }
         });
     }
     this.createRoom = function (room, switchRoom) {
-      self.socket.emit('rooms:create', room)
+        self.socket.emit('rooms:create', room)
     }
     this.leaveRoom = function(id) {
         var room = self.rooms.get(id);
         self.rooms.remove(room);
+        self.socket.emit('rooms:leave', id);
     }
     this.switchRoom = function(id) {
         var room = self.rooms.get(id);

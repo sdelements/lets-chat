@@ -141,7 +141,7 @@ var ChatServer = function (app, sessionStore) {
             // Join Room
             //
             client.on('rooms:join', function(id, fn) {
-                models.room.findById(id, function (err, room) {
+                models.room.findById(id, function(err, room) {
                     if (err) {
                         // Oh shit
                         return;
@@ -155,8 +155,10 @@ var ChatServer = function (app, sessionStore) {
                     });
                     // Hey everyone, look who it is
                     client.get('profile', function(err, profile) {
-                        var data = {};
-                        data.room = id;
+                        if (err) {
+                            // Oh shit
+                            return;
+                        }
                         self.io.sockets.in(id).emit('users:new', {
                             room: id,
                             id: hash.md5(client.id),
@@ -166,11 +168,32 @@ var ChatServer = function (app, sessionStore) {
                     });
                 });
             });
+            
+            //
+            // Get Room Users
+            //
+            client.on('users:get', function(query) {
+                _.each(self.io.sockets.clients(query.room), function(user) {
+                    user.get('profile', function(err, profile) {
+                        if (err) {
+                            // What the what
+                            return;
+                        }
+                        client.emit('users:new', {
+                            room: query.room,
+                            id: hash.md5(user.id),
+                            avatar: profile.avatar,
+                            name: profile.displayName
+                        });
+                    });
+                });
+               
+            });
 
             //
             // Create Room
             //
-            client.on('rooms:create', function (room, fn) {
+            client.on('rooms:create', function(room, fn) {
               var newroom = new models.room({
                 name: room.name,
                 description: room.description,
@@ -197,6 +220,16 @@ var ChatServer = function (app, sessionStore) {
                     _.each(rooms, function(room) {
                         client.emit('rooms:new', room);
                     });
+                });
+            });
+            
+            //
+            // Leave Room
+            //
+            client.on('rooms:leave', function(room) {
+                self.io.sockets.in(room).emit('users:leave', {
+                    id: hash.md5(client.id),
+                    room: room
                 });
             });
 
