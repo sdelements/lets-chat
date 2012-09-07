@@ -206,7 +206,12 @@ var ChatServer = function (app, sessionStore) {
                   // We derped somehow
                   return;
                 }
-                self.io.sockets.emit('rooms:new', room);
+                self.io.sockets.emit('rooms:new', {
+                    id: room._id,
+                    name: room.name,
+                    description: room.description,
+                    owner: room.owner
+                });
               });
             });
             
@@ -220,7 +225,12 @@ var ChatServer = function (app, sessionStore) {
                         return;
                     }
                     _.each(rooms, function(room) {
-                        client.emit('rooms:new', room);
+                        client.emit('rooms:new', {
+                            id: room._id,
+                            name: room.name,
+                            description: room.description,
+                            owner: room.owner
+                        });
                     });
                 });
             });
