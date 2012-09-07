@@ -11,12 +11,18 @@ var RoomListView = Backbone.View.extend({
         this.collection = this.options.collection;
         this.collection.bind('add', function(room) {
             self.add(room);
+            //
+            //  User events
+            //
             room.users.bind('add', function(user) {
                 self.addUser(user.toJSON())
             });
             room.users.bind('remove', function(user) {
                 self.removeUser(user.toJSON())
             })
+        });
+        this.collection.bind('remove', function(room) {
+            self.remove(room.id);
         });
         self.$list.masonry({
             itemSelector: '.room',
@@ -30,6 +36,10 @@ var RoomListView = Backbone.View.extend({
     add: function(room) {
         var item = Mustache.to_html(this.template, room.toJSON());
         this.$list.prepend(item);
+        this.$list.masonry('reload');
+    },
+    remove: function(id) {
+        this.$('.room[data-id=' + id + ']').remove();
         this.$list.masonry('reload');
     },
     addUser: function(user) {
@@ -75,7 +85,11 @@ var UserListView = Backbone.View.extend({
 var RoomView = Backbone.View.extend({
     className: 'view',
     events: {
-        'keypress .entry textarea': 'sendMessage'
+        'keypress .entry textarea': 'sendMessage',
+        'submit .edit-room form': 'submitEditRoom',
+        'click .delete-room': 'deleteRoom',
+        'click .show-edit-room': 'showEditRoom',
+        'click .hide-edit-room': 'hideEditRoom'
     },
     lastMessageUser: false,
     scrollLocked: true,
@@ -189,6 +203,31 @@ var RoomView = Backbone.View.extend({
             text: $.trim($textarea.val())
         });
         $textarea.val('');
+    },
+    showEditRoom: function(e) {
+        var self = this;
+        e.preventDefault;
+        this.$('.modal-backdrop').fadeIn(100).one('click', function() {
+          self.hideEditRoom(e);
+        })
+        this.$('.edit-room').modal({
+            backdrop: false
+        });
+    },
+    hideEditRoom: function(e) {
+        e.preventDefault;
+        this.$('.modal-backdrop').fadeOut(200);
+        this.$('.edit-room').modal('hide');
+    },
+    submitEditRoom: function(e) {
+        e.preventDefault();
+    },
+    deleteRoom: function(e) {
+        e.preventDefault();
+        var serious = confirm('Do you really want to to delete "' + this.model.get('name') +  '"?');
+        if (serious === true) {
+            this.notifications.trigger('deleteroom', this.model.id);
+        }
     }
 });
 
@@ -351,7 +390,6 @@ var ClientView = Backbone.View.extend({
         this.createRoom = new CreateRoomView({
             notifications: this.notifications
         });
-        //
         //
         // Joined Room
         //

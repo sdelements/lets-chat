@@ -106,6 +106,9 @@ var Client = function(config) {
     this.sendMessage = function(message) {
         self.socket.emit('room:messages:new', message);
     }
+    this.deleteRoom = function(id) {
+        self.socket.emit('room:delete', id);
+    }
 
     //
     // Connection
@@ -127,8 +130,14 @@ var Client = function(config) {
         self.socket.on('room:users:leave', function(user) {
             self.removeUser(user);
         });
+        self.socket.on('room:remove', function(id) {
+            self.leaveRoom(id);
+        });
         self.socket.on('rooms:new', function(room) {
             self.availableRooms.add(room);
+        });
+        self.socket.on('rooms:remove', function(room) {
+            self.availableRooms.remove(room);
         });
         self.socket.on('rooms:users:new', function(user) {
             var room = self.availableRooms.get(user.room)
@@ -177,6 +186,9 @@ var Client = function(config) {
         });
         this.notifications.on('tabclosed', function(data) {
             self.leaveRoom(data.id);
+        });
+        this.notifications.on('deleteroom', function(id) {
+            self.deleteRoom(id);
         });
         this.notifications.on('navigate', function(id) {
             self.router.navigate('!/room/'+ id, {

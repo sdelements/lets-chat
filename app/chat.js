@@ -150,6 +150,10 @@ var ChatServer = function (app, sessionStore) {
                         // Oh shit
                         return;
                     }
+                    if (!room) {
+                        // No room bro
+                        return;
+                    }
                     client.join(id);
                     // Send back Room meta to client
                     fn({
@@ -266,6 +270,27 @@ var ChatServer = function (app, sessionStore) {
                 }
                 self.io.sockets.in(room).emit('room:users:leave', user);
                 self.io.sockets.emit('rooms:users:leave', user)
+            });
+
+            //
+            // Delete Room
+            //
+            client.on('room:delete', function(id) {
+                models.room.findOne({
+                    _id: id
+                }).exec(function (err, room) {
+                    if (err) {
+                        // Oh damn
+                        return;
+                    }
+                    if (!room) {
+                        // What happened to our room?
+                        return;
+                    }
+                    self.io.sockets.in(id).emit('room:remove', id);
+                    self.io.sockets.emit('rooms:remove', id)
+                    room.remove();
+                });
             });
 
             //
