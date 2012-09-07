@@ -83,7 +83,7 @@ var ChatServer = function (app, sessionStore) {
             //
             // Message History
             //
-            client.on('messages:get', function(query) {
+            client.on('room:messages:get', function(query) {
                 var today = new Date()
                 query.from = query.from || new Date(today).setDate(today.getDate() - 1)
                 query.room = query.room || '';
@@ -106,14 +106,14 @@ var ChatServer = function (app, sessionStore) {
                             });
                         }
                         messages.reverse();
-                        client.emit('messages:new', messages)
+                        client.emit('room:messages:new', messages)
                 });
             });
     
             //
             // New Message
             //
-            client.on('messages:new', function(data) {
+            client.on('room:messages:new', function(data) {
                 var message = new models.message({
                     room: data.room,
                     owner: userData._id,
@@ -133,14 +133,14 @@ var ChatServer = function (app, sessionStore) {
                         posted: message.posted,
                         room: message.room
                     }
-                    self.io.sockets.in(message.room).emit('messages:new', outgoingMessage);
+                    self.io.sockets.in(message.room).emit('room:messages:new', outgoingMessage);
                 });
             });
 
             //
             // Join Room
             //
-            client.on('rooms:join', function(id, fn) {
+            client.on('room:join', function(id, fn) {
                 models.room.findById(id, function(err, room) {
                     if (err) {
                         // Oh shit
@@ -159,7 +159,7 @@ var ChatServer = function (app, sessionStore) {
                             // Oh shit
                             return;
                         }
-                        self.io.sockets.in(id).emit('users:new', {
+                        self.io.sockets.in(id).emit('room:users:new', {
                             room: id,
                             id: hash.md5(client.id),
                             avatar: profile.avatar,
@@ -173,14 +173,14 @@ var ChatServer = function (app, sessionStore) {
             //
             // Get Room Users
             //
-            client.on('users:get', function(query) {
+            client.on('room:users:get', function(query) {
                 _.each(self.io.sockets.clients(query.room), function(user) {
                     user.get('profile', function(err, profile) {
                         if (err) {
                             // What the what
                             return;
                         }
-                        client.emit('users:new', {
+                        client.emit('room:users:new', {
                             room: query.room,
                             id: hash.md5(user.id),
                             avatar: profile.avatar,
@@ -218,7 +218,7 @@ var ChatServer = function (app, sessionStore) {
             //
             // Roomlist request
             //
-            client.on('rooms:list', function (query) {
+            client.on('rooms:get', function (query) {
                 models.room.find().exec(function(err, rooms) {
                     if (err) {
                         // Couldn't get rooms
@@ -238,8 +238,8 @@ var ChatServer = function (app, sessionStore) {
             //
             // Leave Room
             //
-            client.on('rooms:leave', function(room) {
-                self.io.sockets.in(room).emit('users:leave', {
+            client.on('room:leave', function(room) {
+                self.io.sockets.in(room).emit('room:users:leave', {
                     id: hash.md5(client.id),
                     room: room
                 });
@@ -252,7 +252,7 @@ var ChatServer = function (app, sessionStore) {
                 var rooms = self.io.sockets.manager.roomClients[client.id];
                 _.each(rooms, function(status, room) {
                     room = room.replace('/', '');
-                    self.io.sockets.in(room).emit('users:leave', {
+                    self.io.sockets.in(room).emit('room:users:leave', {
                         id: hash.md5(client.id),
                         room: room
                     });

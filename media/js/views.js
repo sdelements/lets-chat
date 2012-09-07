@@ -134,7 +134,7 @@ var RoomView = Backbone.View.extend({
         if (!this.debouncedScrollDown) {
             this.debouncedScrollDown = _.debounce(function(debounce) {
                 scrollDown();
-            }, 50);
+            }, 40);
         }
         // Debounce bro
         return this.debouncedScrollDown(debounce);

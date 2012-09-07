@@ -30,7 +30,7 @@ var Client = function(config) {
     // Chat actions
     //
     this.joinRoom = function(id, switchRoom) {
-        self.socket.emit('rooms:join', id, function(room) {
+        self.socket.emit('room:join', id, function(room) {
             self.rooms.add(room);
             self.getRoomHistory({
                 room: id
@@ -49,7 +49,7 @@ var Client = function(config) {
     this.leaveRoom = function(id) {
         var room = self.rooms.get(id);
         self.rooms.remove(room);
-        self.socket.emit('rooms:leave', id);
+        self.socket.emit('room:leave', id);
     }
     this.switchRoom = function(id) {
         var room = self.rooms.get(id);
@@ -62,12 +62,12 @@ var Client = function(config) {
         }
     }
     this.getRoomHistory = function(options) {
-        self.socket.emit('messages:get', {
+        self.socket.emit('room:messages:get', {
             room: options.room
         });
     }
     this.getRoomUsers = function(options) {
-        self.socket.emit('users:get', {
+        self.socket.emit('room:users:get', {
             room: options.room
         });
     }
@@ -105,7 +105,7 @@ var Client = function(config) {
         }
     }
     this.sendMessage = function(message) {
-        self.socket.emit('messages:new', message);
+        self.socket.emit('room:messages:new', message);
     }
 
     //
@@ -117,15 +117,15 @@ var Client = function(config) {
             transports: config.transports
         });
         self.socket.on('connect', function() {
-            self.socket.emit('rooms:list', {});
+            self.socket.emit('rooms:get', {});
         });
-        self.socket.on('messages:new', function(message) {
+        self.socket.on('room:messages:new', function(message) {
             self.addMessage(message);
         });
-        self.socket.on('users:new', function(user) {
+        self.socket.on('room:users:new', function(user) {
             self.addUser(user);
         });
-        self.socket.on('users:leave', function(user) {
+        self.socket.on('room:users:leave', function(user) {
             self.removeUser(user);
         });
         self.socket.on('rooms:new', function(room) {
