@@ -91,6 +91,10 @@ var ChatServer = function (app, sessionStore) {
                     .where('room').equals(query.room)
                     .sort('posted', -1).populate('owner')
                     .exec(function (err, docs) {
+                        if (err) {
+                            // Couldn't get message or something
+                            return;
+                        }
                         var messages = [];
                         if (docs) {
                             docs.forEach(function (message) {
@@ -159,13 +163,15 @@ var ChatServer = function (app, sessionStore) {
                             // Oh shit
                             return;
                         }
-                        self.io.sockets.in(id).emit('room:users:new', {
+                        var user = {
                             room: id,
                             id: hash.md5(client.id),
                             avatar: profile.avatar,
                             name: profile.displayName,
                             safeName: profile.displayName.replace(/\W/g, '')
-                        });
+                        }
+                        self.io.sockets.in(id).emit('room:users:new', user);
+                        self.io.sockets.emit('rooms:users:new', user)
                     });
                 });
             });
@@ -231,6 +237,21 @@ var ChatServer = function (app, sessionStore) {
                             description: room.description,
                             owner: room.owner
                         });
+                         _.each(self.io.sockets.clients(room._id), function(user) {
+                            user.get('profile', function(err, profile) {
+                                if (err) {
+                                    // What the what
+                                    return;
+                                }
+                                client.emit('rooms:users:new', {
+                                    room: room._id,
+                                    id: hash.md5(user.id),
+                                    avatar: profile.avatar,
+                                    name: profile.displayName,
+                                    safeName: profile.displayName.replace(/\W/g, '')
+                                });
+                            });
+                        });   
                     });
                 });
             });
@@ -239,10 +260,12 @@ var ChatServer = function (app, sessionStore) {
             // Leave Room
             //
             client.on('room:leave', function(room) {
-                self.io.sockets.in(room).emit('room:users:leave', {
+                var user = {
                     id: hash.md5(client.id),
                     room: room
-                });
+                }
+                self.io.sockets.in(room).emit('room:users:leave', user);
+                self.io.sockets.emit('rooms:users:leave', user)
             });
 
             //
@@ -252,10 +275,12 @@ var ChatServer = function (app, sessionStore) {
                 var rooms = self.io.sockets.manager.roomClients[client.id];
                 _.each(rooms, function(status, room) {
                     room = room.replace('/', '');
-                    self.io.sockets.in(room).emit('room:users:leave', {
+                    var user = {
                         id: hash.md5(client.id),
                         room: room
-                    });
+                    }
+                    self.io.sockets.in(room).emit('room:users:leave', user);
+                    self.io.sockets.emit('rooms:users:leave', user)
                 });
             });
 

@@ -7,9 +7,16 @@ var RoomListView = Backbone.View.extend({
         var self = this;
         this.$list = this.$('.room-list');
         this.template = $('#js-tmpl-room-list-item').html();
+        this.userTemplate = $('#js-tmpl-room-list-user').html();
         this.collection = this.options.collection;
         this.collection.bind('add', function(room) {
             self.add(room);
+            room.users.bind('add', function(user) {
+                self.addUser(user.toJSON())
+            });
+            room.users.bind('remove', function(user) {
+                self.removeUser(user.toJSON())
+            })
         });
         self.$list.masonry({
             itemSelector: '.room',
@@ -23,6 +30,16 @@ var RoomListView = Backbone.View.extend({
     add: function(room) {
         var item = Mustache.to_html(this.template, room.toJSON());
         this.$list.prepend(item);
+        this.$list.masonry('reload');
+    },
+    addUser: function(user) {
+        var html = Mustache.to_html(this.userTemplate, user)
+        this.$('.room[data-id=' + user.room + '] .users').prepend(html);
+        this.$list.masonry('reload');
+    },
+    removeUser: function(user) {
+        this.$('.room[data-id=' + user.room + ']')
+          .find('.user[data-id=' + user.id + ']').remove();
         this.$list.masonry('reload');
     }
 });

@@ -41,23 +41,12 @@
         <li class="room" data-id="{{ id }}">
             <a class="name" href="#!/room/{{ id }}">{{ name }}</a>
             <p class="description">{{ description }}</p>
-            <ul class="users">
-                <li class="user">
-                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                </li>
-                <li class="user">
-                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                </li>
-                <li class="user">
-                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                </li>
-                <li class="user">
-                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                </li>
-                <li class="user">
-                    <img src="http://t0.gstatic.com/images?q=tbn:ANd9GcR4V5iMVXg0r5CNRiHO30uSpLdJaLAV9F7o7VmUfEysZ0-bd5SF4A&t=1" alt="Ram" />
-                </li>
-            </ul>
+            <ul class="users"></ul>
+        </li>
+    </script>
+    <script id="js-tmpl-room-list-user" type="text/html">
+        <li class="user" data-id="{{ id }}">
+            <img src="http://www.gravatar.com/avatar/{{avatar}}?s=50" alt="{{ name }}" title="{{ name }}" />
         </li>
     </script>
     <script id="js-tmpl-room" type="text/html">

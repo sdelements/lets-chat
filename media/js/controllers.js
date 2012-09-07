@@ -87,7 +87,6 @@ var Client = function(config) {
         if (room) {
             var user = room.users.get(user.id)
             room.users.remove(user);
-            console.log(room.users);
         }
     }
     this.addMessage = function(data) {
@@ -130,6 +129,18 @@ var Client = function(config) {
         });
         self.socket.on('rooms:new', function(room) {
             self.availableRooms.add(room);
+        });
+        self.socket.on('rooms:users:new', function(user) {
+            var room = self.availableRooms.get(user.room)
+            if (room) {
+                room.users.add(user);
+            }
+        });
+        self.socket.on('rooms:users:leave', function(user) {
+            var room = self.availableRooms.get(user.room)
+            if (room) {
+                room.users.remove(room.users.get(user.id));
+            }
         });
     }
 
