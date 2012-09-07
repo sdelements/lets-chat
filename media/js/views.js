@@ -157,8 +157,8 @@ var RoomView = Backbone.View.extend({
         return this.debouncedScrollDown(debounce);
     },
     formatContent: function(text) {
-        // TODO: Fix this regex
-        var imagePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b/gim;
+        // TODO: Fix these regexes
+        var imagePattern = /^(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b$/gim;
         var linkPattern =  /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
         if (text.match(imagePattern)) {
             text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" alt="$1" /></a>');
@@ -173,7 +173,7 @@ var RoomView = Backbone.View.extend({
         }
         var $html = $(Mustache.to_html(this.messageTemplate, message));
         var $text = $html.find('.text');
-        $text.html(this.formatContent($text.text()));
+        $text.html(this.formatContent($text.html()));
         this.$messages.append($html);
         this.lastMessageUser = message.owner;
         if (this.scrollLocked) {
