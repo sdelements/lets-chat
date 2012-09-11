@@ -101,8 +101,9 @@ var Client = function(config) {
         } else {
             var room = self.rooms.get(data.room);
             room.messages.add(data);
+            // We only trigger this event for new single messages
+            self.notifications.trigger('addmessage', data);
         }
-        self.notifications.trigger('addmessage');
     }
     this.sendMessage = function(message) {
         self.socket.emit('room:messages:new', message);

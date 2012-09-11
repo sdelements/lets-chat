@@ -236,12 +236,26 @@ var RoomView = Backbone.View.extend({
 //
 var TabsMenuView = Backbone.View.extend({
     el: '#rooms-menu ul',
+    curent: 'home',
     events: {
         'click .tab .close': 'tabclosed'
     },
     initialize: function() {
+        var self = this;
         this.template = $('#js-tmpl-tab').html()
         this.notifications = this.options.notifications
+        //
+        // Tab count badges
+        //
+        this.notifications.on('addmessage', function(message) {
+            if (message.room != self.current) {
+                var $tab = self.$tab(message.room);
+                var count = parseInt($tab.data('count'));
+                count = count ? count : 0;
+                $tab.data('count', ++count);
+                self.setBadge(message.room, count);
+            }
+        });
     },
     render: function() {
         //
@@ -250,13 +264,24 @@ var TabsMenuView = Backbone.View.extend({
         var $tabs = this.$('.tab:not(.fixed)');
         $tabs.width(100 / $tabs.length + '%');
     },
+    $tab: function(id) {
+        return this.$('.tab[data-id=' + id + ']');
+    },
     select: function(id) {
-        this.$('.tab[data-id=' + id + ']')
+        this.current = id;
+        this.$tab(id)
           .addClass('selected')
+          .data('count', 0) // Reset tab alert count
           .siblings().removeClass('selected');
+        this.setBadge(id, 0);
     },
     setBadge: function(id, value) {
-        this.$('.tab[data-id=' + id + '] .badge').text(value)
+        var $badge = this.$tab(id).find('.badge');
+        if (value == 0) {
+            $badge.hide();
+            return;
+        }
+        this.$tab(id).find('.badge').show().text(value)
     },
     add: function(room) {
         var self = this;
@@ -265,8 +290,8 @@ var TabsMenuView = Backbone.View.extend({
         this.render();
     },
     remove: function(id) {
-        this.$el.find('.tab[data-id=' + id + ']').remove();
-        this.last = this.$el.find('.tab:last').data('id');
+        this.$tab(id).remove();
+        this.last = this.$('.tab:last').data('id');
         this.render();
     },
     tabclosed: function(e) {
@@ -277,7 +302,7 @@ var TabsMenuView = Backbone.View.extend({
         });
     },
     next: function(id) {
-        var $tab = this.$('.tab[data-id=' + id + ']');
+        var $tab = this.$tab(id);
         return $tab.next().length > 0 ? $tab.next().data('id') : $tab.prev().data('id');
     }
 });
