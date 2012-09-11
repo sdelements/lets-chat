@@ -4377,9 +4377,6 @@ header .tabs .tab a {
   border-bottom: none;
   display: block;
   position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   -webkit-border-radius: 4px 4px 0 0;
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
@@ -4395,11 +4392,25 @@ header .tabs .tab a:hover .close {
   opacity: 1;
   filter: alpha(opacity=100);
 }
+header .tabs .tab .badge {
+  position: absolute;
+  right: 25px;
+}
+header .tabs .tab .text {
+  max-width: 75%;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 header .tabs .tab .close {
   height: 30px;
   line-height: 30px;
   color: #aaa;
   font-weight: normal;
+  position: absolute;
+  top: 0;
+  right: 8px;
 }
 header .tabs .selected {
   background: #222222 url('../img/dark_noise.png');

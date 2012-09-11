@@ -45,7 +45,6 @@ header {
 				border-bottom: none;
 				display: block;
                 position: relative;
-                .text-overflow();
 				.border-radius(4px 4px 0 0);
 				.opacity(60);
 				&:hover {
@@ -56,11 +55,23 @@ header {
                     }
 				}
 			}
+            .badge {
+                position: absolute;
+                right: 25px;
+            }
+            .text {
+                max-width: 75%;
+                display: block;
+                .text-overflow();
+            }
             .close {
                 height: 30px;
                 line-height: 30px;
                 color: #aaa;
                 font-weight: normal;
+                position: absolute;
+                top: 0;
+                right: 8px;
             }
 		}
         .selected {

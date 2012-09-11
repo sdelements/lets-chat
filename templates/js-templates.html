@@ -2,9 +2,9 @@
 <div id="js-templates">
     <script id="js-tmpl-tab" type="text/html">
         <li class="tab" data-id="{{ id }}">
-            <a class="room" href="#!/room/{{ id }}" data-id="{{ id }}">
+            <a class="room" href="#!/room/{{ id }}" title="{{ name }}" data-id="{{ id }}">
                 <span class="text">{{ name }}</span>
-                <span class="badge badge-important"></span>
+                <span class="badge badge-important" style="display: none;"></span>
                 <span class="close">&times;</span>
             </a>
         </li>
