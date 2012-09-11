@@ -85,10 +85,13 @@ var ChatServer = function (app, sessionStore) {
             // Message History
             //
             client.on('room:messages:get', function(query) {
-                models.message
+                var today = new Date()
+                query.from = query.from || new Date(today).setDate(today.getDate() - 7)
+                query.room = query.room || '';
+                models.message.where('posted').gte(query.from)
                     .where('room').equals(query.room)
-                    .sort({ posted: 'asc' }).populate('owner')
-                    .limit(100)
+                    .sort({ posted: -1 }).populate('owner')
+                    .limit(150)
                     .exec(function (err, docs) {
                         if (err) {
                             // Couldn't get message or something
@@ -109,7 +112,8 @@ var ChatServer = function (app, sessionStore) {
                                 });
                             });
                         }
-                        client.emit('room:messages:new', messages)
+                        messages.reverse();
+                        client.emit('room:messages:new', messages);
                 });
             });
     
