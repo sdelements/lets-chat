@@ -23,7 +23,8 @@
         "socket.io": "*",
         "underscore": "*",
 		"node_hash": "*",
-        "slug": "*"
+        "slug": "*",
+        "moment": "*"
     },
     "license": "MIT",
     "engine": {

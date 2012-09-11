@@ -4,6 +4,7 @@
 
 var _ = require('underscore');
 var hash = require('node_hash');
+var moment = require('moment');
 
 var parseCookie = require('connect').utils.parseCookie;
 var Session = require('connect').middleware.session.Session;
@@ -84,12 +85,10 @@ var ChatServer = function (app, sessionStore) {
             // Message History
             //
             client.on('room:messages:get', function(query) {
-                var today = new Date()
-                query.from = query.from || new Date(today).setDate(today.getDate() - 1)
-                query.room = query.room || '';
-                models.message.where('posted').gte(query.from)
+                models.message
                     .where('room').equals(query.room)
                     .sort({ posted: 'asc' }).populate('owner')
+                    .limit(100)
                     .exec(function (err, docs) {
                         if (err) {
                             // Couldn't get message or something
@@ -105,7 +104,8 @@ var ChatServer = function (app, sessionStore) {
                                     avatar: hash.md5(message.owner.email),
                                     name: message.owner.displayName,
                                     text: message.text,
-                                    posted: message.posted
+                                    posted: message.posted,
+                                    time: moment(message.posted).calendar()
                                 });
                             });
                         }
@@ -134,6 +134,7 @@ var ChatServer = function (app, sessionStore) {
                         name: userData.displayName,
                         text: message.text,
                         posted: message.posted,
+                        time: moment(message.posted).calendar(),
                         room: message.room
                     }
                     self.io.sockets.in(message.room).emit('room:messages:new', outgoingMessage);
