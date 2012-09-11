@@ -1,6 +1,11 @@
 var Client = function(config) {
 
     var self = this;
+    
+    //
+    // Config
+    //
+    this.config = config;
 
     //
     // Global Notifications
@@ -116,9 +121,9 @@ var Client = function(config) {
     // Connection
     //
     this.listen = function() {
-        self.socket = io.connect(config.host, {
+        self.socket = io.connect(self.config.host, {
             reconnect: true,
-            transports: config.transports
+            transports: self.config.transports
         });
         self.socket.on('connect', function() {
             self.socket.emit('rooms:get', {});

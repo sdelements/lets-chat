@@ -111,8 +111,7 @@ var ChatServer = function (app, sessionStore) {
                                     name: message.owner.displayName,
                                     text: message.text,
                                     posted: message.posted,
-                                    time: moment(message.posted).calendar(),
-                                    own: message.owner._id == userData._id
+                                    time: moment(message.posted).calendar()
                                 });
                             });
                         }
@@ -143,8 +142,7 @@ var ChatServer = function (app, sessionStore) {
                         text: message.text,
                         posted: message.posted,
                         time: moment(message.posted).calendar(),
-                        room: message.room,
-                        own: message.owner == userData._id
+                        room: message.room
                     }
                     self.io.sockets.in(message.room).emit('room:messages:new', outgoingMessage);
                 });
