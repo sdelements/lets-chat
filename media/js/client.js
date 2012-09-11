@@ -102,6 +102,7 @@ var Client = function(config) {
             var room = self.rooms.get(data.room);
             room.messages.add(data);
         }
+        self.notifications.trigger('addmessage');
     }
     this.sendMessage = function(message) {
         self.socket.emit('room:messages:new', message);

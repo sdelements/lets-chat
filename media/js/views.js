@@ -362,7 +362,33 @@ var CreateRoomView = Backbone.View.extend({
     this.notifications.trigger('createroom', room);
     return false;
   }
-})
+});
+
+//
+// Window Message Count
+//
+var WindowCountAlertView = Backbone.View.extend({
+    el: 'html',
+    title: $('title').html(),
+    focus: true,
+    count: 0,
+    initialize: function() {
+        var self = this;
+        $(window).bind('focus blur', function(e) {
+            if (e.type == 'focus') {
+                self.count = 0;
+                self.focus = true;
+            } else {
+                self.focus = false;
+            }
+        });
+        this.options.notifications.on('addmessage', function() {
+            if (!self.focus) {
+                self.$('title').html('(' + parseInt(++self.count) + ') ' + self.title);
+            }
+        });
+    }
+});
 
 //
 // Client
@@ -388,6 +414,9 @@ var ClientView = Backbone.View.extend({
             notifications: this.notifications
         });
         this.createRoom = new CreateRoomView({
+            notifications: this.notifications
+        });
+        this.windowCountAlert = new WindowCountAlertView({
             notifications: this.notifications
         });
         //
