@@ -1,6 +1,10 @@
-// General
-
-// Layout
+/*********************
+ * Client
+ *********************/
+ 
+/*
+ * Views
+ *********************/
 
 .views {
 	width: 100%;
@@ -9,45 +13,53 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	.horizontal-box();
+    border-top: 1px #444 solid;
+	.horizontal-box;
 }
 
 .view {
     width: 100%;
-    .horizontal-box();
+    .horizontal-box;
+    .sidebar {
+        .box-flex(0);
+    }
+    .main {
+        .box-flex(1);
+        .vertical-box;
+    }
 }
 
-.sidebar {
-	.box-flex(0);
-}
-
-.main {
-	.box-flex(1);
-	.vertical-box();
-}
+/*
+ * Chat
+ *********************/
 
 .chat {
+    margin: 15px;
+	.fancy-scrollbars;
+	.border-radius(4px);
 	.box-flex(1);
-	.vertical-box();
+	.vertical-box;
+    .messages {
+        margin: 0;
+        overflow: auto;
+        .border-radius(4px 4px 0 0);
+        .box-flex(1);
+    }
+    .entry {
+        .box-flex(0);
+        .horizontal-box;
+        textarea {
+            .box-flex(1);
+        }
+        .btn {
+            .box-flex(0);
+        }
+    }
 }
 
-.chat .messages {
-	.box-flex(1);
-	overflow: auto;
-}
-
-.entry {
-	.box-flex(0);
-	.horizontal-box();
-	textarea {
-		.box-flex(1);
-	}
-	.btn {
-		.box-flex(0);
-	}
-}
-
-// Entry
+/*
+ * Entry
+ *********************/
 
 .entry {
 	background: #fff url('../img/grid_noise.png');
@@ -64,7 +76,9 @@
 	}
 }
 
-// Sidebar
+/*
+ * Sidebar
+ *********************/
 
 .sidebar {
 	width: 230px;
@@ -73,9 +87,6 @@
 	margin-left: 5px;
 	position: relative;
 	z-index: 999;
-	.buttons {
-		float: left;
-	}
 	p, h1 {
 		color: #fff;
 	}
@@ -111,7 +122,7 @@
 			margin-bottom: 0;
 			display: block;
 			word-wrap: break-word;
-			.clearfix();
+			.clearfix;
 			&:last-child {
 				border-bottom: 0;
 				margin-bottom: 5px;
@@ -124,7 +135,9 @@
 	}
 }
 
-// Files
+/*
+ * Files
+ *********************/
 
 .files {
 	form, input {
@@ -168,44 +181,4 @@
 			}
 		}
 	}
-}
-
-// Status
-
-.status { // TODO: Fix
-	font-size: 12px;
-	position: fixed;
-	bottom: 15px;
-	right: 15px;
-	.message {
-		margin-right: 10px;
-		float: left;
-	}
-	.ping {
-		text-align: right;
-		float: right;
-	}
-}
-
-// Chat
-
-.chat {
-	margin: 15px;
-	.fancy-scrollbars();
-	.border-radius(4px);
-}
-
-.views {
-	border-top: 1px #444 solid;
-}
-
-// Lists
-
-.rooms-list {
-    border: 1px #333 solid;
-	overflow: auto;
-    margin: 10px;
-    padding: 20px;
-    .box-flex(1);
-    .border-radius(4px);
 }

@@ -1,0 +1,83 @@
+/*********************
+ * Base
+ *********************/
+
+body {
+	.bg-dark;
+}
+
+textarea {
+	outline: none;
+    .box-sizing(border-box);
+}
+
+header {
+	background: #222 url('../img/header.png');
+	border-bottom: 1px #000 solid;
+    height: 42px;
+    .clearfix;
+	.user {
+        background: #222 url('../img/header.png');
+        max-width: 30%;
+		height: 40px;
+		line-height: 40px;
+		float: right;
+		padding: 0 10px;
+		border-left: 1px #111 solid;
+		position: relative;
+        .box-sizing(border-box);
+		.dropdown {
+			margin: 5px 5px 0 0;
+		}
+		.caret {
+			border-top-color: #fff;
+			border-bottom-color: #fff;
+			margin: 0;
+			margin-top: -2px;
+			vertical-align: middle;
+		}
+		a {
+            color: #fff;
+			display: block;
+            .text-overflow;
+			&:hover {
+				.name {
+					color: #fff;
+				}
+				text-decoration: none;
+			}
+			.name {
+				color: #bbb;
+			}
+		}
+		img {
+			.square(32px);
+			margin-right: 5px;
+			vertical-align: middle;
+		}
+        .dropdown-menu {
+            margin-right: 5px;
+            &, a {
+                color: #333;
+            }
+            a:hover {
+                color: #fff;
+            }
+        }
+	}
+}
+
+.modal-body {
+	.response {
+		.alert;
+		text-align: center;
+		display: none;
+		margin-bottom: 0;
+		&.error {
+			.alert-error;
+		}
+		&.success {
+			.alert-success;
+		}
+	}
+}

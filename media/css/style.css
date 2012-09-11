@@ -4177,9 +4177,9 @@ a.badge:hover {
 .invisible {
   visibility: hidden;
 }
-.clear {
-  overflow: hidden;
-}
+/*********************
+ * Mixins
+ *********************/
 .bg-dark {
   background: #222222 url('../img/dark_noise.png');
 }
@@ -4224,10 +4224,13 @@ a.badge:hover {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 }
 .avatar {
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
 }
+/*********************
+ * Overrides
+ *********************/
 .ui-tooltip label {
   color: inherit;
   margin: 0;
@@ -4305,6 +4308,9 @@ a.badge:hover {
     background-position: -50px 0;
   }
 }
+/*********************
+ * Base
+ *********************/
 body {
   background: #222222 url('../img/dark_noise.png');
 }
@@ -4329,122 +4335,11 @@ header:after {
 header:after {
   clear: both;
 }
-header .tabs {
-  width: 70%;
-  line-height: 0;
-  padding: 11px 0 0 25px;
-  float: left;
-  *zoom: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: visible;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
-}
-header .tabs:before,
-header .tabs:after {
-  display: table;
-  content: "";
-}
-header .tabs:after {
-  clear: both;
-}
-header .tabs ul {
-  padding: 0;
-  margin: 0;
-  display: block;
-}
-header .tabs .tab {
-  width: 20%;
-  max-width: 200px;
-  display: inline-block;
-  overflow: visible;
-}
-header .tabs .tab.fixed {
-  width: 50px;
-  text-align: center;
-}
-header .tabs .tab a {
-  background: #222222 url('../img/dark_noise.png');
-  height: 30px;
-  line-height: 30px;
-  color: #fff;
-  padding: 0 10px;
-  border: 1px #444 solid;
-  border-bottom: none;
-  display: block;
-  position: relative;
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
-  opacity: 0.6;
-  filter: alpha(opacity=60);
-}
-header .tabs .tab a:hover {
-  text-decoration: none;
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-header .tabs .tab a:hover .close {
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-header .tabs .tab .badge {
-  position: absolute;
-  right: 25px;
-}
-header .tabs .tab .text {
-  max-width: 75%;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-header .tabs .tab .close {
-  height: 30px;
-  line-height: 30px;
-  color: #aaa;
-  font-weight: normal;
-  position: absolute;
-  top: 0;
-  right: 8px;
-}
-header .tabs .selected {
-  background: #222222 url('../img/dark_noise.png');
-  position: relative;
-  z-index: 999;
-  padding-bottom: 2px;
-  margin-bottom: -2px;
-  -webkit-border-radius: 5px 5px 0 0;
-  -moz-border-radius: 5px 5px 0 0;
-  border-radius: 5px 5px 0 0;
-}
-header .tabs .selected a {
-  position: relative;
-  z-index: 999;
-  -webkit-box-shadow: 0 0 5px #222222;
-  -moz-box-shadow: 0 0 5px #222222;
-  box-shadow: 0 0 5px #222222;
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-header .tabs .badge {
-  padding: 1px 7px;
-  position: absolute;
-  top: 7px;
-  right: 6px;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 7px;
-}
 header .user {
   background: #222222 url('../img/header.png');
   max-width: 30%;
-  height: 42px;
-  line-height: 42px;
+  height: 40px;
+  line-height: 40px;
   float: right;
   padding: 0 10px;
   border-left: 1px #111 solid;
@@ -4520,12 +4415,27 @@ header .user .dropdown-menu a:hover {
   border-color: #d6e9c6;
   color: #468847;
 }
+/*********************
+ * Login
+ *********************/
+.page-login #logo {
+  text-align: center;
+  margin-top: 50px;
+}
+.page-login form {
+  background: #fff;
+  width: 500px;
+  display: block;
+  margin: 20px auto;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+}
+/*********************
+ * Messages
+ *********************/
 .messages {
   background: #fff;
-  margin: 0;
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
 }
 .message {
   border-top: 1px #eee solid;
@@ -4584,83 +4494,126 @@ header .user .dropdown-menu a:hover {
 .message.fragment .top {
   display: none;
 }
-.event {
-  background: #f9ffb5;
-  padding: 7px;
-  border-bottom: 1px #eee solid;
-}
-.page-login #logo {
-  text-align: center;
-  margin-top: 50px;
-}
-.page-login form {
-  background: #fff;
-  width: 500px;
-  display: block;
-  margin: 20px auto;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 7px;
-}
-#room-list {
-  display: block;
-}
-#room-list .top {
-  padding: 20px;
-  overflow: hidden;
-}
-#room-list .top h1 {
+/*********************
+ * Tabs
+ *********************/
+.tabs {
+  width: 70%;
+  line-height: 0;
+  padding: 11px 0 0 25px;
   float: left;
-}
-#room-list .top .btn {
-  margin-top: 20px;
-  float: right;
-}
-.room-list {
-  padding: 0 15px;
-  margin: 0;
+  *zoom: 1;
   overflow: hidden;
-}
-.room-list ul,
-.room-list li {
-  padding: 0;
-  margin: 0;
-}
-.room-list .room {
-  background: #111;
-  width: 250px;
-  padding: 10px;
-  margin: 5px;
-  border-top: 3px #777 solid;
-  display: block;
-  float: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: visible;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
-.room-list .name {
-  font-size: 20px;
+.tabs:before,
+.tabs:after {
+  display: table;
+  content: "";
+}
+.tabs:after {
+  clear: both;
+}
+.tabs ul {
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+.tabs .tab {
+  width: 20%;
+  max-width: 200px;
+  display: inline-block;
+  overflow: visible;
+}
+.tabs .tab.fixed {
+  width: 50px;
+  text-align: center;
+}
+.tabs .tab a {
+  background: #222222 url('../img/dark_noise.png');
+  height: 30px;
+  line-height: 30px;
+  color: #fff;
+  padding: 0 10px;
+  border: 1px #444 solid;
+  border-bottom: none;
+  display: block;
+  position: relative;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+  opacity: 0.6;
+  filter: alpha(opacity=60);
+}
+.tabs .tab a:hover {
+  text-decoration: none;
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.tabs .tab a:hover .close {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.tabs .tab .badge {
+  position: absolute;
+  right: 25px;
+}
+.tabs .tab .text {
+  max-width: 75%;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.room-list .description {
-  color: #777;
-}
-.room-list .user {
-  margin-right: 5px;
-  display: block;
-  float: left;
-}
-.room-list img {
-  width: 30px;
+.tabs .tab .close {
   height: 30px;
-  -webkit-border-radius: 100%;
-  -moz-border-radius: 100%;
-  border-radius: 100%;
+  line-height: 30px;
+  color: #aaa;
+  font-weight: normal;
+  position: absolute;
+  top: 0;
+  right: 8px;
 }
+.tabs .selected {
+  background: #222222 url('../img/dark_noise.png');
+  position: relative;
+  z-index: 999;
+  padding-bottom: 2px;
+  margin-bottom: -2px;
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+.tabs .selected a {
+  position: relative;
+  z-index: 999;
+  -webkit-box-shadow: 0 0 5px #222222;
+  -moz-box-shadow: 0 0 5px #222222;
+  box-shadow: 0 0 5px #222222;
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.tabs .badge {
+  padding: 1px 7px;
+  position: absolute;
+  top: 7px;
+  right: 6px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+}
+/*********************
+ * Client
+ *********************/
+/*
+ * Views
+ *********************/
 .views {
   width: 100%;
   position: absolute;
@@ -4668,6 +4621,7 @@ header .user .dropdown-menu a:hover {
   left: 0;
   right: 0;
   bottom: 0;
+  border-top: 1px #444 solid;
   display: box;
   display: -webkit-box;
   display: -moz-box;
@@ -4696,12 +4650,12 @@ header .user .dropdown-menu a:hover {
   -moz-box-align: stretch;
   -moz-box-pack: left;
 }
-.sidebar {
+.view .sidebar {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
 }
-.main {
+.view .main {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
@@ -4715,7 +4669,14 @@ header .user .dropdown-menu a:hover {
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
 }
+/*
+ * Chat
+ *********************/
 .chat {
+  margin: 15px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
@@ -4728,14 +4689,33 @@ header .user .dropdown-menu a:hover {
   -webkit-box-align: stretch;
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
+}
+.chat *::-webkit-scrollbar {
+  width: 15px;
+  height: 15px;
+}
+.chat *::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+.chat *::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 }
 .chat .messages {
+  margin: 0;
+  overflow: auto;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
-  overflow: auto;
 }
-.entry {
+.chat .entry {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
@@ -4752,16 +4732,19 @@ header .user .dropdown-menu a:hover {
   -moz-box-align: stretch;
   -moz-box-pack: left;
 }
-.entry textarea {
+.chat .entry textarea {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
 }
-.entry .btn {
+.chat .entry .btn {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
 }
+/*
+ * Entry
+ *********************/
 .entry {
   background: #ffffff url('../img/grid_noise.png');
   padding: 10px;
@@ -4778,6 +4761,9 @@ header .user .dropdown-menu a:hover {
 .entry .btn {
   margin-left: 5px;
 }
+/*
+ * Sidebar
+ *********************/
 .sidebar {
   width: 230px;
   color: #fff;
@@ -4785,9 +4771,6 @@ header .user .dropdown-menu a:hover {
   margin-left: 5px;
   position: relative;
   z-index: 999;
-}
-.sidebar .buttons {
-  float: left;
 }
 .sidebar p,
 .sidebar h1 {
@@ -4849,6 +4832,9 @@ header .user .dropdown-menu a:hover {
   height: 35px;
   margin-right: 5px;
 }
+/*
+ * Files
+ *********************/
 .files form,
 .files input {
   margin: 0;
@@ -4885,101 +4871,65 @@ header .user .dropdown-menu a:hover {
   color: #777;
   font-size: 11px;
 }
-.status {
-  font-size: 12px;
-  position: fixed;
-  bottom: 15px;
-  right: 15px;
+/*********************
+ * Rooms
+ *********************/
+#room-list {
+  display: block;
 }
-.status .message {
-  margin-right: 10px;
+#room-list .top {
+  padding: 20px;
+  overflow: hidden;
+}
+#room-list .top h1 {
   float: left;
 }
-.status .ping {
-  text-align: right;
+#room-list .top .btn {
+  margin-top: 20px;
   float: right;
 }
-.chat {
-  margin: 15px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+.room-list {
+  padding: 0 15px;
+  margin: 0;
+  overflow: hidden;
 }
-.chat *::-webkit-scrollbar {
-  width: 15px;
-  height: 15px;
+.room-list ul,
+.room-list li {
+  padding: 0;
+  margin: 0;
 }
-.chat *::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+.room-list .room {
+  background: #111;
+  width: 250px;
+  padding: 10px;
+  margin: 5px;
+  border-top: 3px #777 solid;
+  display: block;
+  float: left;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
 }
-.chat *::-webkit-scrollbar-thumb {
-  background-color: #aaa;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+.room-list .name {
+  font-size: 20px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.views {
-  border-top: 1px #444 solid;
+.room-list .description {
+  color: #777;
 }
-.rooms-list {
-  border: 1px #333 solid;
-  overflow: auto;
-  margin: 10px;
-  padding: 20px;
-  box-flex: 1;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+.room-list .user {
+  margin-right: 5px;
+  display: block;
+  float: left;
 }
-@media (max-width: 700px) {
-  header .tabs {
-    width: 80%;
-    padding-left: 5px;
-  }
-  header .user {
-    max-width: 20%;
-  }
-  header .user .name {
-    display: none;
-  }
-  #sidebar {
-    width: auto;
-  }
-  #sidebar h1,
-  #sidebar p {
-    display: none;
-  }
-  #sidebar .btn-group {
-    display: none;
-  }
-  #sidebar .btn-group .btn {
-    display: block;
-    float: none;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    margin: 0;
-    margin-bottom: 3px;
-  }
-  #sidebar #files {
-    display: none;
-  }
-  #sidebar .item-list {
-    text-align: center;
-  }
-  #sidebar .item-list ul {
-    max-height: none;
-  }
-  #sidebar .item-list .avatar {
-    max-width: none;
-    margin: 0;
-  }
-  #sidebar .item-list .name,
-  #sidebar .item-list .text {
-    display: none;
-  }
+.room-list img {
+  width: 30px;
+  height: 30px;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
 }
