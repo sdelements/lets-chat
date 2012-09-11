@@ -98,63 +98,6 @@ var Server = function (config) {
         var view = swig.compileFile('chat.html').render(vars);
         res.send(view);
     });
-    
-    /** 
-    self.app.get('/rooms/:id.json', requireLogin, function(req, res) {
-        models.room.findById(
-        res.send('derp');
-    });
-    ***/
-    
-    /***
-    self.app.get('/rooms/?', requireLogin, function (req, res) {
-        models.room.find().exec(function(err, rooms) {
-            var view = swig.compileFile('rooms.html').render({
-                media_url: self.config.media_url,
-                rooms: rooms
-            });
-            res.send(view);
-        });
-    });
-
-	self.app.get('/rooms/:slug', requireLogin, function (req, res) {
-        var slug = req.params.slug;
-		var user = req.session.user;
-        var room;
-        models.room.findOne({
-            slug: slug
-        }).exec(function (err, doc) {
-            if (!doc) {
-                room = new models.room({
-                    slug: slug,
-                    name: slug,
-                    owner: user._id
-                }).save();
-                return;
-            }
-            room = doc;
-            var view = swig.compileFile('chat.html').render({
-                media_url: self.config.media_url,
-                room: {
-                    id: room._id,
-                    slug: room.slug,
-                    name: room.name,
-                    description: room.description
-                },
-                host: self.config.hostname,
-                port: self.config.port,
-                user_id: user._id,
-                user_email: user.email,
-                user_avatar: hash.md5(user.email),
-                user_displayname: user.displayName,
-                user_lastname: user.lastName,
-                user_firstname: user.firstName
-            });
-            res.send(view);
-        });
-
-	});
-    **/
 
 	// Login
 	self.app.get('/login', function (req, res) {
@@ -242,44 +185,6 @@ var Server = function (config) {
                     res.send({
                         status: 'success',
                         message: 'You\'ve been successfully registered.'
-                    });
-                });
-            });
-		});
-
-		// Add Room
-		self.app.post('/add-room', requireLogin, function (req, res) {
-            var form = req.body;
-            models.room.findOne({
-                'name': form.name
-            }).exec(function (error, room) {
-                // Check if the same room name exists
-                if (room) {
-                    res.send({
-                        status: 'error',
-                        message: 'That room name is already in use.'
-                    });
-                    return;
-                }
-                // Save time
-                var room = new models.room({
-                    slug: form.name,
-                    name: form.name,
-                    description: form.description,
-                    owner: req.session.user._id
-                }).save(function(err, room) {
-                    if (err) {
-                        res.send({
-                            status: 'error',
-                            message: 'Some fields did not validate',
-                            errors: err
-                        });
-                        return;
-                    }
-                    res.send({
-                        room: room,
-                        status: 'success',
-                        message: 'The room has been created'
                     });
                 });
             });
