@@ -14,6 +14,9 @@ var models = require('./models/models.js');
 var ChatServer = function (app, sessionStore) {
 
     var self = this;
+    
+    // Set moment date formatting
+    moment.calendar.sameDay = 'LT';
 
     this.rooms = {};
 
