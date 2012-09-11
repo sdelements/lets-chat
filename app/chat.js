@@ -89,7 +89,7 @@ var ChatServer = function (app, sessionStore) {
                 query.room = query.room || '';
                 models.message.where('posted').gte(query.from)
                     .where('room').equals(query.room)
-                    .sort('posted', -1).populate('owner')
+                    .sort({ posted: 'asc' }).populate('owner')
                     .exec(function (err, docs) {
                         if (err) {
                             // Couldn't get message or something
@@ -109,7 +109,6 @@ var ChatServer = function (app, sessionStore) {
                                 });
                             });
                         }
-                        messages.reverse();
                         client.emit('room:messages:new', messages)
                 });
             });

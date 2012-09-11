@@ -18,7 +18,7 @@
         "express-namespace": "*",
         "connect-mongo": "*",
         "validator": "*",
-        "mongoose": "*",
+        "mongoose": "3.1.2",
         "swig": "*",
         "socket.io": "*",
         "underscore": "*",
