@@ -339,11 +339,6 @@ var TabsView = Backbone.View.extend({
         this.menu.add(room);
         this.views[room.id] = view;
         this.$el.append($pane);
-        //
-        // Room Events
-        //
-        room.messages.bind('add', function(message) {
-        });
     },
     remove: function(id) {
         if (this.current == id) {
