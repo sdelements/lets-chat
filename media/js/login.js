@@ -40,7 +40,7 @@ $.validator.addMethod('alphanumeric', function(value, element) {
 	return this.optional(element) || /^[a-z0-9]+$/i.test(value);
 }, 'Only letters and numbers are allowed');
 
-$(document).ready(function() {
+$(function() {
 
 	var submitForm = function(form, callbacks) {
 		var self = this;
@@ -50,8 +50,8 @@ $(document).ready(function() {
 			self.$form.find('.response').each(function () {
 				var isError = type == 'error' ? true : false;
 				$(this).text(text);
-				$(this).toggleClass('error', isError)
-					.toggleClass('success', !isError)
+				$(this).toggleClass('alert-error', isError)
+					.toggleClass('alert-success', !isError)
 					.stop(true, true)
 					.fadeIn(100);
 				if (delay) {
@@ -91,12 +91,13 @@ $(document).ready(function() {
 		});
 	});
 
-	// Toggle register
-	$('.toggle-register').on('click', function(e) {
+	// Toggle forms
+	$('.show-form').on('click', function(e) {
 		e.preventDefault();
-		$('form.login, form.register').each(function() {
+		$('.well[id$=form]').each(function() {
 			$(this).find('input').qtip('destroy');
-			$(this).toggle();
+            $(this).hide();
 		});
+        $($(this).data('target')).show();
 	});
 });

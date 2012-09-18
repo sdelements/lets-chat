@@ -4,14 +4,30 @@
  
 .page-login {
 	#logo {
-		text-align: center;
-		margin-top: 50px;
+        background: #fff url('../img/grid_noise.png');
+        height: 140px;
+        margin-bottom: 40px;
+        position: relative;
+        img {
+            margin-left: -170px;
+            position: absolute;
+            left: 50%;
+            bottom: -1px;
+        }
 	}
-	form {
-		background: #fff;
-		width: 500px;
-		display: block;
-		margin: 20px auto;
-		.border-radius(7px);
-	}
+    input[type="text"],
+    input[type="password"] {
+        width: 378px;
+        font-size: 14px;
+        padding: 10px;
+    }
+    .links {
+        margin-top: 8px;
+    }
+    .well {
+        background: #fff;
+        width: 400px;
+        margin: 0 auto;
+        .box-shadow(0 0 10px #000);
+    }
 }

@@ -12,70 +12,63 @@
 {% block content %}
 	<div id="login">
 		<h1 id="logo">
-			<img src="{{media_url}}/img/logo.png" alt="Let's Chat Bro" />
-		</h1>
-		<form class="login validate form-horizontal" action="/ajax/login" method="post">
-			<input type="hidden" name="next" value="{{next}}" />
-			<div class="modal-header">
-				<h3>Let's get you signed in</h3>
-			</div>
-			<div class="modal-body">
-				<div class="control-group">
-					<label class="control-label">Email</label>
-					<div class="controls">
-						<input class="required email" name="email" type="text" />
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Password</label>
-					<div class="controls">
-						<input class="required" name="password" type="password" />
-					</div>
-				</div>
-				<p class="response"></p>
-			</div>
-			<div class="modal-footer">
-				<div class="pull-left"><a class="toggle-register" href="#">I need an account</a></div>
-				<input type="submit" class="btn btn-success indicator" name="submit" value="Login">
-			</div>
-		</form>
-		<form class="register validate form-horizontal" action="/ajax/register" method="post" style="display: none;">
-			<input type="hidden" name="next" value="{{next}}" />
-			<div class="modal-header">
-				<h3>Let's get you signed up</h3>
-			</div>
-			<div class="modal-body">
-				<div class="control-group">
-					<label class="control-label">Email</label>
-					<div class="controls">
-						<input class="required email" name="email" type="text" />
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Password</label>
-					<div class="controls">
-						<input class="required" name="password" type="password" minlength="4" maxlength="24" />
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label">First Name</label>
-					<div class="controls">
-						<input class="required" name="first-name" type="text" maxlength="24" />
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Last Name</label>
-					<div class="controls">
-						<input class="required" name="last-name" type="text" maxlength="24" />
-					</div>
-				</div>
-				<p class="response"></p>
-			</div>
-			<div class="modal-footer">
-				<div class="pull-left"><a class="toggle-register" href="#">I already I have account</a></div>
-				<input type="submit" class="btn btn-success indicator" name="submit" value="Register">
-			</div>
-		</form>
+			<img src="{{media_url}}/img/logo-dark.png" alt="Let's Chat Bro" />
+		</h1>  
+        <div id="login-form" class="well">
+            <legend>Sign in</legend>
+            <form class="login validate form-horizontal" action="/ajax/login" method="post">
+                <div class="control-group">
+                    <input class="required" placeholder="Email" name="email" type="text" />
+                </div>
+                <div class="control-group">
+                    <input class="required" placeholder="Password" name="password" type="password" /> 
+                </div>
+                <p class="alert response hide"></p>
+                <div class="bottom clearfix">
+                    <div class="pull-left links">
+                        <a class="show-form" data-target="#register-form" href="#">I need an account</a>
+                        <!--
+                            &middot;
+                            <a class="show-lost-password" href="#">
+                                I lost my password
+                            </a>
+                        -->
+                    </div>
+                    <button class="btn-info btn btn-large indicator pull-right" type="submit">Login</button>
+                </div>
+            </form>
+        </div><!-- login form end -->
+        <div id="register-form" class="well" style="display: none;">
+            <legend>Register</legend>
+            <form class="register validate form-horizontal" action="/ajax/register" method="post">
+                <input type="hidden" name="next" value="{{next}}" />
+                <div class="control-group">
+                    <input class="required email" name="email" type="text" placeholder="Email" />
+                </div>
+                <div class="control-group">
+                    <input class="required" name="password" type="password" placeholder="Password" minlength="4" maxlength="24" />
+                </div>
+                <div class="control-group">
+                    <input class="required" name="first-name" type="text" placeholder="First Name" maxlength="24" />
+                </div>
+                <div class="control-group">
+                    <input class="required" name="last-name" type="text" placeholder="Last Name" maxlength="24" />
+                </div>
+                <p class="alert response hide"></p>
+                <div class="bottom clearfix">
+                    <div class="pull-left links">
+                        <a class="show-form" data-target="#login-form" href="#">I already have an account</a>
+                        <!--
+                            &middot;
+                            <a class="show-lost-password" href="#">
+                                I lost my password
+                            </a>
+                        -->
+                    </div>
+                    <button class="btn-info btn btn-large indicator pull-right" type="submit">Register</button>
+                </div>
+            </form>
+        </div><!-- register form end -->
 	</div><!-- login end -->
 {% endblock %}
 

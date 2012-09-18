@@ -4419,17 +4419,33 @@ header .user .dropdown-menu a:hover {
  * Login
  *********************/
 .page-login #logo {
-  text-align: center;
-  margin-top: 50px;
+  background: #ffffff url('../img/grid_noise.png');
+  height: 140px;
+  margin-bottom: 40px;
+  position: relative;
 }
-.page-login form {
+.page-login #logo img {
+  margin-left: -170px;
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+}
+.page-login input[type="text"],
+.page-login input[type="password"] {
+  width: 378px;
+  font-size: 14px;
+  padding: 10px;
+}
+.page-login .links {
+  margin-top: 8px;
+}
+.page-login .well {
   background: #fff;
-  width: 500px;
-  display: block;
-  margin: 20px auto;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 7px;
+  width: 400px;
+  margin: 0 auto;
+  -webkit-box-shadow: 0 0 10px #000000;
+  -moz-box-shadow: 0 0 10px #000000;
+  box-shadow: 0 0 10px #000000;
 }
 /*********************
  * Messages
