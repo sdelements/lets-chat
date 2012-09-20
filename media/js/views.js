@@ -125,6 +125,15 @@ var RoomView = Backbone.View.extend({
                 nicknames: _.pluck(users.toJSON(), 'safeName')
             }); 
         });
+        //
+        // Window Events
+        //
+        $(window).on('resize', function() {
+            // Flex shim
+            // This is runs even if not visible
+            // TODO: Make this better
+            self.updateLayout();
+        });
     },
     render: function() {
         var self = this;
@@ -144,6 +153,19 @@ var RoomView = Backbone.View.extend({
             self.updateScrollLock();
         });
         return this.$el;
+    },
+    updateLayout: function() {
+        //
+        // CSS Flex shim for non-webkit browsers
+        //
+        if ($.browser.webkit !== true) {
+            var height = $(window).height() -
+                $('header.navbar').outerHeight() -
+                parseInt(this.$('.chat').css('margin-top'), 10) -
+                parseInt(this.$('.chat').css('margin-bottom'), 10) -
+                this.$('.entry').outerHeight();
+            this.$messages.height(height);
+        }
     },
     updateScrollLock: function() {
         this.scrollLocked = this.$messages[0].scrollHeight -
@@ -327,6 +349,12 @@ var TabsView = Backbone.View.extend({
         this.$('.view[data-id=' + id + ']')
             .show()
             .siblings().hide();
+        if (this.views[id]) {
+            // Does CSS Flex shim
+            this.views[id].updateLayout();
+            // Sometimes scroll position gets messed up
+            this.views[id].scrollMessagesDown();
+        }
         // Trigger masonry fix event if home
         if (id === 'home') {
             this.notifications.trigger('homeselected');
