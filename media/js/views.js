@@ -3,25 +3,25 @@
 //
 var RoomListView = Backbone.View.extend({
     el: '#room-list',
-    initialize: function () {
+    initialize: function() {
         var self = this;
         this.$list = this.$('.room-list');
         this.template = $('#js-tmpl-room-list-item').html();
         this.userTemplate = $('#js-tmpl-room-list-user').html();
         this.collection = this.options.collection;
-        this.collection.bind('add', function (room) {
+        this.collection.bind('add', function(room) {
             self.add(room);
             //
             //  User events
             //
-            room.users.bind('add', function (user) {
+            room.users.bind('add', function(user) {
                 self.addUser(user.toJSON());
             });
-            room.users.bind('remove', function (user) {
+            room.users.bind('remove', function(user) {
                 self.removeUser(user.toJSON());
             });
         });
-        this.collection.bind('remove', function (room) {
+        this.collection.bind('remove', function(room) {
             self.remove(room.id);
         });
         self.$list.masonry({
@@ -29,25 +29,25 @@ var RoomListView = Backbone.View.extend({
             isAnimated: true
         });
         // Masonry shim
-        this.options.notifications.on('homeselected', function () {
+        this.options.notifications.on('homeselected', function() {
             self.$list.masonry('reload');
         });
     },
-    add: function (room) {
+    add: function(room) {
         var item = Mustache.to_html(this.template, room.toJSON());
         this.$list.prepend(item);
         this.$list.masonry('reload');
     },
-    remove: function (id) {
+    remove: function(id) {
         this.$('.room[data-id=' + id + ']').remove();
         this.$list.masonry('reload');
     },
-    addUser: function (user) {
+    addUser: function(user) {
         var html = Mustache.to_html(this.userTemplate, user);
         this.$('.room[data-id=' + user.room + '] .users').prepend(html);
         this.$list.masonry('reload');
     },
-    removeUser: function (user) {
+    removeUser: function(user) {
         this.$('.room[data-id=' + user.room + ']')
           .find('.user[data-id=' + user.id + ']').remove();
         this.$list.masonry('reload');
@@ -58,23 +58,21 @@ var RoomListView = Backbone.View.extend({
 // Userlist
 //
 var UserListView = Backbone.View.extend({
-    // tagName: 'ul',
-    // className: 'user-list',
-    initialize: function () {
+    initialize: function() {
         var self = this;
         this.template = $('#js-tmpl-user-item').html();
-        this.model.bind('add', function (user) {
+        this.model.bind('add', function(user) {
             self.add(user.toJSON());
         });
-        this.model.bind('remove', function (user) {
+        this.model.bind('remove', function(user) {
             self.remove(user.id);
         });
     },
-    add: function (user) {
+    add: function(user) {
         var html = Mustache.to_html(this.template, user);
         this.$el.append(html);
     },
-    remove: function (id) {
+    remove: function(id) {
         this.$('.user[data-id=' + id + ']').remove();
     }
 });
@@ -93,7 +91,7 @@ var RoomView = Backbone.View.extend({
     },
     lastMessageUser: false,
     scrollLocked: true,
-    initialize: function () {
+    initialize: function() {
         var self = this;
         //
         // Vars
@@ -110,14 +108,14 @@ var RoomView = Backbone.View.extend({
         //
         // Model Bindings
         //
-        this.model.messages.bind('add', function (message) {
+        this.model.messages.bind('add', function(message) {
             self.addMessage(message.toJSON());
         });
-        this.model.messages.bind('addsilent', function (message) {
+        this.model.messages.bind('addsilent', function(message) {
             // We're debouncing the scrolldown for performance
             self.addMessage(message, true);
         });
-        this.model.users.bind('add', function (user, users) {
+        this.model.users.bind('add', function(user, users) {
             //
             // Nick Complete
             //
@@ -128,14 +126,14 @@ var RoomView = Backbone.View.extend({
         //
         // Window Events
         //
-        $(window).on('resize', function () {
+        $(window).on('resize', function() {
             // Flex shim
             // This is runs even if not visible
             // TODO: Make this better
             self.updateLayout();
         });
     },
-    render: function () {
+    render: function() {
         var self = this;
         var html = Mustache.to_html(this.template, this.model.toJSON());
         this.$el.html(html);
@@ -149,12 +147,12 @@ var RoomView = Backbone.View.extend({
         //
         // Message Scroll Lock
         //
-        this.$messages.on('scroll', function () {
+        this.$messages.on('scroll', function() {
             self.updateScrollLock();
         });
         return this.$el;
     },
-    updateLayout: function () {
+    updateLayout: function() {
         //
         // CSS Flex shim for non-webkit browsers
         //
@@ -167,14 +165,14 @@ var RoomView = Backbone.View.extend({
             this.$messages.height(height);
         }
     },
-    updateScrollLock: function () {
+    updateScrollLock: function() {
         this.scrollLocked = this.$messages[0].scrollHeight -
           this.$messages.scrollTop() - 5 <= this.$messages.outerHeight();
         return this.scrollLocked;
     },
-    scrollMessagesDown: function (debounce) {
+    scrollMessagesDown: function(debounce) {
         var self = this;
-        var scrollDown = function () {
+        var scrollDown = function() {
             self.$messages.prop({
                 scrollTop: self.$messages.prop('scrollHeight')
             });
@@ -185,14 +183,14 @@ var RoomView = Backbone.View.extend({
         }
         // Set our debounced instance if its not set
         if (!this.debouncedScrollDown) {
-            this.debouncedScrollDown = _.debounce(function (debounce) {
+            this.debouncedScrollDown = _.debounce(function(debounce) {
                 scrollDown();
             }, 40);
         }
         // Debounce bro
         return this.debouncedScrollDown(debounce);
     },
-    formatContent: function (text) {
+    formatContent: function(text) {
         // TODO: Fix these regexes
         var imagePattern = /^(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\b$/gim;
         var linkPattern =  /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
@@ -203,7 +201,7 @@ var RoomView = Backbone.View.extend({
         }
         return text;
     },
-    addMessage: function (message, debounce) {
+    addMessage: function(message, debounce) {
         if (this.lastMessageUser === message.owner) {
             message.fragment = true;
         }
@@ -216,7 +214,7 @@ var RoomView = Backbone.View.extend({
             this.scrollMessagesDown(debounce);
         }
     },
-    sendMessage: function (e) {
+    sendMessage: function(e) {
         if (e.keyCode !== 13) return;
         e.preventDefault();
         $textarea = $(e.currentTarget);
@@ -226,25 +224,25 @@ var RoomView = Backbone.View.extend({
         });
         $textarea.val('');
     },
-    showEditRoom: function (e) {
+    showEditRoom: function(e) {
         var self = this;
         e.preventDefault();
-        this.$('.modal-backdrop').fadeIn(100).one('click', function () {
+        this.$('.modal-backdrop').fadeIn(100).one('click', function() {
             self.hideEditRoom(e);
         });
         this.$('.edit-room').modal({
             backdrop: false
         });
     },
-    hideEditRoom: function (e) {
+    hideEditRoom: function(e) {
         e.preventDefault();
         this.$('.modal-backdrop').fadeOut(200);
         this.$('.edit-room').modal('hide');
     },
-    submitEditRoom: function (e) {
+    submitEditRoom: function(e) {
         e.preventDefault();
     },
-    deleteRoom: function (e) {
+    deleteRoom: function(e) {
         e.preventDefault();
         var serious = confirm('Do you really want to to delete "' + this.model.get('name') +  '"?');
         if (serious === true) {
@@ -262,14 +260,14 @@ var TabsMenuView = Backbone.View.extend({
     events: {
         'click .tab .close': 'tabclosed'
     },
-    initialize: function () {
+    initialize: function() {
         var self = this;
         this.template = $('#js-tmpl-tab').html();
         this.notifications = this.options.notifications;
         //
         // Tab count badges
         //
-        this.notifications.on('addmessage', function (message) {
+        this.notifications.on('addmessage', function(message) {
             if (message.room !== self.current) {
                 var $tab = self.$tab(message.room);
                 var count = parseInt($tab.data('count'));
@@ -279,17 +277,17 @@ var TabsMenuView = Backbone.View.extend({
             }
         });
     },
-    render: function () {
+    render: function() {
         //
         // Tab size fix
         //
         var $tabs = this.$('.tab:not(.fixed)');
         $tabs.width(100 / $tabs.length + '%');
     },
-    $tab: function (id) {
+    $tab: function(id) {
         return this.$('.tab[data-id=' + id + ']');
     },
-    select: function (id) {
+    select: function(id) {
         this.current = id;
         this.$tab(id)
           .addClass('selected')
@@ -297,7 +295,7 @@ var TabsMenuView = Backbone.View.extend({
           .siblings().removeClass('selected');
         this.setBadge(id, 0);
     },
-    setBadge: function (id, value) {
+    setBadge: function(id, value) {
         var $badge = this.$tab(id).find('.badge');
         if (value === 0) {
             $badge.hide();
@@ -305,25 +303,25 @@ var TabsMenuView = Backbone.View.extend({
         }
         this.$tab(id).find('.badge').show().text(value);
     },
-    add: function (room) {
+    add: function(room) {
         var self = this;
         var tab = Mustache.to_html(this.template, room.toJSON());
         this.$el.append(tab);
         this.render();
     },
-    remove: function (id) {
+    remove: function(id) {
         this.$tab(id).remove();
         this.last = this.$('.tab:last').data('id');
         this.render();
     },
-    tabclosed: function (e) {
+    tabclosed: function(e) {
         e.preventDefault();
         var $tab = $(e.currentTarget).closest('.tab');
         this.notifications.trigger('tabclosed', {
             id: $tab.data('id')
         });
     },
-    next: function (id) {
+    next: function(id) {
         var $tab = this.$tab(id);
         return $tab.next().length > 0 ? $tab.next().data('id') : $tab.prev().data('id');
     }
@@ -336,13 +334,13 @@ var TabsView = Backbone.View.extend({
     el: '#panes',
     current: '',
     views: {},
-    initialize: function (templates) {
+    initialize: function(templates) {
         this.notifications = this.options.notifications;
         this.menu = new TabsMenuView({
             notifications: this.notifications
         });
     },
-    select: function (id) {
+    select: function(id) {
         this.current = id;
         this.menu.select(id);
         this.$('.view').hide();
@@ -360,7 +358,7 @@ var TabsView = Backbone.View.extend({
             this.notifications.trigger('homeselected');
         }
     },
-    add: function (view) {
+    add: function(view) {
         var self = this;
         var $pane = view.render();
         var room = view.model;
@@ -368,7 +366,7 @@ var TabsView = Backbone.View.extend({
         this.views[room.id] = view;
         this.$el.append($pane);
     },
-    remove: function (id) {
+    remove: function(id) {
         if (this.current === id) {
             var next = this.menu.next(id);
             this.select(next);
@@ -385,22 +383,22 @@ var TabsView = Backbone.View.extend({
 //
 var CreateRoomView = Backbone.View.extend({
     el: '#create-room',
-    initialize: function () {
+    initialize: function() {
         this.notifications = this.options.notifications;
     },
     events: {
         'click .create': 'createRoom'
     },
-    clear: function () {
+    clear: function() {
         this.$('input[type="text"], textarea').val('');
     },
-    show: function () {
+    show: function() {
         this.$el.modal('show');
     },
-    hide: function () {
+    hide: function() {
         this.$el.modal('hide');
     },
-    createRoom: function () {
+    createRoom: function() {
         var room = {
             name: this.$('input[name="name"]').val(),
             description: this.$('textarea[name="description"]').val()
@@ -420,9 +418,9 @@ var WindowCountAlertView = Backbone.View.extend({
     title: $('title').html(),
     focus: true,
     count: 0,
-    initialize: function () {
+    initialize: function() {
         var self = this;
-        $(window).bind('focus blur', function (e) {
+        $(window).bind('focus blur', function(e) {
             if (e.type === 'focus') {
                 self.count = 0;
                 self.focus = true;
@@ -438,15 +436,20 @@ var WindowCountAlertView = Backbone.View.extend({
                 self.focus = false;
             }
         });
-        this.options.notifications.on('addmessage', function (message) {
+        this.options.notifications.on('addmessage', function(message) {
+            // Nothing to do here if focused
             if (self.focus) return;
+            //
+            // Update Window Title
+            //
             self.$('title').html('(' + parseInt(++self.count) + ') ' + self.title);
-
+            //
             // Notifications on the for Fluid.app users.
+            //
             if (window.fluid === undefined) return;
             window.fluid.dockBadge = self.count;
             window.fluid.showGrowlNotification({
-                title: "Let's Chat",
+                title: 'Let\'s Chat',
                 description: message.text,
                 priority: 1,
                 sticky: false
@@ -460,7 +463,7 @@ var WindowCountAlertView = Backbone.View.extend({
 //
 var ClientView = Backbone.View.extend({
     el: '#client',
-    initialize: function () {
+    initialize: function() {
         var self = this;
         //
         // Vars
@@ -487,7 +490,7 @@ var ClientView = Backbone.View.extend({
         //
         // Joined Room
         //
-        this.rooms.bind('add', function (room) {
+        this.rooms.bind('add', function(room) {
             self.tabs.add(new RoomView({
                 notifications: self.notifications,
                 model: room
@@ -496,11 +499,11 @@ var ClientView = Backbone.View.extend({
         //
         // Leaving Room
         //
-        this.rooms.bind('remove', function (room) {
+        this.rooms.bind('remove', function(room) {
             self.tabs.remove(room.id);
         });
     },
-    switchView: function (id) {
+    switchView: function(id) {
         if (id) {
             this.tabs.select(id);
         } else {
