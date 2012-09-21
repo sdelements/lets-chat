@@ -14,7 +14,7 @@ var models = require('./models/models.js');
 var ChatServer = function (app, sessionStore) {
 
     var self = this;
-    
+
     // Set moment date formatting
     moment.calendar.sameDay = 'LT';
 
@@ -36,7 +36,7 @@ var ChatServer = function (app, sessionStore) {
     };
 
     this.listen = function () {
-        
+
         //
         // Setup
         //
@@ -68,7 +68,13 @@ var ChatServer = function (app, sessionStore) {
 
             var hs = client.handshake;
             var userData = hs.session.user;
-            
+
+            var sessionTouchInterval = setInterval(function () {
+              hs.session.reload( function () {
+                hs.session.touch().save();
+              });
+            }, 60 * 1000);
+
             //
             // Assign Client Profile
             //
@@ -83,7 +89,7 @@ var ChatServer = function (app, sessionStore) {
                 avatar: hash.md5(userData.email)
             });
 
-            
+
             //
             // Message History
             //
@@ -119,7 +125,7 @@ var ChatServer = function (app, sessionStore) {
                         client.emit('room:messages:new', messages);
                 });
             });
-    
+
             //
             // New Message
             //
@@ -186,7 +192,7 @@ var ChatServer = function (app, sessionStore) {
                     });
                 });
             });
-            
+
             //
             // Get Room Users
             //
@@ -206,7 +212,7 @@ var ChatServer = function (app, sessionStore) {
                         });
                     });
                 });
-               
+
             });
 
             //
@@ -231,7 +237,7 @@ var ChatServer = function (app, sessionStore) {
                 });
               });
             });
-            
+
             //
             // Roomlist request
             //
@@ -262,11 +268,11 @@ var ChatServer = function (app, sessionStore) {
                                     safeName: profile.displayName.replace(/\W/g, '')
                                 });
                             });
-                        });   
+                        });
                     });
                 });
             });
-            
+
             //
             // Leave Room
             //
@@ -314,6 +320,7 @@ var ChatServer = function (app, sessionStore) {
                     self.io.sockets.in(room).emit('room:users:leave', user);
                     self.io.sockets.emit('rooms:users:leave', user)
                 });
+              clearInterval(sessionTouchInterval)
             });
 
         });
