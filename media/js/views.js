@@ -426,6 +426,10 @@ var WindowCountAlertView = Backbone.View.extend({
             if (e.type == 'focus') {
                 self.count = 0;
                 self.focus = true;
+                //
+                // TODO: Title needs Room name or something
+                //
+                self.$('title').html(self.title);
             } else {
                 self.focus = false;
             }
