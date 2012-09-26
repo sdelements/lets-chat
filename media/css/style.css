@@ -4465,15 +4465,12 @@ header .user .dropdown-menu a:hover {
 }
 .message.mentioned:before {
   background: #f22472;
-  width: 5px;
-  height: 5px;
+  width: 3px;
+  height: 100%;
   position: absolute;
-  top: 8px;
-  left: 20px;
+  top: 0;
+  left: 0;
   content: ' ';
-  -webkit-border-radius: 100%;
-  -moz-border-radius: 100%;
-  border-radius: 100%;
 }
 .message:first-child {
   border-top: none;
