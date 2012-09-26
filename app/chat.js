@@ -68,6 +68,13 @@ var ChatServer = function (app, sessionStore) {
 
             var hs = client.handshake;
             var userData = hs.session.user;
+            
+            if (!userData || !hs) {
+                //
+                // Sessions be messin' up bro
+                //
+                return;
+            }
 
             var sessionTouchInterval = setInterval(function () {
               hs.session.reload( function () {
