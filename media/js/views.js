@@ -94,6 +94,7 @@ var UserListView = Backbone.View.extend({
 var RoomView = Backbone.View.extend({
     className: 'view',
     events: {
+        'click .entry .send': 'sendMessage',
         'keypress .entry textarea': 'sendMessage',
         'submit .edit-room form': 'submitEditRoom',
         'click .delete-room': 'deleteRoom',
@@ -232,9 +233,9 @@ var RoomView = Backbone.View.extend({
         }
     },
     sendMessage: function(e) {
-        if (e.keyCode !== 13) return;
+        if (e.type === 'keypress' && e.keyCode !== 13) return;
         e.preventDefault();
-        $textarea = $(e.currentTarget);
+        $textarea = this.$('.entry textarea');
         this.notifications.trigger('newmessage', {
             room: this.model.id,
             text: $.trim($textarea.val())
