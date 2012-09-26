@@ -3,7 +3,7 @@
     <script id="js-tmpl-tab" type="text/html">
         <li class="tab" data-id="{{ id }}">
             <a class="room" href="#!/room/{{ id }}" title="{{ name }}" data-id="{{ id }}">
-                <span class="text">{{ name }}</span>
+                <span class="title text">{{ name }}</span>
                 <span class="badge badge-important" style="display: none;"></span>
                 <span class="close">&times;</span>
             </a>
@@ -124,15 +124,11 @@
                                 <textarea name="description">{{ description }}</textarea>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button class="delete-room btn btn-danger"><i class="icon-remove icon-white"></i> Delete Room</button>
-                            </div>
-                        </div>
                         <p class="response"></p>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-success" name="submit" value="Save">
+                        <input type="submit" class="btn btn-success pull-right" name="submit" value="Save">
+                        <a class="delete-room btn btn-danger pull-left" tabindex="-1"><i class="icon-remove icon-white"></i> Delete Room</a>
                     </div>
                 </form>
             </div><!-- edit room end -->

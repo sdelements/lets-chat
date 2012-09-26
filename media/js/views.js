@@ -12,6 +12,12 @@ var RoomListView = Backbone.View.extend({
         this.collection.bind('add', function(room) {
             self.add(room);
             //
+            // Room meta update
+            //
+            room.bind('change', function(room) {
+                self.updateRoom(room.toJSON());
+            });
+            //
             //  User events
             //
             room.users.bind('add', function(user) {
@@ -51,6 +57,11 @@ var RoomListView = Backbone.View.extend({
         this.$('.room[data-id=' + user.room + ']')
           .find('.user[data-id=' + user.id + ']').remove();
         this.$list.masonry('reload');
+    },
+    updateRoom: function(room) {
+        var $room = this.$('.room[data-id=' + room.id + ']');
+        $room.find('.name').text(room.name);
+        $room.find('.description').text(room.description);
     }
 });
 
@@ -108,6 +119,12 @@ var RoomView = Backbone.View.extend({
         //
         // Model Bindings
         //
+        this.model.bind('change:name', function(room, name) {
+            self.updateName(name);
+        });
+        this.model.bind('change:description', function(room, description) {
+            self.updateDescription(description);
+        });
         this.model.messages.bind('add', function(message) {
             self.addMessage(message.toJSON());
         });
@@ -226,7 +243,9 @@ var RoomView = Backbone.View.extend({
     },
     showEditRoom: function(e) {
         var self = this;
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
         this.$('.modal-backdrop').fadeIn(100).one('click', function() {
             self.hideEditRoom(e);
         });
@@ -235,12 +254,22 @@ var RoomView = Backbone.View.extend({
         });
     },
     hideEditRoom: function(e) {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
         this.$('.modal-backdrop').fadeOut(200);
         this.$('.edit-room').modal('hide');
     },
     submitEditRoom: function(e) {
         e.preventDefault();
+        var name = this.$('.edit-room input[name="name"]').val();
+        var description = this.$('.edit-room textarea[name="description"]').val();
+        this.notifications.trigger('updateroom', {
+            id: this.model.id,
+            name: name,
+            description: description
+        });
+        this.hideEditRoom();
     },
     deleteRoom: function(e) {
         e.preventDefault();
@@ -248,6 +277,14 @@ var RoomView = Backbone.View.extend({
         if (serious === true) {
             this.notifications.trigger('deleteroom', this.model.id);
         }
+    },
+    updateName: function(name) {
+        this.$('.sidebar .meta .name').text(name);
+        this.$('.edit-room input[name="name"]').val(name);
+    },
+    updateDescription: function(description) {
+        this.$('.sidebar .meta .description').text(description);
+        this.$('.edit-room textarea[name="description"]').val(description);
     }
 });
 
@@ -264,6 +301,16 @@ var TabsMenuView = Backbone.View.extend({
         var self = this;
         this.template = $('#js-tmpl-tab').html();
         this.notifications = this.options.notifications;
+        //
+        // Room meta update
+        //
+        this.notifications.on('roomupdate', function(room) {
+            self.update({
+                id: room.id,
+                title: room.name
+            });
+        });
+        //
         //
         // Tab count badges
         //
@@ -313,6 +360,9 @@ var TabsMenuView = Backbone.View.extend({
         this.$tab(id).remove();
         this.last = this.$('.tab:last').data('id');
         this.render();
+    },
+    update: function(data) {
+        this.$tab(data.id).find('.title').text(data.title);
     },
     tabclosed: function(e) {
         e.preventDefault();

@@ -75,7 +75,10 @@ var ChatServer = function (app, sessionStore) {
                 //
                 return;
             }
-
+            
+            //
+            // Keep session alive
+            //
             var sessionTouchInterval = setInterval(function () {
               hs.session.reload( function () {
                 hs.session.touch().save();
@@ -293,6 +296,38 @@ var ChatServer = function (app, sessionStore) {
             });
 
             //
+            // Update Room
+            //
+            client.on('room:update', function(data) {
+                models.room.findOne({
+                    _id: data.id
+                }).exec(function (err, room) {
+                    if (err) {
+                        // Oh damn
+                        return;
+                    }
+                    if (!room) {
+                        // What happened to our room?
+                        return;
+                    }
+                    room.name = data.name;
+                    room.description = data.description;
+                    room.save(function (err) {
+                        if (err) {
+                            // Couldn't save :(
+                            return;
+                        }
+                        // Let's let everyone know
+                        self.io.sockets.emit('room:update', {
+                            id: room._id,
+                            name: room.name,
+                            description: room.description
+                        });
+                    });
+                });
+            });
+
+            //
             // Delete Room
             //
             client.on('room:delete', function(id) {
@@ -327,7 +362,7 @@ var ChatServer = function (app, sessionStore) {
                     self.io.sockets.in(room).emit('room:users:leave', user);
                     self.io.sockets.emit('rooms:users:leave', user)
                 });
-              clearInterval(sessionTouchInterval)
+                clearInterval(sessionTouchInterval);
             });
 
         });

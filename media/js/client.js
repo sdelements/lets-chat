@@ -113,6 +113,9 @@ var Client = function(config) {
     this.sendMessage = function(message) {
         self.socket.emit('room:messages:new', message);
     }
+    this.updateRoom = function(data) {
+        self.socket.emit('room:update', data);
+    }
     this.deleteRoom = function(id) {
         self.socket.emit('room:delete', id);
     }
@@ -139,6 +142,23 @@ var Client = function(config) {
         });
         self.socket.on('room:remove', function(id) {
             self.leaveRoom(id);
+        });
+        self.socket.on('room:update', function(data) {
+            var room = self.rooms.get(data.id);
+            var availableRoom = self.availableRooms.get(data.id);
+            if (room) {
+                room.set({
+                    name: data.name,
+                    description: data.description
+                });
+            }
+            if (availableRoom) {
+                availableRoom.set({
+                    name: data.name,
+                    description: data.description
+                });
+            }
+            self.notifications.trigger('roomupdate', data);
         });
         self.socket.on('rooms:new', function(room) {
             self.availableRooms.add(room);
@@ -193,6 +213,9 @@ var Client = function(config) {
         });
         this.notifications.on('tabclosed', function(data) {
             self.leaveRoom(data.id);
+        });
+        this.notifications.on('updateroom', function(data) {
+            self.updateRoom(data);
         });
         this.notifications.on('deleteroom', function(id) {
             self.deleteRoom(id);
