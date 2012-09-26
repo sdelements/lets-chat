@@ -13,6 +13,11 @@ var Client = function(config) {
     this.notifications = _.extend({}, Backbone.Events);
     
     //
+    // Client User
+    //
+    this.user = new UserModel();
+    
+    //
     // Available Rooms Collections
     //
     this.availableRooms = new AvailableRoomsCollection();
@@ -26,6 +31,7 @@ var Client = function(config) {
     // Client View
     //
     this.view = new ClientView({
+        user: this.user,
         availableRooms: this.availableRooms,
         rooms: this.rooms,
         notifications: this.notifications
@@ -129,7 +135,11 @@ var Client = function(config) {
             transports: self.config.transports
         });
         self.socket.on('connect', function() {
-            self.socket.emit('rooms:get', {});
+            self.socket.emit('user:whoami');
+            self.socket.emit('rooms:get');
+        });
+        self.socket.on('user:whoami', function(profile) {
+            self.user.set(profile);
         });
         self.socket.on('room:messages:new', function(message) {
             self.addMessage(message);

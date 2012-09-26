@@ -111,6 +111,7 @@ var RoomView = Backbone.View.extend({
         this.template = $('#js-tmpl-room').html();
         this.messageTemplate = $('#js-tmpl-message').html();
         this.notifications = this.options.notifications;
+        this.user = this.options.user;
         //
         // Subviews
         this.userlist = new UserListView({
@@ -222,6 +223,10 @@ var RoomView = Backbone.View.extend({
     addMessage: function(message, debounce) {
         if (this.lastMessageUser === message.owner) {
             message.fragment = true;
+        }
+        // I think this has my name on it
+        if (this.user.id === message.owner) {
+            message.own = true;
         }
         var $html = $(Mustache.to_html(this.messageTemplate, message));
         var $text = $html.find('.text');
@@ -519,6 +524,7 @@ var ClientView = Backbone.View.extend({
         //
         // Vars
         //
+        this.user = this.options.user;
         this.availableRooms = this.options.availableRooms;
         this.rooms = this.options.rooms;
         this.notifications = this.options.notifications;
@@ -544,6 +550,7 @@ var ClientView = Backbone.View.extend({
         this.rooms.bind('add', function(room) {
             self.tabs.add(new RoomView({
                 notifications: self.notifications,
+                user: self.user,
                 model: room
             }));
         });

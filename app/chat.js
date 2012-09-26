@@ -98,7 +98,20 @@ var ChatServer = function (app, sessionStore) {
                 joined: userData.joined,
                 avatar: hash.md5(userData.email)
             });
-
+            
+            //
+            // Who is me bro
+            //
+            client.on('user:whoami', function() {
+                client.get('profile', function(err, profile) {
+                    if (err) {
+                        // Oh man
+                        return;
+                    }
+                    profile.safeName = profile.displayName.replace(/\W/g, '');
+                    client.emit('user:whoami', profile);
+                });
+            });
 
             //
             // Message History
