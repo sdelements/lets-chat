@@ -3,22 +3,23 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title>{% block page_name %}{% endblock %} - Let's Chat Bro</title>
-	<link rel="stylesheet" type="text/css" href="{{media_url}}/js/lib/qtip/jquery.qtip.css" />
-	<link rel="stylesheet" type="text/css" href="{{media_url}}/css/style.css" />
-	<script src="{{media_url}}/js/lib/jquery.js" type="text/javascript"></script>
-	<script src="{{media_url}}/js/lib/bootstrap.js" type="text/javascript"></script>
-	<script src="{{media_url}}/js/lib/qtip/jquery.qtip.js" type="text/javascript"></script>
-	<script src="{{media_url}}/js/lib/jquery.url.js" type="text/javascript"></script>
-	<script src="{{media_url}}/js/lib/moment.js" type="text/javascript"></script>
-	<script src="{{media_url}}/js/lib/mustache.js" type="text/javascript"></script>
+    <link rel="icon" type="image/png" href="{{media_url}}/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="{{media_url}}/js/lib/qtip/jquery.qtip.css" />
+    <link rel="stylesheet" type="text/css" href="{{media_url}}/css/style.css" />
+    <script src="{{media_url}}/js/lib/jquery.js" type="text/javascript"></script>
+    <script src="{{media_url}}/js/lib/bootstrap.js" type="text/javascript"></script>
+    <script src="{{media_url}}/js/lib/qtip/jquery.qtip.js" type="text/javascript"></script>
+    <script src="{{media_url}}/js/lib/jquery.url.js" type="text/javascript"></script>
+    <script src="{{media_url}}/js/lib/moment.js" type="text/javascript"></script>
+    <script src="{{media_url}}/js/lib/mustache.js" type="text/javascript"></script>
 
-	<script src="{{media_url}}/js/lib/jquery.ui.widget.js"></script>
-	<script src="{{media_url}}/js/lib/jquery.getimagedata.min.js"></script>
-	<script src="{{media_url}}/js/lib/jquery.iframe-transport.js"></script>
-	<script src="{{media_url}}/js/lib/jquery.fileupload.js"></script>
+    <script src="{{media_url}}/js/lib/jquery.ui.widget.js"></script>
+    <script src="{{media_url}}/js/lib/jquery.getimagedata.min.js"></script>
+    <script src="{{media_url}}/js/lib/jquery.iframe-transport.js"></script>
+    <script src="{{media_url}}/js/lib/jquery.fileupload.js"></script>
 
-	<script src="/socket.io/socket.io.js" type="text/javascript"></script>
-	{% block page_js %}{% endblock %}
+    <script src="/socket.io/socket.io.js" type="text/javascript"></script>
+    {% block page_js %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
 {% block content %}{% endblock %}
