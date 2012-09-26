@@ -11,9 +11,22 @@
 	padding: 7px;
 	display: block;
 	overflow: hidden;
+    position: relative;
 	&.own {
 		background-color: #fcffd8;
 	}
+    &.mentioned {
+        &:before {
+            background: #f22472;
+            width: 5px;
+            height: 5px;
+            position: absolute;
+            top: 8px;
+            left: 20px;
+            content: ' ';
+            .border-radius(100%);
+        }
+    }
 	&:first-child {
 		border-top: none;
 	}

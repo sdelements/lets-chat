@@ -228,6 +228,10 @@ var RoomView = Backbone.View.extend({
         if (this.user.id === message.owner) {
             message.own = true;
         }
+        // Check to see if we've been mentioned
+        if (message.text.match(new RegExp('\\@' + this.user.get('safeName') + '\\b', 'i'))) {
+            message.mentioned = true;
+        }
         var $html = $(Mustache.to_html(this.messageTemplate, message));
         var $text = $html.find('.text');
         $text.html(this.formatContent($text.html()));

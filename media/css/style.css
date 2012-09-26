@@ -4458,9 +4458,22 @@ header .user .dropdown-menu a:hover {
   padding: 7px;
   display: block;
   overflow: hidden;
+  position: relative;
 }
 .message.own {
   background-color: #fcffd8;
+}
+.message.mentioned:before {
+  background: #f22472;
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  top: 8px;
+  left: 20px;
+  content: ' ';
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
 }
 .message:first-child {
   border-top: none;
