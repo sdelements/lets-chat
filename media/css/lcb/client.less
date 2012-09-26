@@ -190,3 +190,26 @@
 		}
 	}
 }
+
+/*
+ * Misc
+ *********************/
+ 
+.connection-status {
+    color: #fff;
+    position: fixed;
+    right: 25px;
+    bottom: 20px;
+    z-index: 1000;
+    .opacity(50);
+    &.disconnected {
+        color: #e44755;
+    }
+    &.connected {
+        color: #46e5a4;
+    }
+    &:hover {
+        cursor: default;
+        .opacity(90);
+    }
+}

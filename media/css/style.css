@@ -4887,6 +4887,29 @@ header .user .dropdown-menu a:hover {
   color: #777;
   font-size: 11px;
 }
+/*
+ * Misc
+ *********************/
+.connection-status {
+  color: #fff;
+  position: fixed;
+  right: 25px;
+  bottom: 20px;
+  z-index: 1000;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+.connection-status.disconnected {
+  color: #e44755;
+}
+.connection-status.connected {
+  color: #46e5a4;
+}
+.connection-status:hover {
+  cursor: default;
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+}
 /*********************
  * Rooms
  *********************/

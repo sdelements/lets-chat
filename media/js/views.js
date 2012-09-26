@@ -30,6 +30,9 @@ var RoomListView = Backbone.View.extend({
         this.collection.bind('remove', function(room) {
             self.remove(room.id);
         });
+        this.collection.bind('reset', function() {
+            self.empty();
+        });
         self.$list.masonry({
             itemSelector: '.room',
             isAnimated: true
@@ -62,6 +65,9 @@ var RoomListView = Backbone.View.extend({
         var $room = this.$('.room[data-id=' + room.id + ']');
         $room.find('.name').text(room.name);
         $room.find('.description').text(room.description);
+    },
+    empty: function() {
+        this.$list.empty();
     }
 });
 
@@ -78,6 +84,9 @@ var UserListView = Backbone.View.extend({
         this.model.bind('remove', function(user) {
             self.remove(user.id);
         });
+        this.model.bind('reset', function() {
+            self.empty();
+        });
     },
     add: function(user) {
         var html = Mustache.to_html(this.template, user);
@@ -85,6 +94,9 @@ var UserListView = Backbone.View.extend({
     },
     remove: function(id) {
         this.$('.user[data-id=' + id + ']').remove();
+    },
+    empty: function() {
+        this.$el.empty();
     }
 });
 
@@ -549,7 +561,22 @@ var ClientView = Backbone.View.extend({
             notifications: this.notifications
         });
         //
-        // Joined Room
+        // Connection Events
+        //
+        this.notifications.on('connect', function() {
+            self.$('.connection-status')
+                .removeClass('disconnected')
+                .addClass('connected')
+                .html('connected');
+        });
+        this.notifications.on('disconnect', function() {
+            self.$('.connection-status')
+              .removeClass('connected')
+              .addClass('disconnected')
+              .html('disconnected');
+        });
+        //
+        // Room events
         //
         this.rooms.bind('add', function(room) {
             self.tabs.add(new RoomView({
@@ -558,9 +585,6 @@ var ClientView = Backbone.View.extend({
                 model: room
             }));
         });
-        //
-        // Leaving Room
-        //
         this.rooms.bind('remove', function(room) {
             self.tabs.remove(room.id);
         });

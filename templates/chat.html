@@ -3,6 +3,7 @@
 {% block page_name %}Chat{% endblock %}
 
 {% block page_js %}
+    <script src="/socket.io/socket.io.js" type="text/javascript"></script>
     <script src="{{media_url}}/js/lib/masonry.js" type="text/javascript"></script>
     <script src="{{media_url}}/js/lib/tab-complete.js" type="text/javascript"></script>
     <script src="{{media_url}}/js/lib/underscore.js" type="text/javascript"></script>
@@ -92,6 +93,7 @@
             </ul><!-- rooms list end -->
         </div><!-- view end -->
 	</div><!-- views end -->
+    <div class="connection-status">connecting...</div>
 </div><!-- client end -->
 {% endblock %}
 

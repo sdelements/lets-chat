@@ -42,7 +42,13 @@ var Client = function(config) {
     //
     this.joinRoom = function(id, switchRoom) {
         self.socket.emit('room:join', id, function(room) {
-            self.rooms.add(room);
+            var existingRoom = self.rooms.get(id);
+            if (existingRoom) {
+                existingRoom.users.reset();
+            } else {
+                self.rooms.add(room);
+            }
+            // Get room data
             self.getRoomHistory({
                 room: id
             });
@@ -135,8 +141,21 @@ var Client = function(config) {
             transports: self.config.transports
         });
         self.socket.on('connect', function() {
+            // Reset keeps available rooms in sync
+            self.availableRooms.reset();
+            // Grab global data
             self.socket.emit('user:whoami');
             self.socket.emit('rooms:get');
+            // If we have rooms we'll need to rejoin
+            if (self.rooms.length > 0) {
+                self.rooms.each(function(room) {
+                    self.joinRoom(room.id);
+                });
+            }
+            self.notifications.trigger('connect');
+        });
+        self.socket.on('disconnect', function() {
+            self.notifications.trigger('disconnect');
         });
         self.socket.on('user:whoami', function(profile) {
             self.user.set(profile);
