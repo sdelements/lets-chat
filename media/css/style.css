@@ -4902,9 +4902,6 @@ header .user .dropdown-menu a:hover {
 .connection-status.disconnected {
   color: #e44755;
 }
-.connection-status.connected {
-  color: #46e5a4;
-}
 .connection-status:hover {
   cursor: default;
   opacity: 0.9;
