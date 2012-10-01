@@ -1,20 +1,21 @@
-# **Let's Chat Bro**
+# **Let's Chat**
 
-A wicked simple node.js chat app.
+A self-hosted chat app for small teams.
 
 ## Features and Stuff
 
-* Wonderfully elegant
-* Easy setup
-* Room transcripts
-* Unlimited rooms
-* Avatar and display name personalization
+* BYOS (bring your own server)
+* Persistant messages
+* Multiple rooms
+* New message alerts
+* Mentions (hey @you)
+* Image/YouTube/Vimeo embeds
+* Code pasting
 * File sharing
 
 ## Getting started
 
-Install **node.js**, **npm**, and **mongodb** ([here](https://github.com/joyent/node/wiki/Installation) and [here](http://www.mongodb.org/display/DOCS/Quickstart))
-
+Install [nodejs](https://github.com/joyent/node/wiki/Installation) and [mongo](http://www.mongodb.org/display/DOCS/Quickstart)
 
 Clone le repo
 
