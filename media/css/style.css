@@ -4479,7 +4479,10 @@ header .user .dropdown-menu a:hover {
   word-wrap: break-word;
 }
 .message pre {
-  background: #eee;
+  background: none;
+  border-width: 3px;
+  border-top: none;
+  border-bottom: none;
   margin-bottom: 3px;
 }
 .message .side {
