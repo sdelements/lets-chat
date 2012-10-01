@@ -4479,11 +4479,8 @@ header .user .dropdown-menu a:hover {
   word-wrap: break-word;
 }
 .message pre {
-  background: none;
-  margin: 0;
-  margin-top: 7px;
-  border: none;
-  border-left: 2px #aaa solid;
+  background: #eee;
+  margin-bottom: 3px;
 }
 .message .side {
   margin-right: 7px;
@@ -4494,6 +4491,7 @@ header .user .dropdown-menu a:hover {
 }
 .message .top {
   overflow: hidden;
+  margin-bottom: 5px;
 }
 .message .name {
   font-weight: bold;
