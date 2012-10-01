@@ -244,6 +244,10 @@ var RoomView = Backbone.View.extend({
         if (message.text.match(new RegExp('\\@' + this.user.get('safeName') + '\\b', 'i'))) {
             message.mentioned = true;
         }
+        // Smells like pasta
+        if (message.text.match(/\n/ig)) {
+            message.paste = true;
+        }
         var $html = $(Mustache.to_html(this.messageTemplate, message));
         var $text = $html.find('.text');
         $text.html(this.formatContent($text.html()));

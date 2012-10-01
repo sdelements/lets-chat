@@ -4478,6 +4478,13 @@ header .user .dropdown-menu a:hover {
 .message .text {
   word-wrap: break-word;
 }
+.message pre {
+  background: none;
+  margin: 0;
+  margin-top: 7px;
+  border: none;
+  border-left: 2px #aaa solid;
+}
 .message .side {
   margin-right: 7px;
   float: left;
