@@ -238,7 +238,6 @@ var RoomView = Backbone.View.extend({
         });
         // replacements
         _.each(this.plugins.replacements, function(replacement) {
-            console.log(replacement.regex);
             text = text.replace(new RegExp(replacement.regex, 'g'), replacement.template);
         });
         return text;
