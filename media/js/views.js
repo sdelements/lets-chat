@@ -233,7 +233,7 @@ var RoomView = Backbone.View.extend({
         }
         // emotes
         _.each(this.plugins.emotes, function(emote, keyword) {
-            var image = '<img class="emote" src="' + encodeURI(emote) + '" />';
+            var image = '<img class="emote" src="' + encodeURI(emote) + '" title="'+ encodeURI(keyword) + '" alt="' + encodeURI(keyword) + '" />';
             text = text.replace(new RegExp('\\B' + keyword + '\\b', 'g'), image);
         });
         // replacements
