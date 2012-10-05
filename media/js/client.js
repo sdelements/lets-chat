@@ -6,6 +6,11 @@ var Client = function(config) {
     // Config
     //
     this.config = config;
+    
+    //
+    // Plugins
+    //
+    this.plugins = {};
 
     //
     // Global Notifications
@@ -34,7 +39,8 @@ var Client = function(config) {
         user: this.user,
         availableRooms: this.availableRooms,
         rooms: this.rooms,
-        notifications: this.notifications
+        notifications: this.notifications,
+        plugins: this.plugins
     });
 
     //
@@ -131,6 +137,14 @@ var Client = function(config) {
     this.deleteRoom = function(id) {
         self.socket.emit('room:delete', id);
     }
+    this.loadPlugins = function() {
+        $.get('/plugins/replacements.json', function(json) {
+            self.plugins.replacements = json;
+        });
+        $.get('/plugins/emotes.json', function(json) {
+            self.plugins.emotes = json;
+        });
+    }
 
     //
     // Connection
@@ -141,6 +155,8 @@ var Client = function(config) {
             transports: self.config.transports
         });
         self.socket.on('connect', function() {
+            // Grab plugins
+            self.loadPlugins();
             // Reset keeps available rooms in sync
             self.availableRooms.reset();
             // Grab global data

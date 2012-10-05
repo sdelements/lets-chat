@@ -4,6 +4,7 @@
 
 var _ = require('underscore');
 var fs = require('fs');
+var path = require('path');
 var http = require('http');
 var https = require('https');
 var express = require('express');
@@ -20,7 +21,7 @@ var ChatServer = require('./chat.js');
 var models = require('./models/models.js');
 
 // TODO: We should require login on all routes
-var requireLogin = function (req, res, next) {
+var requireLogin = function(req, res, next) {
     if (req.session.user) {
         next();
     } else {
@@ -51,7 +52,7 @@ var Server = function(config) {
     //
 	// Configuration
     //
-	self.app.configure(function () {
+	self.app.configure(function() {
 
         // Sessions
         self.sessionStore = new mongoStore({
@@ -109,8 +110,8 @@ var Server = function(config) {
     //
 	// Login
 	//
-    self.app.get('/login', function (req, res) {
-		var render_login_page = function (errors) {
+    self.app.get('/login', function(req, res) {
+		var render_login_page = function(errors) {
 			return swig.compileFile('login.html').render({
 				'media_url': self.config.media_url,
 				'next': req.param('next', ''),
@@ -123,21 +124,34 @@ var Server = function(config) {
     //
 	// Logout
 	//
-    self.app.all('/logout', function (req, res) {
+    self.app.all('/logout', function(req, res) {
 		req.session.destroy();
 		res.redirect('/');
 	});
+    
+    //
+    // Serve Plugins
+    //
+    self.app.namespace('/plugins', function() {
+        if (self.config.plugins) {
+            _.each(self.config.plugins, function(plugin) {
+                self.app.get('/' + plugin.url, function(req, res) {
+                    res.json(require('../' + self.config.plugins_dir + '/' + plugin.file));
+                });
+            });
+        }
+    });
 
     //
 	// Ajax
 	//
-    self.app.namespace('/ajax', function () {
+    self.app.namespace('/ajax', function() {
 		// Login
-		self.app.post('/login', function (req, res) {
+		self.app.post('/login', function(req, res) {
 			var form = req.body;
             models.user.findOne({
                 'email': form.email 
-            }).exec(function (err, user) {
+            }).exec(function(err, user) {
                 if (err) {
                     res.send({
                         status: 'error',
@@ -166,10 +180,10 @@ var Server = function(config) {
         //
 		// Register
         //
-		self.app.post('/register', function (req, res) {
+		self.app.post('/register', function(req, res) {
 
             var form = req.body;
-            models.user.findOne({ 'email': form.email }).exec(function (error, user) {
+            models.user.findOne({ 'email': form.email }).exec(function(error, user) {
                 // Check if a user with this email exists
                 if (user) {
                     res.send({
@@ -208,15 +222,15 @@ var Server = function(config) {
         //
 		// File uploadin'
         // TODO: Some proper error handling
-		self.app.post('/upload-file', function (req, res) {
-			var moveUpload = function (path, newPath, callback) {
-				fs.readFile(path, function (err, data) {
-					fs.writeFile(newPath, data, function (err) {
+		self.app.post('/upload-file', function(req, res) {
+			var moveUpload = function(path, newPath, callback) {
+				fs.readFile(path, function(err, data) {
+					fs.writeFile(newPath, data, function(err) {
 						callback();
 					});
 				});
 			}
-			_.each(req.files, function (file) {
+			_.each(req.files, function(file) {
 				var owner = req.session.user;
 				var allowed_file_types = self.config.allowed_file_types;
 				// Check MIME Type
@@ -229,7 +243,7 @@ var Server = function(config) {
 						size: file.size
 					}).save(function(err, savedFile) {
 						// Let's move the upload now
-						moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function (err) {
+						moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function(err) {
 							// Let the clients know about the new file
 							self.chatServer.sendFile({
 								url: '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name),
@@ -259,8 +273,8 @@ var Server = function(config) {
     //
 	// View files
 	//
-    self.app.get('/files/:id/:name', function (req, res) {
-		models.file.findById(req.params.id, function (err, file) {
+    self.app.get('/files/:id/:name', function(req, res) {
+		models.file.findById(req.params.id, function(err, file) {
 			res.contentType(file.type);
 			res.sendfile(self.config.uploads_dir + '/' + file._id);
 		});
@@ -269,7 +283,7 @@ var Server = function(config) {
     //
     // Start
     //
-    self.start = function () {
+    self.start = function() {
 		// Connect to mongo and start listening
 		mongoose.connect(self.mongoURL, function(err) {
 			if (err) throw err;

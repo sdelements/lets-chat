@@ -124,6 +124,7 @@ var RoomView = Backbone.View.extend({
         this.messageTemplate = $('#js-tmpl-message').html();
         this.notifications = this.options.notifications;
         this.user = this.options.user;
+        this.plugins = this.options.plugins;
         //
         // Subviews
         this.userlist = new UserListView({
@@ -230,6 +231,16 @@ var RoomView = Backbone.View.extend({
         } else {
             text = text.replace(linkPattern, '<a href="$1" target="_blank">$1</a>');
         }
+        // emotes
+        _.each(this.plugins.emotes, function(emote, keyword) {
+            var image = '<img class="emote" src="' + encodeURI(emote) + '" />';
+            text = text.replace(new RegExp('\\B' + keyword + '\\b', 'g'), image);
+        });
+        // replacements
+        _.each(this.plugins.replacements, function(replacement) {
+            console.log(replacement.regex);
+            text = text.replace(new RegExp(replacement.regex, 'g'), replacement.template);
+        });
         return text;
     },
     addMessage: function(message, debounce) {
@@ -548,6 +559,7 @@ var ClientView = Backbone.View.extend({
         this.availableRooms = this.options.availableRooms;
         this.rooms = this.options.rooms;
         this.notifications = this.options.notifications;
+        this.plugins = this.options.plugins;
         //
         // Subviews
         //
@@ -586,7 +598,8 @@ var ClientView = Backbone.View.extend({
             self.tabs.add(new RoomView({
                 notifications: self.notifications,
                 user: self.user,
-                model: room
+                model: room,
+                plugins: self.plugins
             }));
         });
         this.rooms.bind('remove', function(room) {
