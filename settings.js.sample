@@ -34,7 +34,7 @@ var config = {
     // Plugins
     plugins: {
         'emotes': {
-            file: 'emotes.js',
+            file: 'emotes.js', // You should use file.local.js
             url: 'emotes.json'
         },
         'replacements': {
