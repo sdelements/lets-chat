@@ -7,29 +7,27 @@
         {"name": "Ramanan Sivaranjan", "email": "ramanan@sdelements.com"}
     ],
     "keywords": [
-        "brogramming",
         "chat",
-        "http",
-        "server"
+        "group chat"
     ],
     "dependencies": {
-        "connect": "*",
         "express": "*",
-        "express-namespace": "*",
-        "validator": "*",
-	"connect-mongo": "*",
-	"mongodb": "*",
-        "mongoose": "*",
-        "swig": "*",
-        "socket.io": "*",
-        "underscore": "*",
-	"node_hash": "*",
-        "slug": "*",
-        "moment": "*"
+        "connect": "2.5.0",
+        "cookie": "0.0.4",
+        "express-namespace": "0.1.1",
+        "connect-mongo": "0.2.0",
+        "mongodb": "1.1.8",
+        "mongoose": "3.2.1",
+        "swig": "0.12.0",
+        "socket.io": "0.9.10",
+        "underscore": "1.4.1",
+        "node_hash": "0.2.0",
+        "moment": "1.7.2",
+        "validator": "0.4.12"
     },
     "license": "MIT",
     "engine": {
-        "node": ">=0.6"
+        "node": ">=0.7"
     }
 }
 
