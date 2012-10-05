@@ -13,16 +13,17 @@
         "server"
     ],
     "dependencies": {
-        "connect": "2.2.2",
-        "express": "2.5.9",
+        "connect": "*",
+        "express": "*",
         "express-namespace": "*",
-        "connect-mongo": "*",
         "validator": "*",
-        "mongoose": "3.1.2",
+	"connect-mongo": "*",
+	"mongodb": "*",
+        "mongoose": "*",
         "swig": "*",
         "socket.io": "*",
         "underscore": "*",
-		"node_hash": "*",
+	"node_hash": "*",
         "slug": "*",
         "moment": "*"
     },
