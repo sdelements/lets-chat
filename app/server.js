@@ -5,6 +5,7 @@
 var _ = require('underscore');
 var fs = require('fs');
 var http = require('http');
+var https = require('https');
 var express = require('express');
 var expressNamespace = require('express-namespace');
 var mongoose = require('mongoose');
@@ -44,9 +45,8 @@ var Server = function(config) {
 		+ ':' + self.config.db_port 
 		+ '/' + self.config.db_name;
 
-	// Create server
+	// Create express app
 	self.app = express();
-    self.server = http.createServer(self.app)
 
     //
 	// Configuration
@@ -66,7 +66,7 @@ var Server = function(config) {
 			secret: self.config.cookie_secret,
 			store: self.sessionStore
 		}));
-        
+
 		// Templates
 		swig.init({
 			cache: !self.config.debug,
@@ -85,7 +85,7 @@ var Server = function(config) {
         self.app.use(self.app.router);
 
 	});
-    
+
     //
 	// Chat
     //
@@ -105,7 +105,7 @@ var Server = function(config) {
         var view = swig.compileFile('chat.html').render(vars);
         res.send(view);
     });
-    
+
     //
 	// Login
 	//
@@ -127,7 +127,7 @@ var Server = function(config) {
 		req.session.destroy();
 		res.redirect('/');
 	});
-    
+
     //
 	// Ajax
 	//
@@ -274,7 +274,24 @@ var Server = function(config) {
 		mongoose.connect(self.mongoURL, function(err) {
 			if (err) throw err;
             // Go go go!
-            self.server.listen(self.config.port, self.config.host);
+            if (!self.config.https) {
+                // Create regular HTTP server
+                self.server = http.createServer(self.app)
+                  .listen(self.config.port, self.config.host);
+            } else {
+                // Setup HTTP -> HTTP redirect server
+                var redirectServer = express();
+                redirectServer.get('*', function(req, res){
+                    res.redirect('https://' + req.host + ':' + self.config.https.port + req.path)
+                })
+                http.createServer(redirectServer)
+                  .listen(self.config.port, self.config.host);
+                // Create HTTPS server
+                self.server = https.createServer({
+                    key: fs.readFileSync(self.config.https.key),
+                    cert: fs.readFileSync(self.config.https.cert)
+                }, self.app).listen(self.config.https.port);
+            }
 			self.chatServer = new ChatServer(config, self.server, self.sessionStore).start();
 		});
 		return this;
