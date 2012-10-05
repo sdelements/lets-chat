@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
-var slug = require ('slug');
 
 var RoomSchema = new Schema({
     name: {

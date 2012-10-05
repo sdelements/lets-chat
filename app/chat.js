@@ -5,56 +5,51 @@
 var _ = require('underscore');
 var hash = require('node_hash');
 var moment = require('moment');
-
-var parseCookie = require('connect').utils.parseCookie;
-var Session = require('connect').middleware.session.Session;
+var connect = require('connect');
+var cookie = require('cookie');
+var connectSession = require('connect').middleware.session.Session;
 
 var models = require('./models/models.js');
 
-var ChatServer = function (app, sessionStore) {
+//
+// Chat
+//
+var ChatServer = function (config, server, sessionStore) {
 
     var self = this;
-
-    // Set moment date formatting
-    moment.calendar.sameDay = 'LT';
+    
+    self.config = config;
 
     this.rooms = {};
-
-    this.getUserList = function(room) {
-        var users = {};
-        var clients = self.io.sockets.clients(room);
-        clients.forEach(function(client) {
-            client.get('profile', function(err, profile)  {
-                if (err) {
-                    // No profile?
-                    return;
-                }
-                users[profile.cid] = profile;
-            });
-        });
-        return users;
-    };
-
+    
+    // Set moment date formatting
+    moment.calendar.sameDay = 'LT';
+    
+    //
+    // Listen
+    //
     this.listen = function () {
 
-        //
-        // Setup
-        //
-        this.io = require('socket.io').listen(app);
+        // Setup socket.io
+        this.io = require('socket.io').listen(server);
         this.io.set('log level', 0);
+        
+        //
+        // Authorization
+        //
         this.io.set('authorization', function (data, accept) {
             // This function, courtesy of danielbaulig.de, will parse out session
             // info for connections.
             if (data.headers.cookie) {
                 // if there is, parse the cookie
-                data.cookie = parseCookie(data.headers.cookie);
+                data.cookie = connect.utils.parseSignedCookies(cookie.parse(decodeURIComponent(data.headers.cookie)), self.config.cookie_secret);
                 data.sessionID = data.cookie['express.sid'];
                 data.sessionStore = sessionStore;
                 sessionStore.get(data.sessionID, function (err, session) {
                     if (err || !session) {
                         accept('Error with Sessions', false);
                     } else {
-                        data.session = new Session(data, session);
+                        data.session = new connectSession(data, session);
                         accept(null, true);
                     }
                 });
@@ -64,6 +59,9 @@ var ChatServer = function (app, sessionStore) {
             }
         });
 
+        //
+        // Connection
+        //
         this.io.sockets.on('connection', function(client) {
 
             var hs = client.handshake;

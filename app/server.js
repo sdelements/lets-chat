@@ -3,8 +3,9 @@
 //
 
 var _ = require('underscore');
-
 var fs = require('fs');
+var http = require('http');
+var https = require('https');
 var express = require('express');
 var expressNamespace = require('express-namespace');
 var mongoose = require('mongoose');
@@ -27,7 +28,10 @@ var requireLogin = function (req, res, next) {
     }
 };
 
-var Server = function (config) {
+//
+// Web
+//
+var Server = function(config) {
 
     var self = this;
 
@@ -41,29 +45,18 @@ var Server = function (config) {
 		+ ':' + self.config.db_port 
 		+ '/' + self.config.db_name;
 
-	// Create server
-	self.app = express.createServer();
+	// Create express app
+	self.app = express();
 
-	// Setup session store
-	self.sessionStore = new mongoStore({
-		url: self.mongoURL
-	});
-
+    //
 	// Configuration
+    //
 	self.app.configure(function () {
 
-		// Setup template stuffs
-		self.app.register('.html', swig);
-		swig.init({
-			cache: !self.config.debug,
-			root: 'templates',
-			allowErrors: self.config.debug // allows errors to be thrown and caught by express
-		});
-		self.app.set('view options', {
-			layout: false // Prevents express from fucking up our extend/block tags
-		});
-
-		self.app.use(express.bodyParser());
+        // Sessions
+        self.sessionStore = new mongoStore({
+            url: self.mongoURL
+        });
 		self.app.use(express.cookieParser());
 		self.app.use(express.session({
 			key: 'express.sid',
@@ -74,14 +67,28 @@ var Server = function (config) {
 			store: self.sessionStore
 		}));
 
-		// Static directory
-		self.app.use('/media', express.static('media'));
+		// Templates
+		swig.init({
+			cache: !self.config.debug,
+			root: 'templates',
+			allowErrors: self.config.debug // allows errors to be thrown and caught by express
+		});
+		self.app.set('view options', {
+			layout: false // Prevents express from fucking up our extend/block tags
+		});
 
-		self.app.use(self.app.router);
+		// Static
+		self.app.use('/media', express.static('media'));
+        
+        // Router
+        self.app.use(express.bodyParser());
+        self.app.use(self.app.router);
 
 	});
 
-	// Rooms
+    //
+	// Chat
+    //
     self.app.get('/', requireLogin, function(req, res) {
         var user = req.session.user;
         var vars = {
@@ -99,8 +106,10 @@ var Server = function (config) {
         res.send(view);
     });
 
+    //
 	// Login
-	self.app.get('/login', function (req, res) {
+	//
+    self.app.get('/login', function (req, res) {
 		var render_login_page = function (errors) {
 			return swig.compileFile('login.html').render({
 				'media_url': self.config.media_url,
@@ -110,15 +119,19 @@ var Server = function (config) {
 		};
 		res.send(render_login_page());
 	});
-
+    
+    //
 	// Logout
-	self.app.all('/logout', function (req, res) {
+	//
+    self.app.all('/logout', function (req, res) {
 		req.session.destroy();
 		res.redirect('/');
 	});
 
+    //
 	// Ajax
-	self.app.namespace('/ajax', function () {
+	//
+    self.app.namespace('/ajax', function () {
 		// Login
 		self.app.post('/login', function (req, res) {
 			var form = req.body;
@@ -150,7 +163,9 @@ var Server = function (config) {
             });
 		});
 
+        //
 		// Register
+        //
 		self.app.post('/register', function (req, res) {
 
             var form = req.body;
@@ -190,6 +205,7 @@ var Server = function (config) {
             });
 		});
 
+        //
 		// File uploadin'
         // TODO: Some proper error handling
 		self.app.post('/upload-file', function (req, res) {
@@ -240,26 +256,45 @@ var Server = function (config) {
 		});
 	});
 
+    //
 	// View files
-	self.app.get('/files/:id/:name', function (req, res) {
+	//
+    self.app.get('/files/:id/:name', function (req, res) {
 		models.file.findById(req.params.id, function (err, file) {
 			res.contentType(file.type);
 			res.sendfile(self.config.uploads_dir + '/' + file._id);
 		});
 	});
 
+    //
+    // Start
+    //
     self.start = function () {
-
 		// Connect to mongo and start listening
 		mongoose.connect(self.mongoURL, function(err) {
 			if (err) throw err;
-			// Go go go!
-			self.app.listen(config.port, config.host);
-			self.chatServer = new ChatServer(self.app, self.sessionStore).start();
+            // Go go go!
+            if (!self.config.https) {
+                // Create regular HTTP server
+                self.server = http.createServer(self.app)
+                  .listen(self.config.port, self.config.host);
+            } else {
+                // Setup HTTP -> HTTP redirect server
+                var redirectServer = express();
+                redirectServer.get('*', function(req, res){
+                    res.redirect('https://' + req.host + ':' + self.config.https.port + req.path)
+                })
+                http.createServer(redirectServer)
+                  .listen(self.config.port, self.config.host);
+                // Create HTTPS server
+                self.server = https.createServer({
+                    key: fs.readFileSync(self.config.https.key),
+                    cert: fs.readFileSync(self.config.https.cert)
+                }, self.app).listen(self.config.https.port);
+            }
+			self.chatServer = new ChatServer(config, self.server, self.sessionStore).start();
 		});
-
 		return this;
-
     };
 
 };
