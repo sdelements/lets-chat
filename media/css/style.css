@@ -4498,8 +4498,7 @@ header .user .dropdown-menu a:hover {
   overflow: hidden;
 }
 .message .thumbnail img {
-  height: 250px;
-  max-width: 350px;
+  height: 200px;
 }
 .message.fragment {
   padding-top: 0;
