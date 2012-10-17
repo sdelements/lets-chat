@@ -146,7 +146,10 @@ var Server = function(config) {
 	// Ajax
 	//
     self.app.namespace('/ajax', function() {
+
+        //
 		// Login
+        //
 		self.app.post('/login', function(req, res) {
 			var form = req.body;
             models.user.findOne({
@@ -193,10 +196,9 @@ var Server = function(config) {
                     return;
                 }
                 // We're good, lets save!
-                var hashedPassword = hash.sha256(form.password, self.config.password_salt)
                 var user = new models.user({
                     email: form.email,
-                    password: hashedPassword,
+                    password: form.password,
                     firstName: form['first-name'],
                     lastName: form['last-name'],
                     displayName: form['first-name'] + ' ' + form['last-name']
@@ -218,6 +220,95 @@ var Server = function(config) {
                 });
             });
 		});
+        
+        //
+        // Edit Profile
+        //
+        self.app.post('/profile', function(req, res) {
+            var form = req.body;
+            var profile = models.user.findOne({
+                _id: req.session.user._id
+            }).exec(function(err, user) {
+                if (err) {
+                    // Well shit.
+                    return;
+                }
+                _.each({
+                    displayName: form['display-name'],
+                    firstName: form['first-name'],
+                    lastName: form['last-name']
+                }, function(value,  field) {
+                    if (value.length > 0) {
+                        user[field] = value;
+                    }
+                });
+                user.save(function(err) {
+                    if (err) {
+                        res.send({
+                            status: 'error',
+                            message: 'Some fields did not validate',
+                            errors: err
+                        });
+                        return;
+                    }
+                    // Update session
+                    req.session.user = user;
+                    req.session.save();
+                    res.send({
+                        status: 'success',
+                        message: 'Your profile has been saved.'
+                    });
+                });
+            });
+        });
+
+        //
+        // Account Settings
+        //
+        self.app.post('/account', function(req, res) {
+            var form = req.body;
+            var profile = models.user.findOne({
+                _id: req.session.user._id
+            }).exec(function(err, user) {
+                if (err) {
+                    // Well shit.
+                    return;
+                }
+                // Is the password good?
+                if (hash.sha256(form.password, self.config.password_salt) !== user.password) {
+                    res.send({
+                        status: 'error',
+                        message: 'Incorrect password.'
+                    });
+                    return;
+                }
+                // Do we have a new email?
+                if (form.email.length > 0) {
+                    user.email = form.email;
+                }
+                // How about a new password?
+                if (form['new-password'].length > 0) {
+                    user.password = form['new-password'];
+                }
+                user.save(function(err) {
+                    if (err) {
+                        res.send({
+                            status: 'error',
+                            message: 'Some fields did not validate',
+                            errors: err
+                        });
+                        return;
+                    }
+                    // Update session
+                    req.session.user = user;
+                    req.session.save();
+                    res.send({
+                        status: 'success',
+                        message: 'Your account has been updated.'
+                    });
+                });
+            });
+        });
 
         //
 		// File uploadin'

@@ -3,7 +3,6 @@
 {% block page_name %}Login{% endblock %}
 
 {% block page_js %}
-	<script src="{{media_url}}/js/lib/jquery.validate.js" type="text/javascript"></script>
 	<script src="{{media_url}}/js/login.js" type="text/javascript"></script>
 {% endblock %}
 
@@ -16,7 +15,7 @@
 		</h1>  
         <div id="login-form" class="well">
             <legend>Sign in</legend>
-            <form class="login validate form-horizontal" action="/ajax/login" method="post">
+            <form class="login validate form-horizontal" action="/ajax/login" method="post" data-refresh="true">
                 <div class="control-group">
                     <input class="required" placeholder="Email" name="email" type="text" />
                 </div>
@@ -40,7 +39,7 @@
         </div><!-- login form end -->
         <div id="register-form" class="well" style="display: none;">
             <legend>Register</legend>
-            <form class="register validate form-horizontal" action="/ajax/register" method="post">
+            <form class="register validate form-horizontal" action="/ajax/register" method="post" data-refresh="true">
                 <input type="hidden" name="next" value="{{next}}" />
                 <div class="control-group">
                     <input class="required email" name="email" type="text" placeholder="Email" />

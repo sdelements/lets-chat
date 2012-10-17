@@ -2,6 +2,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 var check = require('validator').check;
+var hash = require('node_hash');
+
+var config = require('../../settings.js');
 
 var UserSchema = new Schema({
     email: {
@@ -22,9 +25,13 @@ var UserSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        validate: [function(v) {
-            return (v.length >= 4);
-        }, 'invalid email']
+        set: function(p) {
+            // This is kinda wonky
+            if (p.length < 4) {
+                return false;
+            }
+            return hash.sha256(p, config.password_salt);
+        }
     },
     firstName: {
         type: String,
