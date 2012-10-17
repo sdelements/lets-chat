@@ -51,10 +51,12 @@
 	<div id="panes" class="views">
         <div id="room-list" data-id="home" class="view" style="display: none;">
             <div class="top">
-                <h1><img src="/media/img/rooms.png" alt="Rooms"></h1>
-                <a data-toggle="modal" href="#create-room" class="btn btn-success btn-large">
-                    <i class="icon-plus icon-white"></i> Create Room
-                </a>
+                <div class="bar">
+                    <h1><img src="/media/img/rooms.png" alt="Rooms"></h1>
+                    <a data-toggle="modal" href="#create-room" class="btn btn-info">
+                        <i class="icon-plus icon-white"></i> Create Room
+                    </a>
+                </div>
             </div>
             <ul class="room-list list">
                 {% for room in rooms %}

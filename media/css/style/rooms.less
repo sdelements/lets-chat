@@ -6,12 +6,27 @@
     display: block;
     .top {
         padding: 20px;
-        overflow: hidden;
+        padding-left: 0;
+        .bar {
+            background: #222;
+            padding: 10px;
+            overflow: hidden;
+            position: relative;
+            border: 1px #333 solid;
+            border-left: none;
+            .border-radius(0 4px 4px 0);
+            .box-shadow(0 0 10px #000);
+        }
         h1 {
             float: left;
+            img {
+                height: 25px;
+                position: absolute;
+                left: 20px;
+                bottom: 10px;
+            }
         }
         .btn {
-            margin-top: 20px;
             float: right;
         }
     }
@@ -25,7 +40,7 @@
         margin: 0;
     }
     .room {
-        background: #111;
+        background: #222;
         width: 250px;
         padding: 10px;
         margin: 5px;
@@ -33,13 +48,18 @@
         display: block;
         float: left;
         .box-sizing(border-box);
+        .border-radius(4px);
+        .box-shadow(0 0 7px #000);
     }
     .name {
         font-size: 20px;
+        line-height: 100%;
+        margin-bottom: 5px;
         display: block;
         .text-overflow;
     }
     .description {
+        line-height: 150%;
         color: #777;
     }
     .user {
