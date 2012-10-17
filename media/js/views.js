@@ -20,11 +20,23 @@ var RoomListView = Backbone.View.extend({
             //
             //  User events
             //
-            room.users.bind('add', function(user) {
-                self.addUser(user.toJSON());
+            room.users.bind('add', function(user, users) {
+                var matches = users.where({
+                    uid: user.get('uid'),
+                    room: user.get('room')
+                })
+                if (matches.length == 1) {
+                    self.addUser(user.toJSON());
+                }
             });
-            room.users.bind('remove', function(user) {
-                self.removeUser(user.toJSON());
+            room.users.bind('remove', function(user, users) {
+                var matches = users.where({
+                    uid: user.get('uid'),
+                    room: user.get('room')
+                })
+                if (matches.length < 1) {
+                    self.removeUser(user.toJSON());
+                }
             });
         });
         this.collection.bind('remove', function(room) {
@@ -35,7 +47,7 @@ var RoomListView = Backbone.View.extend({
         });
         self.$list.masonry({
             itemSelector: '.room',
-            isAnimated: false
+            isAnimated: true
         });
         // Masonry shim
         this.options.notifications.on('homeselected', function() {
@@ -58,7 +70,7 @@ var RoomListView = Backbone.View.extend({
     },
     removeUser: function(user) {
         this.$('.room[data-id=' + user.room + ']')
-          .find('.user[data-id=' + user.id + ']').remove();
+          .find('.user[data-uid=' + user.uid + ']').remove();
         this.$list.masonry('reload');
     },
     updateRoom: function(room) {
@@ -78,12 +90,25 @@ var UserListView = Backbone.View.extend({
     initialize: function() {
         var self = this;
         this.template = $('#js-tmpl-user-item').html();
-        this.model.bind('add', function(user) {
-            self.add(user.toJSON());
+        this.model.bind('add', function(user, users) {
+            var matches = users.where({
+                uid: user.get('uid'),
+                room: user.get('room')
+            })
+            if (matches.length == 1) {
+                self.add(user.toJSON());
+            }
         });
-        this.model.bind('remove', function(user) {
-            self.remove(user.id);
+        this.model.bind('remove', function(user, users) {
+            var matches = users.where({
+                uid: user.get('uid'),
+                room: user.get('room')
+            })
+            if (matches.length < 1) {
+                self.remove(user.id);
+            }
         });
+
         this.model.bind('reset', function() {
             self.empty();
         });
@@ -93,7 +118,7 @@ var UserListView = Backbone.View.extend({
         this.$el.append(html);
     },
     remove: function(id) {
-        this.$('.user[data-id=' + id + ']').remove();
+        this.$('.user[data-uid=' + id + ']').remove();
     },
     empty: function() {
         this.$el.empty();

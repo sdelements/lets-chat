@@ -97,7 +97,8 @@ var Client = function(config) {
     this.addUser = function(data) {
         var add = function(user) {
             var room = self.rooms.get(user.room);
-            room.users.add(user);
+            if (room)
+                room.users.add(user);
         }
         if ($.isArray(data)) {
             _.each(data, add);

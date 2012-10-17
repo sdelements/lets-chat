@@ -203,7 +203,8 @@ var ChatServer = function (config, server, sessionStore) {
                         }
                         var user = {
                             room: id,
-                            id: hash.md5(client.id),
+                            id: profile.cid,
+                            uid: profile.id,
                             avatar: profile.avatar,
                             name: profile.displayName,
                             safeName: profile.displayName.replace(/\W/g, '')
@@ -226,7 +227,8 @@ var ChatServer = function (config, server, sessionStore) {
                         }
                         client.emit('room:users:new', {
                             room: query.room,
-                            id: hash.md5(user.id),
+                            id: profile.cid,
+                            uid: profile.id,
                             avatar: profile.avatar,
                             name: profile.displayName,
                             safeName: profile.displayName.replace(/\W/g, '')
@@ -283,7 +285,8 @@ var ChatServer = function (config, server, sessionStore) {
                                 }
                                 client.emit('rooms:users:new', {
                                     room: room._id,
-                                    id: hash.md5(user.id),
+                                    id: profile.cid,
+                                    uid: profile.id,
                                     avatar: profile.avatar,
                                     name: profile.displayName,
                                     safeName: profile.displayName.replace(/\W/g, '')
