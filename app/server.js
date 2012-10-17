@@ -224,7 +224,7 @@ var Server = function(config) {
         //
         // Edit Profile
         //
-        self.app.post('/profile', function(req, res) {
+        self.app.post('/profile', requireLogin, function(req, res) {
             var form = req.body;
             var profile = models.user.findOne({
                 _id: req.session.user._id
@@ -265,7 +265,7 @@ var Server = function(config) {
         //
         // Account Settings
         //
-        self.app.post('/account', function(req, res) {
+        self.app.post('/account', requireLogin, function(req, res) {
             var form = req.body;
             var profile = models.user.findOne({
                 _id: req.session.user._id
@@ -313,7 +313,7 @@ var Server = function(config) {
         //
 		// File uploadin'
         // TODO: Some proper error handling
-		self.app.post('/upload-file', function(req, res) {
+		self.app.post('/upload-file', requireLogin, function(req, res) {
 			var moveUpload = function(path, newPath, callback) {
 				fs.readFile(path, function(err, data) {
 					fs.writeFile(newPath, data, function(err) {
@@ -364,7 +364,7 @@ var Server = function(config) {
     //
 	// View files
 	//
-    self.app.get('/files/:id/:name', function(req, res) {
+    self.app.get('/files/:id/:name', requireLogin, function(req, res) {
 		models.file.findById(req.params.id, function(err, file) {
 			res.contentType(file.type);
 			res.sendfile(self.config.uploads_dir + '/' + file._id);
