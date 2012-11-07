@@ -46,8 +46,7 @@ var RoomListView = Backbone.View.extend({
             self.empty();
         });
         self.$list.masonry({
-            itemSelector: '.room',
-            isAnimated: true
+            itemSelector: '.room'
         });
         // Masonry shim
         this.options.notifications.on('homeselected', function() {
