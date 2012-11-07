@@ -133,6 +133,7 @@ var FileListView = Backbone.View.extend({
     },
     initialize: function() {
         var self = this;
+        this.room = this.options.room;
         this.template = $('#js-tmpl-file-item').html();
         //
         // Model Bindings
@@ -149,16 +150,23 @@ var FileListView = Backbone.View.extend({
     },
     render: function() {
         var self = this;
+        var $input = this.$('.upload input[type="file"]');
         //
         // Uploads
         //
-        this.$('.upload input[type="file"]').fileupload({
+        $input.fileupload({
+            dropZone: this.room.$('.file-drop-zone'),
             dataType: 'json',
             formData: {
-                room: self.options.room.id
+                room: this.room.model.id
             }
         });
-        
+        $input.bind('fileuploadsubmit', function(e, data) {
+            data.formData = {
+                room: self.room.model.id,
+                paste: e.originalEvent.type == 'drop'
+            };
+        });
     },
     add: function(file) {
         var html = Mustache.to_html(this.template, file);
@@ -212,7 +220,7 @@ var RoomView = Backbone.View.extend({
         this.filelist = new FileListView({
             notifications: this.notifications,
             model: this.model.files,
-            room: this.model
+            room: this
         });
         //
         // Model Bindings
