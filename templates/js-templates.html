@@ -33,11 +33,11 @@
         </li>
     </script>
     <script id="js-tmpl-file-item" type="text/html">
-        <li class="file" data-id="{{uid}}" data-uploaded="{{uploaded}}" data-size="{{size}}">
+        <li class="file" data-id="{{id}}" data-uploaded="{{uploaded}}" data-size="{{size}}">
             <a href="{{url}}" class="icon"><i class="icon-file"></i></a>
             <div class="meta">
                 <a class="name" href="{{url}}" target="_blank">{{name}}</a>
-                <span class="owner">via {{owner}}</span> &middot; <span class="size">{{size}}kb</span>
+                <span class="owner">{{owner}}</span> &middot; <span class="size">{{size}}kb</span>
             </div>
         </li>
     </script>
@@ -88,16 +88,16 @@
                         </div>
                         <ul class="user-list"></ul>
                     </div>
-                    <div class="files item-list hide">
+                    <div class="files item-list">
                         <div class="top">
                             <h3>
                                 <i class="icon-white icon-film"></i> <span class="text">Media</span>
                             </h3>
                             <a class="toggle-upload btn btn-dmb" href="#"><i class="icon-plus icon-white"></i><i class="icon-remove icon-white"></i></a>
                         </div>
-                        <div class="upload hide">
-                            <form>
-                                <input type="file" name="file" data-url="/ajax/upload-file" />
+                        <div class="upload" style="display: none;">
+                            <form action="/ajax/upload-file">
+                                <input type="file" name="files[]" data-url="/ajax/upload-file" multiple />
                             </form>
                         </div>
                         <ul class="file-list"></ul>

@@ -61,6 +61,9 @@ var Client = function(config) {
             self.getRoomUsers({
                 room: id
             });
+            self.getRoomFiles({
+                room: id
+            });
             if (switchRoom) {
                 self.view.switchView(id)
             }
@@ -94,6 +97,11 @@ var Client = function(config) {
             room: options.room
         });
     }
+    this.getRoomFiles = function(options) {
+        self.socket.emit('room:files:get', {
+            room: options.room
+        });
+    }
     this.addUser = function(data) {
         var add = function(user) {
             var room = self.rooms.get(user.room);
@@ -113,6 +121,12 @@ var Client = function(config) {
             room.users.remove(user);
         }
     }
+    this.addFile = function(file) {
+        var room = self.rooms.get(file.room);
+        if (room) {
+            room.files.add(file);
+        }
+    };
     this.addMessage = function(data) {
         if ($.isArray(data)) {
             _.each(data, function(message) {
@@ -185,6 +199,9 @@ var Client = function(config) {
         });
         self.socket.on('room:users:leave', function(user) {
             self.removeUser(user);
+        });
+        self.socket.on('room:files:new', function(file) {
+            self.addFile(file);
         });
         self.socket.on('room:remove', function(id) {
             self.leaveRoom(id);

@@ -12,10 +12,18 @@ var MessagesCollection = Backbone.Collection.extend({
     model: MessageModel
 });
 
+var FileModel = Backbone.Model.extend({
+});
+
+var FilesCollection = Backbone.Collection.extend({
+    model: FileModel
+});
+
 var RoomModel = Backbone.Model.extend({
     initialize: function() {
         this.messages = new MessagesCollection();
         this.users = new UsersCollection();
+        this.files = new FilesCollection();
     }
 });
 

@@ -239,6 +239,32 @@ var ChatServer = function (config, server, sessionStore) {
             });
 
             //
+            // Get Room Files
+            //
+            client.on('room:files:get', function(query) {
+                models.file.find({ room: query.room })
+                  .populate('owner')
+                  .exec(function (err, files) {
+                        if (err) {
+                            // Couldn't get files or something
+                            return;
+                        }
+                        _.each(files, function(file) {
+                            client.emit('room:files:new', {
+                                url: '/files/' + file._id + '/' + encodeURIComponent(file.name),
+                                id: file._id,
+                                name: file.name,
+                                type: file.type,
+                                size: Math.floor(file.size / 1024),
+                                uploaded: file.uploaded,
+                                owner: file.owner.displayName,
+                                room: file.room
+                            });
+                        });
+                });
+            });
+
+            //
             // Create Room
             //
             client.on('rooms:create', function(room, fn) {
@@ -383,10 +409,17 @@ var ChatServer = function (config, server, sessionStore) {
 
     };
 
+    //
+    // Utility method to send files from the express server
+    //
+    this.sendFile = function(file) {
+        self.io.sockets.in(file.room).emit('room:files:new', file);
+    };
+
     this.start = function () {
         // Setup listeners
         this.listen();
-		return this;
+        return this;
     };
 
 };

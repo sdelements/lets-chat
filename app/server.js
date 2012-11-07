@@ -38,57 +38,57 @@ var Server = function(config) {
 
     self.config = config;
 
-	// Mongo URL
-	self.mongoURL = 'mongodb://'
-		+ self.config.db_user
-		+ ':' + self.config.db_password
-		+ '@' + self.config.db_host 
-		+ ':' + self.config.db_port 
-		+ '/' + self.config.db_name;
+    // Mongo URL
+    self.mongoURL = 'mongodb://'
+        + self.config.db_user
+        + ':' + self.config.db_password
+        + '@' + self.config.db_host 
+        + ':' + self.config.db_port 
+        + '/' + self.config.db_name;
 
-	// Create express app
-	self.app = express();
+    // Create express app
+    self.app = express();
 
     //
-	// Configuration
+    // Configuration
     //
-	self.app.configure(function() {
+    self.app.configure(function() {
 
         // Sessions
         self.sessionStore = new mongoStore({
             url: self.mongoURL
         });
-		self.app.use(express.cookieParser());
-		self.app.use(express.session({
-			key: 'express.sid',
-			cookie: {
-				httpOnly: false // We have to turn off httpOnly for websockets
-			}, 
-			secret: self.config.cookie_secret,
-			store: self.sessionStore
-		}));
+        self.app.use(express.cookieParser());
+        self.app.use(express.session({
+            key: 'express.sid',
+            cookie: {
+                httpOnly: false // We have to turn off httpOnly for websockets
+            }, 
+            secret: self.config.cookie_secret,
+            store: self.sessionStore
+        }));
 
-		// Templates
-		swig.init({
-			cache: !self.config.debug,
-			root: 'templates',
-			allowErrors: self.config.debug // allows errors to be thrown and caught by express
-		});
-		self.app.set('view options', {
-			layout: false // Prevents express from fucking up our extend/block tags
-		});
+        // Templates
+        swig.init({
+            cache: !self.config.debug,
+            root: 'templates',
+            allowErrors: self.config.debug // allows errors to be thrown and caught by express
+        });
+        self.app.set('view options', {
+            layout: false // Prevents express from fucking up our extend/block tags
+        });
 
-		// Static
-		self.app.use('/media', express.static('media'));
+        // Static
+        self.app.use('/media', express.static('media'));
         
         // Router
         self.app.use(express.bodyParser());
         self.app.use(self.app.router);
 
-	});
+    });
 
     //
-	// Chat
+    // Chat
     //
     self.app.get('/', requireLogin, function(req, res) {
         var user = req.session.user;
@@ -108,26 +108,26 @@ var Server = function(config) {
     });
 
     //
-	// Login
-	//
+    // Login
+    //
     self.app.get('/login', function(req, res) {
-		var render_login_page = function(errors) {
-			return swig.compileFile('login.html').render({
-				'media_url': self.config.media_url,
-				'next': req.param('next', ''),
-				'errors': errors
-			});
-		};
-		res.send(render_login_page());
-	});
+        var render_login_page = function(errors) {
+            return swig.compileFile('login.html').render({
+                'media_url': self.config.media_url,
+                'next': req.param('next', ''),
+                'errors': errors
+            });
+        };
+        res.send(render_login_page());
+    });
     
     //
-	// Logout
-	//
+    // Logout
+    //
     self.app.all('/logout', function(req, res) {
-		req.session.destroy();
-		res.redirect('/');
-	});
+        req.session.destroy();
+        res.redirect('/');
+    });
     
     //
     // Serve Plugins
@@ -143,15 +143,15 @@ var Server = function(config) {
     });
 
     //
-	// Ajax
-	//
+    // Ajax
+    //
     self.app.namespace('/ajax', function() {
 
         //
-		// Login
+        // Login
         //
-		self.app.post('/login', function(req, res) {
-			var form = req.body;
+        self.app.post('/login', function(req, res) {
+            var form = req.body;
             models.user.findOne({
                 'email': form.email 
             }).exec(function(err, user) {
@@ -178,12 +178,12 @@ var Server = function(config) {
                     });
                 }
             });
-		});
+        });
 
         //
-		// Register
+        // Register
         //
-		self.app.post('/register', function(req, res) {
+        self.app.post('/register', function(req, res) {
 
             var form = req.body;
             models.user.findOne({ 'email': form.email }).exec(function(error, user) {
@@ -219,7 +219,7 @@ var Server = function(config) {
                     });
                 });
             });
-		});
+        });
         
         //
         // Edit Profile
@@ -311,73 +311,99 @@ var Server = function(config) {
         });
 
         //
-		// File uploadin'
+        // File uploadin'
         // TODO: Some proper error handling
-		self.app.post('/upload-file', requireLogin, function(req, res) {
-			var moveUpload = function(path, newPath, callback) {
-				fs.readFile(path, function(err, data) {
-					fs.writeFile(newPath, data, function(err) {
-						callback();
-					});
-				});
-			}
-			_.each(req.files, function(file) {
-				var owner = req.session.user;
-				var allowed_file_types = self.config.allowed_file_types;
-				// Check MIME Type
-				if (_.include(allowed_file_types, file.type)) {
-					// Save the file
-					new models.file({
-						owner: owner._id,
-						name: file.name,
-						type: file.type,
-						size: file.size
-					}).save(function(err, savedFile) {
-						// Let's move the upload now
-						moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function(err) {
-							// Let the clients know about the new file
-							self.chatServer.sendFile({
-								url: '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name),
-								id: savedFile._id,
-								name: savedFile.name,
-								type: savedFile.type,
-								size: savedFile.size,
-								uploaded: savedFile.uploaded,
-								owner: owner.displayName
-							});
-							res.send({
-								status: 'success',
-								message: 'File has been saved!'
-							});
-						});
-					});
-				} else {
-					res.send({
-						status: 'error',
-						message: 'The MIME type ' + file.type + ' is not allowed'
-					});
-				}
-			});
-		});
-	});
+        self.app.post('/upload-file', requireLogin, function(req, res) {
+            var moveUpload = function(path, newPath, callback) {
+                fs.readFile(path, function(err, data) {
+                    fs.writeFile(newPath, data, function(err) {
+                        callback();
+                    });
+                });
+            }
+            // Loops through them files
+            _.each(req.files, function(file) {
+                var roomID = req.body.room;
+                var file = file[0];
+                var owner = req.session.user;
+                var allowed_file_types = self.config.allowed_file_types;
+                // Lets see if this room exists
+                models.room.findOne({
+                    '_id': roomID
+                }).exec(function(err, room) {
+                    if (err) {
+                        // Danger zone!
+                        res.send({
+                            status: 'error',
+                            message: 'Couldn\'t do the db query'
+                        });
+                        return;
+                    }
+                    // No such room?
+                    if (!room) {
+                        res.send({
+                            status: 'error',
+                            message: 'This room does not exist'
+                        });
+                        return;
+                    }
+                    // Check MIME Type
+                    if (_.include(allowed_file_types, file.type)) {
+                        // Save the file
+                        new models.file({
+                            owner: owner._id,
+                            name: file.name,
+                            type: file.type,
+                            size: file.size,
+                            room: room._id
+                        }).save(function(err, savedFile) {
+                            // Let's move the upload now
+                            moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function(err) {
+                                // Let the clients know about the new file
+                                self.chatServer.sendFile({
+                                    url: '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name),
+                                    id: savedFile._id,
+                                    name: savedFile.name,
+                                    type: savedFile.type,
+                                    size: Math.floor(savedFile.size / 1024),
+                                    uploaded: savedFile.uploaded,
+                                    owner: owner.displayName,
+                                    room: room._id
+                                });
+                                res.send({
+                                    status: 'success',
+                                    message: file.name + ' has been saved!'
+                                });
+                            });
+                        });
+                    } else {
+                        res.send({
+                            status: 'error',
+                            message: 'The MIME type ' + file.type + ' is not allowed'
+                        });
+                    }
+                });
+            });
+        });
+    });
 
     //
-	// View files
-	//
+    // View files
+    //
     self.app.get('/files/:id/:name', requireLogin, function(req, res) {
-		models.file.findById(req.params.id, function(err, file) {
-			res.contentType(file.type);
-			res.sendfile(self.config.uploads_dir + '/' + file._id);
-		});
-	});
+        models.file.findById(req.params.id, function(err, file) {
+            res.contentType(file.type);
+            res.sendfile(self.config.uploads_dir + '/' + file._id);
+        });
+    });
 
     //
     // Start
     //
     self.start = function() {
-		// Connect to mongo and start listening
-		mongoose.connect(self.mongoURL, function(err) {
-			if (err) throw err;
+        // Connect to mongo and start listening
+        mongoose.connect(self.mongoURL, function(err) {
+            if (err) throw err;
             // Go go go!
             if (!self.config.https) {
                 // Create regular HTTP server
@@ -397,9 +423,9 @@ var Server = function(config) {
                     cert: fs.readFileSync(self.config.https.cert)
                 }, self.app).listen(self.config.https.port);
             }
-			self.chatServer = new ChatServer(config, self.server, self.sessionStore).start();
-		});
-		return this;
+            self.chatServer = new ChatServer(config, self.server, self.sessionStore).start();
+        });
+        return this;
     };
 
 };

@@ -126,6 +126,60 @@ var UserListView = Backbone.View.extend({
 });
 
 //
+// Filelist
+//
+var FileListView = Backbone.View.extend({
+    events: {
+        'click .toggle-upload': 'toggleUpload'
+    },
+    initialize: function() {
+        var self = this;
+        this.template = $('#js-tmpl-file-item').html();
+        //
+        // Model Bindings
+        //
+        this.model.bind('add', function(file) {
+            self.add(file.toJSON());
+        });
+        this.model.bind('remove', function(files) {
+            self.remove(file.id);
+        });
+        this.model.bind('reset', function() {
+            self.empty();
+        });
+    },
+    render: function() {
+        var self = this;
+        //
+        // Uploads
+        //
+        this.$('.upload input[type="file"]').fileupload({
+            dataType: 'json',
+            formData: {
+                room: self.options.room.id
+            }
+        });
+        
+    },
+    add: function(file) {
+        var html = Mustache.to_html(this.template, file);
+        this.$('.file-list').prepend(html);
+    },
+    remove: function(id) {
+        this.$('.file-list .file[data-id=' + id + ']').remove();
+    },
+    empty: function() {
+        this.$('.file-list').empty();
+    },
+    toggleUpload: function(e) {
+        e.preventDefault();
+        this.$('.toggle-upload').toggleClass('open');
+        this.$('.upload').toggle();
+    }
+});
+
+
+//
 // Room
 //
 var RoomView = Backbone.View.extend({
@@ -155,6 +209,11 @@ var RoomView = Backbone.View.extend({
         this.userlist = new UserListView({
             notifications: this.notifications,
             model: this.model.users
+        });
+        this.filelist = new FileListView({
+            notifications: this.notifications,
+            model: this.model.files,
+            room: this.model
         });
         //
         // Model Bindings
@@ -201,6 +260,11 @@ var RoomView = Backbone.View.extend({
         // Set subview elements
         //
         this.userlist.setElement(this.$('.user-list'));
+        this.filelist.setElement(this.$('.files'));
+        //
+        // Render subviews
+        //
+        this.filelist.render();
         //
         // Message Scroll Lock
         //
