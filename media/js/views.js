@@ -104,7 +104,7 @@ var UserListView = Backbone.View.extend({
                 room: user.get('room')
             })
             if (matches.length < 1) {
-                self.remove(user.id);
+                self.remove(user.get('uid'));
             }
         });
 
