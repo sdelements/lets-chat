@@ -64,8 +64,22 @@ var Client = function(config) {
             self.getRoomFiles({
                 room: id
             });
+            // Do we want to show this room?
             if (switchRoom) {
                 self.view.switchView(id)
+            }
+            //
+            // Add room id to localstorage so we can reopen it on refresh
+            //
+            var openRooms = store.get('openrooms');
+            if (openRooms instanceof Array) {
+                // Check for duplicates
+                if (!_.contains(openRooms, id)) {
+                    openRooms.push(id);
+                }
+                store.set('openrooms', openRooms);
+            } else {
+                store.set('openrooms', [id]);
             }
         });
     }
@@ -76,6 +90,10 @@ var Client = function(config) {
         var room = self.rooms.get(id);
         self.rooms.remove(room);
         self.socket.emit('room:leave', id);
+        //
+        // Remove room id from localstorage
+        //
+        store.set('openrooms', _.without(store.get('openrooms'), id));
     }
     this.switchRoom = function(id) {
         var room = self.rooms.get(id);
@@ -295,9 +313,22 @@ var Client = function(config) {
     // Lets go
     //
     this.start = function() {
+        var self = this;
         this.listen();
         this.route();
         this.viewListen();
+        //
+        // Join rooms from localstorage
+        //
+        var openRooms = store.get('openrooms');
+        if (openRooms instanceof Array) {
+            // Flush the stored array
+            store.set('openrooms', [])
+            // Let's open some rooms!
+            _.each(_.uniq(openRooms), function(id) {
+                self.joinRoom(id);
+            });
+        }
         return this;
     }
 
