@@ -4358,10 +4358,12 @@ header .user .caret {
   margin-top: -2px;
   vertical-align: middle;
 }
-header .user a {
-  color: #fff;
+header .user .button {
   padding: 0 10px;
   border-left: 1px #444 solid;
+}
+header .user a {
+  color: #fff;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
