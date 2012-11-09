@@ -5,33 +5,33 @@
 // qTip
 
 .ui-tooltip {
-	label {
-		color: inherit;
-		margin: 0;
-	}
+    label {
+        color: inherit;
+        margin: 0;
+    }
 }
 
 // Bootstrap
 
 .navbar,
 .modal form {
-	margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .btn {
-	.border-radius(3px);
+    .border-radius(3px);
 }
 
 .btn-dmb {
     .buttonBackground(@gray, darken(@gray, 10%));
-	.border-radius(3px);
-	border: 1px solid @grayDarker;
+    .border-radius(3px);
+    border: 1px solid @grayDarker;
 }
 
 .btn-dmb, .btn-dmb:hover {
-	color: @white;
-	font-weight: bold;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    color: @white;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 .btn.loading {
@@ -43,7 +43,7 @@
         color-stop(.75, rgba(0, 0, 0, .10)), 
         color-stop(.75, transparent), 
         to(transparent)
-	);
+    );
     background-image: -moz-linear-gradient(-45deg, 
             rgba(0, 0, 0, .10) 25%, 
             transparent 25%,
@@ -55,7 +55,7 @@
     -moz-background-size: 50px 50px;
     -webkit-background-size: 50px 50px;
     -webkit-animation: animate-stripes 2s linear infinite;
-	-moz-animation: animate-stripes 2s linear infinite;
+    -moz-animation: animate-stripes 2s linear infinite;
 }
 
 @-webkit-keyframes animate-stripes {

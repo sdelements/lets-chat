@@ -14,11 +14,11 @@
 }
 
 .views {
-	position: absolute;
-	top: 43px;
-	left: 0;
-	right: 0;
-	bottom: 0;
+    position: absolute;
+    top: 43px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border-top: 1px #444 solid;
 }
 
@@ -43,10 +43,10 @@
 
 .chat {
     margin: 15px;
-	.fancy-scrollbars;
-	.border-radius(4px);
-	.box-flex(1);
-	.vertical-box;
+    .fancy-scrollbars;
+    .border-radius(4px);
+    .box-flex(1);
+    .vertical-box;
     .messages {
         margin: 0;
         overflow: auto;
@@ -70,18 +70,18 @@
  *********************/
 
 .entry {
-	background: #fff url('../img/grid_noise.png');
-	padding: 10px;
-	border-top: 1px #ccc solid;
-	.border-radius( 0 0 4px 4px);
-	textarea {
-		min-height: 70px;
-		margin: 0;
-		display: block;
-	}
-	.btn {
-		margin-left: 5px;
-	}
+    background: #fff url('../img/grid_noise.png');
+    padding: 10px;
+    border-top: 1px #ccc solid;
+    .border-radius( 0 0 4px 4px);
+    textarea {
+        min-height: 70px;
+        margin: 0;
+        display: block;
+    }
+    .btn {
+        margin-left: 5px;
+    }
 }
 
 /*
@@ -89,58 +89,60 @@
  *********************/
 
 .sidebar {
-	width: 230px;
-	color: #fff;
-	margin: 20px;
-	margin-left: 5px;
-	position: relative;
-	z-index: 999;
-	p, h1 {
-		color: #fff;
-	}
-	.item-list {
-		margin-top: 10px;
-		border: 1px #444 solid;
-		.border-radius(5px);
-		h3 {
-			font-size: 14px;
-			font-weight: normal;
-		}
-		.top {
-			background: #222 url('../img/header.png') repeat-x;
-			padding: 3px 5px;
-			h3 {
-				display: inline;
-			}
-			.btn {
-				padding: 2px 6px;
-				float: right;
-			}
-		}
-		ul {
-			max-height: 170px;
-			background: #f2f2f2;
-			color: #555;
-			margin: 0;
-			overflow-y: auto;
-			.border-radius(5px);
-		}
-		li {
-			margin: 5px;
-			margin-bottom: 0;
-			display: block;
-			word-wrap: break-word;
-			.clearfix;
-			&:last-child {
-				border-bottom: 0;
-				margin-bottom: 5px;
-			}
-		}
-		.avatar {
-			.size(35px, 35px);
-			margin-right: 5px;
-		}
-	}
+    width: 230px;
+    color: #ccc;
+    margin: 20px;
+    margin-left: 5px;
+    position: relative;
+    z-index: 999;
+    p, h1 {
+        color: #fff;
+    }
+    .item-list {
+        margin-top: 10px;
+        border: 1px #444 solid;
+        .border-radius(5px);
+        h3 {
+            font-size: 14px;
+            font-weight: normal;
+        }
+        .top {
+            background: #222 url('../img/header.png') repeat-x;
+            padding: 3px 5px;
+            h3 {
+                display: inline;
+            }
+            .btn {
+                padding: 2px 6px;
+                float: right;
+            }
+        }
+        ul {
+            max-height: 170px;
+            background: #f2f2f2;
+            color: #555;
+            margin: 0;
+            overflow-y: auto;
+            .border-radius(5px);
+        }
+        li {
+            #gradient > .vertical(#fff, #e9e9e9);
+            padding: 5px;
+            display: block;
+            border-top: 1px #ddd solid;
+            border-bottom: 1px #eee solid;
+            word-wrap: break-word;
+            .clearfix;
+            &:last-child {
+                border-bottom: 0;
+                padding-bottom: 5px;
+            }
+        }
+        .avatar {
+            .size(30px, 30px);
+            margin-right: 5px;
+        }
+    }
 }
 
 /*
@@ -148,47 +150,47 @@
  *********************/
 
 .files {
-	form, input {
-		margin:0;
-	}
-	.toggle-upload {
-		.icon-remove {
-			display: none;
-		}
-		&.open {
-			.icon-plus {
-				display: none;
-			}
-			.icon-remove {
-				display: inline-block;
-			}
-		}
-	}
-	.upload {
-		background: #222;
-		border-top: 1px #000 solid;
-	}
-	form {
-		padding: 5px;
-		border-top: 1px #333 solid;
-	}
-	.file {
-		.icon {
-			margin-top: 2px;
-			float: left;
-		}
-		.meta {
-			line-height: 130%;
-			margin-left: 20px;
-			a {
-				display: block;
-			}
-			span {
-				color: #777;
-				font-size: 11px;
-			}
-		}
-	}
+    form, input {
+        margin:0;
+    }
+    .toggle-upload {
+        .icon-remove {
+            display: none;
+        }
+        &.open {
+            .icon-plus {
+                display: none;
+            }
+            .icon-remove {
+                display: inline-block;
+            }
+        }
+    }
+    .upload {
+        background: #222;
+        border-top: 1px #000 solid;
+    }
+    form {
+        padding: 5px;
+        border-top: 1px #333 solid;
+    }
+    .file {
+        .icon {
+            margin-top: 2px;
+            float: left;
+        }
+        .meta {
+            line-height: 130%;
+            margin-left: 20px;
+            a {
+                display: block;
+            }
+            span {
+                color: #777;
+                font-size: 11px;
+            }
+        }
+    }
 }
 
 /*

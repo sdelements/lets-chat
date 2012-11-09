@@ -3,58 +3,59 @@
  *********************/
 
 body {
-	.bg-dark;
+    .bg-dark;
 }
 
 textarea {
-	outline: none;
+    outline: none;
     .box-sizing(border-box);
 }
 
 header {
-	background: #222 url('../img/header.png');
-	border-bottom: 1px #000 solid;
+    background: #222 url('../img/header.png');
+    border-bottom: 1px #000 solid;
     height: 42px;
     .clearfix;
-	.user {
+    .user {
         background: #222 url('../img/header.png');
         max-width: 30%;
-		height: 40px;
-		line-height: 40px;
-		float: right;
-		padding: 0 10px;
-		border-left: 1px #111 solid;
-		position: relative;
+        height: 42px;
+        line-height: 42px;
+        float: right;
+        border-left: 1px #111 solid;
+        position: relative;
         .box-sizing(border-box);
-		.dropdown {
-			margin: 5px 5px 0 0;
-		}
-		.caret {
-			border-top-color: #fff;
-			border-bottom-color: #fff;
-			margin: 0;
-			margin-top: -2px;
-			vertical-align: middle;
-		}
-		a {
+        .dropdown {
+            margin: 5px 5px 0 0;
+        }
+        .caret {
+            border-top-color: #fff;
+            border-bottom-color: #fff;
+            margin: 0;
+            margin-top: -2px;
+            vertical-align: middle;
+        }
+        a {
             color: #fff;
-			display: block;
+            padding: 0 10px;
+            border-left: 1px #444 solid;
+            display: block;
             .text-overflow;
-			&:hover {
-				.name {
-					color: #fff;
-				}
-				text-decoration: none;
-			}
-			.name {
-				color: #bbb;
-			}
-		}
-		img {
-			.square(32px);
-			margin-right: 5px;
-			vertical-align: middle;
-		}
+            &:hover {
+                .name {
+                    color: #fff;
+                }
+                text-decoration: none;
+            }
+            .name {
+                color: #bbb;
+            }
+        }
+        img {
+            .square(32px);
+            margin-right: 5px;
+            vertical-align: middle;
+        }
         .dropdown-menu {
             margin-right: 5px;
             &, a {
@@ -64,13 +65,13 @@ header {
                 color: #fff;
             }
         }
-	}
+    }
 }
 
 .modal-body {
-	.response {
-		text-align: center;
-		display: none;
-		margin-bottom: 0;
-	}
+    .response {
+        text-align: center;
+        display: none;
+        margin-bottom: 0;
+    }
 }

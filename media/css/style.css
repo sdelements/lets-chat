@@ -4338,10 +4338,9 @@ header:after {
 header .user {
   background: #222222 url('../img/header.png');
   max-width: 30%;
-  height: 40px;
-  line-height: 40px;
+  height: 42px;
+  line-height: 42px;
   float: right;
-  padding: 0 10px;
   border-left: 1px #111 solid;
   position: relative;
   -webkit-box-sizing: border-box;
@@ -4361,6 +4360,8 @@ header .user .caret {
 }
 header .user a {
   color: #fff;
+  padding: 0 10px;
+  border-left: 1px #444 solid;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4774,7 +4775,7 @@ header .user .dropdown-menu a:hover {
  *********************/
 .sidebar {
   width: 230px;
-  color: #fff;
+  color: #ccc;
   margin: 20px;
   margin-left: 5px;
   position: relative;
@@ -4817,9 +4818,19 @@ header .user .dropdown-menu a:hover {
   border-radius: 5px;
 }
 .sidebar .item-list li {
-  margin: 5px;
-  margin-bottom: 0;
+  background-color: #f6f6f6;
+  background-image: -moz-linear-gradient(top, #ffffff, #e9e9e9);
+  background-image: -ms-linear-gradient(top, #ffffff, #e9e9e9);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e9e9e9);
+  background-image: -o-linear-gradient(top, #ffffff, #e9e9e9);
+  background-image: linear-gradient(top, #ffffff, #e9e9e9);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e9e9e9', GradientType=0);
+  padding: 5px;
   display: block;
+  border-top: 1px #ddd solid;
+  border-bottom: 1px #eee solid;
   word-wrap: break-word;
   *zoom: 1;
 }
@@ -4833,11 +4844,11 @@ header .user .dropdown-menu a:hover {
 }
 .sidebar .item-list li:last-child {
   border-bottom: 0;
-  margin-bottom: 5px;
+  padding-bottom: 5px;
 }
 .sidebar .item-list .avatar {
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   margin-right: 5px;
 }
 /*
@@ -4910,7 +4921,6 @@ header .user .dropdown-menu a:hover {
   padding-left: 0;
 }
 #room-list .top .bar {
-  background: #222;
   padding: 10px;
   overflow: hidden;
   position: relative;

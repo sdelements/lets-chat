@@ -5,62 +5,62 @@
 // Backgrounds
 
 .bg-dark {
-	background: #222 url('../img/dark_noise.png');
+    background: #222 url('../img/dark_noise.png');
 }
 
 // CSS3 Flex layout mixins
 // Thanks to https://github.com/maccman/
 
 .box-flex (@s: 0) {
-	box-flex: @s;
-	-webkit-box-flex: @s;
-	-moz-box-flex: @s;
+    box-flex: @s;
+    -webkit-box-flex: @s;
+    -moz-box-flex: @s;
 }
 
 .horizontal-box {
-	display: box;
-	display: -webkit-box;
-	display: -moz-box;
-	box-orient: horizontal;
-	box-align: stretch;
-	box-pack: left;
-	-webkit-box-orient: horizontal;
-	-webkit-box-align: stretch;
-	-webkit-box-pack: left;
-	-moz-box-orient: horizontal;
-	-moz-box-align: stretch;
-	-moz-box-pack: left;
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    box-orient: horizontal;
+    box-align: stretch;
+    box-pack: left;
+    -webkit-box-orient: horizontal;
+    -webkit-box-align: stretch;
+    -webkit-box-pack: left;
+    -moz-box-orient: horizontal;
+    -moz-box-align: stretch;
+    -moz-box-pack: left;
 }
 
 .vertical-box {
-	display: box;
-	display: -webkit-box;
-	display: -moz-box;
-	box-orient: vertical;
-	box-align: stretch;
-	-webkit-box-orient: vertical;
-	-webkit-box-align: stretch;
-	-moz-box-orient: vertical;
-	-moz-box-align: stretch;
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    box-orient: vertical;
+    box-align: stretch;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
 }
 
 // Fancy scrollbars
 
 .fancy-scrollbars {
-	*::-webkit-scrollbar {
-		.square(15px);
-	}
-	*::-webkit-scrollbar-track {
-		.box-shadow(inset 0 0 6px rgba(0,0,0,0.3));
-	}
-	*::-webkit-scrollbar-thumb {
-		background-color: #aaa;
-		.box-shadow(inset 0 0 6px rgba(0,0,0,0.5));
-	}
+    *::-webkit-scrollbar {
+        .square(15px);
+    }
+    *::-webkit-scrollbar-track {
+        .box-shadow(inset 0 0 6px rgba(0,0,0,0.3));
+    }
+    *::-webkit-scrollbar-thumb {
+        background-color: #aaa;
+        .box-shadow(inset 0 0 6px rgba(0,0,0,0.5));
+    }
 }
 
 // Avatars
 
 .avatar {
-	.border-radius(100%);
+    .border-radius(100%);
 }
