@@ -4218,10 +4218,19 @@ a.badge:hover {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 .fancy-scrollbars *::-webkit-scrollbar-thumb {
-  background-color: #aaa;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  background-color: #cfcfcf;
+  background-image: -moz-linear-gradient(top, #dddddd, #bbbbbb);
+  background-image: -ms-linear-gradient(top, #dddddd, #bbbbbb);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dddddd), to(#bbbbbb));
+  background-image: -webkit-linear-gradient(top, #dddddd, #bbbbbb);
+  background-image: -o-linear-gradient(top, #dddddd, #bbbbbb);
+  background-image: linear-gradient(top, #dddddd, #bbbbbb);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#bbbbbb', GradientType=0);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px #ababab solid;
 }
 .avatar {
   -webkit-border-radius: 100%;
@@ -4711,10 +4720,19 @@ header .user .dropdown-menu a:hover {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 .chat *::-webkit-scrollbar-thumb {
-  background-color: #aaa;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  background-color: #cfcfcf;
+  background-image: -moz-linear-gradient(top, #dddddd, #bbbbbb);
+  background-image: -ms-linear-gradient(top, #dddddd, #bbbbbb);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dddddd), to(#bbbbbb));
+  background-image: -webkit-linear-gradient(top, #dddddd, #bbbbbb);
+  background-image: -o-linear-gradient(top, #dddddd, #bbbbbb);
+  background-image: linear-gradient(top, #dddddd, #bbbbbb);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#bbbbbb', GradientType=0);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px #ababab solid;
 }
 .chat .messages {
   margin: 0;
