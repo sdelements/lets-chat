@@ -133,6 +133,7 @@ var FileListView = Backbone.View.extend({
     },
     initialize: function() {
         var self = this;
+        this.notifications = this.options.notifications;
         this.room = this.options.room;
         this.template = $('#js-tmpl-file-item').html();
         //
@@ -162,10 +163,23 @@ var FileListView = Backbone.View.extend({
             }
         });
         $input.bind('fileuploadsubmit', function(e, data) {
+            self.$('.throbber').show();
             data.formData = {
                 room: self.room.model.id,
                 paste: e.originalEvent.type == 'drop'
             };
+        });
+        $input.bind('fileuploaddone', function(e, data) {
+            self.$('.throbber').hide();
+            // Temporary solution to post images inside chat
+            // We should make relative urls work for embeds
+            if (data.result.url) {
+                var url = location.protocol + '//' + location.host + data.result.url
+                self.notifications.trigger('newmessage', {
+                    room: self.room.model.id,
+                    text: url
+                });
+            }
         });
     },
     add: function(file) {

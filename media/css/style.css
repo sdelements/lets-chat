@@ -4887,6 +4887,9 @@ header .user .dropdown-menu a:hover {
 .files .toggle-upload.open .icon-remove {
   display: inline-block;
 }
+.files .throbber {
+  height: 24px;
+}
 .files .upload {
   background: #222;
   border-top: 1px #000 solid;

@@ -360,8 +360,9 @@ var Server = function(config) {
                             // Let's move the upload now
                             moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function(err) {
                                 // Let the clients know about the new file
+                                var url = '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name);
                                 self.chatServer.sendFile({
-                                    url: '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name),
+                                    url: url,
                                     id: savedFile._id,
                                     name: savedFile.name,
                                     type: savedFile.type,
@@ -372,7 +373,8 @@ var Server = function(config) {
                                 });
                                 res.send({
                                     status: 'success',
-                                    message: file.name + ' has been saved!'
+                                    message: file.name + ' has been saved!',
+                                    url: url
                                 });
                             });
                         });
