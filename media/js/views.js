@@ -107,7 +107,6 @@ var UserListView = Backbone.View.extend({
                 self.remove(user.get('uid'));
             }
         });
-
         this.model.bind('reset', function() {
             self.empty();
         });
@@ -425,7 +424,7 @@ var RoomView = Backbone.View.extend({
         }
     },
     updateName: function(name) {
-        this.$('.sidebar .meta .name').text(name);
+        this.$('.sidebar .room-name').text(name);
         this.$('.edit-room input[name="name"]').val(name);
     },
     updateDescription: function(description) {
