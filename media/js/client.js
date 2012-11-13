@@ -55,15 +55,17 @@ var Client = function(config) {
                 self.rooms.add(room);
             }
             // Get room data
-            self.getRoomHistory({
-                room: id
-            });
             self.getRoomUsers({
                 room: id
             });
-            self.getRoomFiles({
-                room: id
-            });
+            if (!existingRoom) {
+                self.getRoomHistory({
+                    room: id
+                });
+                self.getRoomFiles({
+                    room: id
+                });
+            }
             // Do we want to show this room?
             if (switchRoom) {
                 self.view.switchView(id)
