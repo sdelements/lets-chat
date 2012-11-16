@@ -3,6 +3,9 @@
 //
 var TranscriptView = Backbone.View.extend({
     el: '#transcript',
+    events: {
+        'change .mentioned-filter input': 'toggleMentionFilter'
+    },
     initialize: function() {
         var self = this;
         //
@@ -60,5 +63,16 @@ var TranscriptView = Backbone.View.extend({
         $text.html(this.formatContent($text.html()));
         this.$('.messages').append($html);
         this.lastMessageUser = message.owner;
+    },
+    toggleMentionFilter: function(e) {
+        var $target = $(e.currentTarget);
+        var checked = $target.attr('checked');
+        if (checked) {
+            this.$('.message').not('.mentioned').hide();
+            this.$('.mentioned.fragment').removeClass('fragment').addClass('-fragment');
+        } else {
+            this.$('.message').show();
+            this.$('.-fragment').removeClass('.-fragment').addClass('fragment');
+        }
     }
 });

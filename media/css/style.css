@@ -4465,6 +4465,15 @@ header .user .dropdown-menu a:hover {
   left: 0;
   content: ' ';
 }
+.message.overlayed:after {
+  background: rgba(255, 255, 255, 0.8);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  content: ' ';
+}
 .message:first-child {
   border-top: none;
 }
@@ -5025,12 +5034,28 @@ header .user .dropdown-menu a:hover {
 /*********************
  * Transcript
  *********************/
+.page-transcript .top {
+  color: #fff;
+  overflow: hidden;
+}
 .page-transcript h1 {
   font-weight: normal;
-  color: #fff;
   padding: 0;
   margin: 10px;
+  margin-bottom: 0;
   font-size: 20px;
+  float: left;
+}
+.page-transcript .filters {
+  margin: 16px 15px 0 0;
+  float: right;
+}
+.page-transcript .filters label {
+  color: #f22472;
+}
+.page-transcript .filters input {
+  display: inline;
+  margin-top: 0;
 }
 .page-transcript .messages {
   padding: 0;
