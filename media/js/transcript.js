@@ -37,7 +37,7 @@ var TranscriptView = Backbone.View.extend({
         });
     },
     formatContent: function(text) {
-        return window.utils.message.formatter(text, this.plugins);
+        return window.utils.message.format(text, this.plugins);
     },
     addMessage: function(message) {
         //

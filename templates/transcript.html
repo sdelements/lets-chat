@@ -11,14 +11,11 @@
     <script src="{{media_url}}/js/models.js" type="text/javascript"></script>
     <script src="{{media_url}}/js/transcript.js" type="text/javascript"></script>
     <script type="text/javascript">
-        var user = {{ user|json_encode|raw }};
-        var room = {{ room|json_encode|raw }};
-        var messages = {{ messages|json_encode|raw }};
         $(function() {
             var transcript = new TranscriptView({
-                user: user,
-                room: room,
-                messages: messages
+                user: window.app.user,
+                room: window.app.room,
+                messages: window.app.messages
             });
         });
     </script>
@@ -26,11 +23,17 @@
 
 {% block content %}
     <div id="transcript">
-        <h1>Transcript &middot; {{ room.name }}</h1>
+        <h1>{{ room.name }}</h1>
         <ul class="messages"></ul>
     </div>
 {% endblock %}
 
 {% block page_assets %}
     {% include "js-templates.html" %}
+    <script type="text/javascript">
+        window.app = {};
+        window.app.user = $.parseJSON('{{ user|json_encode|e("js") }}');
+        window.app.room = $.parseJSON('{{ room|json_encode|e("js") }}');
+        window.app.messages = $.parseJSON('{{ messages|json_encode|e("js") }}');
+    </script>
 {% endblock %}

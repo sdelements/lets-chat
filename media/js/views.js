@@ -332,7 +332,7 @@ var RoomView = Backbone.View.extend({
         return this.debouncedScrollDown(debounce);
     },
     formatContent: function(text) {
-        return window.utils.message.formatter(text, this.plugins);
+        return window.utils.message.format(text, this.plugins);
     },
     addMessage: function(message, debounce) {
         if (this.lastMessageUser === message.owner) {
