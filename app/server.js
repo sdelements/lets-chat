@@ -394,8 +394,52 @@ var Server = function(config) {
     //
     self.app.get('/files/:id/:name', requireLogin, function(req, res) {
         models.file.findById(req.params.id, function(err, file) {
+            if (err) {
+                // Error
+                res.send(500, 'Something went terribly wrong');
+                return;
+            }
             res.contentType(file.type);
             res.sendfile(self.config.uploads_dir + '/' + file._id);
+        });
+    });
+    
+    //
+    // Transcripts
+    //
+    self.app.get('/transcripts/:room/:date', requireLogin, function(req, res) {
+        // Lookup room
+        models.room.findById(req.params.room, function(err, room) {
+            if (err) {
+                // Error
+                res.send(500, 'Something went wrong trying to lookup the room');
+                return;
+            }
+            // Lookup messages
+            // TODO: Maybe we should push message refs to room so we can use populate :|
+            models.message.find({
+                room: room._id
+            }).select('-room -__v').exec(function(err, messages) {
+                var user = req.session.user;
+                var view = swig.compileFile('transcript.html').render({
+                    media_url: self.config.media_url,
+                    room: {
+                        id: room._id,
+                        name: room.name,
+                        description: room.description
+                    },
+                    messages: messages,
+                    user: {
+                        id: user._id,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        displayName: user.displayName,
+                        avatar: hash.md5(user.email),
+                        safeName: user.displayName.replace(/\W/g, '')
+                    }
+                });
+                res.send(view);
+            });
         });
     });
 

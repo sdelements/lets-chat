@@ -5022,3 +5022,19 @@ header .user .dropdown-menu a:hover {
   -moz-border-radius: 100%;
   border-radius: 100%;
 }
+/*********************
+ * Transcript
+ *********************/
+.page-transcript h1 {
+  font-weight: normal;
+  color: #fff;
+  padding: 0;
+  margin: 10px;
+}
+.page-transcript .messages {
+  padding: 0;
+  margin: 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}

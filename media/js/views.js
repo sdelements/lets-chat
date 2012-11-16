@@ -332,24 +332,7 @@ var RoomView = Backbone.View.extend({
         return this.debouncedScrollDown(debounce);
     },
     formatContent: function(text) {
-        // TODO: Fix these regexes
-        var imagePattern = /(^\s*(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif)\s*$)/gim;
-        var linkPattern =  /((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])\b/gim;
-        if (text.match(imagePattern)) {
-            text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" alt="$1" /></a>');
-        } else {
-            text = text.replace(linkPattern, '<a href="$1" target="_blank">$1</a>');
-        }
-        // emotes
-        _.each(this.plugins.emotes, function(emote, keyword) {
-            var image = '<img class="emote" src="' + encodeURI(emote) + '" title="'+ encodeURI(keyword) + '" alt="' + encodeURI(keyword) + '" />';
-            text = text.replace(new RegExp('\\B' + keyword + '\\b', 'g'), image);
-        });
-        // replacements
-        _.each(this.plugins.replacements, function(replacement) {
-            text = text.replace(new RegExp(replacement.regex, 'g'), replacement.template);
-        });
-        return text;
+        return window.utils.message.formatter(text, this.plugins);
     },
     addMessage: function(message, debounce) {
         if (this.lastMessageUser === message.owner) {
