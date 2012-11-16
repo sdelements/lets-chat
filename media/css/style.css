@@ -5030,6 +5030,7 @@ header .user .dropdown-menu a:hover {
   color: #fff;
   padding: 0;
   margin: 10px;
+  font-size: 20px;
 }
 .page-transcript .messages {
   padding: 0;
@@ -5037,4 +5038,8 @@ header .user .dropdown-menu a:hover {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
+}
+.page-transcript .transcript-date {
+  color: #777;
+  font-style: italic;
 }

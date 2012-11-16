@@ -13,6 +13,7 @@ var mongoose = require('mongoose');
 var mongoStore = require('connect-mongo')(express);
 var swig = require('swig');
 var hash = require('node_hash');
+var moment = require('moment');
 
 // App stuff
 var ChatServer = require('./chat.js');
@@ -407,7 +408,20 @@ var Server = function(config) {
     //
     // Transcripts
     //
-    self.app.get('/transcripts/:room/:date', requireLogin, function(req, res) {
+    self.app.get('/transcripts/:room/:date?', requireLogin, function(req, res) {  
+        var uriToDate = function(uri) {
+            if (uri == 'today' || !uri) {
+                var date = new Date();
+                date.setHours(0, 0, 0, 0);
+                return date;
+            }
+            return !isNaN(Date.parse(uri)) ? new Date(uri) : false;
+        }
+        var date = uriToDate(req.params.date);
+        if (date === false) {
+            // Error, Invalid date
+            res.send(404, 'Invalid date');
+        }
         // Lookup room
         models.room.findById(req.params.room, function(err, room) {
             if (err) {
@@ -419,10 +433,31 @@ var Server = function(config) {
             // TODO: Maybe we should push message refs to room so we can use populate :|
             models.message.find({
                 room: room._id
-            }).select('-room -__v').exec(function(err, messages) {
+            }).select('-room -__v')
+            .populate('owner')
+            .where('posted').gt(date).lt(new Date(date).setDate(date.getDate() + 1))
+            .exec(function(err, docs) {
+                if (err) {
+                    // Whoopsie
+                    return;
+                }
                 var user = req.session.user;
+                // Let's process some messages
+                var messages = [];
+                docs.forEach(function (message) {
+                    messages.push({
+                        id: message._id,
+                        owner: message.owner._id,
+                        avatar: hash.md5(message.owner.email),
+                        name: message.owner.displayName,
+                        text: message.text,
+                        posted: message.posted,
+                        time: moment(message.posted).format('h:mma')
+                    });
+                });
                 var view = swig.compileFile('transcript.html').render({
                     media_url: self.config.media_url,
+                    date: moment(date).format('dddd, MMM Do YYYY'),
                     room: {
                         id: room._id,
                         name: room.name,

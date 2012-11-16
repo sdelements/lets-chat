@@ -23,7 +23,7 @@
 
 {% block content %}
     <div id="transcript">
-        <h1>{{ room.name }}</h1>
+        <h1>{{ room.name }} &middot; <span class="transcript-date">{{ date }}</span></h1>
         <ul class="messages"></ul>
     </div>
 {% endblock %}
