@@ -5,7 +5,7 @@ A self-hosted chat app for small teams.
 ## Features and Stuff
 
 * BYOS (bring your own server)
-* Persistant messages
+* Persistent messages
 * Multiple rooms
 * New message alerts
 * Mentions (hey @you)
