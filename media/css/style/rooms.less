@@ -40,19 +40,22 @@
     }
     .room {
         background: #222;
-        width: 250px;
+        width: 300px;
+        min-height: 130px;
         padding: 10px;
+        padding-bottom: 30px;
         margin: 5px;
         border-top: 3px #777 solid;
         display: block;
         float: left;
+        position: relative;
         .box-sizing(border-box);
         .border-radius(4px);
         .box-shadow(0 0 7px #000);
     }
     .name {
         font-size: 20px;
-        line-height: 100%;
+        line-height: 120%;
         margin-bottom: 5px;
         display: block;
         .text-overflow;
@@ -61,13 +64,26 @@
         line-height: 150%;
         color: #777;
     }
+    .users {
+        overflow: hidden;
+        img {
+            .square(30px);
+            .border-radius(100%);
+        }
+    }
     .user {
         margin-right: 5px;
+        margin-bottom: 3px;
         display: block;
         float: left;
     }
-    img {
-        .square(30px);
-        .border-radius(100%);
+    .last-active {
+        color: #fff;
+        font-size: 11px;
+        text-align: right;
+        .opacity(40);
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
     }
 }

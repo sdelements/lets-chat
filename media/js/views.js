@@ -10,12 +10,16 @@ var RoomListView = Backbone.View.extend({
         this.userTemplate = $('#js-tmpl-room-list-user').html();
         this.collection = this.options.collection;
         this.collection.bind('add', function(room) {
-            self.add(room);
+            self.add(_.extend(room.toJSON(), {
+                lastActive: room.get('lastActive') ? moment(room.get('lastActive')).calendar() : ''
+            }));
             //
             // Room meta update
             //
             room.bind('change', function(room) {
-                self.updateRoom(room.toJSON());
+                self.updateRoom(_.extend(room.toJSON(), {
+                    lastActive: room.get('lastActive') ? moment(room.get('lastActive')).calendar() : ''
+                }));
             });
             //
             //  User events
@@ -54,7 +58,7 @@ var RoomListView = Backbone.View.extend({
         });
     },
     add: function(room) {
-        var item = Mustache.to_html(this.template, room.toJSON());
+        var item = Mustache.to_html(this.template, room);
         this.$list.prepend(item);
         this.$list.masonry('reload');
     },
@@ -76,6 +80,7 @@ var RoomListView = Backbone.View.extend({
         var $room = this.$('.room[data-id=' + room.id + ']');
         $room.find('.name').text(room.name);
         $room.find('.description').text(room.description);
+        $room.find('.last-active .value').text(room.lastActive);
     },
     empty: function() {
         this.$list.empty();

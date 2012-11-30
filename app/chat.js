@@ -172,6 +172,22 @@ var ChatServer = function (config, server, sessionStore) {
                         room: message.room
                     }
                     self.io.sockets.in(message.room).emit('room:messages:new', outgoingMessage);
+                    // Let's save the last message timestamp for the room
+                    // TODO: Maybe define a helper in the Room schema
+                    models.room.findOne({
+                        '_id': message.room
+                    }, function(err, room) {
+                        if (err) {
+                            // Shit son...
+                            return;
+                        }
+                        room.lastActive = message.posted;
+                        room.save();
+                        self.io.sockets.emit('room:update', {
+                            id: room._id,
+                            lastActive: room.lastActive
+                        });
+                    });
                 });
             });
 
@@ -301,7 +317,8 @@ var ChatServer = function (config, server, sessionStore) {
                             id: room._id,
                             name: room.name,
                             description: room.description,
-                            owner: room.owner
+                            owner: room.owner,
+                            lastActive: room.lastActive
                         });
                          _.each(self.io.sockets.clients(room._id), function(user) {
                             user.get('profile', function(err, profile) {

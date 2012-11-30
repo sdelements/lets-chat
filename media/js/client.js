@@ -230,18 +230,12 @@ var Client = function(config) {
             var room = self.rooms.get(data.id);
             var availableRoom = self.availableRooms.get(data.id);
             if (room) {
-                room.set({
-                    name: data.name,
-                    description: data.description
-                });
+                room.set(_.extend(room.toJSON(), data));
             }
             if (availableRoom) {
-                availableRoom.set({
-                    name: data.name,
-                    description: data.description
-                });
+                availableRoom.set(_.extend(availableRoom.toJSON(), data));
             }
-            self.notifications.trigger('roomupdate', data);
+            self.notifications.trigger('roomupdate', _.extend(room.toJSON(), data));
         });
         self.socket.on('rooms:new', function(room) {
             self.availableRooms.add(room);

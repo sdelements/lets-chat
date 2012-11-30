@@ -28,6 +28,9 @@ var RoomSchema = new Schema({
     created: {
         type: Date,
         default: Date.now
+    },
+    lastActive: {
+        type: Date
     }
 });
 

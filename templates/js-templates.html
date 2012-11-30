@@ -42,10 +42,16 @@
         </li>
     </script>
     <script id="js-tmpl-room-list-item" type="text/html">
-        <li class="room" data-id="{{ id }}">
+        <li class="room" data-id="{{ id }}" data-last-active="{{ lastActive }}">
             <a class="name" href="#!/room/{{ id }}">{{ name }}</a>
             <p class="description">{{ description }}</p>
             <ul class="users"></ul>
+            {{#lastActive}}
+                <div class="last-active">
+                    <i class="icon-time icon-white"></i>
+                    <span class="value">{{ lastActive }}</span>
+                </div>
+            {{/lastActive}}
         </li>
     </script>
     <script id="js-tmpl-room-list-user" type="text/html">

@@ -4465,15 +4465,6 @@ header .user .dropdown-menu a:hover {
   left: 0;
   content: ' ';
 }
-.message.overlayed:after {
-  background: rgba(255, 255, 255, 0.8);
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  content: ' ';
-}
 .message:first-child {
   border-top: none;
 }
@@ -4989,12 +4980,15 @@ header .user .dropdown-menu a:hover {
 }
 .room-list .room {
   background: #222;
-  width: 250px;
+  width: 300px;
+  min-height: 130px;
   padding: 10px;
+  padding-bottom: 30px;
   margin: 5px;
   border-top: 3px #777 solid;
   display: block;
   float: left;
+  position: relative;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
@@ -5008,7 +5002,7 @@ header .user .dropdown-menu a:hover {
 }
 .room-list .name {
   font-size: 20px;
-  line-height: 100%;
+  line-height: 120%;
   margin-bottom: 5px;
   display: block;
   overflow: hidden;
@@ -5019,17 +5013,31 @@ header .user .dropdown-menu a:hover {
   line-height: 150%;
   color: #777;
 }
-.room-list .user {
-  margin-right: 5px;
-  display: block;
-  float: left;
+.room-list .users {
+  overflow: hidden;
 }
-.room-list img {
+.room-list .users img {
   width: 30px;
   height: 30px;
   -webkit-border-radius: 100%;
   -moz-border-radius: 100%;
   border-radius: 100%;
+}
+.room-list .user {
+  margin-right: 5px;
+  margin-bottom: 3px;
+  display: block;
+  float: left;
+}
+.room-list .last-active {
+  color: #fff;
+  font-size: 11px;
+  text-align: right;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
 }
 /*********************
  * Transcript
