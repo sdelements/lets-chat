@@ -25,7 +25,9 @@
                 <p class="alert response hide"></p>
                 <div class="bottom clearfix">
                     <div class="pull-left links">
-                        <a class="show-form" data-target="#register-form" href="#">I need an account</a>
+                        {% if not disableRegistration %}
+                            <a class="show-form" data-target="#register-form" href="#">I need an account</a>
+                        {% endif %}
                         <!--
                             &middot;
                             <a class="show-lost-password" href="#">
@@ -37,37 +39,39 @@
                 </div>
             </form>
         </div><!-- login form end -->
-        <div id="register-form" class="well" style="display: none;">
-            <legend>Register</legend>
-            <form class="register validate form-horizontal" action="/ajax/register" method="post" data-refresh="true">
-                <input type="hidden" name="next" value="{{next}}" />
-                <div class="control-group">
-                    <input class="required email" name="email" type="text" placeholder="Email" />
-                </div>
-                <div class="control-group">
-                    <input class="required" name="password" type="password" placeholder="Password" minlength="4" maxlength="24" />
-                </div>
-                <div class="control-group">
-                    <input class="required" name="first-name" type="text" placeholder="First Name" maxlength="24" />
-                </div>
-                <div class="control-group">
-                    <input class="required" name="last-name" type="text" placeholder="Last Name" maxlength="24" />
-                </div>
-                <p class="alert response hide"></p>
-                <div class="bottom clearfix">
-                    <div class="pull-left links">
-                        <a class="show-form" data-target="#login-form" href="#">I already have an account</a>
-                        <!--
-                            &middot;
-                            <a class="show-lost-password" href="#">
-                                I lost my password
-                            </a>
-                        -->
+        {% if not disableRegistration %}
+            <div id="register-form" class="well" style="display: none;">
+                <legend>Register</legend>
+                <form class="register validate form-horizontal" action="/ajax/register" method="post" data-refresh="true">
+                    <input type="hidden" name="next" value="{{next}}" />
+                    <div class="control-group">
+                        <input class="required email" name="email" type="text" placeholder="Email" />
                     </div>
-                    <button class="btn-info btn btn-large indicator pull-right" type="submit">Register</button>
-                </div>
-            </form>
-        </div><!-- register form end -->
+                    <div class="control-group">
+                        <input class="required" name="password" type="password" placeholder="Password" minlength="4" maxlength="24" />
+                    </div>
+                    <div class="control-group">
+                        <input class="required" name="first-name" type="text" placeholder="First Name" maxlength="24" />
+                    </div>
+                    <div class="control-group">
+                        <input class="required" name="last-name" type="text" placeholder="Last Name" maxlength="24" />
+                    </div>
+                    <p class="alert response hide"></p>
+                    <div class="bottom clearfix">
+                        <div class="pull-left links">
+                            <a class="show-form" data-target="#login-form" href="#">I already have an account</a>
+                            <!--
+                                &middot;
+                                <a class="show-lost-password" href="#">
+                                    I lost my password
+                                </a>
+                            -->
+                        </div>
+                        <button class="btn-info btn btn-large indicator pull-right" type="submit">Register</button>
+                    </div>
+                </form>
+            </div><!-- register form end -->
+        {% endif %}
 	</div><!-- login end -->
 {% endblock %}
 

@@ -116,7 +116,8 @@ var Server = function(config) {
             return swig.compileFile('login.html').render({
                 'media_url': self.config.media_url,
                 'next': req.param('next', ''),
-                'errors': errors
+                'errors': errors,
+                'disableRegistration': self.config.disableRegistration
             });
         };
         res.send(render_login_page());
@@ -184,43 +185,44 @@ var Server = function(config) {
         //
         // Register
         //
-        self.app.post('/register', function(req, res) {
-
-            var form = req.body;
-            models.user.findOne({ 'email': form.email }).exec(function(error, user) {
-                // Check if a user with this email exists
-                if (user) {
-                    res.send({
-                        status: 'error',
-                        message: 'That email is already in use.'
-                    });
-                    return;
-                }
-                // We're good, lets save!
-                var user = new models.user({
-                    email: form.email,
-                    password: form.password,
-                    firstName: form['first-name'],
-                    lastName: form['last-name'],
-                    displayName: form['first-name'] + ' ' + form['last-name']
-                }).save(function(err, user) {
-                    if (err) {
+        if (!self.config.disableRegistration) {
+            self.app.post('/register', function(req, res) {
+                var form = req.body;
+                models.user.findOne({ 'email': form.email }).exec(function(error, user) {
+                    // Check if a user with this email exists
+                    if (user) {
                         res.send({
                             status: 'error',
-                            message: 'Some fields did not validate',
-                            errors: err
+                            message: 'That email is already in use.'
                         });
                         return;
                     }
-                    req.session.user = user;
-                    req.session.save();
-                    res.send({
-                        status: 'success',
-                        message: 'You\'ve been successfully registered.'
+                    // We're good, lets save!
+                    var user = new models.user({
+                        email: form.email,
+                        password: form.password,
+                        firstName: form['first-name'],
+                        lastName: form['last-name'],
+                        displayName: form['first-name'] + ' ' + form['last-name']
+                    }).save(function(err, user) {
+                        if (err) {
+                            res.send({
+                                status: 'error',
+                                message: 'Some fields did not validate',
+                                errors: err
+                            });
+                            return;
+                        }
+                        req.session.user = user;
+                        req.session.save();
+                        res.send({
+                            status: 'success',
+                            message: 'You\'ve been successfully registered.'
+                        });
                     });
                 });
             });
-        });
+        }
         
         //
         // Edit Profile
