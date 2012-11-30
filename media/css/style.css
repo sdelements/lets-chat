@@ -4971,7 +4971,6 @@ header .user .dropdown-menu a:hover {
 .room-list {
   padding: 0 15px;
   margin: 0;
-  overflow: hidden;
 }
 .room-list ul,
 .room-list li {
@@ -4981,7 +4980,6 @@ header .user .dropdown-menu a:hover {
 .room-list .room {
   background: #222;
   width: 300px;
-  min-height: 130px;
   padding: 10px;
   padding-bottom: 30px;
   margin: 5px;

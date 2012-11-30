@@ -52,35 +52,54 @@ var RoomListView = Backbone.View.extend({
         self.$list.masonry({
             itemSelector: '.room'
         });
-        // Masonry shim
+        // Masonry shims
         this.options.notifications.on('homeselected', function() {
-            self.$list.masonry('reload');
+            self.updateMasonry(true);
         });
     },
     add: function(room) {
         var item = Mustache.to_html(this.template, room);
         this.$list.prepend(item);
-        this.$list.masonry('reload');
+        this.updateMasonry();
     },
     remove: function(id) {
         this.$('.room[data-id=' + id + ']').remove();
-        this.$list.masonry('reload');
+        this.updateMasonry();
     },
     addUser: function(user) {
         var html = Mustache.to_html(this.userTemplate, user);
         this.$('.room[data-id=' + user.room + '] .users').prepend(html);
-        this.$list.masonry('reload');
+        this.updateMasonry();
     },
     removeUser: function(user) {
         this.$('.room[data-id=' + user.room + ']')
           .find('.user[data-uid=' + user.uid + ']').remove();
-        this.$list.masonry('reload');
+        this.updateMasonry();
     },
     updateRoom: function(room) {
         var $room = this.$('.room[data-id=' + room.id + ']');
         $room.find('.name').text(room.name);
         $room.find('.description').text(room.description);
         $room.find('.last-active .value').text(room.lastActive);
+    },
+    //
+    // Sort rooms by users in dom
+    //
+    sortRooms: function() {
+        this.$('.room').tsort('', {
+            sortFunction: function(a, b){
+                var aCount = a.e.find('.user').length;
+                var bCount = b.e.find('.user').length;
+                return aCount === bCount ? 0 : (aCount < bCount ? 1 : -1);
+            }
+        });
+    },
+    updateMasonry: function(sort) {
+        // Only sort when invisible since its annoying
+        if (sort) {
+            this.sortRooms();
+        }
+        this.$list.masonry('reload');
     },
     empty: function() {
         this.$list.empty();
