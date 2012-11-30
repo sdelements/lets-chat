@@ -30,7 +30,8 @@ var RoomSchema = new Schema({
         default: Date.now
     },
     lastActive: {
-        type: Date
+        type: Date,
+        default: Date.now
     }
 });
 

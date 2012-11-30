@@ -298,7 +298,8 @@ var ChatServer = function (config, server, sessionStore) {
                     id: room._id,
                     name: room.name,
                     description: room.description,
-                    owner: room.owner
+                    owner: room.owner,
+                    lastActive: room.lastActive
                 });
               });
             });

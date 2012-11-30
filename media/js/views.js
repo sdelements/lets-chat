@@ -11,14 +11,14 @@ var RoomListView = Backbone.View.extend({
         this.collection = this.options.collection;
         this.collection.bind('add', function(room) {
             self.add(_.extend(room.toJSON(), {
-                lastActive: room.get('lastActive') ? moment(room.get('lastActive')).calendar() : ''
+                lastActive: moment(room.get('lastActive')).calendar()
             }));
             //
             // Room meta update
             //
             room.bind('change', function(room) {
                 self.updateRoom(_.extend(room.toJSON(), {
-                    lastActive: room.get('lastActive') ? moment(room.get('lastActive')).calendar() : ''
+                    lastActive: moment(room.get('lastActive')).calendar()
                 }));
             });
             //
