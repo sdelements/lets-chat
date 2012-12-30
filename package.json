@@ -25,9 +25,11 @@
         "moment": "1.7.2",
         "validator": "0.4.12"
     },
-    "license": "MIT",
     "engine": {
         "node": ">=0.7"
+    },
+    "scripts": {
+        "start": "nodejs app.js"
     }
 }
 
