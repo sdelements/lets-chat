@@ -12,6 +12,7 @@ var expressNamespace = require('express-namespace');
 var mongoose = require('mongoose');
 var mongoStore = require('connect-mongo')(express);
 var swig = require('swig');
+var cons = require('consolidate');
 var hash = require('node_hash');
 var moment = require('moment');
 
@@ -73,11 +74,11 @@ var Server = function(config) {
         swig.init({
             cache: !self.config.debug,
             root: 'templates',
-            allowErrors: self.config.debug // allows errors to be thrown and caught by express
+            allowErrors: self.config.debug
         });
-        self.app.set('view options', {
-            layout: false // Prevents express from fucking up our extend/block tags
-        });
+        self.app.engine('.html', cons.swig);
+        self.app.set('view engine', 'html');
+        self.app.set('views', 'templates');
 
         // Static
         self.app.use('/media', express.static('media'));
@@ -104,22 +105,17 @@ var Server = function(config) {
             user_lastname: user.lastName,
             user_firstname: user.firstName
         }
-        var view = swig.compileFile('chat.html').render(vars);
-        res.send(view);
+        res.render('chat.html', vars);
     });
 
     //
     // Login
     //
     self.app.get('/login', function(req, res) {
-        var render_login_page = function(errors) {
-            return swig.compileFile('login.html').render({
-                'media_url': self.config.media_url,
-                'next': req.param('next', ''),
-                'errors': errors
-            });
-        };
-        res.send(render_login_page());
+        res.render('login.html', {
+            'media_url': self.config.media_url,
+            'next': req.param('next', '')
+        });;
     });
     
     //
@@ -455,7 +451,7 @@ var Server = function(config) {
                         time: moment(message.posted).format('h:mma')
                     });
                 });
-                var view = swig.compileFile('transcript.html').render({
+                res.render('transcript.html', {
                     media_url: self.config.media_url,
                     date: moment(date).format('dddd, MMM Do YYYY'),
                     room: {
@@ -473,7 +469,6 @@ var Server = function(config) {
                         safeName: user.displayName.replace(/\W/g, '')
                     }
                 });
-                res.send(view);
             });
         });
     });

@@ -23,7 +23,8 @@
         "underscore": "1.4.1",
         "node_hash": "0.2.0",
         "moment": "1.7.2",
-        "validator": "0.4.12"
+        "validator": "0.4.12",
+        "consolidate": "0.7.0"
     },
     "engine": {
         "node": ">=0.7"
