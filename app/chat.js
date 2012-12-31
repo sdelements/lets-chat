@@ -1,5 +1,5 @@
 //
-// Letschatbro Chat Server
+// Let's Chat Sockets
 //
 
 var _ = require('underscore');
@@ -8,6 +8,8 @@ var moment = require('moment');
 var connect = require('connect');
 var cookie = require('cookie');
 var connectSession = require('connect').middleware.session.Session;
+var socketIO = require('socket.io');
+var passportSocketIO = require('passport.socketio');
 
 var models = require('./models/models.js');
 
@@ -17,71 +19,51 @@ var models = require('./models/models.js');
 var ChatServer = function (config, server, sessionStore) {
 
     var self = this;
-    
+
     self.config = config;
 
     this.rooms = {};
-    
-    // Set moment date formatting
+
+    // Moment Format
     moment.calendar.sameDay = 'LT';
-    
+
     //
     // Listen
     //
     this.listen = function () {
 
         // Setup socket.io
-        this.io = require('socket.io').listen(server);
+        this.io = socketIO.listen(server);
         this.io.set('log level', 0);
         
         //
         // Authorization
         //
-        this.io.set('authorization', function (data, accept) {
-            // This function, courtesy of danielbaulig.de, will parse out session
-            // info for connections.
-            if (data.headers.cookie) {
-                // if there is, parse the cookie
-                data.cookie = connect.utils.parseSignedCookies(cookie.parse(decodeURIComponent(data.headers.cookie)), self.config.cookie_secret);
-                data.sessionID = data.cookie['express.sid'];
-                data.sessionStore = sessionStore;
-                sessionStore.get(data.sessionID, function (err, session) {
-                    if (err || !session) {
-                        accept('Error with Sessions', false);
-                    } else {
-                        data.session = new connectSession(data, session);
-                        accept(null, true);
-                    }
-                });
-            } else {
-                // if there isn't, turn down the connection
-                return accept('No cookie transmitted.', false);
+        this.io.set('authorization', passportSocketIO.authorize({
+            sessionKey: 'express.sid',
+            sessionStore:  sessionStore,
+            sessionSecret: self.config.cookie_secret,
+            fail: function(data, accept) {
+                accept(null, false);
+            },
+            success: function(data, accept) {
+                accept(null, true);
             }
-        });
+        }));
 
         //
         // Connection
         //
         this.io.sockets.on('connection', function(client) {
 
-            var hs = client.handshake;
-            var userData = hs.session.user;
+            var userData = client.handshake.user || false;
             
-            if (!userData || !hs) {
+            if (!userData) {
                 //
                 // Sessions be messin' up bro
                 //
                 return;
             }
-            
-            //
-            // Keep session alive
-            //
-            var sessionTouchInterval = setInterval(function () {
-              hs.session.reload( function () {
-                hs.session.touch().save();
-              });
-            }, 60 * 1000);
 
             //
             // Assign Client Profile
@@ -420,7 +402,6 @@ var ChatServer = function (config, server, sessionStore) {
                     self.io.sockets.in(room).emit('room:users:leave', user);
                     self.io.sockets.emit('rooms:users:leave', user)
                 });
-                clearInterval(sessionTouchInterval);
             });
 
         });
