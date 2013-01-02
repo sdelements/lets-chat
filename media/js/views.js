@@ -481,7 +481,7 @@ var TabsMenuView = Backbone.View.extend({
         // Tab size fix
         //
         var $tabs = this.$('.tab:not(.fixed)');
-        $tabs.width(100 / $tabs.length + '%');
+        $tabs.width(90 / $tabs.length + '%');
     },
     $tab: function(id) {
         return this.$('.tab[data-id=' + id + ']');
@@ -695,12 +695,14 @@ var ClientView = Backbone.View.extend({
         // Connection Events
         //
         this.notifications.on('connect', function() {
+            $('#disconnect-message').modal('hide');
             self.$('.connection-status')
                 .removeClass('disconnected')
                 .addClass('connected')
                 .html('connected');
         });
         this.notifications.on('disconnect', function() {
+            $('#disconnect-message').modal('show');
             self.$('.connection-status')
               .removeClass('connected')
               .addClass('disconnected')

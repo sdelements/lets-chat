@@ -18,13 +18,16 @@ header {
     .clearfix;
     .user {
         background: #222 url('../img/header.png');
-        max-width: 30%;
+        max-width: 25%;
         height: 42px;
         line-height: 42px;
         float: right;
         border-left: 1px #111 solid;
         position: relative;
         .box-sizing(border-box);
+        &:active {
+            background: #222;
+        }
         .dropdown {
             margin: 5px 5px 0 0;
         }
@@ -55,8 +58,8 @@ header {
         }
         img {
             .square(32px);
+            margin-top: -2px;
             margin-right: 5px;
-            vertical-align: middle;
         }
         .dropdown-menu {
             margin-right: 5px;
@@ -71,6 +74,9 @@ header {
 }
 
 .modal-body {
+    textarea {
+        .size(100px, 220px);
+    }
     .response {
         text-align: center;
         display: none;

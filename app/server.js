@@ -1,5 +1,5 @@
 //
-// Letschatbro Server
+// Let's Chat Frontend
 //
 
 var _ = require('underscore');
@@ -12,8 +12,11 @@ var expressNamespace = require('express-namespace');
 var mongoose = require('mongoose');
 var mongoStore = require('connect-mongo')(express);
 var swig = require('swig');
+var cons = require('consolidate');
 var hash = require('node_hash');
 var moment = require('moment');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 // App stuff
 var ChatServer = require('./chat.js');
@@ -23,7 +26,7 @@ var models = require('./models/models.js');
 
 // TODO: We should require login on all routes
 var requireLogin = function(req, res, next) {
-    if (req.session.user) {
+    if (req.isAuthenticated()) {
         next();
     } else {
         res.redirect('/login?next=' + req.path);
@@ -55,6 +58,9 @@ var Server = function(config) {
     //
     self.app.configure(function() {
 
+        // Body
+        self.app.use(express.bodyParser());
+
         // Sessions
         self.sessionStore = new mongoStore({
             url: self.mongoURL
@@ -69,30 +75,65 @@ var Server = function(config) {
             store: self.sessionStore
         }));
 
+        // Auth
+        self.app.use(passport.initialize());
+        self.app.use(passport.session());
+
         // Templates
         swig.init({
             cache: !self.config.debug,
             root: 'templates',
-            allowErrors: self.config.debug // allows errors to be thrown and caught by express
+            allowErrors: self.config.debug
         });
-        self.app.set('view options', {
-            layout: false // Prevents express from fucking up our extend/block tags
-        });
+        self.app.engine('.html', cons.swig);
+        self.app.set('view engine', 'html');
+        self.app.set('views', 'templates');
 
         // Static
         self.app.use('/media', express.static('media'));
         
         // Router
-        self.app.use(express.bodyParser());
         self.app.use(self.app.router);
 
+    });
+
+    // Authentication
+    passport.use(new LocalStrategy({
+            usernameField: 'email',
+            passwordField: 'password'
+        },
+        function(email, password, done) {
+            models.user.findOne({
+                'email': email
+            }).exec(function(err, user) {
+                if (err) {
+                    return done(null, false,  { message: 'Some fields did not validate.' });
+                }
+                var hashedPassword = hash.sha256(password, self.config.password_salt)
+                if (user && hashedPassword === user.password) {
+                    return done(null, user);
+                } else {
+                    return done(null, false, { message: 'Incorrect password.' });
+                }
+            });
+        }
+    ));
+    passport.serializeUser(function(user, done) {
+        done(null, user._id);
+    });
+    passport.deserializeUser(function(id, done) {
+        models.user.findOne({
+            _id: id 
+        }).exec(function(err, user) {
+            done(err, user);
+        });
     });
 
     //
     // Chat
     //
     self.app.get('/', requireLogin, function(req, res) {
-        var user = req.session.user;
+        var user = req.user;
         var vars = {
             media_url: self.config.media_url,
             host: self.config.hostname,
@@ -104,33 +145,29 @@ var Server = function(config) {
             user_lastname: user.lastName,
             user_firstname: user.firstName
         }
-        var view = swig.compileFile('chat.html').render(vars);
-        res.send(view);
+        res.render('chat.html', vars);
     });
 
     //
     // Login
     //
     self.app.get('/login', function(req, res) {
-        var render_login_page = function(errors) {
-            return swig.compileFile('login.html').render({
-                'media_url': self.config.media_url,
-                'next': req.param('next', ''),
-                'errors': errors,
-                'disableRegistration': self.config.disableRegistration
-            });
-        };
-        res.send(render_login_page());
+        res.render('login.html', {
+            'media_url': self.config.media_url,
+            'next': req.param('next', ''),
+            'disableRegistration': self.config.disableRegistration
+        });;
     });
-    
+
     //
     // Logout
     //
     self.app.all('/logout', function(req, res) {
+        req.logout();
         req.session.destroy();
         res.redirect('/');
     });
-    
+
     //
     // Serve Plugins
     //
@@ -148,15 +185,11 @@ var Server = function(config) {
     // Ajax
     //
     self.app.namespace('/ajax', function() {
-
         //
         // Login
         //
         self.app.post('/login', function(req, res) {
-            var form = req.body;
-            models.user.findOne({
-                'email': form.email 
-            }).exec(function(err, user) {
+            passport.authenticate('local', function(err, user, info) {
                 if (err) {
                     res.send({
                         status: 'error',
@@ -165,23 +198,28 @@ var Server = function(config) {
                     });
                     return;
                 }
-                var hashedPassword = hash.sha256(form.password, self.config.password_salt)
-                if (user && hashedPassword === user.password) {
-                    req.session.user = user;
-                    req.session.save();
-                    res.send({
-                        status: 'success',
-                        message: 'Logging you in...'
-                    });
-                } else {
+                if (!user) {
                     res.send({
                         status: 'error',
                         message: 'Incorrect login credentials.'
                     });
+                    return;
                 }
-            });
+                req.login(user, function(err) {
+                    if (err) {
+                        res.send({
+                            status: 'error',
+                            message: 'There were problems logging you in.'
+                        });
+                        return;
+                    }
+                    res.send({
+                        status: 'success',
+                        message: 'Logging you in...'
+                    });
+                });
+            })(req, res);
         });
-
         //
         // Register
         //
@@ -213,27 +251,37 @@ var Server = function(config) {
                             });
                             return;
                         }
-                        req.session.user = user;
-                        req.session.save();
-                        res.send({
-                            status: 'success',
-                            message: 'You\'ve been successfully registered.'
+                        req.login(user, function(err) {
+                            if (err) {
+                                res.send({
+                                    status: 'error',
+                                    message: 'There were problems logging you in.'
+                                });
+                                return;
+                            }
+                            res.send({
+                                status: 'success',
+                                message: 'You\'ve been successfully registered.'
+                            });
                         });
                     });
                 });
             });
         }
-        
         //
         // Edit Profile
         //
-        self.app.post('/profile', requireLogin, function(req, res) {
+        self.app.post('/profile', function(req, res) {
             var form = req.body;
             var profile = models.user.findOne({
-                _id: req.session.user._id
+                _id: req.user._id
             }).exec(function(err, user) {
                 if (err) {
-                    // Well shit.
+                    // Well shit
+                    res.send({
+                        status: 'error',
+                        message: 'Unable to update your profile.'
+                    });
                     return;
                 }
                 _.each({
@@ -241,7 +289,7 @@ var Server = function(config) {
                     firstName: form['first-name'],
                     lastName: form['last-name']
                 }, function(value,  field) {
-                    if (value.length > 0) {
+                    if (value && value.length > 0) {
                         user[field] = value;
                     }
                 });
@@ -254,9 +302,6 @@ var Server = function(config) {
                         });
                         return;
                     }
-                    // Update session
-                    req.session.user = user;
-                    req.session.save();
                     res.send({
                         status: 'success',
                         message: 'Your profile has been saved.'
@@ -264,17 +309,19 @@ var Server = function(config) {
                 });
             });
         });
-
         //
         // Account Settings
         //
         self.app.post('/account', requireLogin, function(req, res) {
             var form = req.body;
             var profile = models.user.findOne({
-                _id: req.session.user._id
+                _id: req.user._id
             }).exec(function(err, user) {
                 if (err) {
-                    // Well shit.
+                    res.send({
+                        status: 'error',
+                        message: 'Unable to update your account.'
+                    });
                     return;
                 }
                 // Is the password good?
@@ -302,9 +349,6 @@ var Server = function(config) {
                         });
                         return;
                     }
-                    // Update session
-                    req.session.user = user;
-                    req.session.save();
                     res.send({
                         status: 'success',
                         message: 'Your account has been updated.'
@@ -312,7 +356,6 @@ var Server = function(config) {
                 });
             });
         });
-
         //
         // File uploadin'
         // TODO: Some proper error handling
@@ -328,7 +371,7 @@ var Server = function(config) {
             _.each(req.files, function(file) {
                 var roomID = req.body.room;
                 var file = file[0];
-                var owner = req.session.user;
+                var owner = req.user;
                 var allowed_file_types = self.config.allowed_file_types;
                 // Lets see if this room exists
                 models.room.findOne({
@@ -443,7 +486,7 @@ var Server = function(config) {
                     // Whoopsie
                     return;
                 }
-                var user = req.session.user;
+                var user = req.user;
                 // Let's process some messages
                 var messages = [];
                 docs.forEach(function (message) {
@@ -457,7 +500,7 @@ var Server = function(config) {
                         time: moment(message.posted).format('h:mma')
                     });
                 });
-                var view = swig.compileFile('transcript.html').render({
+                res.render('transcript.html', {
                     media_url: self.config.media_url,
                     date: moment(date).format('dddd, MMM Do YYYY'),
                     room: {
@@ -475,7 +518,6 @@ var Server = function(config) {
                         safeName: user.displayName.replace(/\W/g, '')
                     }
                 });
-                res.send(view);
             });
         });
     });

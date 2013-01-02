@@ -23,11 +23,17 @@
         "underscore": "1.4.1",
         "node_hash": "0.2.0",
         "moment": "1.7.2",
-        "validator": "0.4.12"
+        "validator": "0.4.12",
+        "consolidate": "0.7.0",
+        "passport": "0.1.15",
+        "passport-local": "0.1.6",
+        "passport.socketio": "0.0.4"
     },
-    "license": "MIT",
     "engine": {
         "node": ">=0.7"
+    },
+    "scripts": {
+        "start": "nodejs app.js"
     }
 }
 
