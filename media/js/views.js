@@ -695,12 +695,14 @@ var ClientView = Backbone.View.extend({
         // Connection Events
         //
         this.notifications.on('connect', function() {
+            $('#disconnect-message').modal('hide');
             self.$('.connection-status')
                 .removeClass('disconnected')
                 .addClass('connected')
                 .html('connected');
         });
         this.notifications.on('disconnect', function() {
+            $('#disconnect-message').modal('show');
             self.$('.connection-status')
               .removeClass('connected')
               .addClass('disconnected')
