@@ -4227,15 +4227,15 @@ a.badge:hover {
   background-image: linear-gradient(top, #dddddd, #bbbbbb);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#bbbbbb', GradientType=0);
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
   border: 1px #ababab solid;
 }
 .avatar {
-  -webkit-border-radius: 100%;
-  -moz-border-radius: 100%;
-  border-radius: 100%;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 /*********************
  * Overrides
@@ -4346,7 +4346,7 @@ header:after {
 }
 header .user {
   background: #222222 url('../img/header.png');
-  max-width: 30%;
+  max-width: 25%;
   height: 42px;
   line-height: 42px;
   float: right;
@@ -4356,6 +4356,9 @@ header .user {
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
+}
+header .user:active {
+  background: #222;
 }
 header .user .dropdown {
   margin: 5px 5px 0 0;
@@ -4390,8 +4393,8 @@ header .user a .name {
 header .user img {
   width: 32px;
   height: 32px;
+  margin-top: -2px;
   margin-right: 5px;
-  vertical-align: middle;
 }
 header .user .dropdown-menu {
   margin-right: 5px;
@@ -4402,6 +4405,10 @@ header .user .dropdown-menu a {
 }
 header .user .dropdown-menu a:hover {
   color: #fff;
+}
+.modal-body textarea {
+  width: 220px;
+  height: 100px;
 }
 .modal-body .response {
   text-align: center;
@@ -4467,6 +4474,9 @@ header .user .dropdown-menu a:hover {
 }
 .message:first-child {
   border-top: none;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
 }
 .message .text {
   word-wrap: break-word;
@@ -4729,9 +4739,9 @@ header .user .dropdown-menu a:hover {
   background-image: linear-gradient(top, #dddddd, #bbbbbb);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#bbbbbb', GradientType=0);
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
   border: 1px #ababab solid;
 }
 .chat .messages {

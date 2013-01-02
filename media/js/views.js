@@ -481,7 +481,7 @@ var TabsMenuView = Backbone.View.extend({
         // Tab size fix
         //
         var $tabs = this.$('.tab:not(.fixed)');
-        $tabs.width(100 / $tabs.length + '%');
+        $tabs.width(90 / $tabs.length + '%');
     },
     $tab: function(id) {
         return this.$('.tab[data-id=' + id + ']');
