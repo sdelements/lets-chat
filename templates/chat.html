@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block page_name %}Chat{% endblock %}
+{% block page_title %}Chat &middot; {% parent %}{% endblock %}
 
 {% block page_js %}
     <script src="/socket.io/socket.io.js" type="text/javascript"></script>
@@ -19,6 +19,7 @@
     <script type="text/javascript">
         $(function() {
             window.app = new Client({
+                title: 'Let\'s Chat',
                 host: '{{host}}',
                 port: {{port}},
                 transports: ['websocket', 'flashsocket']

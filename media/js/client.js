@@ -36,6 +36,7 @@ var Client = function(config) {
     // Client View
     //
     this.view = new ClientView({
+        config: this.config,
         user: this.user,
         availableRooms: this.availableRooms,
         rooms: this.rooms,
@@ -68,7 +69,7 @@ var Client = function(config) {
             }
             // Do we want to show this room?
             if (switchRoom) {
-                self.view.switchView(id)
+                self.view.switchView(id);
             }
             //
             // Add room id to localstorage so we can reopen it on refresh
