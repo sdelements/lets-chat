@@ -613,23 +613,29 @@ var CreateRoomView = Backbone.View.extend({
 });
 
 //
-// Window Message Count
+// Window Title and Message Count
 //
-var WindowCountAlertView = Backbone.View.extend({
+var WindowTitleView = Backbone.View.extend({
     el: 'html',
-    title: $('title').html(),
     focus: true,
     count: 0,
     initialize: function() {
         var self = this;
+        this.config = this.options.config;
+        this.notifications = this.options.notifications;
+        this.notifications.on('switchview', function(view) {
+            if (view && view.name) {
+                self.title = view.name + ' &middot; ' + self.config.title ;
+            } else {
+                self.title = self.config.title;
+            }
+            $('title').html(self.title);
+        });
         $(window).bind('focus blur', function(e) {
             if (e.type === 'focus') {
                 self.count = 0;
                 self.focus = true;
-                //
-                // TODO: Title needs Room name or something
-                //
-                self.$('title').html(self.title);
+                $('title').html(self.title);
                 // Clean up Fluid.app dock badge
                 if (window.fluid !== undefined) {
                     window.fluid.dockBadge = undefined;
@@ -638,13 +644,13 @@ var WindowCountAlertView = Backbone.View.extend({
                 self.focus = false;
             }
         });
-        this.options.notifications.on('addmessage', function(message) {
+        this.notifications.on('addmessage', function(message) {
             // Nothing to do here if focused
             if (self.focus) return;
             //
             // Update Window Title
             //
-            self.$('title').html('(' + parseInt(++self.count) + ') ' + self.title);
+            $('title').html('(' + parseInt(++self.count) + ') ' + self.title);
             //
             // Notifications on the for Fluid.app users.
             //
@@ -670,6 +676,7 @@ var ClientView = Backbone.View.extend({
         //
         // Vars
         //
+        this.config = this.options.config;
         this.user = this.options.user;
         this.availableRooms = this.options.availableRooms;
         this.rooms = this.options.rooms;
@@ -688,7 +695,8 @@ var ClientView = Backbone.View.extend({
         this.createRoom = new CreateRoomView({
             notifications: this.notifications
         });
-        this.windowCountAlert = new WindowCountAlertView({
+        this.windowTitle = new WindowTitleView({
+            config: this.config,
             notifications: this.notifications
         });
         //
@@ -729,5 +737,9 @@ var ClientView = Backbone.View.extend({
         } else {
             this.tabs.select('home');
         }
+        var room = this.rooms.get(id);
+        this.notifications.trigger('switchview', room ? room.toJSON() : false || {
+            name: 'Rooms'
+        });
     }
 });
