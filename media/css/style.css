@@ -4232,11 +4232,6 @@ a.badge:hover {
   border-radius: 3px;
   border: 1px #ababab solid;
 }
-.avatar {
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-}
 /*********************
  * Overrides
  *********************/
@@ -4414,6 +4409,11 @@ header .user .dropdown-menu a:hover {
   text-align: center;
   display: none;
   margin-bottom: 0;
+}
+.avatar {
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
 }
 /*********************
  * Login
