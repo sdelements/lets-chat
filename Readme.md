@@ -9,9 +9,19 @@ A self-hosted chat app for small teams.
 * Multiple rooms
 * New message alerts
 * Mentions (hey @you)
-* Image/YouTube/Vimeo embeds
+* Image embeds
 * Code pasting
-* File sharing
+* File uploads
+* SSL/TLS
+
+## Upcoming Features
+
+* API
+* Better transcripts with search
+* Better error handling
+* Emote autocomplete
+* Access control
+* Mobile client
 
 ## Getting started
 
