@@ -229,6 +229,8 @@ var FileListView = Backbone.View.extend({
 var RoomView = Backbone.View.extend({
     className: 'view',
     events: {
+        'keydown .entry textarea': 'altPressed',
+        'keyup .entry textarea': 'altPressed',
         'click .entry .send': 'sendMessage',
         'keypress .entry textarea': 'sendMessage',
         'submit .edit-room form': 'submitEditRoom',
@@ -383,10 +385,22 @@ var RoomView = Backbone.View.extend({
             this.scrollMessagesDown(debounce);
         }
     },
+    altPressed: function(e) {
+        var $textarea = this.$('.entry textarea');
+        if (e.keyCode === 18) {
+            e.preventDefault();
+            this.altPressed = e.type == 'keydown' || false;
+        }
+        // ALT + ENTER
+        // Add a newline
+        if (this.altPressed && e.keyCode === 13 && e.type == 'keyup') {
+            $textarea.val($textarea.val() + '\n');
+        }
+    },
     sendMessage: function(e) {
-        if (e.type === 'keypress' && e.keyCode !== 13) return;
+        if (e.type === 'keypress' && e.keyCode !== 13 || this.altPressed) return;
         e.preventDefault();
-        $textarea = this.$('.entry textarea');
+        var $textarea = this.$('.entry textarea');
         this.notifications.trigger('newmessage', {
             room: this.model.id,
             text: $.trim($textarea.val())
