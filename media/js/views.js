@@ -158,6 +158,7 @@ var UserListView = Backbone.View.extend({
     },
     update: function(user) {
         var $user = this.$('.user[data-uid=' + user.id + ']');
+        $user.addClass('has-status', user.status);
         $user.find('.status').text(user.status);
     },
     empty: function() {

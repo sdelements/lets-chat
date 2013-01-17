@@ -4879,6 +4879,7 @@ header .user .dropdown-menu a:hover {
 .sidebar .item-list .user {
   min-height: 30px;
   line-height: 100%;
+  position: relative;
 }
 .sidebar .item-list .user .avatar {
   width: 30px;
