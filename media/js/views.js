@@ -131,8 +131,22 @@ var UserListView = Backbone.View.extend({
                 self.remove(user.get('uid'));
             }
         });
+        this.model.bind('change', function(user, users) {
+            self.update(user.toJSON());
+        });
         this.model.bind('reset', function() {
             self.empty();
+        });
+        //
+        // User profile update
+        //
+        self.options.notifications.on('updateuser', function(profile) {
+            var matches = self.model.where({
+                uid: profile.id
+            })
+            _.each(matches, function(user) {
+                user.set(profile);
+            });
         });
     },
     add: function(user) {
@@ -141,6 +155,10 @@ var UserListView = Backbone.View.extend({
     },
     remove: function(id) {
         this.$('.user[data-uid=' + id + ']').remove();
+    },
+    update: function(user) {
+        var $user = this.$('.user[data-uid=' + user.id + ']');
+        $user.find('.status').text(user.status);
     },
     empty: function() {
         this.$el.empty();

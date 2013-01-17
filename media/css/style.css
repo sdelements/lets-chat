@@ -4876,10 +4876,30 @@ header .user .dropdown-menu a:hover {
   border-bottom: 0;
   padding-bottom: 5px;
 }
-.sidebar .item-list .avatar {
+.sidebar .item-list .user {
+  min-height: 30px;
+  line-height: 100%;
+}
+.sidebar .item-list .user .avatar {
   width: 30px;
   height: 30px;
   margin-right: 5px;
+}
+.sidebar .item-list .user .status {
+  color: #777;
+  font-style: italic;
+  font-size: 11px;
+}
+.sidebar .item-list .user.has-status .avatar {
+  position: absolute;
+}
+.sidebar .item-list .user.has-status .name,
+.sidebar .item-list .user.has-status .status {
+  display: block;
+  margin-left: 38px;
+}
+.sidebar .item-list .user.has-status .name {
+  margin-top: 4px;
 }
 /*
  * Files

@@ -58,6 +58,10 @@ var UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    status: {
+        type: String,
+        trim: true
+    },
 	messages: [{
 		type: Schema.ObjectId,
 		ref: 'Message' 
