@@ -131,8 +131,22 @@ var UserListView = Backbone.View.extend({
                 self.remove(user.get('uid'));
             }
         });
+        this.model.bind('change', function(user, users) {
+            self.update(user.toJSON());
+        });
         this.model.bind('reset', function() {
             self.empty();
+        });
+        //
+        // User profile update
+        //
+        self.options.notifications.on('updateuser', function(profile) {
+            var matches = self.model.where({
+                uid: profile.id
+            })
+            _.each(matches, function(user) {
+                user.set(profile);
+            });
         });
     },
     add: function(user) {
@@ -141,6 +155,10 @@ var UserListView = Backbone.View.extend({
     },
     remove: function(id) {
         this.$('.user[data-uid=' + id + ']').remove();
+    },
+    update: function(user) {
+        var $user = this.$('.user[data-uid=' + user.id + ']');
+        $user.find('.status').text(user.status);
     },
     empty: function() {
         this.$el.empty();
@@ -229,8 +247,7 @@ var FileListView = Backbone.View.extend({
 var RoomView = Backbone.View.extend({
     className: 'view',
     events: {
-        'keydown .entry textarea': 'altPressed',
-        'keyup .entry textarea': 'altPressed',
+        'keydown .entry textarea': 'keyCombo',
         'click .entry .send': 'sendMessage',
         'keypress .entry textarea': 'sendMessage',
         'submit .edit-room form': 'submitEditRoom',
@@ -385,20 +402,17 @@ var RoomView = Backbone.View.extend({
             this.scrollMessagesDown(debounce);
         }
     },
-    altPressed: function(e) {
+    keyCombo: function(e) {
         var $textarea = this.$('.entry textarea');
-        if (e.keyCode === 18) {
-            e.preventDefault();
-            this.altPressed = e.type == 'keydown' || false;
-        }
         // ALT + ENTER
         // Add a newline
-        if (this.altPressed && e.keyCode === 13 && e.type == 'keyup') {
+        if (e.altKey && e.keyCode === 13) {
+            e.preventDefault();
             $textarea.val($textarea.val() + '\n');
         }
     },
     sendMessage: function(e) {
-        if (e.type === 'keypress' && e.keyCode !== 13 || this.altPressed) return;
+        if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
         e.preventDefault();
         var $textarea = this.$('.entry textarea');
         this.notifications.trigger('newmessage', {
