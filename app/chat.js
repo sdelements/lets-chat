@@ -231,6 +231,7 @@ var ChatServer = function (config, server, sessionStore) {
                             uid: profile.id,
                             avatar: profile.avatar,
                             name: profile.displayName,
+                            status: profile.status,
                             safeName: profile.displayName.replace(/\W/g, '')
                         });
                     });
