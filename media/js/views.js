@@ -113,6 +113,9 @@ var UserListView = Backbone.View.extend({
     initialize: function() {
         var self = this;
         this.template = $('#js-tmpl-user-item').html();
+        this.model.bind('add remove', function(users, users) {
+            self.count(users.length);
+        });
         this.model.bind('add', function(user, users) {
             var matches = users.where({
                 uid: user.get('uid'),
@@ -148,6 +151,9 @@ var UserListView = Backbone.View.extend({
                 user.set(profile);
             });
         });
+    },
+    count: function(count) {
+        this.$el.closest('.item-list').find('.count').text(count);
     },
     add: function(user) {
         var html = Mustache.to_html(this.template, user);
