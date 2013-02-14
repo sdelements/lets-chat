@@ -143,7 +143,8 @@ var Server = function(config) {
             user_avatar: hash.md5(user.email),
             user_displayname: user.displayName,
             user_lastname: user.lastName,
-            user_firstname: user.firstName
+            user_firstname: user.firstName,
+            user_status: user.status
         }
         res.render('chat.html', vars);
     });
@@ -284,6 +285,7 @@ var Server = function(config) {
                     });
                     return;
                 }
+                // Only grab the fields we need
                 _.each({
                     displayName: form['display-name'],
                     firstName: form['first-name'],
@@ -293,6 +295,7 @@ var Server = function(config) {
                         user[field] = value;
                     }
                 });
+                user.status = form['status'];
                 user.save(function(err) {
                     if (err) {
                         res.send({
@@ -302,6 +305,9 @@ var Server = function(config) {
                         });
                         return;
                     }
+                    // Let the socket clients know
+                    self.chatServer.updateUser(user);
+                    // Aww yea
                     res.send({
                         status: 'success',
                         message: 'Your profile has been saved.'

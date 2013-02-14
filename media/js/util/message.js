@@ -13,8 +13,8 @@ if (typeof exports !== 'undefined') {
     //
     exports.format = function(text, plugins) {
         // TODO: Fix these regexes
-        var imagePattern = /(^\s*(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif)\s*$)/gim;
-        var linkPattern =  /((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])\b/gim;
+        var imagePattern = /((https?|ftp):\/\/[^\s\/$.?#].[^\s]*[.](jpe?g|png|gif)\s*$)/gi;
+        var linkPattern = /((https?|ftp):\/\/[^\s\/$.?#].[^\s]*[^.])/gi;
         if (text.match(imagePattern)) {
             text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" alt="$1" /></a>');
         } else {

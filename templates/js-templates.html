@@ -27,9 +27,10 @@
         </li>
     </script>
     <script id="js-tmpl-user-item" type="text/html">
-        <li class="user" data-id="{{id}}" data-uid="{{uid}}">
+        <li class="user {{#status}}has-status{{/status}}" data-id="{{id}}" data-uid="{{uid}}">
             <img class="avatar" src="https://www.gravatar.com/avatar/{{avatar}}?s=50" />
             <span class="name">{{name}}</span>
+            <span class="status">{{status}}</span>
         </li>
     </script>
     <script id="js-tmpl-file-item" type="text/html">
@@ -88,7 +89,11 @@
                     </div>
                     <div class="item-list">
                         <div class="top">
-                            <h3><i class="icon-white icon-user"></i> <span class="text">Who's here</span></h3>
+                            <h3>
+                                <i class="icon-white icon-user"></i>
+                                <span class="text">Who's here</span>
+                                (<span class="count"></span>)
+                            </h3>
                         </div>
                         <ul class="user-list"></ul>
                     </div>

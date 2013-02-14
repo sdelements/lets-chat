@@ -135,6 +135,9 @@ var Client = function(config) {
             add(data);
         }
     }
+    this.updateUser = function(user) {
+        self.notifications.trigger('updateuser', user);
+    }
     this.removeUser = function(user) {
         var room = self.rooms.get(user.room);
         if (room) {
@@ -211,6 +214,9 @@ var Client = function(config) {
         });
         self.socket.on('user:whoami', function(profile) {
             self.user.set(profile);
+        });
+        self.socket.on('user:update', function(profile) {
+            self.updateUser(profile);
         });
         self.socket.on('room:messages:new', function(message) {
             self.addMessage(message);

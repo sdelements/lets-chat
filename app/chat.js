@@ -76,9 +76,10 @@ var ChatServer = function (config, server, sessionStore) {
                 lastName: userData.lastName,
                 displayName: userData.displayName,
                 joined: userData.joined,
-                avatar: hash.md5(userData.email)
+                avatar: hash.md5(userData.email),
+                status: userData.status
             });
-            
+
             //
             // Who is me bro
             //
@@ -205,6 +206,7 @@ var ChatServer = function (config, server, sessionStore) {
                             uid: profile.id,
                             avatar: profile.avatar,
                             name: profile.displayName,
+                            status: profile.status,
                             safeName: profile.displayName.replace(/\W/g, '')
                         }
                         self.io.sockets.in(id).emit('room:users:new', user);
@@ -229,6 +231,7 @@ var ChatServer = function (config, server, sessionStore) {
                             uid: profile.id,
                             avatar: profile.avatar,
                             name: profile.displayName,
+                            status: profile.status,
                             safeName: profile.displayName.replace(/\W/g, '')
                         });
                     });
@@ -413,6 +416,19 @@ var ChatServer = function (config, server, sessionStore) {
     //
     this.sendFile = function(file) {
         self.io.sockets.in(file.room).emit('room:files:new', file);
+    };
+
+    //
+    // Utility method to update user profiles
+    //
+    this.updateUser = function(user) {
+        self.io.sockets.emit('user:update', {
+            id: user._id,
+            name: user.displayName,
+            avatar: hash.md5(user.email),
+            safeName: user.displayName.replace(/\W/g, ''),
+            status: user.status
+        });
     };
 
     this.start = function () {

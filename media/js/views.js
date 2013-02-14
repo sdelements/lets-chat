@@ -113,6 +113,9 @@ var UserListView = Backbone.View.extend({
     initialize: function() {
         var self = this;
         this.template = $('#js-tmpl-user-item').html();
+        this.model.bind('add remove', function(users, users) {
+            self.count(users.length);
+        });
         this.model.bind('add', function(user, users) {
             var matches = users.where({
                 uid: user.get('uid'),
@@ -131,9 +134,26 @@ var UserListView = Backbone.View.extend({
                 self.remove(user.get('uid'));
             }
         });
+        this.model.bind('change', function(user, users) {
+            self.update(user.toJSON());
+        });
         this.model.bind('reset', function() {
             self.empty();
         });
+        //
+        // User profile update
+        //
+        self.options.notifications.on('updateuser', function(profile) {
+            var matches = self.model.where({
+                uid: profile.id
+            })
+            _.each(matches, function(user) {
+                user.set(profile);
+            });
+        });
+    },
+    count: function(count) {
+        this.$el.closest('.item-list').find('.count').text(count);
     },
     add: function(user) {
         var html = Mustache.to_html(this.template, user);
@@ -141,6 +161,11 @@ var UserListView = Backbone.View.extend({
     },
     remove: function(id) {
         this.$('.user[data-uid=' + id + ']').remove();
+    },
+    update: function(user) {
+        var $user = this.$('.user[data-uid=' + user.id + ']');
+        $user.addClass('has-status', user.status);
+        $user.find('.status').text(user.status);
     },
     empty: function() {
         this.$el.empty();
@@ -229,6 +254,7 @@ var FileListView = Backbone.View.extend({
 var RoomView = Backbone.View.extend({
     className: 'view',
     events: {
+        'keydown .entry textarea': 'keyCombo',
         'click .entry .send': 'sendMessage',
         'keypress .entry textarea': 'sendMessage',
         'submit .edit-room form': 'submitEditRoom',
@@ -383,10 +409,19 @@ var RoomView = Backbone.View.extend({
             this.scrollMessagesDown(debounce);
         }
     },
+    keyCombo: function(e) {
+        var $textarea = this.$('.entry textarea');
+        // ALT + ENTER
+        // Add a newline
+        if (e.altKey && e.keyCode === 13) {
+            e.preventDefault();
+            $textarea.val($textarea.val() + '\n');
+        }
+    },
     sendMessage: function(e) {
-        if (e.type === 'keypress' && e.keyCode !== 13) return;
+        if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
         e.preventDefault();
-        $textarea = this.$('.entry textarea');
+        var $textarea = this.$('.entry textarea');
         this.notifications.trigger('newmessage', {
             room: this.model.id,
             text: $.trim($textarea.val())

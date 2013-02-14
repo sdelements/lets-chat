@@ -138,9 +138,32 @@
                 padding-bottom: 5px;
             }
         }
-        .avatar {
-            .size(30px, 30px);
-            margin-right: 5px;
+        .user {
+            min-height: 30px;
+            line-height: 100%;
+            position: relative;
+            .avatar {
+                .square(30px);
+                margin-right: 5px;
+            }
+            .status {
+                color: #777;
+                font-style: italic;
+                font-size: 11px;
+            }
+            &.has-status {
+                .avatar {
+                    position: absolute;
+                }
+                .name,
+                .status {
+                    display: block;
+                    margin-left: 38px;
+                }
+                .name {
+                    margin-top: 4px;
+                }
+            }
         }
     }
 }
