@@ -35,21 +35,40 @@ var ChatServer = function (config, server, sessionStore) {
         // Setup socket.io
         this.io = socketIO.listen(server);
         this.io.set('log level', 0);
-        
+
         //
         // Authorization
         //
-        this.io.set('authorization', passportSocketIO.authorize({
-            sessionKey: 'express.sid',
-            sessionStore:  sessionStore,
-            sessionSecret: self.config.cookie_secret,
-            fail: function(data, accept) {
-                accept(null, false);
-            },
-            success: function(data, accept) {
-                accept(null, true);
+        this.io.set('authorization', function(data, accept) {
+            // Auth via socket params
+            if (data.query.username && data.query.password) {
+                models.user.findOne({
+                    'email': data.query.username
+                }).exec(function(err, user) {
+                    if (err) {
+                        // Woops
+                        accept(null, false);
+                    }
+                    var hashedPassword = hash.sha256(data.query.password, self.config.password_salt);
+                    if (user && hashedPassword === user.password) {
+                        data.user = user;
+                        accept(null, true);
+                    } else {
+                        accept(null, false);
+                    }
+                });
+                return;
             }
-        }));
+            // Auth via web session
+            (passportSocketIO.authorize({
+                sessionKey: 'express.sid',
+                sessionStore:  sessionStore,
+                sessionSecret: self.config.cookie_secret,
+                success: function(data, accept) {
+                    accept(null, true);
+                }
+            }))(data, accept);
+        });
 
         //
         // Connection
