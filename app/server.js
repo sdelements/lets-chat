@@ -466,7 +466,7 @@ var Server = function(config) {
             return !isNaN(Date.parse(uri)) ? new Date(uri) : false;
         }
         var date = uriToDate(req.params.date);
-        if (date === false) {
+        if (!date.getDate) {
             // Error, Invalid date
             res.send(404, 'Invalid date');
         }
