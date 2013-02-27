@@ -469,13 +469,13 @@ var Server = function(config) {
             return !isNaN(Date.parse(uri)) ? new Date(uri) : false;
         }
         var date = uriToDate(req.params.date);
-        if (date === false) {
+        if (!date.getDate) {
             // Error, Invalid date
             res.send(404, 'Invalid date');
         }
         // Lookup room
         models.room.findById(req.params.room, function(err, room) {
-            if (err) {
+            if (err || !room) {
                 // Error
                 res.send(500, 'Something went wrong trying to lookup the room');
                 return;
