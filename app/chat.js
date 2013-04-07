@@ -208,11 +208,13 @@ var ChatServer = function (config, server, sessionStore) {
                     }
                     client.join(id);
                     // Send back Room meta to client
-                    fn({
-                        id: room._id,
-                        name: room.name,
-                        description: room.description
-                    });
+                    if (fn) {
+                        fn({
+                            id: room._id,
+                            name: room.name,
+                            description: room.description
+                        });
+                    }
                     // Hey everyone, look who it is
                     client.get('profile', function(err, profile) {
                         if (err) {
