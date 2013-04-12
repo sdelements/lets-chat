@@ -114,7 +114,7 @@ var UserListView = Backbone.View.extend({
         var self = this;
         this.template = $('#js-tmpl-user-item').html();
         this.model.bind('add remove', function(users, users) {
-            self.count(_.uniq(_.pluck(users.toJSON(),'uid'), true).length);
+            self.count(_.uniq(_.pluck(users.toJSON(), 'uid')).length);
         });
         this.model.bind('add', function(user, users) {
             var matches = users.where({
