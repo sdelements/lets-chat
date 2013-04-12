@@ -114,7 +114,7 @@ var UserListView = Backbone.View.extend({
         var self = this;
         this.template = $('#js-tmpl-user-item').html();
         this.model.bind('add remove', function(users, users) {
-            self.count(users.length);
+            self.count(_.uniq(_.pluck(users.toJSON(), 'uid')).length);
         });
         this.model.bind('add', function(user, users) {
             var matches = users.where({
@@ -745,7 +745,11 @@ var ClientView = Backbone.View.extend({
                 .html('connected');
         });
         this.notifications.on('disconnect', function() {
-            $('#disconnect-message').modal('show');
+            if ($('#disconnect-message').is(':hidden')) {
+                $('#disconnect-message').modal({
+                    backdrop: false
+                });
+            }
             self.$('.connection-status')
               .removeClass('connected')
               .addClass('disconnected')

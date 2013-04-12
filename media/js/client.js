@@ -52,6 +52,7 @@ var Client = function(config) {
             var existingRoom = self.rooms.get(id);
             if (existingRoom) {
                 existingRoom.users.reset();
+                var lastMessageModel = existingRoom.messages.at(existingRoom.messages.length - 1);
             } else {
                 self.rooms.add(room);
             }
@@ -59,6 +60,17 @@ var Client = function(config) {
             self.getRoomUsers({
                 room: id
             });
+            // Do we need to resync?
+            if (lastMessageModel && lastMessageModel.id) {
+                self.getRoomHistory({
+                    room: id,
+                    from: lastMessageModel.id
+                }, function(messages) {
+                    _.each(messages, self.addMessage);
+                });
+            }
+            // Fresh room stuffs
+            // TODO: These few lines can be merged with above
             if (!existingRoom) {
                 self.getRoomHistory({
                     room: id
@@ -108,10 +120,8 @@ var Client = function(config) {
             self.joinRoom(id, true);
         }
     }
-    this.getRoomHistory = function(options) {
-        self.socket.emit('room:messages:get', {
-            room: options.room
-        });
+    this.getRoomHistory = function(query, callback) {
+        self.socket.emit('room:messages:get', query, callback || false);
     }
     this.getRoomUsers = function(options) {
         self.socket.emit('room:users:get', {

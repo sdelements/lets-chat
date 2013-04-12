@@ -116,36 +116,52 @@ var ChatServer = function (config, server, sessionStore) {
             //
             // Message History
             //
-            client.on('room:messages:get', function(query) {
+            client.on('room:messages:get', function(req, fn) {
+                // TODO: Make this less shitty
                 var today = new Date()
-                query.from = query.from || new Date(today).setDate(today.getDate() - 7)
-                query.room = query.room || '';
-                models.message.where('posted').gte(query.from)
-                    .where('room').equals(query.room)
-                    .sort({ posted: -1 }).populate('owner')
-                    .limit(150)
-                    .exec(function (err, docs) {
-                        if (err) {
-                            // Couldn't get message or something
-                            return;
-                        }
-                        var messages = [];
-                        if (docs) {
-                            docs.forEach(function (message) {
-                                messages.push({
-                                    room: message.room,
-                                    id: message._id,
-                                    owner: message.owner._id,
-                                    avatar: hash.md5(message.owner.email),
-                                    name: message.owner.displayName,
-                                    text: message.text,
-                                    posted: message.posted,
-                                    time: moment(message.posted).calendar()
-                                });
+                req.room = req.room || false;
+                req.from = req.from || false;
+                req.since = req.since || new Date(today).setDate(today.getDate() - 7);
+                var query = models.message.find({});
+                if (req.room) {
+                    query.where('room', req.room);
+                }
+                if (req.from) {
+                    query.where('_id').gt(req.from);
+                }
+                if (req.since) {
+                    query.where('posted').gte(req.since);
+                }
+                query
+                  .sort({ posted: -1 })
+                  .populate('owner').limit(150)
+                  .exec(function (err, docs) {
+                    if (err) {
+                        // Couldn't get message or something
+                        return;
+                    }
+                    var messages = [];
+                    if (docs) {
+                        docs.forEach(function (message) {
+                            messages.push({
+                                room: message.room,
+                                id: message._id,
+                                owner: message.owner._id,
+                                avatar: hash.md5(message.owner.email),
+                                name: message.owner.displayName,
+                                text: message.text,
+                                posted: message.posted,
+                                time: moment(message.posted).calendar()
                             });
-                        }
-                        messages.reverse();
+                        });
+                    }
+                    messages.reverse();
+                    // Is there a callback?
+                    if (fn) {
+                        fn(messages);
+                    } else {
                         client.emit('room:messages:new', messages);
+                    }
                 });
             });
 
