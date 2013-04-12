@@ -745,7 +745,11 @@ var ClientView = Backbone.View.extend({
                 .html('connected');
         });
         this.notifications.on('disconnect', function() {
-            $('#disconnect-message').modal('show');
+            if ($('#disconnect-message').is(':hidden')) {
+                $('#disconnect-message').modal({
+                    backdrop: false
+                });
+            }
             self.$('.connection-status')
               .removeClass('connected')
               .addClass('disconnected')
