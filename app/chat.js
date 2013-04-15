@@ -5,8 +5,6 @@
 var _ = require('underscore');
 var hash = require('node_hash');
 var moment = require('moment');
-var connect = require('connect');
-var cookie = require('cookie');
 var connectSession = require('connect').middleware.session.Session;
 var socketIO = require('socket.io');
 var passportSocketIO = require('passport.socketio');
@@ -48,22 +46,24 @@ var ChatServer = function (config, server, sessionStore) {
                     if (err) {
                         // Woops
                         accept(null, false);
+                        return;  
                     }
                     var hashedPassword = hash.sha256(data.query.password, self.config.password_salt);
                     if (user && hashedPassword === user.password) {
                         data.user = user;
                         accept(null, true);
-                    } else {
-                        accept(null, false);
+                        return;
                     }
+                    accept(null, false);
+                    return;
                 });
                 return;
             }
             // Auth via web session
             (passportSocketIO.authorize({
-                sessionKey: 'express.sid',
-                sessionStore:  sessionStore,
-                sessionSecret: self.config.cookie_secret,
+                key: 'express.sid',
+                store: sessionStore,
+                secret: self.config.cookie_secret,
                 success: function(data, accept) {
                     accept(null, true);
                 }
@@ -76,7 +76,7 @@ var ChatServer = function (config, server, sessionStore) {
         this.io.sockets.on('connection', function(client) {
 
             var userData = client.handshake.user || false;
-            
+
             if (!userData) {
                 //
                 // Sessions be messin' up bro

@@ -11,23 +11,21 @@
         "group chat"
     ],
     "dependencies": {
-        "express": "*",
-        "connect": "2.5.0",
-        "cookie": "0.0.4",
+        "express": "3.0.6",
+        "connect": "2.7.5",
         "express-namespace": "0.1.1",
-        "connect-mongo": "0.2.0",
-        "mongodb": "1.1.8",
-        "mongoose": "3.2.1",
-        "swig": "0.12.0",
-        "socket.io": "0.9.10",
-        "underscore": "1.4.1",
+        "connect-mongo": "0.3.2",
+        "mongoose": "3.6.4",
+        "swig": "0.13.5",
+        "socket.io": "0.9.14",
+        "underscore": "1.4.4",
         "node_hash": "0.2.0",
         "moment": "1.7.2",
-        "validator": "0.4.12",
-        "consolidate": "0.7.0",
-        "passport": "0.1.15",
+        "validator": "0.5.0",
+        "consolidate": "0.9.0",
+        "passport": "0.1.16",
         "passport-local": "0.1.6",
-        "passport.socketio": "0.0.4"
+        "passport.socketio": "1.0.1"
     },
     "engine": {
         "node": ">=0.7"
