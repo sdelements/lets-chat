@@ -90,8 +90,8 @@ var Server = function(config) {
         self.app.set('views', 'templates');
 
         // Static
-        self.app.use('/media', express.static('media'));
-        
+        self.app.use('/media', express.static(path.resolve('media')));
+
         // Router
         self.app.use(self.app.router);
 
