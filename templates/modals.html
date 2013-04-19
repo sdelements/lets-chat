@@ -1,5 +1,5 @@
 <div id="modals">
-    <div id="create-room" class="modal hide">
+    <div id="create-room" class="modal hide fade">
         <form class="validate form-horizontal" action="" method="post">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -21,7 +21,7 @@
                 <p class="response"></p>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-success create" name="submit" value="Create Room" />
+                <button type="submit" class="btn btn-info create" name="submit"><i class="icon-plus"></i> Create Room</button>
             </div>
         </form>
     </div>
@@ -29,7 +29,7 @@
         <form class="validate form-horizontal" action="/ajax/account" method="post">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Account Settings</h3>
+                <h3><i class="icon-cogs"></i> Account Settings</h3>
             </div>
             <div class="modal-body">
                 <div class="control-group">
@@ -59,7 +59,7 @@
                 <p class="alert response"></p>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-info indicator" name="submit" value="Save" />
+                <button type="submit" class="btn btn-info indicator" name="submit"><i class="icon-ok"></i> Save</button>
             </div>
         </form>
     </div>
@@ -67,7 +67,7 @@
         <form class="validate form-horizontal" action="/ajax/profile" method="post">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Profile Settings</h3>
+                <h3><i class="icon-edit"></i> Profile Settings</h3>
             </div>
             <div class="modal-body">
                 <div class="control-group">
@@ -97,7 +97,7 @@
                 <p class="alert response"></p>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-info indicator" name="submit" value="Save" />
+                <button type="submit" class="btn btn-info indicator" name="submit"><i class="icon-ok"></i> Save</button>
             </div>
         </form>
     </div>
