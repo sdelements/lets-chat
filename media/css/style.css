@@ -4368,6 +4368,7 @@ header .user .caret {
 header .user .button {
   padding: 0 10px;
   border-left: 1px #444 solid;
+  outline: none;
 }
 header .user a {
   color: #fff;
@@ -4804,7 +4805,9 @@ header .user .dropdown-menu a:hover {
  * Sidebar
  *********************/
 .sidebar {
-  width: 230px;
+  width: 20%;
+  max-width: 230px;
+  min-width: 150px;
   color: #ccc;
   margin: 20px;
   margin-left: 5px;
@@ -4814,6 +4817,12 @@ header .user .dropdown-menu a:hover {
 .sidebar p,
 .sidebar h1 {
   color: #fff;
+  word-wrap: break-word;
+}
+.sidebar h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .sidebar .item-list {
   margin-top: 10px;
@@ -4876,30 +4885,36 @@ header .user .dropdown-menu a:hover {
   border-bottom: 0;
   padding-bottom: 5px;
 }
-.sidebar .item-list .user {
+.sidebar .user {
   min-height: 30px;
   line-height: 100%;
   position: relative;
 }
-.sidebar .item-list .user .avatar {
+.sidebar .user .avatar {
   width: 30px;
   height: 30px;
   margin-right: 5px;
 }
-.sidebar .item-list .user .status {
+.sidebar .user .avatar {
+  position: absolute;
+}
+.sidebar .user .name,
+.sidebar .user .status {
+  display: block;
+  margin-left: 38px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar .user .name {
+  margin-top: 7px;
+}
+.sidebar .user .status {
   color: #777;
   font-style: italic;
   font-size: 11px;
 }
-.sidebar .item-list .user.has-status .avatar {
-  position: absolute;
-}
-.sidebar .item-list .user.has-status .name,
-.sidebar .item-list .user.has-status .status {
-  display: block;
-  margin-left: 38px;
-}
-.sidebar .item-list .user.has-status .name {
+.sidebar .user.has-status .name {
   margin-top: 4px;
 }
 /*

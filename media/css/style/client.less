@@ -89,7 +89,9 @@
  *********************/
 
 .sidebar {
-    width: 230px;
+    width: 20%;
+    max-width: 230px;
+    min-width: 150px;
     color: #ccc;
     margin: 20px;
     margin-left: 5px;
@@ -97,6 +99,10 @@
     z-index: 999;
     p, h1 {
         color: #fff;
+        word-wrap: break-word;
+    }
+    h1 {
+        .text-overflow;
     }
     .item-list {
         margin-top: 10px;
@@ -138,31 +144,35 @@
                 padding-bottom: 5px;
             }
         }
-        .user {
-            min-height: 30px;
-            line-height: 100%;
-            position: relative;
-            .avatar {
-                .square(30px);
-                margin-right: 5px;
-            }
-            .status {
-                color: #777;
-                font-style: italic;
-                font-size: 11px;
-            }
-            &.has-status {
-                .avatar {
-                    position: absolute;
-                }
-                .name,
-                .status {
-                    display: block;
-                    margin-left: 38px;
-                }
-                .name {
-                    margin-top: 4px;
-                }
+    }
+    .user {
+        min-height: 30px;
+        line-height: 100%;
+        position: relative;
+        .avatar {
+            .square(30px);
+            margin-right: 5px;
+        }
+        .avatar {
+            position: absolute;
+        }
+        .name,
+        .status {
+            display: block;
+            margin-left: 38px;
+            .text-overflow;
+        }
+        .name {
+            margin-top: 7px;
+        }
+        .status {
+            color: #777;
+            font-style: italic;
+            font-size: 11px;
+        }
+        &.has-status {
+            .name {
+                margin-top: 4px;
             }
         }
     }
