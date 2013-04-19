@@ -233,6 +233,23 @@
  * Misc
  *********************/
 
+@keyframes blink {
+    from {
+        .opacity(20);
+    }
+    to {
+        .opacity(70);
+    }
+}
+
+@-webkit-keyframes blink {
+    from {
+        .opacity(20);
+    }
+    to {
+        .opacity(70);
+    }
+}
  
 .connection-status {
     color: #fff;
@@ -243,6 +260,8 @@
     .opacity(50);
     &.disconnected {
         color: #e44755;
+        animation: blink .7s infinite alternate;
+        -webkit-animation: blink .7s infinite alternate;
     }
     &:hover {
         cursor: default;

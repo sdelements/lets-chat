@@ -742,7 +742,7 @@ var ClientView = Backbone.View.extend({
             self.$('.connection-status')
                 .removeClass('disconnected')
                 .addClass('connected')
-                .html('connected');
+                .html('<i class="icon-signal"></i>  connected');
         });
         this.notifications.on('disconnect', function() {
             if ($('#disconnect-message').is(':hidden')) {
@@ -753,7 +753,7 @@ var ClientView = Backbone.View.extend({
             self.$('.connection-status')
               .removeClass('connected')
               .addClass('disconnected')
-              .html('disconnected');
+              .html('<i class="icon-warning-sign"></i> disconnected');
         });
         //
         // Room events
