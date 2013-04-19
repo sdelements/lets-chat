@@ -41,16 +41,17 @@
             </ul>
         </div>
         <div class="user dropdown pull-right">
-            <a class="button" data-toggle="dropdown" href="#">
+            <span class="button" data-toggle="dropdown" href="#">
                 <img class="avatar" src="https://www.gravatar.com/avatar/{{ user_avatar }}?s=50" />
                 <span class="name">{{ user_firstname }} {{ user_lastname }}</span>
                 <b class="caret"></b>
-            </a>
+            </span>
             <ul class="dropdown-menu">
-                <li><a data-toggle="modal" href="#edit-profile">Edit Profile</a></li>
-                <li><a data-toggle="modal" href="#edit-account">Account Settings</a></li>
+                <li><a data-toggle="modal" href="#edit-profile"><i class="icon-edit"></i> Edit Profile</a></li>
+                <li><a data-toggle="modal" href="#edit-account"><i class="icon-cog"></i> Account Settings</a></li>
+                <li><a data-toggle="modal" href="#experimental-features"><i class="icon-beaker"></i> Experimental</a></li>
                 <li class="divider"></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/logout"><i class="icon-signout"></i> Logout</a></li>
             </ul>
         </div>
     </header>

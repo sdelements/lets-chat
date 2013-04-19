@@ -164,7 +164,7 @@ var UserListView = Backbone.View.extend({
     },
     update: function(user) {
         var $user = this.$('.user[data-uid=' + user.id + ']');
-        $user.addClass('has-status', user.status);
+        $user.toggleClass('has-status', user.status && user.status.length > 0);
         $user.find('.status').text(user.status);
     },
     empty: function() {
@@ -654,6 +654,8 @@ var WindowTitleView = Backbone.View.extend({
     el: 'html',
     focus: true,
     count: 0,
+    activeWebkitNotifications: [],
+    activeWebkitNotificationMentions: [],
     initialize: function() {
         var self = this;
         this.config = this.options.config;
@@ -671,10 +673,8 @@ var WindowTitleView = Backbone.View.extend({
                 self.count = 0;
                 self.focus = true;
                 $('title').html(self.title);
-                // Clean up Fluid.app dock badge
-                if (window.fluid !== undefined) {
-                    window.fluid.dockBadge = undefined;
-                }
+                // Clean up lingering notifications
+                self.clean();
             } else {
                 self.focus = false;
             }
@@ -687,6 +687,34 @@ var WindowTitleView = Backbone.View.extend({
             //
             $('title').html('(' + parseInt(++self.count) + ') ' + self.title);
             //
+            // Desktop Notifications because fuckyes webkit~!
+            //
+            if (window.webkitNotifications) {
+               var notification = webkitNotifications.createNotification(
+                  'https://www.gravatar.com/avatar/' + message.avatar + '?s=50',
+                  message.name + ' in ' + message.roomName,
+                  message.text
+                );
+                // If it's a mention, just show keep it sticky
+                if (message.text.match(new RegExp('\\@' + self.options.user.get('safeName') + '\\b', 'i'))) {
+                    self.activeWebkitNotificationMentions.push(notification);
+                    notification.show();
+                    return;
+                }
+                // Clear excessive notifications
+                if (self.activeWebkitNotifications.length > 2) {
+                    console.log(self.activeWebkitNotifications);
+                    self.activeWebkitNotifications[0].cancel();
+                    self.activeWebkitNotifications.shift();
+                }
+                self.activeWebkitNotifications.push(notification);
+                notification.show();
+                // Close after a few seconds
+                setTimeout(function() {
+                    notification.close();
+                }, 4000);
+            }
+            //
             // Notifications on the for Fluid.app users.
             //
             if (window.fluid === undefined) return;
@@ -697,6 +725,57 @@ var WindowTitleView = Backbone.View.extend({
                 priority: 1,
                 sticky: false
             });
+        });
+    },
+    clean: function() {
+        // Clean up webkit notifications
+        if (window.webkitNotifications) {
+            _.each(this.activeWebkitNotifications.concat(this.activeWebkitNotificationMentions), function(notification) {
+                notification.cancel();
+            });
+        }
+        // Clean up Fluid.app dock badge
+        if (window.fluid !== undefined) {
+            window.fluid.dockBadge = undefined;
+        }
+    }
+});
+
+var ExperimentalFeaturesView = Backbone.View.extend({
+    el: '#experimental-features',
+    focus: true,
+    count: 0,
+    events: {
+        'click [name=desktop-notifications]': 'toggleDesktopNotifications'
+    },
+    initialize: function() {
+        this.render();
+    },
+    render: function() {
+        var $input = this.$('[name=desktop-notifications]');
+        $input.find('.disabled').show()
+          .siblings().hide();
+        if (!window.webkitNotifications) {
+            $input.attr('disabled', true);
+            // Welp we're done here
+            return;
+        }
+        if (window.webkitNotifications.checkPermission() === 0) {
+            $input.find('.enabled').show()
+              .siblings().hide();
+        }
+        if (window.webkitNotifications.checkPermission() === 2) {
+            $input.find('.blocked').show()
+              .siblings().hide();
+        }
+    },
+    toggleDesktopNotifications: function() {
+        var self = this;
+        if (!window.webkitNotifications) {
+            return;
+        }
+        window.webkitNotifications.requestPermission(function() {
+            self.render();
         });
     }
 });
@@ -732,8 +811,10 @@ var ClientView = Backbone.View.extend({
         });
         this.windowTitle = new WindowTitleView({
             config: this.config,
-            notifications: this.notifications
+            notifications: this.notifications,
+            user: this.user
         });
+        this.experimentalFeatures = new ExperimentalFeaturesView();
         //
         // Connection Events
         //
@@ -742,7 +823,7 @@ var ClientView = Backbone.View.extend({
             self.$('.connection-status')
                 .removeClass('disconnected')
                 .addClass('connected')
-                .html('connected');
+                .html('<i class="icon-signal"></i>  connected');
         });
         this.notifications.on('disconnect', function() {
             if ($('#disconnect-message').is(':hidden')) {
@@ -753,7 +834,7 @@ var ClientView = Backbone.View.extend({
             self.$('.connection-status')
               .removeClass('connected')
               .addClass('disconnected')
-              .html('disconnected');
+              .html('<i class="icon-warning-sign"></i> disconnected');
         });
         //
         // Room events

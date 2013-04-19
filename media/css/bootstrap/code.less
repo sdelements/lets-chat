@@ -1,13 +1,14 @@
-// Code.less
-// Code typography styles for the <code> and <pre> elements
-// --------------------------------------------------------
+//
+// Code (inline and blocK)
+// --------------------------------------------------
+
 
 // Inline and block code styles
 code,
 pre {
   padding: 0 3px 2px;
   #font > #family > .monospace;
-  font-size: @baseFontSize - 1;
+  font-size: @baseFontSize - 2;
   color: @grayDark;
   .border-radius(3px);
 }
@@ -18,6 +19,7 @@ code {
   color: #d14;
   background-color: #f7f7f9;
   border: 1px solid #e1e1e8;
+  white-space: nowrap;
 }
 
 // Blocks of code
@@ -25,7 +27,7 @@ pre {
   display: block;
   padding: (@baseLineHeight - 1) / 2;
   margin: 0 0 @baseLineHeight / 2;
-  font-size: @baseFontSize * .925; // 13px to 12px
+  font-size: @baseFontSize - 1; // 14px to 13px
   line-height: @baseLineHeight;
   word-break: break-all;
   word-wrap: break-word;
@@ -34,7 +36,7 @@ pre {
   background-color: #f5f5f5;
   border: 1px solid #ccc; // fallback for IE7-8
   border: 1px solid rgba(0,0,0,.15);
-  .border-radius(4px);
+  .border-radius(@baseBorderRadius);
 
   // Make prettyprint styles more spaced out for readability
   &.prettyprint {
@@ -45,6 +47,8 @@ pre {
   code {
     padding: 0;
     color: inherit;
+    white-space: pre;
+    white-space: pre-wrap;
     background-color: transparent;
     border: 0;
   }
