@@ -173,6 +173,7 @@ var Client = function(config) {
         } else {
             var room = self.rooms.get(data.room);
             room.messages.add(data);
+            data.roomName = room.get('name');
             // We only trigger this event for new single messages
             self.notifications.trigger('addmessage', data);
         }
