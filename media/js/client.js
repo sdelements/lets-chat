@@ -190,9 +190,11 @@ var Client = function(config) {
     this.loadPlugins = function() {
         $.get('/plugins/replacements.json', function(json) {
             self.plugins.replacements = json;
+            self.notifications.trigger('replacements.update');
         });
         $.get('/plugins/emotes.json', function(json) {
             self.plugins.emotes = json;
+            self.notifications.trigger('emotes.update');
         });
     }
 

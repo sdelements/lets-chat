@@ -305,8 +305,9 @@ var RoomView = Backbone.View.extend({
             //
             // Nick Complete
             //
-            self.$('.entry textarea').nicknameTabComplete({
-                nicknames: _.pluck(users.toJSON(), 'safeName')
+            self.$('.entry textarea').atwho({
+                at: '@',
+                data: _.pluck(users.toJSON(), 'safeName')
             });
         });
         //
@@ -340,6 +341,26 @@ var RoomView = Backbone.View.extend({
         //
         this.$messages.on('scroll', function() {
             self.updateScrollLock();
+        });
+        //
+        // Emote Complete
+        //
+        this.notifications.on('emotes.update', function() {
+            var emotes = _.map(self.plugins.emotes, function(url, id) {
+                var name = id.replace(':', '');
+                return {
+                    id: name,
+                    key: name,
+                    name: name,
+                    url: url
+                };
+            });
+            self.$('.entry textarea').atwho({
+                at: ':',
+                tpl: '<li data-value="${key}"><img src="${url}" height="20" width="20" /> ${key}</li>',
+                data: emotes,
+                limit: 8
+            });
         });
         return this.$el;
     },
@@ -703,7 +724,6 @@ var WindowTitleView = Backbone.View.extend({
                 }
                 // Clear excessive notifications
                 if (self.activeWebkitNotifications.length > 2) {
-                    console.log(self.activeWebkitNotifications);
                     self.activeWebkitNotifications[0].cancel();
                     self.activeWebkitNotifications.shift();
                 }
