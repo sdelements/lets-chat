@@ -4,6 +4,9 @@ var config = {
     host: '', // Not required
     port: 5000,
 
+    // Registration
+    disable_registration: false,
+
     // HTTPS
     /***
     https: {

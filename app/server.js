@@ -156,7 +156,7 @@ var Server = function(config) {
         res.render('login.html', {
             'media_url': self.config.media_url,
             'next': req.param('next', ''),
-            'disableRegistration': self.config.disableRegistration
+            'disableRegistration': self.config.disable_registration
         });;
     });
 
@@ -224,51 +224,57 @@ var Server = function(config) {
         //
         // Register
         //
-        if (!self.config.disableRegistration) {
-            self.app.post('/register', function(req, res) {
-                var form = req.body;
-                models.user.findOne({ 'email': form.email }).exec(function(error, user) {
-                    // Check if a user with this email exists
-                    if (user) {
+        self.app.post('/register', function(req, res) {
+            if (self.config.disable_registration) {
+                // Registration is not enabled bro
+                res.send(403, {
+                    status: 'error',
+                    message: 'Registration is disabled.'
+                });
+                return;
+            }
+            var form = req.body;
+            models.user.findOne({ 'email': form.email }).exec(function(error, user) {
+                // Check if a user with this email exists
+                if (user) {
+                    res.send({
+                        status: 'error',
+                        message: 'That email is already in use.'
+                    });
+                    return;
+                }
+                // We're good, lets save!
+                var user = new models.user({
+                    email: form.email,
+                    password: form.password,
+                    firstName: form['first-name'],
+                    lastName: form['last-name'],
+                    displayName: form['first-name'] + ' ' + form['last-name']
+                }).save(function(err, user) {
+                    if (err) {
                         res.send({
                             status: 'error',
-                            message: 'That email is already in use.'
+                            message: 'Some fields did not validate',
+                            errors: err
                         });
                         return;
                     }
-                    // We're good, lets save!
-                    var user = new models.user({
-                        email: form.email,
-                        password: form.password,
-                        firstName: form['first-name'],
-                        lastName: form['last-name'],
-                        displayName: form['first-name'] + ' ' + form['last-name']
-                    }).save(function(err, user) {
+                    req.login(user, function(err) {
                         if (err) {
                             res.send({
                                 status: 'error',
-                                message: 'Some fields did not validate',
-                                errors: err
+                                message: 'There were problems logging you in.'
                             });
                             return;
                         }
-                        req.login(user, function(err) {
-                            if (err) {
-                                res.send({
-                                    status: 'error',
-                                    message: 'There were problems logging you in.'
-                                });
-                                return;
-                            }
-                            res.send({
-                                status: 'success',
-                                message: 'You\'ve been successfully registered.'
-                            });
+                        res.send({
+                            status: 'success',
+                            message: 'You\'ve been successfully registered.'
                         });
                     });
                 });
             });
-        }
+        });
         //
         // Edit Profile
         //
