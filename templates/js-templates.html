@@ -59,94 +59,92 @@
         </li>
     </script>
     <script id="js-tmpl-room" type="text/html">
-        <div class="view-inner">
-            <div class="main">
-                <div class="chat">
-                    <ul class="messages file-drop-zone"></ul>
-                    <div class="entry file-drop-zone">
-                        <textarea type="text" name="talk"></textarea>
-                        <div class="buttons">
-                            <button class="send btn btn-info">Send</button>
+        <div class="main">
+            <div class="chat">
+                <ul class="messages file-drop-zone"></ul>
+                <div class="entry file-drop-zone">
+                    <textarea type="text" name="talk"></textarea>
+                    <div class="buttons">
+                        <button class="send btn btn-info">Send</button>
+                    </div>
+                </div>
+            </div><!-- chat end -->
+        </div><!-- content end -->
+        <div class="sidebar">
+            <div class="inner">
+                <div class="meta">
+                    <h1 class="room-name">{{ name }}</h1>
+                    <p class="description">{{ description }}</p>
+                </div>
+                <div class="clear">
+                    <div class="btn-group buttons">
+                        <a class="btn" title="View Transcript" href="/transcripts/{{ id }}/today" target="_blank">
+                            <i class="icon-comment"></i>
+                        </a>
+                        <button class="btn show-edit-room" title="Edit Room">
+                            <i class="icon-pencil"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="item-list">
+                    <div class="top">
+                        <h3>
+                            <i class="icon-white icon-user"></i>
+                            <span class="text">Who's here</span>
+                            (<span class="count"></span>)
+                        </h3>
+                    </div>
+                    <ul class="user-list"></ul>
+                </div>
+                <div class="files item-list file-drop-zone">
+                    <div class="top">
+                        <h3>
+                            <i class="icon-white icon-film"></i> <span class="text">Media</span>
+                            <img class="throbber"  src="/media/img/llama.gif" style="display: none;" />
+                        </h3>
+                        <a class="toggle-upload btn btn-dmb" href="#"><i class="icon-plus icon-white"></i><i class="icon-remove icon-white"></i></a>
+                    </div>
+                    <div class="upload" style="display: none;">
+                        <form action="/ajax/upload-file">
+                            <input type="file" name="files[]" data-url="/ajax/upload-file" multiple />
+                        </form>
+                    </div>
+                    <ul class="file-list"></ul>
+                </div>
+                <div class="status">
+                    <span class="message"></span>
+                    <span class="ping"></span>
+                </div>
+            </div><!-- inner end -->
+        </div><!-- sidebar end -->
+        <div class="edit-room modal hide fade">
+            <form class="validate form-horizontal" action="" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close hide-edit-room" aria-hidden="true">&times;</button>
+                    <h3>Edit Room</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="control-group">
+                        <label class="control-label">Name</label>
+                        <div class="controls">
+                            <input class="required name" name="name" type="text" value="{{ name }}" />
                         </div>
                     </div>
-                </div><!-- chat end -->
-            </div><!-- content end -->
-            <div class="sidebar">
-                <div class="inner">
-                    <div class="meta">
-                        <h1 class="room-name">{{ name }}</h1>
-                        <p class="description">{{ description }}</p>
-                    </div>
-                    <div class="clear">
-                        <div class="btn-group buttons">
-                            <a class="btn" title="View Transcript" href="/transcripts/{{ id }}/today" target="_blank">
-                                <i class="icon-comment"></i>
-                            </a>
-                            <button class="btn show-edit-room" title="Edit Room">
-                                <i class="icon-pencil"></i>
-                            </button>
+                    <div class="control-group">
+                        <label class="control-label">Description</label>
+                        <div class="controls">
+                            <textarea name="description">{{ description }}</textarea>
                         </div>
                     </div>
-                    <div class="item-list">
-                        <div class="top">
-                            <h3>
-                                <i class="icon-white icon-user"></i>
-                                <span class="text">Who's here</span>
-                                (<span class="count"></span>)
-                            </h3>
-                        </div>
-                        <ul class="user-list"></ul>
-                    </div>
-                    <div class="files item-list file-drop-zone">
-                        <div class="top">
-                            <h3>
-                                <i class="icon-white icon-film"></i> <span class="text">Media</span>
-                                <img class="throbber"  src="/media/img/llama.gif" style="display: none;" />
-                            </h3>
-                            <a class="toggle-upload btn btn-dmb" href="#"><i class="icon-plus icon-white"></i><i class="icon-remove icon-white"></i></a>
-                        </div>
-                        <div class="upload" style="display: none;">
-                            <form action="/ajax/upload-file">
-                                <input type="file" name="files[]" data-url="/ajax/upload-file" multiple />
-                            </form>
-                        </div>
-                        <ul class="file-list"></ul>
-                    </div>
-                    <div class="status">
-                        <span class="message"></span>
-                        <span class="ping"></span>
-                    </div>
-                </div><!-- inner end -->
-            </div><!-- sidebar end -->
-            <div class="edit-room modal hide fade">
-                <form class="validate form-horizontal" action="" method="post">
-                    <div class="modal-header">
-                        <button type="button" class="close hide-edit-room" aria-hidden="true">&times;</button>
-                        <h3>Edit Room</h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="control-group">
-                            <label class="control-label">Name</label>
-                            <div class="controls">
-                                <input class="required name" name="name" type="text" value="{{ name }}" />
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Description</label>
-                            <div class="controls">
-                                <textarea name="description">{{ description }}</textarea>
-                            </div>
-                        </div>
-                        <p class="response"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="submit" class="btn btn-success pull-right" name="submit" value="Save">
-                        <a class="delete-room btn btn-danger pull-left" tabindex="-1"><i class="icon-remove icon-white"></i> Delete Room</a>
-                    </div>
-                </form>
-            </div><!-- edit room end -->
-            <div class="modal-backdrop hide"></div>
-        </div><!-- view inner end -->
+                    <p class="response"></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success pull-right" name="submit" value="Save">
+                    <a class="delete-room btn btn-danger pull-left" tabindex="-1"><i class="icon-remove icon-white"></i> Delete Room</a>
+                </div>
+            </form>
+        </div><!-- edit room end -->
+        <div class="modal-backdrop hide"></div>
     </script>
 </div>
 {% endraw %}

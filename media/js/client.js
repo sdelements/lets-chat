@@ -255,7 +255,7 @@ var Client = function(config) {
             if (availableRoom) {
                 availableRoom.set(_.extend(availableRoom.toJSON(), data));
             }
-            self.notifications.trigger('roomupdate', _.extend(room.toJSON(), data));
+            self.notifications.trigger('roomupdate', _.extend(availableRoom.toJSON(), data));
         });
         self.socket.on('rooms:new', function(room) {
             self.availableRooms.add(room);
@@ -330,6 +330,7 @@ var Client = function(config) {
     //
     this.start = function() {
         var self = this;
+        this.loadPlugins();
         this.listen();
         this.route();
         this.viewListen();

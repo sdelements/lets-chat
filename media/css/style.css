@@ -5777,8 +5777,7 @@ header .user .dropdown-menu a:hover {
  * Views
  *********************/
 .views,
-.view,
-.view-inner {
+.view {
   width: 100%;
   display: box;
   display: -webkit-box;
@@ -5801,12 +5800,12 @@ header .user .dropdown-menu a:hover {
   bottom: 0;
   border-top: 1px #444 solid;
 }
-.view-inner .sidebar {
+.view .sidebar {
   box-flex: 0;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
 }
-.view-inner .main {
+.view .main {
   box-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;

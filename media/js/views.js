@@ -378,12 +378,12 @@ var RoomView = Backbone.View.extend({
         //
         // CSS Flex shim for non-webkit browsers
         //
-        if ($.browser.webkit !== true) {
+        if (navigator.userAgent.indexOf('WebKit/') < 0) {
             var height = $(window).height() -
                 $('header.navbar').outerHeight() -
                 parseInt(this.$('.chat').css('margin-top'), 10) -
                 parseInt(this.$('.chat').css('margin-bottom'), 10) -
-                this.$('.entry').outerHeight();
+                this.$('.entry').outerHeight() - 1;
             this.$messages.height(height);
         }
     },
@@ -431,7 +431,7 @@ var RoomView = Backbone.View.extend({
         if (message.text.match(/\n/ig)) {
             message.paste = true;
         }
-        var $html = $(Mustache.to_html(this.messageTemplate, message));
+        var $html = $(Mustache.to_html(this.messageTemplate, message).trim());
         var $text = $html.find('.text');
         $text.html(this.formatContent($text.html()));
         this.$messages.append($html);
