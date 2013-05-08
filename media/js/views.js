@@ -264,6 +264,7 @@ var RoomView = Backbone.View.extend({
     },
     lastMessageUser: false,
     scrollLocked: true,
+    knownUsers: {},
     initialize: function() {
         var self = this;
         //
@@ -305,9 +306,18 @@ var RoomView = Backbone.View.extend({
             //
             // Nick Complete
             //
+            var user = user.toJSON()
+            self.knownUsers[user.uid] = {
+                id: user.uid,
+                key: user.safeName,
+                name: user.safeName,
+                avatar: user.avatar
+            }
             self.$('.entry textarea').atwho({
                 at: '@',
-                data: _.pluck(users.toJSON(), 'safeName')
+                tpl: '<li data-value="${key}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> ${name}</li>',
+                data: _.toArray(self.knownUsers),
+                limit: 4
             });
         });
         //
@@ -357,7 +367,7 @@ var RoomView = Backbone.View.extend({
             });
             self.$('.entry textarea').atwho({
                 at: ':',
-                tpl: '<li data-value="${key}"><img src="${url}" height="20" width="20" /> ${key}</li>',
+                tpl: '<li data-value="${key}"><img src="${url}" height="20" width="20" /> ${name}</li>',
                 data: emotes,
                 limit: 8
             });
