@@ -2,3 +2,7 @@ settings.js
 node_modules
 .*.swp
 *humbs.db
+*.key
+*.pem
+*.crt
+*.csr
