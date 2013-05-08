@@ -310,12 +310,12 @@ var RoomView = Backbone.View.extend({
             self.knownUsers[user.uid] = {
                 id: user.uid,
                 key: user.safeName,
-                name: user.safeName,
+                name: user.name,
                 avatar: user.avatar
             }
             self.$('.entry textarea').atwho({
                 at: '@',
-                tpl: '<li data-value="${key}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> ${name}</li>',
+                tpl: '<li data-value="${key}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> ${name} <small>${key}</small></li>',
                 data: _.toArray(self.knownUsers),
                 limit: 4
             });
