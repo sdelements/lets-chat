@@ -5294,16 +5294,15 @@ a.badge:focus {
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
 }
-.fancy-scrollbars *::-webkit-scrollbar {
-  width: 15px;
-  height: 15px;
+.fancy-scrollbar ::-webkit-scrollbar {
+  width: 10px;
 }
-.fancy-scrollbars *::-webkit-scrollbar-track {
+.fancy-scrollbar ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
-.fancy-scrollbars *::-webkit-scrollbar-thumb {
+.fancy-scrollbar ::-webkit-scrollbar-thumb {
   background-color: #cfcfcf;
   background-image: -moz-linear-gradient(top, #dddddd, #bbbbbb);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dddddd), to(#bbbbbb));
@@ -5312,9 +5311,9 @@ a.badge:focus {
   background-image: linear-gradient(to bottom, #dddddd, #bbbbbb);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdddddd', endColorstr='#ffbbbbbb', GradientType=0);
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
   border: 1px #ababab solid;
 }
 /*********************
@@ -5840,16 +5839,15 @@ header .user .dropdown-menu a:hover {
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
 }
-.chat *::-webkit-scrollbar {
-  width: 15px;
-  height: 15px;
+.chat ::-webkit-scrollbar {
+  width: 10px;
 }
-.chat *::-webkit-scrollbar-track {
+.chat ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
-.chat *::-webkit-scrollbar-thumb {
+.chat ::-webkit-scrollbar-thumb {
   background-color: #cfcfcf;
   background-image: -moz-linear-gradient(top, #dddddd, #bbbbbb);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dddddd), to(#bbbbbb));
@@ -5858,9 +5856,9 @@ header .user .dropdown-menu a:hover {
   background-image: linear-gradient(to bottom, #dddddd, #bbbbbb);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdddddd', endColorstr='#ffbbbbbb', GradientType=0);
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
   border: 1px #ababab solid;
 }
 .chat .messages {
