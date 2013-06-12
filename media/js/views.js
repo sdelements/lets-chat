@@ -205,6 +205,7 @@ var FileListView = Backbone.View.extend({
         //
         $input.fileupload({
             dropZone: this.room.$('.file-drop-zone'),
+            pasteZone: this.room.$('.file-paste-zone'),
             dataType: 'json',
             formData: {
                 room: this.room.model.id
