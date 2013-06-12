@@ -262,7 +262,8 @@ var RoomView = Backbone.View.extend({
         'click .show-edit-room': 'showEditRoom',
         'click .hide-edit-room': 'hideEditRoom'
     },
-    lastMessageUser: false,
+    lastMessageOwner: false,
+    lastMessageTime: false,
     scrollLocked: true,
     knownUsers: {},
     initialize: function() {
@@ -416,26 +417,22 @@ var RoomView = Backbone.View.extend({
         return window.utils.message.format(text, this.plugins);
     },
     addMessage: function(message, debounce) {
-        if (this.lastMessageUser === message.owner) {
-            message.fragment = true;
-        }
+        // Is this a fragment or new message?
+        message.fragment = this.lastMessageOwner === message.owner
+          // Was the last message under 5 minutes ago?
+          && moment(message.posted).diff(moment(this.lastMessagePosted), 'minutes') < 5;
         // I think this has my name on it
-        if (this.user.id === message.owner) {
-            message.own = true;
-        }
+        message.own = this.user.id === message.owner;
         // Check to see if we've been mentioned
-        if (message.text.match(new RegExp('\\@' + this.user.get('safeName') + '\\b', 'i'))) {
-            message.mentioned = true;
-        }
+        message.mentioned = message.text.match(new RegExp('\\@' + this.user.get('safeName') + '\\b', 'i'))
         // Smells like pasta
-        if (message.text.match(/\n/ig)) {
-            message.paste = true;
-        }
+        message.paste = message.text.match(/\n/ig)
         var $html = $(Mustache.to_html(this.messageTemplate, message).trim());
         var $text = $html.find('.text');
         $text.html(this.formatContent($text.html()));
         this.$messages.append($html);
-        this.lastMessageUser = message.owner;
+        this.lastMessageOwner = message.owner;
+        this.lastMessagePosted = message.posted
         if (this.scrollLocked) {
             this.scrollMessagesDown(debounce);
         }
