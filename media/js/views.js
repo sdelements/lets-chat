@@ -254,7 +254,7 @@ var FileListView = Backbone.View.extend({
 var RoomView = Backbone.View.extend({
     className: 'view',
     events: {
-        'keydown .entry textarea': 'keyCombo',
+        'keyup .entry textarea': 'keyCombo',
         'click .entry .send': 'sendMessage',
         'keypress .entry textarea': 'sendMessage',
         'submit .edit-room form': 'submitEditRoom',
