@@ -432,9 +432,9 @@ var RoomView = Backbone.View.extend({
         // I think this has my name on it
         message.own = this.user.id === message.owner;
         // Check to see if we've been mentioned
-        message.mentioned = message.text.match(new RegExp('\\@' + this.user.get('safeName') + '\\b', 'i'))
+        message.mentioned = message.text.match(new RegExp('\\@' + this.user.get('safeName') + '\\b', 'i')) ? true : false;
         // Smells like pasta
-        message.paste = message.text.match(/\n/ig)
+        message.paste = message.text.match(/\n/ig) ? true : false;
         var $html = $(Mustache.to_html(this.messageTemplate, message).trim());
         var $text = $html.find('.text');
         $text.html(this.formatContent($text.html()));
