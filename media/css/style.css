@@ -5638,6 +5638,13 @@ header .user .dropdown-menu a:hover {
   margin-top: 5px;
   display: inline-block;
   overflow: hidden;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
 }
 .message .thumbnail img {
   height: 200px;
