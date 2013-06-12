@@ -5294,28 +5294,6 @@ a.badge:focus {
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
 }
-.fancy-scrollbar ::-webkit-scrollbar {
-  width: 10px;
-}
-.fancy-scrollbar ::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-.fancy-scrollbar ::-webkit-scrollbar-thumb {
-  background-color: #cfcfcf;
-  background-image: -moz-linear-gradient(top, #dddddd, #bbbbbb);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dddddd), to(#bbbbbb));
-  background-image: -webkit-linear-gradient(top, #dddddd, #bbbbbb);
-  background-image: -o-linear-gradient(top, #dddddd, #bbbbbb);
-  background-image: linear-gradient(to bottom, #dddddd, #bbbbbb);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdddddd', endColorstr='#ffbbbbbb', GradientType=0);
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  border: 1px #ababab solid;
-}
 /*********************
  * Overrides
  *********************/
@@ -5845,28 +5823,6 @@ header .user .dropdown-menu a:hover {
   -webkit-box-align: stretch;
   -moz-box-orient: vertical;
   -moz-box-align: stretch;
-}
-.chat ::-webkit-scrollbar {
-  width: 10px;
-}
-.chat ::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-.chat ::-webkit-scrollbar-thumb {
-  background-color: #cfcfcf;
-  background-image: -moz-linear-gradient(top, #dddddd, #bbbbbb);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dddddd), to(#bbbbbb));
-  background-image: -webkit-linear-gradient(top, #dddddd, #bbbbbb);
-  background-image: -o-linear-gradient(top, #dddddd, #bbbbbb);
-  background-image: linear-gradient(to bottom, #dddddd, #bbbbbb);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdddddd', endColorstr='#ffbbbbbb', GradientType=0);
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  border: 1px #ababab solid;
 }
 .chat .messages {
   margin: 0;
