@@ -303,11 +303,11 @@ var RoomView = Backbone.View.extend({
             // We're debouncing the scrolldown for performance
             self.addMessage(message, true);
         });
-        this.model.users.bind('add', function(user, users) {
+        this.model.users.bind('add remove', function(user, users) {
             //
             // Nick Complete
             //
-            var user = user.toJSON()
+            var user = user.toJSON();
             self.knownUsers[user.uid] = {
                 id: user.uid,
                 key: user.safeName,
@@ -316,9 +316,7 @@ var RoomView = Backbone.View.extend({
             }
             self.$('.entry textarea').atwho({
                 at: '@',
-                tpl: '<li data-value="${key}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> ${name} <small>${key}</small></li>',
-                data: _.toArray(self.knownUsers),
-                limit: 4
+                data: _.toArray(self.knownUsers)
             });
         });
         //
@@ -372,6 +370,15 @@ var RoomView = Backbone.View.extend({
                 data: emotes,
                 limit: 8
             });
+        });
+        //
+        // Nick complete
+        //
+        this.$('.entry textarea').atwho({
+            at: '@',
+            tpl: '<li data-value="${key}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> ${name} <small>${key}</small></li>',
+            data: _.toArray(this.knownUsers),
+            limit: 4
         });
         return this.$el;
     },
