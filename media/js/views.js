@@ -717,7 +717,7 @@ var WindowTitleView = Backbone.View.extend({
             //
             // Desktop Notifications because fuckyes webkit~!
             //
-            if (window.webkitNotifications) {
+            if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
                var notification = webkitNotifications.createNotification(
                   'https://www.gravatar.com/avatar/' + message.avatar + '?s=50',
                   message.name + ' in ' + message.roomName,
