@@ -255,7 +255,6 @@ var FileListView = Backbone.View.extend({
 var RoomView = Backbone.View.extend({
     className: 'view',
     events: {
-        'keyup .entry textarea': 'keyCombo',
         'click .entry .send': 'sendMessage',
         'keypress .entry textarea': 'sendMessage',
         'submit .edit-room form': 'submitEditRoom',
@@ -443,15 +442,6 @@ var RoomView = Backbone.View.extend({
         this.lastMessagePosted = message.posted
         if (this.scrollLocked) {
             this.scrollMessagesDown(debounce);
-        }
-    },
-    keyCombo: function(e) {
-        var $textarea = this.$('.entry textarea');
-        // ALT + ENTER
-        // Add a newline
-        if (e.altKey && e.keyCode === 13) {
-            e.preventDefault();
-            $textarea.val($textarea.val() + '\n');
         }
     },
     sendMessage: function(e) {
