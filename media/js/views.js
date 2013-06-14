@@ -723,9 +723,9 @@ var WindowTitleView = Backbone.View.extend({
             //
             $('title').html('(' + parseInt(++self.count) + ') ' + self.title);
 
-            icon = 'https://www.gravatar.com/avatar/' + message.avatar + '?s=50'
-            title = message.name + ' in ' + message.roomName
-            mention = message.text.match(new RegExp('\\@' + self.options.user.get('safeName') + '\\b', 'i')) ? true : false
+            var icon = 'https://www.gravatar.com/avatar/' + message.avatar + '?s=50'
+            var title = message.name + ' in ' + message.roomName
+            var mention = message.text.match(new RegExp('\\@' + self.options.user.get('safeName') + '\\b', 'i')) ? true : false
 
             //
             // Desktop Notifications because fuckyes webkit~!
