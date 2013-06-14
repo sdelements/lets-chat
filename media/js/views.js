@@ -722,17 +722,22 @@ var WindowTitleView = Backbone.View.extend({
             // Update Window Title
             //
             $('title').html('(' + parseInt(++self.count) + ') ' + self.title);
+
+            var icon = 'https://www.gravatar.com/avatar/' + message.avatar + '?s=50'
+            var title = message.name + ' in ' + message.roomName
+            var mention = message.text.match(new RegExp('\\@' + self.options.user.get('safeName') + '\\b', 'i')) ? true : false
+
             //
             // Desktop Notifications because fuckyes webkit~!
             //
             if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
                var notification = webkitNotifications.createNotification(
-                  'https://www.gravatar.com/avatar/' + message.avatar + '?s=50',
-                  message.name + ' in ' + message.roomName,
+                  icon,
+                  title,
                   message.text
                 );
-                // If it's a mention, just show keep it sticky
-                if (message.text.match(new RegExp('\\@' + self.options.user.get('safeName') + '\\b', 'i'))) {
+                // If it's a mention, keep it sticky
+                if (mention) {
                     self.activeWebkitNotificationMentions.push(notification);
                     notification.show();
                     return;
@@ -749,17 +754,23 @@ var WindowTitleView = Backbone.View.extend({
                     notification.close();
                 }, 4000);
             }
+    
             //
-            // Notifications on the for Fluid.app users.
+            // Notifications for Fluid.app users.
             //
-            if (window.fluid === undefined) return;
-            window.fluid.dockBadge = self.count;
-            window.fluid.showGrowlNotification({
-                title: 'Let\'s Chat',
-                description: message.text,
-                priority: 1,
-                sticky: false
-            });
+            if (window.fluid !== undefined) {
+                window.fluid.dockBadge = self.count;
+                window.fluid.showGrowlNotification({
+                    title: title,
+                    icon: icon,
+                    description: message.text,
+                    priority: 1,
+                    sticky: mention
+                });
+                if (mention) {
+                    window.fluid.beep()
+                }
+            }
         });
     },
     clean: function() {
