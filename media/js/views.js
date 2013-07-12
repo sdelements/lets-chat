@@ -680,8 +680,8 @@ var WindowTitleView = Backbone.View.extend({
     el: 'html',
     focus: true,
     count: 0,
-    activeWebkitNotifications: [],
-    activeWebkitNotificationMentions: [],
+    activeDesktopNotifications: [],
+    activeDesktopNotificationMentions: [],
     initialize: function() {
         var self = this;
         this.config = this.options.config;
@@ -718,31 +718,29 @@ var WindowTitleView = Backbone.View.extend({
             var mention = message.text.match(new RegExp('\\@' + self.options.user.get('safeName') + '\\b', 'i')) ? true : false
 
             //
-            // Desktop Notifications because fuckyes webkit~!
+            // Desktop Notifications because fuckyeawhynot
             //
-            if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
-               var notification = webkitNotifications.createNotification(
-                  icon,
-                  title,
-                  message.text
-                );
+            if (notify.isSupported && notify.permissionLevel() == notify.PERMISSION_GRANTED) {
+                var notification = notify.createNotification(title, {
+                    body: message.text,
+                    icon: icon,
+                    tag: message.id
+                });
                 // If it's a mention, keep it sticky
                 if (mention) {
-                    self.activeWebkitNotificationMentions.push(notification);
-                    notification.show();
+                    self.activeDesktopNotificationMentions.push(notification);
                     return;
                 }
                 // Clear excessive notifications
-                if (self.activeWebkitNotifications.length > 2) {
-                    self.activeWebkitNotifications[0].cancel();
-                    self.activeWebkitNotifications.shift();
+                if (self.activeDesktopNotifications.length > 2) {
+                    self.activeDesktopNotifications[0].close();
+                    self.activeDesktopNotifications.shift();
                 }
-                self.activeWebkitNotifications.push(notification);
-                notification.show();
+                self.activeDesktopNotifications.push(notification);
                 // Close after a few seconds
                 setTimeout(function() {
                     notification.close();
-                }, 4000);
+                }, 5 * 1000);
             }
     
             //
@@ -764,10 +762,10 @@ var WindowTitleView = Backbone.View.extend({
         });
     },
     clean: function() {
-        // Clean up webkit notifications
-        if (window.webkitNotifications) {
-            _.each(this.activeWebkitNotifications.concat(this.activeWebkitNotificationMentions), function(notification) {
-                notification.cancel();
+        // Clean up desktop notifications
+        if (notify.isSupported) {
+            _.each(this.activeDesktopNotifications.concat(this.activeDesktopNotificationMentions), function(notification) {
+                notification.close();
             });
         }
         // Clean up Fluid.app dock badge
@@ -791,26 +789,26 @@ var ExperimentalFeaturesView = Backbone.View.extend({
         var $input = this.$('[name=desktop-notifications]');
         $input.find('.disabled').show()
           .siblings().hide();
-        if (!window.webkitNotifications) {
+        if (!notify.isSupported) {
             $input.attr('disabled', true);
             // Welp we're done here
             return;
         }
-        if (window.webkitNotifications.checkPermission() === 0) {
+        if (notify.permissionLevel() === notify.PERMISSION_GRANTED) {
             $input.find('.enabled').show()
               .siblings().hide();
         }
-        if (window.webkitNotifications.checkPermission() === 2) {
+        if (notify.permissionLevel() === notify.PERMISSION_DENIED) {
             $input.find('.blocked').show()
               .siblings().hide();
         }
     },
     toggleDesktopNotifications: function() {
         var self = this;
-        if (!window.webkitNotifications) {
+        if (!notify.isSupported) {
             return;
         }
-        window.webkitNotifications.requestPermission(function() {
+        notify.requestPermission(function() {
             self.render();
         });
     }
