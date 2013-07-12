@@ -680,6 +680,8 @@ var WindowTitleView = Backbone.View.extend({
     el: 'html',
     focus: true,
     count: 0,
+    titleTimer: false,
+    titleTimerFlip: false,
     activeDesktopNotifications: [],
     activeDesktopNotificationMentions: [],
     initialize: function() {
@@ -699,8 +701,12 @@ var WindowTitleView = Backbone.View.extend({
                 self.count = 0;
                 self.focus = true;
                 $('title').html(self.title);
+                // Clear title timer
+                window.clearInterval(self.titleTimer);
+                self.titleTimer = false;
+                self.titleTimerFlip = false;
                 // Clean up lingering notifications
-                self.clean();
+                self.cleanNotifications();
             } else {
                 self.focus = false;
             }
@@ -708,18 +714,30 @@ var WindowTitleView = Backbone.View.extend({
         this.notifications.on('addmessage', function(message) {
             // Nothing to do here if focused
             if (self.focus) return;
-            //
-            // Update Window Title
-            //
-            $('title').html('(' + parseInt(++self.count) + ') ' + self.title);
 
-            var icon = 'https://www.gravatar.com/avatar/' + message.avatar + '?s=50'
-            var title = message.name + ' in ' + message.roomName
-            var mention = message.text.match(new RegExp('\\@' + self.options.user.get('safeName') + '\\b', 'i')) ? true : false
+            // Up the new message count
+            ++self.count;
+
+            //
+            // Start Window Title Change
+            //
+            var changeTitle = function() {
+                var countTitle = '(' + parseInt(self.count) + ') ' + self.title;
+                $('title').html(self.titleTimerFlip ? self.title : countTitle);
+                self.titleTimerFlip = !self.titleTimerFlip;
+            }
+            if (!self.titleTimer) {
+                changeTitle();
+                self.titleTimer = setInterval(changeTitle, 1 * 1000);
+            }
 
             //
             // Desktop Notifications because fuckyeawhynot
             //
+            var icon = 'https://www.gravatar.com/avatar/' + message.avatar + '?s=50'
+            var title = message.name + ' in ' + message.roomName
+            var mention = message.text.match(new RegExp('\\@' + self.options.user.get('safeName') + '\\b', 'i')) ? true : false
+
             if (notify.isSupported && notify.permissionLevel() == notify.PERMISSION_GRANTED) {
                 var notification = notify.createNotification(title, {
                     body: message.text,
@@ -761,7 +779,7 @@ var WindowTitleView = Backbone.View.extend({
             }
         });
     },
-    clean: function() {
+    cleanNotifications: function() {
         // Clean up desktop notifications
         if (notify.isSupported) {
             _.each(this.activeDesktopNotifications.concat(this.activeDesktopNotificationMentions), function(notification) {
