@@ -5,19 +5,19 @@
                 <form class="validate form-horizontal" action="" method="post">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3>New Room</h3>
+                        <h4 class="modal-title">New Room</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="control-group">
-                            <label class="control-label">Name</label>
-                            <div class="controls">
-                                <input class="required name" name="name" type="text" value="" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Name</label>
+                            <div class="col-sm-7">
+                                <input class="required name form-control" name="name" type="text" value="" />
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label">Description</label>
-                            <div class="controls">
-                                <textarea name="description"></textarea>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Description</label>
+                            <div class="col-sm-7">
+                                <textarea class="form-control" name="description"></textarea>
                             </div>
                         </div>
                         <p class="response"></p>
@@ -35,31 +35,31 @@
                 <form class="validate form-horizontal" action="/ajax/account" method="post">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3><i class="icon-cogs"></i> Account Settings</h3>
+                        <h4 class="modal-title"><i class="icon-cogs"></i> Account Settings</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="control-group">
-                            <label class="control-label">Email</label>
-                            <div class="controls">
-                                <input class="required email" name="email" type="text" value="{{ user_email }}" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Email</label>
+                            <div class="col-sm-7">
+                                <input class="required email form-control" name="email" type="text" value="{{ user_email }}" />
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label">Current Password</label>
-                            <div class="controls">
-                                <input class="required" name="password" type="password" data-clear="true" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Current Password</label>
+                            <div class="col-sm-7">
+                                <input class="required form-control" name="password" type="password" data-clear="true" />
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label">New Password</label>
-                            <div class="controls">
-                                <input id="account-modal-password" name="new-password" type="password" minlength="4" maxlength="24" data-clear="true" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">New Password</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" id="account-modal-password" name="new-password" type="password" minlength="4" maxlength="24" data-clear="true" />
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label">Confirm New Password</label>
-                            <div class="controls">
-                                <input name="confirm-password" type="password" data-equal-to="#account-modal-password" data-clear="true" minlength="4" maxlength="24" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Confirm New Password</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" name="confirm-password" type="password" data-equal-to="#account-modal-password" data-clear="true" minlength="4" maxlength="24" />
                             </div>
                         </div>
                         <p class="alert response"></p>
@@ -77,31 +77,31 @@
                 <form class="validate form-horizontal" action="/ajax/profile" method="post">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3><i class="icon-edit"></i> Profile Settings</h3>
+                        <h4 class="modal-title"><i class="icon-edit"></i> Profile Settings</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="control-group">
-                            <label class="control-label">Display Name</label>
-                            <div class="controls">
-                                <input class="required" name="display-name" type="text" value="{{ user_displayname }}" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Display Name</label>
+                            <div class="col-sm-7">
+                                <input class="required form-control" name="display-name" type="text" value="{{ user_displayname }}" />
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label">First Name</label>
-                            <div class="controls">
-                                <input class="required" name="first-name" type="text" value="{{ user_firstname }}" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">First Name</label>
+                            <div class="col-sm-7">
+                                <input class="required form-control" name="first-name" type="text" value="{{ user_firstname }}" />
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label">Last Name</label>
-                            <div class="controls">
-                                <input class="required" name="last-name" type="text" value="{{ user_lastname }}" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Last Name</label>
+                            <div class="col-sm-7">
+                                <input class="required form-control" name="last-name" type="text" value="{{ user_lastname }}" />
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label">Status</label>
-                            <div class="controls">
-                                <textarea name="status">{{ user_status }}</textarea>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Status</label>
+                            <div class="col-sm-7">
+                                <textarea class="form-control" name="status">{{ user_status }}</textarea>
                             </div>
                         </div>
                         <p class="alert response"></p>
@@ -118,12 +118,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3><i class="icon-beaker"></i> Experimental Features</h3>
+                    <h4 class="modal-title"><i class="icon-beaker"></i> Experimental Features</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="controls">
+                    <div class="form-group">
                         <label class="checkbox">
-                            <button name="desktop-notifications" class="btn">
+                            <button name="desktop-notifications" class="btn btn-info" style="text-align: left">
                                 <span class="enabled">
                                     Desktop Notifications are <strong>enabled</strong>
                                     <br /><small>Use your browser settings to disable them</small>

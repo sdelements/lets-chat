@@ -5943,16 +5943,11 @@ td.visible-print {
 /*********************
  * Overrides
  *********************/
-.ui-tooltip label {
-  color: inherit;
-  margin: 0;
+.modal {
+  overflow-y: auto;
 }
-.navbar,
-.modal form {
-  margin-bottom: 0;
-}
-.btn {
-  border-radius: 3px;
+body.modal-open {
+  margin-right: 0;
 }
 .btn.loading {
   background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.25, rgba(0, 0, 0, 0.1)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(0, 0, 0, 0.1)), color-stop(0.75, rgba(0, 0, 0, 0.1)), color-stop(0.75, transparent), to(transparent));
@@ -6111,13 +6106,8 @@ header .user .dropdown-menu a {
 header .user .dropdown-menu a:hover {
   color: #fff;
 }
-.modal-body textarea {
-  width: 100px;
-  height: 220px;
-}
 .modal-body .response {
   text-align: center;
-  display: none;
   margin-bottom: 0;
 }
 /*********************

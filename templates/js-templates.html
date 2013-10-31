@@ -126,16 +126,16 @@
                             <h3>Edit Room</h3>
                         </div>
                         <div class="modal-body">
-                            <div class="control-group">
-                                <label class="control-label">Name</label>
-                                <div class="controls">
-                                    <input class="required name" name="name" type="text" value="{{ name }}" />
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Name</label>
+                                <div class="col-sm-7">
+                                    <input class="required name form-control" name="name" type="text" value="{{ name }}" />
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <label class="control-label">Description</label>
-                                <div class="controls">
-                                    <textarea name="description">{{ description }}</textarea>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Description</label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control" name="description">{{ description }}</textarea>
                                 </div>
                             </div>
                             <p class="response"></p>
