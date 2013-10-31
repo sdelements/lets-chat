@@ -5281,6 +5281,9 @@ header .user .dropdown-menu a:hover {
 /*********************
  * Login
  *********************/
+.page-login {
+  background: #222222 url('../img/pattern.png');
+}
 .page-login h1 {
   margin-top: 0;
 }
