@@ -15,28 +15,28 @@
 		</h1>  
         <div id="login-form" class="well">
             <legend>Sign in</legend>
-            <form class="login validate form-horizontal" action="/ajax/login" method="post" data-refresh="true">
+            <form class="login validate" action="/ajax/login" method="post" data-refresh="true">
                 <div class="form-group">
                     <input class="required form-control" placeholder="Email" name="email" type="text" />
                 </div>
                 <div class="form-group">
                     <input class="required form-control" placeholder="Password" name="password" type="password" /> 
                 </div>
-                <p class="alert response hide"></p>
+                <p class="alert response" style="display: none;"></p>
                 <div class="bottom clearfix">
                     <div class="pull-left links">
                         {% if not disableRegistration %}
                             <a class="show-form" data-target="#register-form" href="#">I need an account</a>
                         {% endif %}
                     </div>
-                    <button class="btn-info btn btn-large indicator pull-right" type="submit">Sign in <i class="icon-signin"></i></button>
+                    <button class="btn-info btn btn-lg indicator pull-right" type="submit">Sign in <i class="icon-signin"></i></button>
                 </div>
             </form>
         </div><!-- login form end -->
         {% if not disableRegistration %}
             <div id="register-form" class="well" style="display: none;">
                 <legend>Register</legend>
-                <form class="register validate form-horizontal" action="/ajax/register" method="post" data-refresh="true">
+                <form class="register validate" action="/ajax/register" method="post" data-refresh="true">
                     <input type="hidden" name="next" value="{{next}}" />
                     <div class="form-group">
                         <input class="required email form-control" name="email" type="text" placeholder="Email" />
@@ -50,12 +50,12 @@
                     <div class="form-group">
                         <input class="required form-control" name="last-name" type="text" placeholder="Last Name" maxlength="24" />
                     </div>
-                    <p class="alert response hide"></p>
+                    <p class="alert response" style="display: none;"></p>
                     <div class="bottom clearfix">
                         <div class="pull-left links">
                             <a class="show-form" data-target="#login-form" href="#">I already have an account</a>
                         </div>
-                        <button class="btn-info btn btn-large indicator pull-right" type="submit">Register</button>
+                        <button class="btn-info btn btn-lg indicator pull-right" type="submit">Register</button>
                     </div>
                 </form>
             </div><!-- register form end -->

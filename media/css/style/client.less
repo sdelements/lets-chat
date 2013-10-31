@@ -237,19 +237,19 @@
 
 @keyframes blink {
     from {
-        .opacity(20);
+        .opacity(.2);
     }
     to {
-        .opacity(70);
+        .opacity(.7);
     }
 }
 
 @-webkit-keyframes blink {
     from {
-        .opacity(20);
+        .opacity(.2);
     }
     to {
-        .opacity(70);
+        .opacity(.7);
     }
 }
  
@@ -259,7 +259,7 @@
     right: 25px;
     bottom: 20px;
     z-index: 1000;
-    .opacity(50);
+    .opacity(.5);
     &.disconnected {
         color: #e44755;
         animation: blink .7s infinite alternate;
@@ -267,6 +267,6 @@
     }
     &:hover {
         cursor: default;
-        .opacity(90);
+        .opacity(.9);
     }
 }

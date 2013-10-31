@@ -1,42 +1,23 @@
 
 // Validator defaults
-jQuery.validator.setDefaults({
-	onkeyup: false,
-	errorClass: 'error',
-	validClass: 'valid',
-	errorPlacement: function(error, element) {
-		//Set positioning based on the elements position in the form
-		var elem = $(element),
-			corners = ['right center', 'left center'],
-			flipIt = elem.parents('span.right').length > 0;
-		//Check we have a valid error message
-		if(!error.is(':empty')) {
-			// Apply the tooltip only if it isn't valid
-			elem.filter(':not(.valid)').qtip({
-				overwrite: false,
-				content: error,
-				position: {
-					my: corners[ flipIt ? 0 : 1 ],
-					at: corners[ flipIt ? 1 : 0 ],
-					viewport: $(window)
-				},
-				show: {
-					event: false,
-					ready: true
-				},
-				hide: false,
-				style: {
-					classes: 'ui-tooltip-red ui-tooltip-rounded'
-				}
-			})
-			// If we have a tooltip on this element already, just update its content
-			.qtip('option', 'content.text', error);
-		}
-		// If the error is empty, remove the qTip
-		else { elem.qtip('destroy'); }
-	},
-	success: $.noop // Odd workaround for errorPlacement not firing!
+$.validator.setDefaults({
+    highlight: function(element) {
+        $(element).closest('.form-group').addClass('has-error');
+    },
+    unhighlight: function(element) {
+        $(element).closest('.form-group').removeClass('has-error');
+    },
+    errorElement: 'span',
+    errorClass: 'help-block',
+    errorPlacement: function(error, element) {
+        if(element.parent('.input-group').length) {
+            error.insertAfter(element.parent());
+        } else {
+            error.insertAfter(element);
+        }
+    }
 });
+
 $.validator.addMethod('alphanumeric', function(value, element) {
 	return this.optional(element) || /^[a-z0-9]+$/i.test(value);
 }, 'Only letters and numbers are allowed');
@@ -50,7 +31,7 @@ window.submitForm = function(form, callbacks) {
         self.$form.find('.response').each(function () {
             var isError = type == 'error' ? true : false;
             $(this).text(text);
-            $(this).toggleClass('alert-error', isError)
+            $(this).toggleClass('alert-danger', isError)
                 .toggleClass('alert-success', !isError)
                 .stop(true, true)
                 .fadeIn(100);
