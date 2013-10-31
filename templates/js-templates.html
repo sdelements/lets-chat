@@ -4,7 +4,7 @@
         <li class="tab" data-id="{{ id }}">
             <a class="room" href="#!/room/{{ id }}" title="{{ name }}" data-id="{{ id }}">
                 <span class="title text">{{ name }}</span>
-                <span class="badge badge-important" style="display: none;"></span>
+                <span class="badge" style="display: none;"></span>
                 <span class="close">&times;</span>
             </a>
         </li>
@@ -35,7 +35,7 @@
     </script>
     <script id="js-tmpl-file-item" type="text/html">
         <li class="file" data-id="{{id}}" data-uploaded="{{uploaded}}" data-size="{{size}}">
-            <a href="{{url}}" class="icon"><i class="icon-file"></i></a>
+            <a href="{{url}}" class="icon"><i class="icon-file-alt"></i></a>
             <div class="meta">
                 <a class="name" href="{{url}}" target="_blank">{{name}}</a>
                 <span class="owner">{{owner}}</span> &middot; <span class="size">{{size}}kb</span>
@@ -78,10 +78,10 @@
                 </div>
                 <div class="clear">
                     <div class="btn-group buttons">
-                        <a class="btn" title="View Transcript" href="/transcripts/{{ id }}/today" target="_blank">
+                        <a class="btn btn-default btn-sm" title="View Transcript" href="/transcripts/{{ id }}/today" target="_blank">
                             <i class="icon-comment"></i>
                         </a>
-                        <button class="btn show-edit-room" title="Edit Room">
+                        <button class="btn btn-default btn-sm show-edit-room" title="Edit Room">
                             <i class="icon-pencil"></i>
                         </button>
                     </div>
@@ -102,7 +102,7 @@
                             <i class="icon-white icon-film"></i> <span class="text">Media</span>
                             <img class="throbber"  src="/media/img/llama.gif" style="display: none;" />
                         </h3>
-                        <a class="toggle-upload btn btn-dmb" href="#"><i class="icon-plus icon-white"></i><i class="icon-remove icon-white"></i></a>
+                        <a class="toggle-upload btn btn-dmb btn-sm" href="#"><i class="icon-plus icon-white"></i><i class="icon-remove icon-white"></i></a>
                     </div>
                     <div class="upload" style="display: none;">
                         <form action="/ajax/upload-file">
@@ -123,7 +123,7 @@
                     <form class="validate form-horizontal" action="" method="post">
                         <div class="modal-header">
                             <button type="button" class="close hide-edit-room" aria-hidden="true">&times;</button>
-                            <h3>Edit Room</h3>
+                            <h4 class="modal-title">Edit Room</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
@@ -138,10 +138,12 @@
                                     <textarea class="form-control" name="description">{{ description }}</textarea>
                                 </div>
                             </div>
-                            <p class="response"></p>
+                            <p class="response" style="display: none;"></p>
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" class="btn btn-success pull-right" name="submit" value="Save">
+                            <button type="submit" class="btn btn-success pull-right">
+                                <i class="icon-ok"></i> Save
+                            </button>
                             <a class="delete-room btn btn-danger pull-left" tabindex="-1"><i class="icon-remove icon-white"></i> Delete Room</a>
                         </div>
                     </form>

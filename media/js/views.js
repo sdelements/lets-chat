@@ -459,18 +459,12 @@ var RoomView = Backbone.View.extend({
         if (e) {
             e.preventDefault();
         }
-        this.$('.modal-backdrop').fadeIn(100).one('click', function() {
-            self.hideEditRoom(e);
-        });
-        this.$('.edit-room').modal({
-            backdrop: false
-        });
+        this.$('.edit-room').modal();
     },
     hideEditRoom: function(e) {
         if (e) {
             e.preventDefault();
         }
-        this.$('.modal-backdrop').fadeOut(200);
         this.$('.edit-room').modal('hide');
     },
     submitEditRoom: function(e) {
@@ -856,7 +850,7 @@ var ClientView = Backbone.View.extend({
             self.$('.connection-status')
                 .removeClass('disconnected')
                 .addClass('connected')
-                .html('<i class="icon-signal"></i>  connected');
+                .html('<i class="icon-refresh"></i>  connected');
         });
         this.notifications.on('disconnect', function() {
             self.$('.connection-status')
