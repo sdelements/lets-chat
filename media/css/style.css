@@ -5026,14 +5026,14 @@ li {
 }
 textarea {
   outline: none;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }
 header {
   background: #222222 url('../img/header.png');
   border-bottom: 1px #000 solid;
   height: 42px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 }
 header:before,
 header:after {
@@ -5067,9 +5067,6 @@ header .user {
   float: right;
   border-left: 1px #111 solid;
   position: relative;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }
 header .user:active {
   background: #222;
@@ -5343,6 +5340,9 @@ header .user .dropdown-menu a:hover {
   border-bottom: none;
   display: block;
   position: relative;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
   opacity: 0.6;
   filter: alpha(opacity=60);
 }
@@ -5370,6 +5370,7 @@ header .user .dropdown-menu a:hover {
   height: 30px;
   line-height: 30px;
   color: #aaa;
+  text-shadow: none;
   font-weight: normal;
   position: absolute;
   top: 0;
