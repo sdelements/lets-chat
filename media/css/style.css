@@ -5517,15 +5517,14 @@ header .user .dropdown-menu a:hover {
 }
 .page-login #logo {
   background: #ffffff url('../img/grid_noise.png');
-  height: 140px;
-  margin-bottom: 40px;
-  position: relative;
+  text-align: center;
+  padding: 50px 0;
+  padding-bottom: 150px;
 }
 .page-login #logo img {
-  margin-left: -170px;
-  position: absolute;
-  left: 50%;
-  bottom: -1px;
+  width: 400px;
+  max-width: 400px;
+  height: 77px;
 }
 .page-login input[type="text"],
 .page-login input[type="password"] {
@@ -5540,9 +5539,10 @@ header .user .dropdown-menu a:hover {
   background: #fff;
   width: 400px;
   margin: 0 auto;
-  -webkit-box-shadow: 0 0 10px #000000;
-  -moz-box-shadow: 0 0 10px #000000;
-  box-shadow: 0 0 10px #000000;
+  margin-top: -140px;
+  -webkit-box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.1);
 }
 /*********************
  * Messages
