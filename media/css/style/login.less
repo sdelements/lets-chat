@@ -4,6 +4,16 @@
  
 .page-login {
     background: #222 url('../img/pattern.png');
+    &:before {
+        .square(100%);
+        content: '';
+        position: fixed;
+        background: rgba(0,0,0,.7);
+    }
+    #login {
+        z-index: 1;
+        position: relative;
+    }
     h1 {
         margin-top: 0;
     }
