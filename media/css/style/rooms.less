@@ -4,30 +4,28 @@
 
 #room-list {
     display: block;
+    padding-top: 20px;
+    h1 {
+        font-size: 30px;
+        color: #f2f2f2;
+        vertical-align: middle;
+        margin: 0;
+        display: inline-block;
+    }
     .top {
-        padding: 20px;
-        padding-left: 0;
-        .bar {
-            padding: 10px;
-            overflow: hidden;
-            position: relative;
-            border: 1px #333 solid;
-            border-left: none;
-            border-radius: 0 4px 4px 0;
-            .box-shadow(0 0 10px #000);
+        padding: 15px;
+        margin: 20px;
+        margin-top: 0;
+        border: 1px #333 solid;
+        img {
+            height: 20px;
         }
-        h1 {
-            float: left;
-            img {
-                height: 25px;
-                position: absolute;
-                left: 20px;
-                bottom: 10px;
-            }
-        }
-        .btn {
-            float: right;
-        }
+        .border-radius(3px);
+        .box-shadow(0 0 7px #000);
+    }
+    .btn {
+        float: right;
+        margin-left: 20px;
     }
 }
 

@@ -5900,32 +5900,32 @@ header .user .dropdown-menu a:hover {
  *********************/
 #room-list {
   display: block;
+  padding-top: 20px;
+}
+#room-list h1 {
+  font-size: 30px;
+  color: #f2f2f2;
+  vertical-align: middle;
+  margin: 0;
+  display: inline-block;
 }
 #room-list .top {
-  padding: 20px;
-  padding-left: 0;
-}
-#room-list .top .bar {
-  padding: 10px;
-  overflow: hidden;
-  position: relative;
+  padding: 15px;
+  margin: 20px;
+  margin-top: 0;
   border: 1px #333 solid;
-  border-left: none;
-  border-radius: 0 4px 4px 0;
-  -webkit-box-shadow: 0 0 10px #000000;
-  box-shadow: 0 0 10px #000000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 7px #000000;
+  box-shadow: 0 0 7px #000000;
 }
-#room-list .top h1 {
-  float: left;
+#room-list .top img {
+  height: 20px;
 }
-#room-list .top h1 img {
-  height: 25px;
-  position: absolute;
-  left: 20px;
-  bottom: 10px;
-}
-#room-list .top .btn {
+#room-list .btn {
   float: right;
+  margin-left: 20px;
 }
 .room-list {
   padding: 0 15px;
