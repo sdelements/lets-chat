@@ -1,4 +1,16 @@
 //
+// Backbone 1.1 legacy options shim
+//
+Backbone.View = (function(View) {
+   return View.extend({
+        constructor: function(options) {
+            this.options = options || {};
+            View.apply(this, arguments);
+        }
+    });
+})(Backbone.View);
+
+//
 // Roomlist
 //
 var RoomListView = Backbone.View.extend({
@@ -813,7 +825,7 @@ var ExperimentalFeaturesView = Backbone.View.extend({
 //
 var ClientView = Backbone.View.extend({
     el: '#client',
-    initialize: function() {
+    initialize: function(options) {
         var self = this;
         //
         // Vars

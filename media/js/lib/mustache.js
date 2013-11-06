@@ -38,9 +38,13 @@
   }
 
   var Object_toString = Object.prototype.toString;
-  var isArray = Array.isArray || function (obj) {
-    return Object_toString.call(obj) === '[object Array]';
+  var isArray = Array.isArray || function (object) {
+    return Object_toString.call(object) === '[object Array]';
   };
+
+  function isFunction(object) {
+    return typeof object === 'function';
+  }
 
   function escapeRegExp(string) {
     return string.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
@@ -82,9 +86,10 @@
     var match = this.tail.match(re);
 
     if (match && match.index === 0) {
-      this.tail = this.tail.substring(match[0].length);
-      this.pos += match[0].length;
-      return match[0];
+      var string = match[0];
+      this.tail = this.tail.substring(string.length);
+      this.pos += string.length;
+      return string;
     }
 
     return "";
@@ -95,30 +100,30 @@
    * the skipped string, which is the entire tail if no match can be made.
    */
   Scanner.prototype.scanUntil = function (re) {
-    var match, pos = this.tail.search(re);
+    var index = this.tail.search(re), match;
 
-    switch (pos) {
+    switch (index) {
     case -1:
       match = this.tail;
-      this.pos += this.tail.length;
       this.tail = "";
       break;
     case 0:
       match = "";
       break;
     default:
-      match = this.tail.substring(0, pos);
-      this.tail = this.tail.substring(pos);
-      this.pos += pos;
+      match = this.tail.substring(0, index);
+      this.tail = this.tail.substring(index);
     }
+
+    this.pos += match.length;
 
     return match;
   };
 
   function Context(view, parent) {
-    this.view = view || {};
+    this.view = view == null ? {} : view;
     this.parent = parent;
-    this._cache = {};
+    this._cache = { '.': this.view };
   }
 
   Context.make = function (view) {
@@ -130,35 +135,35 @@
   };
 
   Context.prototype.lookup = function (name) {
-    var value = this._cache[name];
+    var value;
+    if (name in this._cache) {
+      value = this._cache[name];
+    } else {
+      var context = this;
 
-    if (!value) {
-      if (name == '.') {
-        value = this.view;
-      } else {
-        var context = this;
+      while (context) {
+        if (name.indexOf('.') > 0) {
+          value = context.view;
 
-        while (context) {
-          if (name.indexOf('.') > 0) {
-            value = context.view;
-            var names = name.split('.'), i = 0;
-            while (value && i < names.length) {
-              value = value[names[i++]];
-            }
-          } else {
-            value = context.view[name];
+          var names = name.split('.'), i = 0;
+          while (value != null && i < names.length) {
+            value = value[names[i++]];
           }
-
-          if (value != null) break;
-
-          context = context.parent;
+        } else {
+          value = context.view[name];
         }
+
+        if (value != null) break;
+
+        context = context.parent;
       }
 
       this._cache[name] = value;
     }
 
-    if (typeof value === 'function') value = value.call(this.view);
+    if (isFunction(value)) {
+      value = value.call(this.view);
+    }
 
     return value;
   };
@@ -201,7 +206,7 @@
     var self = this;
     return function (view, partials) {
       if (partials) {
-        if (typeof partials === 'function') {
+        if (isFunction(partials)) {
           self._loadPartial = partials;
         } else {
           for (var name in partials) {
@@ -227,6 +232,12 @@
   function renderTokens(tokens, writer, context, template) {
     var buffer = '';
 
+    // This function is used to render an artbitrary template
+    // in the current context by higher-order functions.
+    function subRender(template) {
+      return writer.render(template, context);
+    }
+
     var token, tokenValue, value;
     for (var i = 0, len = tokens.length; i < len; ++i) {
       token = tokens[i];
@@ -236,7 +247,7 @@
       case '#':
         value = context.lookup(tokenValue);
 
-        if (typeof value === 'object') {
+        if (typeof value === 'object' || typeof value === 'string') {
           if (isArray(value)) {
             for (var j = 0, jlen = value.length; j < jlen; ++j) {
               buffer += renderTokens(token[4], writer, context.push(value[j]), template);
@@ -244,11 +255,9 @@
           } else if (value) {
             buffer += renderTokens(token[4], writer, context.push(value), template);
           }
-        } else if (typeof value === 'function') {
+        } else if (isFunction(value)) {
           var text = template == null ? null : template.slice(token[3], token[5]);
-          value = value.call(context.view, text, function (template) {
-            return writer.render(template, context);
-          });
+          value = value.call(context.view, text, subRender);
           if (value != null) buffer += value;
         } else if (value) {
           buffer += renderTokens(token[4], writer, context, template);
@@ -267,7 +276,7 @@
         break;
       case '>':
         value = writer.getPartial(tokenValue);
-        if (typeof value === 'function') buffer += value(context);
+        if (isFunction(value)) buffer += value(context);
         break;
       case '&':
         value = context.lookup(tokenValue);
@@ -388,7 +397,7 @@
       nonSpace = false;
     }
 
-    var start, type, value, chr, token;
+    var start, type, value, chr, token, openSection;
     while (!scanner.eos()) {
       start = scanner.pos;
 
@@ -444,30 +453,36 @@
         sections.push(token);
       } else if (type === '/') {
         // Check section nesting.
-        if (sections.length === 0) throw new Error('Unopened section "' + value + '" at ' + start);
-        var openSection = sections.pop();
-        if (openSection[1] !== value) throw new Error('Unclosed section "' + openSection[1] + '" at ' + start);
+        openSection = sections.pop();
+        if (!openSection) {
+          throw new Error('Unopened section "' + value + '" at ' + start);
+        }
+        if (openSection[1] !== value) {
+          throw new Error('Unclosed section "' + openSection[1] + '" at ' + start);
+        }
       } else if (type === 'name' || type === '{' || type === '&') {
         nonSpace = true;
       } else if (type === '=') {
         // Set the tags for the next time around.
         tags = value.split(spaceRe);
-        if (tags.length !== 2) throw new Error('Invalid tags at ' + start + ': ' + tags.join(', '));
+        if (tags.length !== 2) {
+          throw new Error('Invalid tags at ' + start + ': ' + tags.join(', '));
+        }
         tagRes = escapeTags(tags);
       }
     }
 
     // Make sure there are no open sections when we're done.
-    var openSection = sections.pop();
-    if (openSection) throw new Error('Unclosed section "' + openSection[1] + '" at ' + scanner.pos);
+    openSection = sections.pop();
+    if (openSection) {
+      throw new Error('Unclosed section "' + openSection[1] + '" at ' + scanner.pos);
+    }
 
-    tokens = squashTokens(tokens);
-
-    return nestTokens(tokens);
+    return nestTokens(squashTokens(tokens));
   }
 
   mustache.name = "mustache.js";
-  mustache.version = "0.7.2";
+  mustache.version = "0.7.3";
   mustache.tags = ["{{", "}}"];
 
   mustache.Scanner = Scanner;
@@ -526,7 +541,7 @@
   mustache.to_html = function (template, view, partials, send) {
     var result = mustache.render(template, view, partials);
 
-    if (typeof send === "function") {
+    if (isFunction(send)) {
       send(result);
     } else {
       return result;
