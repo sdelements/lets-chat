@@ -5,7 +5,7 @@
   font-family: 'Pacifico';
   font-style: normal;
   font-weight: 400;
-  src: url(pacifico) format('woff');
+  src: url('../font/pacifico.woff') format('woff');
 }
 /*!
  * Bootstrap v3.0.0
