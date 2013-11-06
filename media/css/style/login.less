@@ -1,36 +1,61 @@
 /*********************
  * Login
  *********************/
- 
+
 .page-login {
-    background: #222 url('../img/pattern.png');
+    background-image: url('../img/photos/city.jpg');
+    background-size: cover;
+    height: 100%;
     &:before {
+        background-image: url('../img/photo-overlay.png');
         .square(100%);
         content: '';
         position: fixed;
-        background: rgba(0,0,0,.7);
+        top: 0;
+        left: 0;
+        .opacity(.4);
     }
-    #login {
-        z-index: 1;
-        position: relative;
-    }
-    h1 {
-        margin-top: 0;
-    }
-    #logo {
-        background: #fff url('../img/grid_noise.png');
+    .content-wrap {
+        height: 100%;
         text-align: center;
-        padding: 50px 0;
-        padding-bottom: 150px;
-        img {
-            width: 400px;
-            max-width: 400px;
-            height: 77px;
+        &:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+            margin-right: -0.25em; /* Adjusts for spacing */
         }
+    }
+    .content {
+        width: 400px;
+        vertical-align: middle;
+        display: inline-block;
+        margin-top: -100px;
+        position: relative;
+        z-index: 1;
+    }
+    .logo {
+        width: 100%;
+        font-family: Pacifico;
+        font-size: 85px;
+        text-shadow: 0 0 10px rgba(0,0,0,.2);
+        color: #fff;
+        margin: 0;
+        margin-bottom: 30px;
+        .flavour {
+            color: #f22472;
+        }
+    }
+    .well {
+        background: #fff;
+        margin: 0 auto;
+        .box-shadow(0 0 20px 3px rgba(0,0,0,.1));
     }
     legend {
         line-height: 100%;
-        padding-bottom: 10px;
+        color: #555;
+        font-family: pacifico;
+        padding-bottom: 15px;
     }
     input[type="text"],
     input[type="password"] {
@@ -41,11 +66,29 @@
     .links {
         margin-top: 12px;
     }
-    .well {
-        background: #fff;
-        width: 400px;
-        margin: 0 auto;
-        margin-top: -130px;
-        .box-shadow(0 0 20px 3px rgba(0,0,0,.1));
+    .footer {
+        .bg-dark;
+        width: 100%;
+        color: #fff;
+        font-size: 11px;
+        font-family: Tahoma;
+        text-align: center;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: 5px 0;
+        .opacity(0.8);
+        p {
+            margin: 0 10px;
+        }
+        a {
+            color: #fff;
+        }
+        .icon {
+            margin-right: 3px;
+        }
+        .icon-heart {
+            color: #f22472;
+        }
     }
 }

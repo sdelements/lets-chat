@@ -22,7 +22,7 @@
     {% block page_js %}{% endblock %}
 
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}" {% block body_attributes %}{% endblock %}>
     {% block content %}{% endblock %}
     {% block page_assets %}{% endblock %}
 </body>

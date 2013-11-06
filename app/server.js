@@ -153,10 +153,14 @@ var Server = function(config) {
     // Login
     //
     self.app.get('/login', function(req, res) {
+        var image = _.chain(fs.readdirSync(path.resolve('media/img/photos'))).filter(function(file){
+                return /\.(gif|jpg|jpeg|tiff|png)$/i.test(file);
+            }).sample().value();
         res.render('login.html', {
-            'media_url': self.config.media_url,
-            'next': req.param('next', ''),
-            'disableRegistration': self.config.disable_registration
+            media_url: self.config.media_url,
+            next: req.param('next', ''),
+            disableRegistration: self.config.disable_registration,
+            photo: image
         });;
     });
 

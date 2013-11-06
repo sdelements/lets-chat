@@ -18,7 +18,7 @@
         "mongoose": "3.6.4",
         "swig": "0.13.5",
         "socket.io": "0.9.14",
-        "underscore": "1.4.4",
+        "underscore": "1.5.2",
         "node_hash": "0.2.0",
         "moment": "1.7.2",
         "validator": "0.5.0",
