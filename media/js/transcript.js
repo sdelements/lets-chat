@@ -8,6 +8,7 @@ var TranscriptView = Backbone.View.extend({
     },
     initialize: function(options) {
         var self = this;
+        this.options = options;
         //
         // Models
         //
