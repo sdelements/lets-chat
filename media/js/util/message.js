@@ -17,10 +17,10 @@ if (typeof exports !== 'undefined') {
         var linkPattern = /((https?|ftp):\/\/[^\s\/$.?#].[^\s]*[^.])/gi;
         var mentionPattern = /@(.+?)\b/;
 
+        text = text.replace(mentionPattern, '<span class="mention-color">@$1</span>');
+
         if (text.match(imagePattern)) {
             text = text.replace(imagePattern, '<a class="thumbnail" href="$1" target="_blank"><img src="$1" alt="$1" /></a>');
-        } else if(text.match(mentionPattern)) {
-          text = text.replace(mentionPattern, '<span class="mention-color">@$1</span>');
         } else {
             text = text.replace(linkPattern, '<a href="$1" target="_blank">$1</a>');
         }
