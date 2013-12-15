@@ -117,7 +117,7 @@ var Server = function(config) {
                         if (err) {
                             return done(err);
                         }
-
+                        self.config.ldap_search_options.filter = 'uid=' + uid;
                         ldap.search(self.config.ldap_search_options, function (err, data) {
                             if (err) {
                                 return done(err);
