@@ -15,7 +15,7 @@ if (typeof exports !== 'undefined') {
         // TODO: Fix these regexes
         var imagePattern = /((https?|ftp):\/\/[^\s\/$.?#].[^\s]*[.](jpe?g|png|gif)\s*$)/gi;
         var linkPattern = /((https?|ftp):\/\/[^\s\/$.?#].[^\s]*[^.])/gi;
-        var mentionPattern = /@(.+?)\b/;
+        var mentionPattern = /@(.+?)\b/g;
 
         text = text.replace(mentionPattern, '<span class="mention-color">@$1</span>');
 
