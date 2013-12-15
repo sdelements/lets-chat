@@ -18,6 +18,7 @@ var moment = require('moment');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var KerberosStrategy = require('passport-kerberos').Strategy;
+var LDAP = require('LDAP');
 
 // App stuff
 var ChatServer = require('./chat.js');
@@ -105,32 +106,53 @@ var Server = function(config) {
             passwordField: 'password'
         },
         function (uid, done) {
-            console.log('searching for user');
-
-
-
-            models.user.findOne({ username: username }, function (err, user) {
+            models.user.findOne({ uid: uid }, function (err, user) {
                 if (err) {
-                    console.log('Error searching for user!!');
                     return done(err);
                 }
                 if (!user) {
-                    console.log('No user found attempting to create authenticated kerberos user');
-                    user = new models.user({
-                        username: username,
-                        displayName: username
-                    });
-                    user.save(function (err, user) {
+                    var ldap = new LDAP(self.config.ldap_connect_settings);
+                    ldap.open();
+                    ldap.simplebind(self.config.ldap_bind_options, function (err) {
                         if (err) {
-                            console.log("Error creating user: " + err);
+                            return done(err);
                         }
+
+                        ldap.search(self.config.ldap_search_options, function (err, data) {
+                            if (err) {
+                                return done(err);
+                            }
+                            if (data !== undefined && data[0] !== undefined) {
+                                var user = models.user.findOne({
+                                    'email': data[0][self.config.ldap_field_mappings.email]
+                                }, function (err, user) {
+                                    if (err) {
+                                        return done(err);
+                                    }
+                                    if (!user) {
+                                        user = new models.user({
+                                            uid: uid,
+                                            email: data[0][self.config.ldap_field_mappings.email],
+                                            firstName: data[0][self.config.ldap_field_mappings.firstName],
+                                            lastName: data[0][self.config.ldap_field_mappings.lastName],
+                                            displayName: data[0][self.config.ldap_field_mappings.displayName]
+                                        });
+                                    } else {
+                                        user.uid = uid;
+                                    }
+                                    user.save(function (err, user) {
+                                        if (err) {
+                                            return done(err);
+                                        }
+                                        return done(null, user, self.config.realm);
+                                    });
+                                });
+                            }
+                        });
                     });
-                    if (!user) {
-                        console.log('user var still false after creating user');
-                        return done(null, false);
-                    }
+                } else {
+                    return done(null, user, self.config.realm);
                 }
-                return done(null, user, self.config.realm);
             });
         }
     ));
@@ -231,10 +253,8 @@ var Server = function(config) {
         // Kerberos Login
         //
         self.app.post('/login', function(req, res, next) {
-            console.log('attempting kerberos auth with ' + req.toString());
             passport.authenticate('kerberos', function(err, user, info) {
                 if (err) {
-                    console.log('kerberos auth failed:\nError: ' + err + '\nInfo: ' + info);
                     res.send({
                         status: 'error',
                         message: 'Some fields did not validate',
@@ -243,7 +263,6 @@ var Server = function(config) {
                     return;
                 }
                 if (!user) {
-                    console.log('kerberos auth failed, no user returned:\nUser: ' + user + "\nInfo: " + info);
                     next();
                     return;
                 }
@@ -262,10 +281,8 @@ var Server = function(config) {
                 });
             })(req, res, next);
         }, function(req, res) {
-            console.log('attempting local auth with ' + req.toString());
             passport.authenticate('local', function(err, user, info) {
                 if (err) {
-                    console.log("Error performing local auth:\nError: " + err + "\nInfo: " + info);
                     res.send({
                         status: 'error',
                         message: 'Some fields did not validate',
@@ -274,7 +291,6 @@ var Server = function(config) {
                     return;
                 }
                 if (!user) {
-                    console.log("Error performing local auth, no user returned:\nInfo: " + info);
                     res.send({
                         status: 'error',
                         message: 'Incorrect login credentials.'
@@ -282,23 +298,19 @@ var Server = function(config) {
                     return;
                 }
                 req.login(user, function(err) {
-                    console.log('Auth success, attempting to log you in');
                     if (err) {
-                        console.log("Error logging you in:\nError: " + err);
                         res.send({
                             status: 'error',
                             message: 'There were problems logging you in.'
                         });
                         return;
                     }
-                    console.log('Login success, letting you know with ' + res.toString());
                     res.send({
                         status: 'success',
                         message: 'Logging you in...'
                     });
                 });
             })(req, res);
-            console.log('attempted local auth... what happened?');
         });
 
         //

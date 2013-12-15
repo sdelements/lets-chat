@@ -7,7 +7,7 @@ var hash = require('node_hash');
 var config = require('../../settings.js');
 
 var UserSchema = new Schema({
-    username: {
+    uid: {
         type: String,
         required: false,
         trim: true,
@@ -17,7 +17,7 @@ var UserSchema = new Schema({
     },
     email: {
         type: String,
-        required: false,
+        required: true,
         trim: true,
         lowercase: true,
         validate: [function(v) {
@@ -43,7 +43,7 @@ var UserSchema = new Schema({
     },
     firstName: {
         type: String,
-        required: false,
+        required: true,
         trim: true,
         validate: [function(v) {
             return (v.length <= 24);
@@ -51,7 +51,7 @@ var UserSchema = new Schema({
     },
     lastName: {
         type: String,
-        required: false,
+        required: true,
         trim: true,
         validate: [function(v) {
             return (v.length <= 24);

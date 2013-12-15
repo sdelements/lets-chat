@@ -33,9 +33,9 @@ var config = {
 
     //LDAP
     ldap_connect_settings: {
-        uri: '',
+        uri: 'ldap://your.ldap.server',
         // Replace with your appropriate LDAP version
-        version: 3,
+        version: 4,
         connecttimeout: 1
     },
 
