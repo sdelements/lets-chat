@@ -220,7 +220,7 @@ table {
   img {
     max-width: 100% !important;
   }
-  @page  {
+  @page {
     margin: 2cm .5cm;
   }
   p,
@@ -531,10 +531,8 @@ dd {
   .dl-horizontal dd:after {
     content: " ";
     /* 1 */
-  
     display: table;
     /* 2 */
-  
   }
   .dl-horizontal dd:after {
     clear: both;
@@ -543,10 +541,8 @@ dd {
   .dl-horizontal dd:after {
     content: " ";
     /* 1 */
-  
     display: table;
     /* 2 */
-  
   }
   .dl-horizontal dd:after {
     clear: both;
@@ -660,10 +656,8 @@ pre code {
 .container:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .container:after {
   clear: both;
@@ -672,10 +666,8 @@ pre code {
 .container:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .container:after {
   clear: both;
@@ -688,10 +680,8 @@ pre code {
 .row:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .row:after {
   clear: both;
@@ -700,10 +690,8 @@ pre code {
 .row:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .row:after {
   clear: both;
@@ -1318,7 +1306,6 @@ input[type="checkbox"] {
   margin: 4px 0 0;
   margin-top: 1px \9;
   /* IE8-9 */
-
   line-height: normal;
 }
 input[type="file"] {
@@ -1580,10 +1567,8 @@ textarea.input-lg {
 .form-horizontal .form-group:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .form-horizontal .form-group:after {
   clear: both;
@@ -1592,10 +1577,8 @@ textarea.input-lg {
 .form-horizontal .form-group:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .form-horizontal .form-group:after {
   clear: both;
@@ -2139,10 +2122,8 @@ input[type="button"].btn-block {
 .btn-toolbar:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .btn-toolbar:after {
   clear: both;
@@ -2151,10 +2132,8 @@ input[type="button"].btn-block {
 .btn-toolbar:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .btn-toolbar:after {
   clear: both;
@@ -2254,10 +2233,8 @@ input[type="button"].btn-block {
 .btn-group-vertical > .btn-group:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .btn-group-vertical > .btn-group:after {
   clear: both;
@@ -2266,10 +2243,8 @@ input[type="button"].btn-block {
 .btn-group-vertical > .btn-group:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .btn-group-vertical > .btn-group:after {
   clear: both;
@@ -2928,10 +2903,8 @@ body.modal-open,
 .modal-footer:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .modal-footer:after {
   clear: both;
@@ -2940,10 +2913,8 @@ body.modal-open,
 .modal-footer:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .modal-footer:after {
   clear: both;
@@ -2975,10 +2946,8 @@ body.modal-open,
 .clearfix:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .clearfix:after {
   clear: both;
@@ -5180,10 +5149,8 @@ header:before,
 header:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 header:after {
   clear: both;
@@ -5192,10 +5159,8 @@ header:before,
 header:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 header:after {
   clear: both;
@@ -5317,7 +5282,6 @@ header .user .dropdown-menu a:hover {
   vertical-align: middle;
   margin-right: -0.25em;
   /* Adjusts for spacing */
-
 }
 .page-login .content {
   width: 400px;
@@ -5444,6 +5408,10 @@ header .user .dropdown-menu a:hover {
   color: #aaa;
   float: left;
 }
+.message .mention-color {
+  font-weight: bold;
+  color: #444;
+}
 .message time {
   color: #bbb;
   float: right;
@@ -5499,10 +5467,8 @@ header .user .dropdown-menu a:hover {
 .tabs:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .tabs:after {
   clear: both;
@@ -5511,10 +5477,8 @@ header .user .dropdown-menu a:hover {
 .tabs:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .tabs:after {
   clear: both;
@@ -5806,10 +5770,8 @@ header .user .dropdown-menu a:hover {
 .sidebar .item-list li:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .sidebar .item-list li:after {
   clear: both;
@@ -5818,10 +5780,8 @@ header .user .dropdown-menu a:hover {
 .sidebar .item-list li:after {
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .sidebar .item-list li:after {
   clear: both;
