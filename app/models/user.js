@@ -7,6 +7,14 @@ var hash = require('node_hash');
 var config = require('../../settings.js');
 
 var UserSchema = new Schema({
+    uid: {
+        type: String,
+        required: false,
+        trim: true,
+        validate: [function(v) {
+            return (v.length <= 24);
+        }, 'invalid kerberos username']
+    },
     email: {
         type: String,
         required: true,
@@ -23,7 +31,7 @@ var UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
         set: function(p) {
             // This is kinda wonky
@@ -64,7 +72,7 @@ var UserSchema = new Schema({
     },
 	messages: [{
 		type: Schema.ObjectId,
-		ref: 'Message' 
+		ref: 'Message'
 	}]
 });
 
