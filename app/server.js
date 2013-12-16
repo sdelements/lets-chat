@@ -465,24 +465,31 @@ var Server = function(config) {
             res.sendfile(self.config.uploads_dir + '/' + file._id);
         });
     });
-    
+
     //
     // Transcripts
     //
-    self.app.get('/transcripts/:room/:date?', requireLogin, function(req, res) {  
-        var uriToDate = function(uri) {
-            if (uri == 'today' || !uri) {
-                var date = new Date();
-                date.setHours(0, 0, 0, 0);
-                return date;
-            }
-            return !isNaN(Date.parse(uri)) ? new Date(uri) : false;
+    self.app.get('/transcripts/:room', requireLogin, function(req, res) {
+        var fromDate = moment().subtract('days', 1).format("DDMMYYYY");
+        var toDate = moment().format("DDMMYYYY");
+
+        res.writeHead(301, {Location: '/transcripts/' + req.params.room + '/from/' + fromDate + '/to/' + toDate});
+        res.end();
+    });
+
+    self.app.get('/transcripts/:room/from/:fromDate/to/:toDate', requireLogin, function(req, res) {
+        //dates in url are in DDMMYYY format
+        var dateParamPattern = /[0-9]{6}/;
+
+        //check if dates in the parameters are 6 digit numbers
+        if(!dateParamPattern.test(req.params.fromDate) ||
+           !dateParamPattern.test(req.params.toDate)) {
+           res.send(400, 'Invalid parameters');
         }
-        var date = uriToDate(req.params.date);
-        if (!date.getDate) {
-            // Error, Invalid date
-            res.send(404, 'Invalid date');
-        }
+
+        var fromDate = moment(req.params.fromDate, "DDMMYYYY");
+        var toDate = moment(req.params.toDate, "DDMMYYYY");
+
         // Lookup room
         models.room.findById(req.params.room, function(err, room) {
             if (err || !room) {
@@ -496,7 +503,7 @@ var Server = function(config) {
                 room: room._id
             }).select('-room -__v')
             .populate('owner')
-            .where('posted').gt(date).lt(new Date(date).setDate(date.getDate() + 1))
+            .where('posted').gt(fromDate).lt(moment(new Date(toDate)).add('d', 1))
             .exec(function(err, docs) {
                 if (err) {
                     // Whoopsie
@@ -513,12 +520,13 @@ var Server = function(config) {
                         name: message.owner.displayName,
                         text: message.text,
                         posted: message.posted,
-                        time: moment(message.posted).format('h:mma')
+                        time: moment(message.posted).format('hh:mm DD-MM-YYYY')
                     });
                 });
                 res.render('transcript.html', {
                     media_url: self.config.media_url,
-                    date: moment(date).format('dddd, MMM Do YYYY'),
+                    fromDate: moment(fromDate).format('dddd, MMM Do YYYY'),
+                    toDate: moment(toDate).format('dddd, MMM Do YYYY'),
                     room: {
                         id: room._id,
                         name: room.name,
