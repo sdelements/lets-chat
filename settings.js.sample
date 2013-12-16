@@ -29,13 +29,13 @@ var config = {
     password_salt: 'Hello. Yes, This is Dog',
 
     //Kerberos Auth
-    realm: 'azuroth',
+    realm: 'mordor',
 
     //LDAP
     ldap_connect_settings: {
-        uri: 'ldap://your.ldap.server',
+        uri: 'ldaps://your.ldap.server',
         // Replace with your appropriate LDAP version
-        version: 4,
+        version: 3,
         connecttimeout: 1
     },
 
