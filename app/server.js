@@ -110,21 +110,22 @@ var Server = function(config) {
                 if (err) {
                     return done(err);
                 }
-                if (!user) {
-                    var ldap = new LDAP(self.config.ldap_connect_settings);
+                if (!user && self.config.ldap_config.enabled) {
+                    var ldap = new LDAP(self.config.ldap_config.ldap_connect_settings);
                     ldap.open();
-                    ldap.simplebind(self.config.ldap_bind_options, function (err) {
+                    ldap.simplebind(self.config.ldap_config.ldap_bind_options, function (err) {
                         if (err) {
                             return done(err);
                         }
-                        self.config.ldap_search_options.filter = 'uid=' + uid;
-                        ldap.search(self.config.ldap_search_options, function (err, data) {
+                        var search_options = _.clone(self.config.ldap_config.ldap_search_options);
+                        search_options.filter = 'uid=' + uid;
+                        ldap.search(search_options, function (err, data) {
                             if (err) {
                                 return done(err);
                             }
                             if (data !== undefined && data[0] !== undefined) {
                                 var user = models.user.findOne({
-                                    'email': data[0][self.config.ldap_field_mappings.email]
+                                    'email': data[0][self.config.ldap_config.ldap_field_mappings.email]
                                 }, function (err, user) {
                                     if (err) {
                                         return done(err);
@@ -132,10 +133,10 @@ var Server = function(config) {
                                     if (!user) {
                                         user = new models.user({
                                             uid: uid,
-                                            email: data[0][self.config.ldap_field_mappings.email],
-                                            firstName: data[0][self.config.ldap_field_mappings.firstName],
-                                            lastName: data[0][self.config.ldap_field_mappings.lastName],
-                                            displayName: data[0][self.config.ldap_field_mappings.displayName]
+                                            email: data[0][self.config.ldap_config.ldap_field_mappings.email],
+                                            firstName: data[0][self.config.ldap_config.ldap_field_mappings.firstName],
+                                            lastName: data[0][self.config.ldap_config.ldap_field_mappings.lastName],
+                                            displayName: data[0][self.config.ldap_config.ldap_field_mappings.displayName]
                                         });
                                     } else {
                                         user.uid = uid;
@@ -144,7 +145,7 @@ var Server = function(config) {
                                         if (err) {
                                             return done(err);
                                         }
-                                        return done(null, user, self.config.realm);
+                                        return done(null, user, self.config.kerberos_config.realm);
                                     });
                                 });
                             }
@@ -253,6 +254,10 @@ var Server = function(config) {
         // Kerberos Login
         //
         self.app.post('/login', function(req, res, next) {
+            if (!self.config.kerberos_config.enabled){
+                next();
+                return;
+            }
             passport.authenticate('kerberos', function(err, user, info) {
                 if (err) {
                     res.send({
