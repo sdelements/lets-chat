@@ -29,7 +29,7 @@ var config = {
     password_salt: 'Hello. Yes, This is Dog',
 
     //Kerberos Auth
-    realm: 'azuroth',
+    realm: 'mordor',
 
     //LDAP
     ldap_connect_settings: {
