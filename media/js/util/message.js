@@ -13,8 +13,8 @@ if (typeof exports !== 'undefined') {
     //
     exports.format = function(text, plugins) {
         // TODO: Fix these regexes
-        var imagePattern = /((https?|ftp):\/\/[^\s\/$.?#].[^\s]*[.](jpe?g|png|gif)\s*$)/gi;
-        var linkPattern = /((https?|ftp):\/\/[^\s\/$.?#].[^\s]*[^.])/gi;
+        var imagePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif)\s*$)/i;
+        var linkPattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
         var mentionPattern = /@(.+?)\b/g;
 
         text = text.replace(mentionPattern, '<span class="mention-color">@$1</span>');
