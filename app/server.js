@@ -148,6 +148,8 @@ var Server = function(config) {
                                         return done(null, user, self.config.kerberos_config.realm);
                                     });
                                 });
+                            } else {
+                                return done(null, user, self.config.realm);
                             }
                         });
                     });
