@@ -28,6 +28,36 @@ var config = {
     cookie_secret: 'KeyBoard Cat',
     password_salt: 'Hello. Yes, This is Dog',
 
+    //Kerberos Auth
+    realm: 'mordor',
+
+    //LDAP
+    ldap_connect_settings: {
+        uri: 'ldap://your.ldap.server',
+        // Replace with your appropriate LDAP version
+        version: 4,
+        connecttimeout: 1
+    },
+
+    ldap_bind_options: {
+        binddn: '',
+        password: ''
+    },
+
+    ldap_search_options: {
+        base: '',
+        scope: '',
+        filter: '',
+        attrs: ''
+    },
+
+    ldap_field_mappings: {
+        firstName: '',
+        lastName: '',
+        displayName: '',
+        mail: ''
+    }
+
     // Misc
     debug: false,
     media_url: '/media',
