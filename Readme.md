@@ -13,6 +13,8 @@ A self-hosted chat app for small teams.
 * Code pasting
 * File uploads
 * SSL/TLS
+* Kerberos Authentication
+* Auto build new users using LDAP
 
 ## Upcoming Features
 
@@ -40,7 +42,7 @@ Install node dependencies
 npm install
 ```
 
-Create a settings file (make sure to edit if you need to). 
+Create a settings file (make sure to edit if you need to).
 
 ```php
 cp settings.js.sample settings.js

@@ -17,6 +17,8 @@ var hash = require('node_hash');
 var moment = require('moment');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var KerberosStrategy = require('passport-kerberos').Strategy;
+var LDAP = require('LDAP');
 
 // App stuff
 var ChatServer = require('./chat.js');
@@ -46,8 +48,8 @@ var Server = function(config) {
     self.mongoURL = 'mongodb://'
         + self.config.db_user
         + ':' + self.config.db_password
-        + '@' + self.config.db_host 
-        + ':' + self.config.db_port 
+        + '@' + self.config.db_host
+        + ':' + self.config.db_port
         + '/' + self.config.db_name;
 
     // Create express app
@@ -70,7 +72,7 @@ var Server = function(config) {
             key: 'express.sid',
             cookie: {
                 httpOnly: false // We have to turn off httpOnly for websockets
-            }, 
+            },
             secret: self.config.cookie_secret,
             store: self.sessionStore
         }));
@@ -97,7 +99,65 @@ var Server = function(config) {
 
     });
 
+
     // Authentication
+    passport.use(new KerberosStrategy({
+            usernameField: 'email',
+            passwordField: 'password'
+        },
+        function (uid, done) {
+            models.user.findOne({ uid: uid }, function (err, user) {
+                if (err) {
+                    return done(err);
+                }
+                if (!user && self.config.ldap_config.enabled) {
+                    var ldap = new LDAP(self.config.ldap_config.ldap_connect_settings);
+                    ldap.open();
+                    ldap.simplebind(self.config.ldap_config.ldap_bind_options, function (err) {
+                        if (err) {
+                            return done(err);
+                        }
+                        var search_options = _.clone(self.config.ldap_config.ldap_search_options);
+                        search_options.filter = 'uid=' + uid;
+                        ldap.search(search_options, function (err, data) {
+                            if (err) {
+                                return done(err);
+                            }
+                            if (data !== undefined && data[0] !== undefined) {
+                                var user = models.user.findOne({
+                                    'email': data[0][self.config.ldap_config.ldap_field_mappings.email]
+                                }, function (err, user) {
+                                    if (err) {
+                                        return done(err);
+                                    }
+                                    if (!user) {
+                                        user = new models.user({
+                                            uid: uid,
+                                            email: data[0][self.config.ldap_config.ldap_field_mappings.email],
+                                            firstName: data[0][self.config.ldap_config.ldap_field_mappings.firstName],
+                                            lastName: data[0][self.config.ldap_config.ldap_field_mappings.lastName],
+                                            displayName: data[0][self.config.ldap_config.ldap_field_mappings.displayName]
+                                        });
+                                    } else {
+                                        user.uid = uid;
+                                    }
+                                    user.save(function (err, user) {
+                                        if (err) {
+                                            return done(err);
+                                        }
+                                        return done(null, user, self.config.kerberos_config.realm);
+                                    });
+                                });
+                            }
+                        });
+                    });
+                } else {
+                    return done(null, user, self.config.realm);
+                }
+            });
+        }
+    ));
+
     passport.use(new LocalStrategy({
             usernameField: 'email',
             passwordField: 'password'
@@ -123,7 +183,7 @@ var Server = function(config) {
     });
     passport.deserializeUser(function(id, done) {
         models.user.findOne({
-            _id: id 
+            _id: id
         }).exec(function(err, user) {
             done(err, user);
         });
@@ -191,9 +251,41 @@ var Server = function(config) {
     //
     self.app.namespace('/ajax', function() {
         //
-        // Login
+        // Kerberos Login
         //
-        self.app.post('/login', function(req, res) {
+        self.app.post('/login', function(req, res, next) {
+            if (!self.config.kerberos_config.enabled){
+                next();
+                return;
+            }
+            passport.authenticate('kerberos', function(err, user, info) {
+                if (err) {
+                    res.send({
+                        status: 'error',
+                        message: 'Some fields did not validate',
+                        errors: err
+                    });
+                    return;
+                }
+                if (!user) {
+                    next();
+                    return;
+                }
+                req.login(user, function(err) {
+                    if (err) {
+                        res.send({
+                            status: 'error',
+                            message: 'There were problems logging you in.'
+                        });
+                        return;
+                    }
+                    res.send({
+                        status: 'success',
+                        message: 'Logging you in...'
+                    });
+                });
+            })(req, res, next);
+        }, function(req, res) {
             passport.authenticate('local', function(err, user, info) {
                 if (err) {
                     res.send({
@@ -225,6 +317,7 @@ var Server = function(config) {
                 });
             })(req, res);
         });
+
         //
         // Register
         //
