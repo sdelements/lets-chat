@@ -46,7 +46,7 @@ var ChatServer = function (config, server, sessionStore) {
                     if (err) {
                         // Woops
                         accept(null, false);
-                        return;  
+                        return;
                     }
                     var hashedPassword = hash.sha256(data.query.password, self.config.password_salt);
                     if (user && hashedPassword === user.password) {
@@ -169,6 +169,52 @@ var ChatServer = function (config, server, sessionStore) {
             // New Message
             //
             client.on('room:messages:new', function(data) {
+                var regexp = /\/(\w*) (\w*@\w*\.\w*)/;
+                var match = data.text.match(regexp);
+
+                if (match) {
+
+                    models.user.findOne({
+                        'email': match[2]
+                    }, function (err, user) {
+
+                        if (err) {
+                            // Shit we're on fire!
+                            return;
+                        }
+
+                        if (!user) {
+                            return;
+                        }
+
+                        models.room.findById(data.room)
+                            .or([{'owner': userData._id}, {'admins': userData._id}])
+                            .exec(function(err, room) {
+                            if (err) {
+                                // Shit son...
+                                return;
+                            }
+
+                            if (!room) {
+                                return;
+                            }
+
+                            if (match[1] === 'invite') {
+                                room.allowed_users.push(user._id);
+                            } else if (match[1] === 'kick') {
+                                room.allowed_users.pop(user._id);
+                            }
+
+                            room.save(function( err, message) {
+                                if (err) {
+                                    // Shit we're on fire!
+                                    return;
+                                }
+                            });
+                        });
+                    });
+                }
+
                 var message = new models.message({
                     room: data.room,
                     owner: userData._id,
@@ -212,30 +258,31 @@ var ChatServer = function (config, server, sessionStore) {
             //
             // Join Room
             //
-            client.on('room:join', function(id, fn) {
-                models.room.findById(id, function(err, room) {
+            client.on('room:join', function (id, fn) {
+                // Hey everyone, look who it is
+                client.get('profile', function (err, profile) {
                     if (err) {
                         // Oh shit
                         return;
                     }
-                    if (!room) {
-                        // No room bro
-                        return;
-                    }
-                    client.join(id);
-                    // Send back Room meta to client
-                    if (fn) {
-                        fn({
-                            id: room._id,
-                            name: room.name,
-                            description: room.description
-                        });
-                    }
-                    // Hey everyone, look who it is
-                    client.get('profile', function(err, profile) {
+                    models.room.findById(id).or([{'owner': profile.id}, {'admins': profile.id}, {'allowed_users': profile.id}, {'allowed_users': {$size: 0}}]).exec(function (err, room) {
+
                         if (err) {
                             // Oh shit
                             return;
+                        }
+                        if (!room) {
+                            // No room bro
+                            return;
+                        }
+                        client.join(id);
+                        // Send back Room meta to client
+                        if (fn) {
+                            fn({
+                                id: room._id,
+                                name: room.name,
+                                description: room.description
+                            });
                         }
                         var user = {
                             room: id,
@@ -245,9 +292,9 @@ var ChatServer = function (config, server, sessionStore) {
                             name: profile.displayName,
                             status: profile.status,
                             safeName: profile.displayName.replace(/\W/g, '')
-                        }
+                        };
                         self.io.sockets.in(id).emit('room:users:new', user);
-                        self.io.sockets.emit('rooms:users:new', user)
+                        self.io.sockets.emit('rooms:users:new', user);
                     });
                 });
             });
@@ -309,7 +356,8 @@ var ChatServer = function (config, server, sessionStore) {
               var newroom = new models.room({
                 name: room.name,
                 description: room.description,
-                owner: userData._id
+                owner: userData._id,
+                allowed_users: []
               });
               newroom.save(function (err, room) {
                 if (err) {
@@ -330,32 +378,34 @@ var ChatServer = function (config, server, sessionStore) {
             // Roomlist request
             //
             client.on('rooms:get', function (query) {
-                models.room.find().exec(function(err, rooms) {
-                    if (err) {
-                        // Couldn't get rooms
-                        return;
-                    }
-                    _.each(rooms, function(room) {
-                        client.emit('rooms:new', {
-                            id: room._id,
-                            name: room.name,
-                            description: room.description,
-                            owner: room.owner,
-                            lastActive: room.lastActive
-                        });
-                         _.each(self.io.sockets.clients(room._id), function(user) {
-                            user.get('profile', function(err, profile) {
-                                if (err) {
-                                    // What the what
-                                    return;
-                                }
-                                client.emit('rooms:users:new', {
-                                    room: room._id,
-                                    id: profile.cid,
-                                    uid: profile.id,
-                                    avatar: profile.avatar,
-                                    name: profile.displayName,
-                                    safeName: profile.displayName.replace(/\W/g, '')
+                client.get('profile', function(err, profile) {
+                    models.room.find().or([{'owner': profile.id}, {'admins': profile.id}, {'allowed_users': profile.id}, {'allowed_users': {$size: 0}}]).exec(function(err, rooms) {
+                        if (err) {
+                            // Couldn't get rooms
+                            return;
+                        }
+                        _.each(rooms, function(room) {
+                            client.emit('rooms:new', {
+                                id: room._id,
+                                name: room.name,
+                                description: room.description,
+                                owner: room.owner,
+                                lastActive: room.lastActive
+                            });
+                             _.each(self.io.sockets.clients(room._id), function(user) {
+                                user.get('profile', function(err, profile) {
+                                    if (err) {
+                                        // What the what
+                                        return;
+                                    }
+                                    client.emit('rooms:users:new', {
+                                        room: room._id,
+                                        id: profile.cid,
+                                        uid: profile.id,
+                                        avatar: profile.avatar,
+                                        name: profile.displayName,
+                                        safeName: profile.displayName.replace(/\W/g, '')
+                                    });
                                 });
                             });
                         });
