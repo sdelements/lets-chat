@@ -694,11 +694,11 @@ var WindowTitleView = Backbone.View.extend({
         this.notifications = this.options.notifications;
         this.notifications.on('switchview', function(view) {
             if (view && view.name) {
-                self.title = view.name + ' &middot; ' + self.config.title ;
+                self.title = $('<pre />').text(view.name).html() + ' &middot; ' + self.config.title ;
             } else {
                 self.title = self.config.title;
             }
-            $('title').html($('<pre />').text(self.title).html());
+            $('title').html(self.title);
         });
         $(window).bind('focus blur', function(e) {
             if (e.type === 'focus') {
