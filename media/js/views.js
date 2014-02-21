@@ -698,7 +698,7 @@ var WindowTitleView = Backbone.View.extend({
             } else {
                 self.title = self.config.title;
             }
-            $('title').html(self.title);
+            $('title').html($('<pre />').text(self.title).html());
         });
         $(window).bind('focus blur', function(e) {
             if (e.type === 'focus') {
