@@ -8,6 +8,8 @@ var _ = require('underscore'),
     mongoose = require('mongoose'),
     MongoStore = require('connect-mongo')(express);
 
+var models = require('./app/models');
+
 var settings = require('./settings.js');
 
 var app = express().http().io();
@@ -46,9 +48,63 @@ app.get('/', function(req, res) {
 	});
 });
 
+app.post('/users/register', function(req, res) {
+    req.io.route('users:create');
+});
+
 //
 // Sockets
 //
+
+app.io.route('users', {
+    create: function(req, res) {
+        var fields = req.body || req.data;
+        models.user.create({
+            email: fields.email,
+            password: fields.password,
+            firstName: fields.firstName || fields['first-name'],
+            lastName: fields.lastName || fields['last-name'],
+            displayName: fields.displayName || fields['display-name']
+        }, function(err, user) {
+            // Did we get error?
+            if (err) {
+                // console.error(err);
+                var message = 'Sorry, we could not process your request';
+                // User already exists
+                if (err.code == 11000) {
+                    message = 'Email has already been taken';
+                }
+                // Invalid username
+                if (err.errors) {
+                    message = _.map(err.errors, function(error) {
+                        return error.message
+                    }).join(' ');
+                }
+                // Notify
+                req.io.respond({
+                    status: 'error',
+                    message: message
+                }, 400);
+                return;
+            }
+            // AWWW YISSSSS!
+            req.io.respond({
+                status: 'success',
+                message: 'You\'ve been registered, please try logging in now!',
+                reset: true
+            }, 201);
+        });
+    },
+    update: function(req, res) {
+        console.log('update')
+    },
+    get: function(req, res) {
+        console.log('get')
+    },
+    list: function(req, res) {
+        console.log('list')
+    }
+});
 
 app.io.route('room', {
     join: function(req) {
@@ -56,12 +112,6 @@ app.io.route('room', {
         req.io.join(id);
     }
 });
-
-app.io.route('message', {
-    get: function(req) {
-        // TODO
-    }
-})
 
 //
 // Mongo
