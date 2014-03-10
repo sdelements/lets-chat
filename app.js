@@ -52,6 +52,10 @@ app.post('/users/register', function(req, res) {
     req.io.route('users:create');
 });
 
+app.post('/messages/', function(req, res) {
+    req.io.route('messages:create');
+})
+
 //
 // Sockets
 //
@@ -106,7 +110,31 @@ app.io.route('users', {
     }
 });
 
-app.io.route('room', {
+app.io.route('messages', {
+    create: function(req, res) {
+        var data = req.data || req.body;
+        console.log(data)
+        models.message.create({
+            text: data.text
+        }, function(err, message) {
+            if (err) {
+                console.error(err);
+                req.io.respond(err, 400)
+                return;
+            }
+            req.io.respond(null, 201)
+            req.io.broadcast('messages:new', data)
+        });
+    },
+    get: function(req, res) {
+        console.log('get')
+    },
+    list: function(req, res) {
+        console.log('list')
+    }
+})
+
+app.io.route('rooms', {
     join: function(req) {
         var id = req.data;
         req.io.join(id);
@@ -121,7 +149,8 @@ app.io.route('room', {
 mongoose.connect(settings.mongoURI);
 
 mongoose.connection.on('error', function (err) {
-    console.warn(err)
+    if (err)
+        console.warn(err)
 });
 
 mongoose.connection.on('disconnected', function() {
