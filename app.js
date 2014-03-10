@@ -47,6 +47,23 @@ app.get('/', function(req, res) {
 });
 
 //
+// Sockets
+//
+
+app.io.route('room', {
+    join: function(req) {
+        var id = req.data;
+        req.io.join(id);
+    }
+});
+
+app.io.route('message', {
+    get: function(req) {
+        // TODO
+    }
+})
+
+//
 // Mongo
 //
 
