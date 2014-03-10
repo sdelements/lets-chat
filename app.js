@@ -52,9 +52,13 @@ app.post('/users/register', function(req, res) {
     req.io.route('users:create');
 });
 
-app.post('/messages/', function(req, res) {
+app.get('/messages', function(req, res) {
+    req.io.route('messages:list');
+});
+
+app.post('/messages', function(req, res) {
     req.io.route('messages:create');
-})
+});
 
 //
 // Sockets
@@ -131,6 +135,15 @@ app.io.route('messages', {
     },
     list: function(req, res) {
         console.log('list')
+        models.message.find(function(err, messages) {
+            if (err) {
+                console.error(err);
+                req.io.respond(err, 400)
+                return;
+            }
+            req.io.respond(messages)
+            // req.io.respond(null, messages, 201)
+        })
     }
 })
 
