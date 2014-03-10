@@ -1,0 +1,6 @@
+Thumbs.db
+.DS_Store
+*.swap
+node_modules
+*.sw[opqr]
+settings.js

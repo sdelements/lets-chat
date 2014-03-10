@@ -15,5 +15,13 @@
   "bugs": {
     "url": "https://github.com/hhaidar/IWANTPIZZA/issues"
   },
-  "homepage": "https://github.com/hhaidar/IWANTPIZZA"
+  "homepage": "https://github.com/hhaidar/IWANTPIZZA",
+  "dependencies": {
+    "express.io": "~1.1.13",
+    "underscore": "~1.6.0",
+    "swig": "~1.3.2",
+    "connect-mongo": "~0.4.0",
+    "mongoose": "~3.8.8",
+    "nunjucks": "~1.0.1"
+  }
 }

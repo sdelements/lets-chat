@@ -1,0 +1,4 @@
+module.exports = {
+    mongoURI: 'mongodb://localhost/letschat',
+    cookieSecret: 'secretsauce'
+}
