@@ -51,6 +51,10 @@ app.post('/account/login', function(req, res) {
     req.io.route('account:login');
 });
 
+app.get('/account/logout', function(req, res) {
+    req.io.route('account:logout');
+});
+
 app.post('/account/register', function(req, res) {
     req.io.route('account:register');
 });
@@ -81,10 +85,13 @@ app.io.route('account', {
             }
             if (user && user) {
                 // Hello user <3
-                req.io.respond({
-                    status: 'success',
-                    message: 'You\'ve been logged in!'
-                });
+                req.session.userID = user._id;
+                req.session.save(function() {
+                    req.io.respond({
+                        status: 'success',
+                        message: 'You\'ve been logged in!'
+                    });
+                })
                 return;
             }
             // NOPE!
@@ -94,7 +101,14 @@ app.io.route('account', {
             }, 401);
         })
     },
-    register: function(req, res) {
+    logout: function(req) {
+        req.session.destroy();
+        req.io.respond({
+            status: 'succcess',
+            message: 'Session deleted'
+        }, 200);
+    },
+    register: function(req) {
         var fields = req.body || req.data;
         models.user.create({
             email: fields.email,
@@ -134,43 +148,40 @@ app.io.route('account', {
 });
 
 app.io.route('users', {
-    get: function(req, res) {
-        console.log('get')
+    get: function(req) {
+        console.log('get');
     },
-    list: function(req, res) {
-        console.log('list')
+    list: function(req) {
+        console.log('list');
     }
 });
 
 app.io.route('messages', {
-    create: function(req, res) {
+    create: function(req) {
         var data = req.data || req.body;
-        console.log(data)
         models.message.create({
             text: data.text
         }, function(err, message) {
             if (err) {
                 console.error(err);
-                req.io.respond(err, 400)
+                req.io.respond(err, 400);
                 return;
             }
-            req.io.respond(null, 201)
-            req.io.broadcast('messages:new', data)
+            req.io.respond(null, 201);
+            req.io.broadcast('messages:new', data);
         });
     },
-    get: function(req, res) {
-        console.log('get')
+    get: function(req) {
+        console.log('get');
     },
-    list: function(req, res) {
-        console.log('list')
+    list: function(req) {
         models.message.find(function(err, messages) {
             if (err) {
                 console.error(err);
-                req.io.respond(err, 400)
+                req.io.respond(err, 400);
                 return;
             }
-            req.io.respond(messages)
-            // req.io.respond(null, messages, 201)
+            req.io.respond(messages);
         })
     }
 })
