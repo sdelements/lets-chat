@@ -59,6 +59,10 @@ app.post('/account/register', function(req, res) {
     req.io.route('account:register');
 });
 
+app.get('/account/update', function(req, res) {
+    req.io.route('account:update');
+});
+
 app.get('/messages', function(req, res) {
     req.io.route('messages:list');
 });
@@ -144,6 +148,9 @@ app.io.route('account', {
                 message: 'You\'ve been registered, please try logging in now!'
             }, 201);
         });
+    },
+    update: function(req) {
+        // Update profile and stuff
     }
 });
 
