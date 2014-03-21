@@ -24,6 +24,8 @@
     "mongoose": "~3.8.8",
     "nunjucks": "~1.0.1",
     "require-directory": "~1.2.0",
-    "mongoose-unique-validator": "~0.3.0"
+    "mongoose-unique-validator": "~0.3.0",
+    "mongoose-validate": "0.0.5",
+    "bcryptjs": "~0.7.12"
   }
 }

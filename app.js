@@ -37,7 +37,6 @@ nunjucks.configure('templates', {
 app.use(express.json());
 app.use(express.urlencoded());
 
-
 //
 // Routes
 //
@@ -48,8 +47,12 @@ app.get('/', function(req, res) {
 	});
 });
 
-app.post('/users/register', function(req, res) {
-    req.io.route('users:create');
+app.post('/account/login', function(req, res) {
+    req.io.route('account:login');
+});
+
+app.post('/account/register', function(req, res) {
+    req.io.route('account:register');
 });
 
 app.get('/messages', function(req, res) {
@@ -64,8 +67,34 @@ app.post('/messages', function(req, res) {
 // Sockets
 //
 
-app.io.route('users', {
-    create: function(req, res) {
+app.io.route('account', {
+    login: function(req) {
+        var fields = req.body || req.data;
+        models.user.authenticate(fields.email, fields.password, function(err, user) {
+            if (err) {
+                // Something bad
+                req.io.respond({
+                    status: 'error',
+                    message: 'An error occured while trying to log you in'
+                }, 400);
+                return;
+            }
+            if (user && user) {
+                // Hello user <3
+                req.io.respond({
+                    status: 'success',
+                    message: 'You\'ve been logged in!'
+                });
+                return;
+            }
+            // NOPE!
+            req.io.respond({
+                status: 'error',
+                message: 'Could not log you in'
+            }, 401);
+        })
+    },
+    register: function(req, res) {
         var fields = req.body || req.data;
         models.user.create({
             email: fields.email,
@@ -98,14 +127,13 @@ app.io.route('users', {
             // AWWW YISSSSS!
             req.io.respond({
                 status: 'success',
-                message: 'You\'ve been registered, please try logging in now!',
-                reset: true
+                message: 'You\'ve been registered, please try logging in now!'
             }, 201);
         });
-    },
-    update: function(req, res) {
-        console.log('update')
-    },
+    }
+});
+
+app.io.route('users', {
     get: function(req, res) {
         console.log('get')
     },
