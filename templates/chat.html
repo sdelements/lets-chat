@@ -1,20 +1,31 @@
 {% extends 'base.html' %}
 
 {% block js %}
-    <script type="text/javascript" src="media/js/client.js"></script>
+    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="media/js/vendor/angular-socket-io/socket.js"></script>
+    <script type="text/javascript" src="media/js/ng/app.js"></script>
+    <script type="text/javascript" src="media/js/ng/controllers/client-controller.js"></script>
 {% endblock %}
 
 {% block body %}
-    <h1>Chat</h1>
-    <h2>Account Info</h2>
-    <table>
-        <tbody>
-            {% for property, value in account %}
-                <tr>
-                    <td>{{ property }}</td>
-                    <td>{{ value }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div ng-app="lets-chat">
+        <div ng-controller="client-controller">
+            <h1>Chat</h1>
+            <h2>Messages</h2>
+            <ul>
+                <li></li>
+            </ul>
+            <h2>Account Info</h2>
+            <table>
+                <tbody>
+                    {% for property, value in account %}
+                        <tr>
+                            <td>{{ property }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
