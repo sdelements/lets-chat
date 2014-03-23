@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block js %}
+    <script type="text/javascript" src="media/js/login.js"></script>
+{% endblock %}
+
+{% block body %}
+    <h1>LETS-PIZZA</h1>
+    <form action="/account/login" method="POST">
+        <h2>Login</h2>
+        <input type="text" name="email" placeholder="Username" />
+        <input type="text" name="password" placeholder="Password" />
+        <button type="submit">Submit</button>
+    </form>
+    <form action="/account/register" method="POST">
+        <h2>Register</h2>
+        <input type="text" name="email" placeholder="Username" />
+        <input type="text" name="password" placeholder="Password" />
+        <input type="text" name="display-name" placeholder="Display Name" />
+        <input type="text" name="first-name" placeholder="First Name" />
+        <input type="text" name="last-name" placeholder="Last Name" />
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}

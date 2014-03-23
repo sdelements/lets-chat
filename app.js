@@ -8,7 +8,8 @@ var _ = require('underscore'),
     mongoose = require('mongoose'),
     MongoStore = require('connect-mongo')(express);
 
-var models = require('./app/models');
+var models = require('./app/models'),
+    middlewares = require('./app/middlewares');
 
 var settings = require('./settings.js');
 
@@ -41,10 +42,12 @@ app.use(express.urlencoded());
 // Routes
 //
 
-app.get('/', function(req, res) {
-	res.render('chat.html', {
-		account: req.session.username || false
-	});
+app.get('/', middlewares.requireLogin, function(req, res) {
+	res.render('chat.html');
+});
+
+app.get('/login', function(req, res) {
+	res.render('login.html');
 });
 
 app.post('/account/login', function(req, res) {
@@ -59,15 +62,15 @@ app.post('/account/register', function(req, res) {
     req.io.route('account:register');
 });
 
-app.get('/account/update', function(req, res) {
+app.get('/account/update', middlewares.requireLogin, function(req, res) {
     req.io.route('account:update');
 });
 
-app.get('/messages', function(req, res) {
+app.get('/messages', middlewares.requireLogin, function(req, res) {
     req.io.route('messages:list');
 });
 
-app.post('/messages', function(req, res) {
+app.post('/messages', middlewares.requireLogin, function(req, res) {
     req.io.route('messages:create');
 });
 
@@ -117,9 +120,9 @@ app.io.route('account', {
         models.user.create({
             email: fields.email,
             password: fields.password,
-            firstName: fields.firstName || fields['first-name'],
-            lastName: fields.lastName || fields['last-name'],
-            displayName: fields.displayName || fields['display-name']
+            firstName: fields.firstName || fields['first-name'] || fields['firstname'],
+            lastName: fields.lastName || fields['last-name'] || fields['lastname'],
+            displayName: fields.displayName || fields['display-name'] || fields['displayname']
         }, function(err, user) {
             // Did we get error?
             if (err) {
