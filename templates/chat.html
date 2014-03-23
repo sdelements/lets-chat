@@ -12,9 +12,15 @@
         <div ng-controller="client-controller">
             <h1>Chat</h1>
             <h2>Messages</h2>
-            <ul>
-                <li></li>
+            <ul scroll-glue style="max-height: 300px; overflow-y: auto;">
+                <li ng-repeat="message in messages">
+                    {$ message.text $}
+                </li>
             </ul>
+            <form data-ng-submit="send()" ng-keypress="$event.keyCode == 13 && send($event)">
+                <input ng-model="text" placeholder="Wow. Much talk." />
+                <button type="submit">Send</button>
+            </form>
             <h2>Account Info</h2>
             <table>
                 <tbody>

@@ -197,21 +197,25 @@ app.io.route('messages', {
                 return;
             }
             req.io.respond(null, 201);
-            req.io.broadcast('messages:new', data);
+            app.io.broadcast('messages:new', data);
         });
     },
     get: function(req) {
         console.log('get');
     },
     list: function(req) {
-        models.message.find(function(err, messages) {
+        models.message
+            .find()
+            .limit(20)
+            .sort({ 'posted': -1 })
+            .exec(function(err, messages) {
             if (err) {
                 console.error(err);
                 req.io.respond(err, 400);
                 return;
             }
-            req.io.respond(messages);
-        })
+            req.io.respond(messages.reverse());
+        });
     }
 })
 
