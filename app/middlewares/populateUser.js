@@ -5,6 +5,7 @@
 var models = require('../models');
 
 module.exports = function(req, res, next) {
+    next = next || res; // No res object if called as a socket.io middleware
     if (req.session && req.session.userID) {
         models.user.findById(req.session.userID, function(err, user) {
             if (!err && user) {

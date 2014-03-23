@@ -4,6 +4,7 @@
 
 var _ = require('underscore'),
     express = require('express.io'),
+    expressMiddleware = require('express.io-middleware'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
     MongoStore = require('connect-mongo')(express);
@@ -14,6 +15,7 @@ var models = require('./app/models'),
 var settings = require('./settings.js');
 
 var app = express().http().io();
+expressMiddleware(app);
 
 // Session
 app.use(express.cookieParser());
@@ -27,6 +29,7 @@ app.use(express.session({
 
 // Populate user for each request
 app.use(middlewares.populateUser);
+app.io.use(middlewares.populateUser);
 
 // Public
 app.use('/media', express.static(__dirname + '/media'));
@@ -82,6 +85,17 @@ app.post('/messages', middlewares.requireLogin, function(req, res) {
 //
 // Sockets
 //
+
+var authorizationIO = app.io.get('authorization');
+app.io.set('authorization', function(data,accept) {
+    authorizationIO(data, function(err, res){
+        if (data.session && data.session.userID) {
+            accept(null, true);
+            return;
+        }
+        accept(null, false);
+    });
+});
 
 app.io.route('account', {
     login: function(req) {
