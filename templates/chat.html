@@ -1,19 +1,9 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Let's Chat</title>
-        <meta name="description" content="" />
-        <link rel="icon" type="image/png" href="media/favicon.ico" />
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+{% extends 'base.html' %}
 
-        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,400italic' rel='stylesheet' type='text/css'>
+{% block js %}
+    <script type="text/javascript" src="media/js/client.js"></script>
+{% endblock %}
 
-        <script type="text/javascript" src="socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="media/js/vendor/jquery/jquery.js"></script>
-        <script type="text/javascript" src="media/js/vendor/underscore/underscore.js"></script>
-
-        <script type="text/javascript" src="media/js/client.js"></script>
-    </head>
-    <body>Hello, this is dog.</body>
-</html>
+{% block body %}
+    Hello, this is dog.
+{% endblock %}
