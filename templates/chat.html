@@ -5,5 +5,16 @@
 {% endblock %}
 
 {% block body %}
-    Hello, this is dog.
+    <h1>Chat</h1>
+    <h2>Account Info</h2>
+    <table>
+        <tbody>
+            {% for property, value in account %}
+                <tr>
+                    <td>{{ property }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

@@ -1,5 +1,5 @@
 //
-// Rqeure Login
+// Require Login
 //
 
 module.exports = function(req, res, next) {

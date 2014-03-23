@@ -25,6 +25,9 @@ app.use(express.session({
     })
 }));
 
+// Populate user for each request
+app.use(middlewares.populateUser);
+
 // Public
 app.use('/media', express.static(__dirname + '/media'));
 
@@ -43,7 +46,9 @@ app.use(express.urlencoded());
 //
 
 app.get('/', middlewares.requireLogin, function(req, res) {
-	res.render('chat.html');
+	res.render('chat.html', {
+        account: req.user.toJSON()
+    });
 });
 
 app.get('/login', function(req, res) {
