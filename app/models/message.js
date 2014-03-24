@@ -14,7 +14,7 @@ var MessageSchema = new mongoose.Schema({
     owner: {
         type: ObjectId,
         ref: 'User',
-        // required: true
+        required: true
     },
     text: {
         type: String,

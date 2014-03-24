@@ -189,6 +189,7 @@ app.io.route('messages', {
     create: function(req) {
         var data = req.data || req.body;
         models.message.create({
+            owner: req.user._id,
             text: data.text
         }, function(err, message) {
             if (err) {
