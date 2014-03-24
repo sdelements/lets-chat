@@ -59,19 +59,16 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/account/login', function(req, res) {
-    req.io.route('account:login');
+    req.io.route('users:login');
 });
 
+// TODO: you should be POST'ing to DELETE'ing this resource
 app.get('/account/logout', function(req, res) {
-    req.io.route('account:logout');
+    req.io.route('users:logout');
 });
 
 app.post('/account/register', function(req, res) {
-    req.io.route('account:register');
-});
-
-app.get('/account/update', middlewares.requireLogin, function(req, res) {
-    req.io.route('account:update');
+    req.io.route('users:create');
 });
 
 app.get('/rooms', middlewares.requireLogin, function(req, res) {
@@ -90,6 +87,18 @@ app.post('/messages', middlewares.requireLogin, function(req, res) {
     req.io.route('messages:create');
 });
 
+app.get('/users', middlewares.requireLogin, function(req, res) {
+    req.io.route('users:list');
+});
+
+app.get('/users/:email', middlewares.requireLogin, function(req, res) {
+    req.io.route('users:retrieve');
+});
+
+app.post('/users/:email', middlewares.requireLogin, function(req, res) {
+    req.io.route('users:update');
+});
+
 //
 // Sockets
 //
@@ -105,7 +114,7 @@ app.io.set('authorization', function(data,accept) {
     });
 });
 
-app.io.route('account', {
+app.io.route('users', {
     login: function(req) {
         var fields = req.body || req.data;
         models.user.authenticate(fields.email, fields.password, function(err, user) {
@@ -125,7 +134,7 @@ app.io.route('account', {
                         status: 'success',
                         message: 'You\'ve been logged in!'
                     });
-                })
+                });
                 return;
             }
             // NOPE!
@@ -133,7 +142,7 @@ app.io.route('account', {
                 status: 'error',
                 message: 'Could not log you in'
             }, 401);
-        })
+        });
     },
     logout: function(req) {
         req.session.destroy();
@@ -142,14 +151,30 @@ app.io.route('account', {
             message: 'Session deleted'
         }, 200);
     },
-    register: function(req) {
+    list: function(req) {
+        models.user
+              .find()
+              .sort({'email': 1})
+              .exec(function(err, users) {
+            // return all the users in the system
+            if (err) {
+                // TODO: can you create a default error handler? We have code like
+                //       this all over the place.
+                console.error(err);
+                req.io.respond(err, 400);
+                return;
+            }
+            req.io.respond(users);
+        });
+    },
+    create: function(req) {
         var fields = req.body || req.data;
         models.user.create({
             email: fields.email,
             password: fields.password,
-            firstName: fields.firstName || fields['first-name'] || fields['firstname'],
-            lastName: fields.lastName || fields['last-name'] || fields['lastname'],
-            displayName: fields.displayName || fields['display-name'] || fields['displayname']
+            firstName: fields.firstName || fields.firstname || fields['first-name'],
+            lastName: fields.lastName || fields.lastname || fields['last-name'],
+            displayName: fields.displayName || fields.displayname || fields['display-name']
         }, function(err, user) {
             // Did we get error?
             if (err) {
@@ -162,7 +187,7 @@ app.io.route('account', {
                 // Invalid username
                 if (err.errors) {
                     message = _.map(err.errors, function(error) {
-                        return error.message
+                        return error.message;
                     }).join(' ');
                 }
                 // Notify
@@ -179,14 +204,20 @@ app.io.route('account', {
             }, 201);
         });
     },
+    retrieve: function(req) {
+        var email = req.params.email;
+        models.user.find({email: email}).exec(function (err, user) {
+            if (err) {
+                console.error(err);
+                req.io.respond(err, 400);
+                return;
+            }
+            console.log(user);
+            req.io.respond(user);
+        });
+    },
     update: function(req) {
         // Update profile and stuff
-    }
-});
-
-app.io.route('users', {
-    list: function(req) {
-        console.log('list');
     }
 });
 
@@ -201,6 +232,7 @@ app.io.route('messages', {
                 console.error(err);
                 req.io.respond(err, 400);
                 return;
+
             }
             req.io.respond(message, 201);
             app.io.broadcast('messages:new', message);
@@ -220,7 +252,7 @@ app.io.route('messages', {
             req.io.respond(messages.reverse());
         });
     }
-})
+});
 
 app.io.route('rooms', {
     create: function(req) {
@@ -230,7 +262,7 @@ app.io.route('rooms', {
             name: data.name,
             description: data.description
         }, function(err, room) {
-            console.log(err)
+            console.log(err);
             if (err) {
                 console.error(err);
                 req.io.respond(err, 400);
@@ -267,7 +299,7 @@ mongoose.connect(settings.mongoURI);
 
 mongoose.connection.on('error', function (err) {
     if (err)
-        console.warn(err)
+        console.warn(err);
 });
 
 mongoose.connection.on('disconnected', function() {

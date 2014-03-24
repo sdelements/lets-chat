@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     uniqueValidator = require('mongoose-unique-validator'),
     validate = require('mongoose-validate'),
     bcrypt = require('bcryptjs');
-    
+
 var UserSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -52,7 +52,7 @@ var UserSchema = new mongoose.Schema({
     }],
 	messages: [{
 		type: ObjectId,
-		ref: 'Message' 
+		ref: 'Message'
 	}]
 });
 

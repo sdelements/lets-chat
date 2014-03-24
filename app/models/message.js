@@ -4,7 +4,7 @@
 
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId;
-    
+
 var MessageSchema = new mongoose.Schema({
     room: {
         type: ObjectId,
