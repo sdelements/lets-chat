@@ -230,7 +230,6 @@ app.io.route('rooms', {
             name: data.name,
             description: data.description
         }, function(err, room) {
-            console.log(err)
             if (err) {
                 console.error(err);
                 req.io.respond(err, 400);
