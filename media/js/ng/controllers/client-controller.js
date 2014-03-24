@@ -38,12 +38,27 @@ angular.module('lets-chat')
             console.log(room);
             $scope.rooms.push(room);
         });
-        $scope.send = function(e) {
-            if ($scope.text) {
+        $scope.sendMessage = function(e) {
+            if ($scope.forms.message.text) {
                 socket.emit('messages:create', {
-                    text: $scope.text
+                    text: $scope.forms.message.text
                 }, function(res) {
-                    $scope.text = '';
+                    $scope.forms.message.text = '';
+                    $scope.$apply(function() {
+                        e && e.preventDefault();
+                    });
+                });
+                return;
+            }
+        }
+        $scope.createRoom = function(e) {
+            if ($scope.forms.room.name) {
+                socket.emit('rooms:create', {
+                    name: $scope.forms.room.name,
+                    description: $scope.forms.room.description
+                }, function(res) {
+                    $scope.forms.room.name = '';
+                    $scope.forms.room.description = '';
                     $scope.$apply(function() {
                         e && e.preventDefault();
                     });
