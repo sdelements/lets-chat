@@ -12,7 +12,7 @@
         <div ng-controller="client-controller">
             <h1>Chat</h1>
             <h2>Messages</h2>
-            <ul scroll-glue style="max-height: 300px; overflow-y: auto;">
+            <ul scroll-glue style="max-height: 300px; width: 50%; overflow-y: auto;">
                 <li ng-repeat="message in messages">
                     {$ message.text $}
                 </li>
@@ -21,6 +21,12 @@
                 <input ng-model="text" placeholder="Wow. Much talk." ng-keypress="$event.keyCode == 13 && send($event)" />
                 <button type="submit" data-click="send()">Send</button>
             </form>
+            <h2>Rooms</h2>
+            <ul scroll-glue style="max-height: 300px; width: 50%; overflow-y: auto;">
+                <li ng-repeat="room in rooms">
+                    {$ room._id $} &middot; {$ room.name $} 
+                </li>
+            </ul>
             <h2>Account Info</h2>
             <table>
                 <tbody>

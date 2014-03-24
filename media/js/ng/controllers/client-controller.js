@@ -7,6 +7,7 @@ angular.module('lets-chat')
     .controller('client-controller', function ($scope, $window, socket) {
         $window.socket = socket; // For testing
         $scope.messages = [];
+        $scope.rooms = [];
         $scope.glued = true;
         socket.on('connect', function() {
             console.log('connected');
@@ -25,9 +26,17 @@ angular.module('lets-chat')
             $scope.messages = messages;
         });
         socket.on('messages:new', function(message) {
-            console.log('got!')
+            console.log('got message!')
             console.log(message);
             $scope.messages.push(message);
+        });
+        socket.emit('rooms:list', {}, function(rooms) {
+            $scope.rooms = rooms;
+        });
+        socket.on('rooms:new', function(room) {
+            console.log('got room!')
+            console.log(room);
+            $scope.rooms.push(room);
         });
         $scope.send = function(e) {
             if ($scope.text) {

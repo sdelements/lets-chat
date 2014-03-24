@@ -74,6 +74,14 @@ app.get('/account/update', middlewares.requireLogin, function(req, res) {
     req.io.route('account:update');
 });
 
+app.get('/rooms', middlewares.requireLogin, function(req, res) {
+    req.io.route('rooms:list');
+});
+
+app.post('/rooms', middlewares.requireLogin, function(req, res) {
+    req.io.route('rooms:create');
+});
+
 app.get('/messages', middlewares.requireLogin, function(req, res) {
     req.io.route('messages:list');
 });
@@ -177,9 +185,6 @@ app.io.route('account', {
 });
 
 app.io.route('users', {
-    get: function(req) {
-        console.log('get');
-    },
     list: function(req) {
         console.log('list');
     }
@@ -197,12 +202,9 @@ app.io.route('messages', {
                 req.io.respond(err, 400);
                 return;
             }
-            req.io.respond(null, 201);
-            app.io.broadcast('messages:new', data);
+            req.io.respond(message, 201);
+            app.io.broadcast('messages:new', message);
         });
-    },
-    get: function(req) {
-        console.log('get');
     },
     list: function(req) {
         models.message
@@ -221,6 +223,35 @@ app.io.route('messages', {
 })
 
 app.io.route('rooms', {
+    create: function(req) {
+        var data = req.data || req.body;
+        models.room.create({
+            owner: req.user._id,
+            name: data.name,
+            description: data.description
+        }, function(err, room) {
+            console.log(err)
+            if (err) {
+                console.error(err);
+                req.io.respond(err, 400);
+                return;
+            }
+            req.io.respond(room, 201);
+            app.io.broadcast('rooms:new', room);
+        });
+    },
+    list: function(req) {
+        models.room
+            .find()
+            .exec(function(err, rooms) {
+            if (err) {
+                console.error(err);
+                req.io.respond(err, 400);
+                return;
+            }
+            req.io.respond(rooms);
+        });
+    },
     join: function(req) {
         var id = req.data;
         req.io.join(id);
