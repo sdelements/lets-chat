@@ -6,6 +6,7 @@ angular.module('lets-chat')
     })
     .controller('client-controller', function ($scope, $window, socket) {
         $window.socket = socket; // For testing
+        $scope.messages = [];
         $scope.glued = true;
         socket.on('connect', function() {
             console.log('connected');

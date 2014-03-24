@@ -17,9 +17,9 @@
                     {$ message.text $}
                 </li>
             </ul>
-            <form data-ng-submit="send()" ng-keypress="$event.keyCode == 13 && send($event)">
-                <input ng-model="text" placeholder="Wow. Much talk." />
-                <button type="submit">Send</button>
+            <form>
+                <input ng-model="text" placeholder="Wow. Much talk." ng-keypress="$event.keyCode == 13 && send($event)" />
+                <button type="submit" data-click="send()">Send</button>
             </form>
             <h2>Account Info</h2>
             <table>
