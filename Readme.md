@@ -2,6 +2,8 @@
 
 A self-hosted chat app for small teams.
 
+![Screenshot](http://i.imgur.com/djnd0Uk.png)
+
 ## Features and Stuff
 
 * BYOS (bring your own server)
