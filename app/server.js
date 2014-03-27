@@ -429,7 +429,7 @@ var Server = function(config) {
                         size: file.size,
                         room: room._id
                     }).save(function(err, savedFile) {
-                        var fileFolder = savedFile._id
+                        var fileFolder = savedFile._id;
                         var filePath = fileFolder + '/' + encodeURIComponent(savedFile.name);
                         (!config.s3 ? function(callback) {
                             // if s3 config is not set, upload file to filesystem
@@ -447,7 +447,7 @@ var Server = function(config) {
                                 region: self.config.s3.region,
                                 bucket: self.config.s3.bucket
                             });
-                            client.putFile(file.path, '/' + filePath, {
+                            client.putFile(file.path, '/' + decodeURIComponent(filePath), {
                                 'Content-Type': file.type,
                                 'Content-Length': file.size
                             }, function (err, response) {
@@ -455,7 +455,7 @@ var Server = function(config) {
                                     callback('There was a problem with the server\'s S3 credentials.');
                                     return;
                                 }
-                                var url = 'https://' + client.urlBase + '/' + filePath
+                                var url = 'https://' + client.urlBase + '/' + filePath;
                                 callback(null, url, savedFile);
                             });
                         })(function(error, url, savedFile) {
