@@ -430,7 +430,6 @@ var Server = function(config) {
                                     var url = '/files/' + filePath;
                                     callback(null, url, savedFile);
                                 });
-
                             } : function(callback) {
                                 // otherwise, upload the file to S3
                                 var client = knox.createClient({
@@ -451,7 +450,7 @@ var Server = function(config) {
                                     callback(null, url, savedFile);
                                 });
 
-                            })(function(error, url, file) {
+                            })(function(error, url, savedFile) {
                                 // send the updated file to the chatserver
                                 if (error) {
                                     res.send({
@@ -463,20 +462,19 @@ var Server = function(config) {
 
                                 self.chatServer.sendFile({
                                     url: url,
-                                    id: file._id,
-                                    name: file.name,
-                                    type: file.type,
-                                    size: Math.floor(file.size / 1024),
-                                    uploaded: file.uploaded,
+                                    id: savedFile._id,
+                                    name: savedFile.name,
+                                    type: savedFile.type,
+                                    size: Math.floor(savedFile.size / 1024),
+                                    uploaded: savedFile.uploaded,
                                     owner: owner.displayName,
                                     room: room._id
                                 });
                                 res.send({
                                     status: 'success',
-                                    message: file.name + ' has been saved!',
+                                    message: savedFile.name + ' has been saved!',
                                     url: url
                                 }); 
-
                             });
                         });  
 
