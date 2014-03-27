@@ -390,6 +390,16 @@ var Server = function(config) {
                 var file = file[0];
                 var owner = req.user;
                 var allowed_file_types = self.config.allowed_file_types;
+
+                // Check MIME Type
+                if (!_.include(allowed_file_types, file.type)) {
+                    res.send({
+                        status: 'error',
+                        message: 'The MIME type ' + file.type + ' is not allowed'
+                    });
+                    return;
+                }
+                
                 // Lets see if this room exists
                 models.room.findOne({
                     '_id': roomID
@@ -410,80 +420,72 @@ var Server = function(config) {
                         });
                         return;
                     }
-                    // Check MIME Type
-                    if (_.include(allowed_file_types, file.type)) {
-                        // Save the file
-                        new models.file({
-                            owner: owner._id,
-                            name: file.name,
-                            type: file.type,
-                            size: file.size,
-                            room: room._id
-                        }).save(function(err, savedFile) {
-                            var fileFolder = savedFile._id
-                            var filePath = fileFolder + '/' + encodeURIComponent(savedFile.name);
-                            (!config.s3 ? function(callback) {
-                                // if s3 config is not set, upload file to filesystem
-                                // Let's move the upload now
-                                moveUpload(file.path, self.config.uploads_dir + '/' + fileFolder, function(err) {
-                                    // Let the clients know about the new file
-                                    var url = '/files/' + filePath;
-                                    callback(null, url, savedFile);
-                                });
-                            } : function(callback) {
-                                // otherwise, upload the file to S3
-                                var client = knox.createClient({
-                                    key: self.config.s3.accessKeyId,
-                                    secret: self.config.s3.secretAccessKey,
-                                    region: self.config.s3.region,
-                                    bucket: self.config.s3.bucket
-                                });
-                                client.putFile(file.path, '/' + filePath, {
-                                    'Content-Type': file.type,
-                                    'Content-Length': file.size
-                                }, function (err, response) {
-                                    if (response.statusCode != 200) {
-                                        callback('There was a problem with the server\'s S3 credentials.');
-                                        return;
-                                    }
-                                    var url = 'https://' + client.urlBase + '/' + filePath
-                                    callback(null, url, savedFile);
-                                });
 
-                            })(function(error, url, savedFile) {
-                                // send the updated file to the chatserver
-                                if (error) {
-                                    res.send({
-                                        status: 'error',
-                                        message: error
-                                    });
+                    // Save the file if all is well
+                    new models.file({
+                        owner: owner._id,
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        room: room._id
+                    }).save(function(err, savedFile) {
+                        var fileFolder = savedFile._id
+                        var filePath = fileFolder + '/' + encodeURIComponent(savedFile.name);
+                        (!config.s3 ? function(callback) {
+                            // if s3 config is not set, upload file to filesystem
+                            // Let's move the upload now
+                            moveUpload(file.path, self.config.uploads_dir + '/' + fileFolder, function(err) {
+                                // Let the clients know about the new file
+                                var url = '/files/' + filePath;
+                                callback(null, url, savedFile);
+                            });
+                        } : function(callback) {
+                            // otherwise, upload the file to S3
+                            var client = knox.createClient({
+                                key: self.config.s3.accessKeyId,
+                                secret: self.config.s3.secretAccessKey,
+                                region: self.config.s3.region,
+                                bucket: self.config.s3.bucket
+                            });
+                            client.putFile(file.path, '/' + filePath, {
+                                'Content-Type': file.type,
+                                'Content-Length': file.size
+                            }, function (err, response) {
+                                if (response.statusCode != 200) {
+                                    callback('There was a problem with the server\'s S3 credentials.');
                                     return;
                                 }
-
-                                self.chatServer.sendFile({
-                                    url: url,
-                                    id: savedFile._id,
-                                    name: savedFile.name,
-                                    type: savedFile.type,
-                                    size: Math.floor(savedFile.size / 1024),
-                                    uploaded: savedFile.uploaded,
-                                    owner: owner.displayName,
-                                    room: room._id
-                                });
-                                res.send({
-                                    status: 'success',
-                                    message: savedFile.name + ' has been saved!',
-                                    url: url
-                                }); 
+                                var url = 'https://' + client.urlBase + '/' + filePath
+                                callback(null, url, savedFile);
                             });
-                        });  
+                        })(function(error, url, savedFile) {
+                            // send the updated file to the chatserver
+                            if (error) {
+                                res.send({
+                                    status: 'error',
+                                    message: error
+                                });
+                                return;
+                            }
 
-                    } else {
-                        res.send({
-                            status: 'error',
-                            message: 'The MIME type ' + file.type + ' is not allowed'
+                            self.chatServer.sendFile({
+                                url: url,
+                                id: savedFile._id,
+                                name: savedFile.name,
+                                type: savedFile.type,
+                                size: Math.floor(savedFile.size / 1024),
+                                uploaded: savedFile.uploaded,
+                                owner: owner.displayName,
+                                room: room._id
+                            });
+                            res.send({
+                                status: 'success',
+                                message: savedFile.name + ' has been saved!',
+                                url: url
+                            }); 
                         });
-                    }
+                    });  
+
                 });
             });
         });
