@@ -288,8 +288,13 @@ var ChatServer = function (config, server, sessionStore) {
                             return;
                         }
                         _.each(files, function(file) {
+                            if (!self.config.s3) {
+                                var url = '/files/' + file._id + '/' + encodeURIComponent(file.name)
+                            } else {
+                                var url = file.url
+                            }
                             client.emit('room:files:new', {
-                                url: '/files/' + file._id + '/' + encodeURIComponent(file.name),
+                                url: url,
                                 id: file._id,
                                 name: file.name,
                                 type: file.type,

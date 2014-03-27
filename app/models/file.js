@@ -26,6 +26,9 @@ var FileSchema = new Schema({
         type: Number,
         required: true
     },
+    url: {
+        type: String
+    },
     uploaded: {
         type: Date,
         default: Date.now

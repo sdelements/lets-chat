@@ -17,6 +17,7 @@ var hash = require('node_hash');
 var moment = require('moment');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var knox = require('knox');
 
 // App stuff
 var ChatServer = require('./chat.js');
@@ -412,34 +413,83 @@ var Server = function(config) {
                     // Check MIME Type
                     if (_.include(allowed_file_types, file.type)) {
                         // Save the file
-                        new models.file({
-                            owner: owner._id,
-                            name: file.name,
-                            type: file.type,
-                            size: file.size,
-                            room: room._id
-                        }).save(function(err, savedFile) {
-                            // Let's move the upload now
-                            moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function(err) {
-                                // Let the clients know about the new file
-                                var url = '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name);
-                                self.chatServer.sendFile({
-                                    url: url,
-                                    id: savedFile._id,
-                                    name: savedFile.name,
-                                    type: savedFile.type,
-                                    size: Math.floor(savedFile.size / 1024),
-                                    uploaded: savedFile.uploaded,
-                                    owner: owner.displayName,
-                                    room: room._id
+                        if (!self.config.s3) {
+
+                            new models.file({
+                                owner: owner._id,
+                                name: file.name,
+                                type: file.type,
+                                size: file.size,
+                                room: room._id
+                            }).save(function(err, savedFile) {
+                                // Let's move the upload now
+                                moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function(err) {
+                                    // Let the clients know about the new file
+                                    var url = '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name);
+                                    self.chatServer.sendFile({
+                                        url: url,
+                                        id: savedFile._id,
+                                        name: savedFile.name,
+                                        type: savedFile.type,
+                                        size: Math.floor(savedFile.size / 1024),
+                                        uploaded: savedFile.uploaded,
+                                        owner: owner.displayName,
+                                        room: room._id
+                                    });
+                                    res.send({
+                                        status: 'success',
+                                        message: file.name + ' has been saved!',
+                                        path: url
+                                    });
                                 });
-                                res.send({
-                                    status: 'success',
-                                    message: file.name + ' has been saved!',
-                                    url: url
-                                });
+                            });        
+
+                        } else {
+                            var client = knox.createClient({
+                                key: self.config.s3.accessKeyId,
+                                secret: self.config.s3.secretAccessKey,
+                                region: self.config.s3.region,
+                                bucket: self.config.s3.bucket
                             });
-                        });
+                            date = new Date()
+                            newFilename = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '-' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '-' + file.name
+                            client.putFile(file.path, '/' + newFilename, {'Content-Type': file.type, 'Content-Length': file.size}, function (err, response) {
+                                if (response.statusCode == 200) {
+                                    new models.file({
+                                        owner: owner._id,
+                                        name: newFilename,
+                                        type: file.type,
+                                        size: file.size,
+                                        room: room._id,
+                                        url: 'https://s3-' + self.config.s3.region + '.amazonaws.com/' + self.config.s3.bucket + '/' + encodeURIComponent(newFilename)
+                                    }).save(function(err, savedFile) {
+                                        self.chatServer.sendFile({
+                                            url: savedFile.url,
+                                            id: savedFile._id,
+                                            name: savedFile.name,
+                                            type: savedFile.type,
+                                            size: Math.floor(savedFile.size / 1024),
+                                            uploaded: savedFile.uploaded,
+                                            owner: owner.displayName,
+                                            room: room._id
+                                        });
+
+                                        res.send({
+                                            status: 'success',
+                                            message: file.name + ' has been saved!',
+                                            url: savedFile.url
+                                        });                                        
+
+                                    });
+                                } else {
+                                    res.send({
+                                        status: 'error',
+                                        message: 'There was a problem with the S3 credentials.'
+                                    });
+                                }
+                            });                    
+                        }
+
                     } else {
                         res.send({
                             status: 'error',

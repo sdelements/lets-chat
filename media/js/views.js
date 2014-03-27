@@ -234,8 +234,12 @@ var FileListView = Backbone.View.extend({
             self.$('.throbber').hide();
             // Temporary solution to post images inside chat
             // We should make relative urls work for embeds
-            if (data.result.url) {
-                var url = location.protocol + '//' + location.host + data.result.url
+            if (data.result.url || data.result.path) {
+                if (data.result.path) {
+                    var url = location.protocol + '//' + location.host + data.result.path;
+                } else {
+                    var url = data.result.url;
+                }
                 self.notifications.trigger('newmessage', {
                     room: self.room.model.id,
                     text: url
