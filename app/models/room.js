@@ -17,13 +17,17 @@ var RoomSchema = new Schema({
 		ref: 'User',
         required: true
     },
-	admins: [{
-		type: Schema.ObjectId,
-		ref: 'User' 
-	}],
+    admins: [{
+        type: Schema.ObjectId,
+        ref: 'User'
+    }],
+    allowed_users: [{
+        type: Schema.ObjectId,
+        ref: 'User'
+    }],
 	messages: [{
 		type: Schema.ObjectId,
-		ref: 'Message' 
+		ref: 'Message'
 	}],
     created: {
         type: Date,
@@ -32,7 +36,7 @@ var RoomSchema = new Schema({
     lastActive: {
         type: Date,
         default: Date.now
-    }
+    },
 });
 
 module.exports = mongoose.model('Room', RoomSchema);
