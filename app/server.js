@@ -457,7 +457,7 @@ var Server = function(config) {
                                 if (response.statusCode == 200) {
                                     new models.file({
                                         owner: owner._id,
-                                        name: newFilename,
+                                        name: file.name,
                                         type: file.type,
                                         size: file.size,
                                         room: room._id,
