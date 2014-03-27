@@ -288,10 +288,11 @@ var ChatServer = function (config, server, sessionStore) {
                             return;
                         }
                         _.each(files, function(file) {
+                            var filePath = file._id + '/' + encodeURIComponent(file.name);
                             if (!self.config.s3) {
-                                var url = '/files/' + file._id + '/' + encodeURIComponent(file.name)
+                                var url = '/files/' + filePath;
                             } else {
-                                var url = file.url
+                                var url = 'https://' + config.s3.bucket + '.s3-' + config.s3.region + '.amazonaws.com/' + filePath;
                             }
                             client.emit('room:files:new', {
                                 url: url,

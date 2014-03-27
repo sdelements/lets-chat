@@ -413,82 +413,72 @@ var Server = function(config) {
                     // Check MIME Type
                     if (_.include(allowed_file_types, file.type)) {
                         // Save the file
-                        if (!self.config.s3) {
-
-                            new models.file({
-                                owner: owner._id,
-                                name: file.name,
-                                type: file.type,
-                                size: file.size,
-                                room: room._id
-                            }).save(function(err, savedFile) {
+                        new models.file({
+                            owner: owner._id,
+                            name: file.name,
+                            type: file.type,
+                            size: file.size,
+                            room: room._id
+                        }).save(function(err, savedFile) {
+                            var fileFolder = savedFile._id
+                            var filePath = fileFolder + '/' + encodeURIComponent(savedFile.name);
+                            (!config.s3 ? function(callback) {
+                                // if s3 config is not set, upload file to filesystem
                                 // Let's move the upload now
-                                moveUpload(file.path, self.config.uploads_dir + '/' + savedFile._id, function(err) {
+                                moveUpload(file.path, self.config.uploads_dir + '/' + fileFolder, function(err) {
                                     // Let the clients know about the new file
-                                    var url = '/files/' + savedFile._id + '/' + encodeURIComponent(savedFile.name);
-                                    self.chatServer.sendFile({
-                                        url: url,
-                                        id: savedFile._id,
-                                        name: savedFile.name,
-                                        type: savedFile.type,
-                                        size: Math.floor(savedFile.size / 1024),
-                                        uploaded: savedFile.uploaded,
-                                        owner: owner.displayName,
-                                        room: room._id
-                                    });
-                                    res.send({
-                                        status: 'success',
-                                        message: file.name + ' has been saved!',
-                                        path: url
-                                    });
+                                    var url = '/files/' + filePath;
+                                    callback(null, url, savedFile);
                                 });
-                            });        
 
-                        } else {
-                            var client = knox.createClient({
-                                key: self.config.s3.accessKeyId,
-                                secret: self.config.s3.secretAccessKey,
-                                region: self.config.s3.region,
-                                bucket: self.config.s3.bucket
-                            });
-                            date = new Date()
-                            newFilename = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '-' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '-' + file.name
-                            client.putFile(file.path, '/' + newFilename, {'Content-Type': file.type, 'Content-Length': file.size}, function (err, response) {
-                                if (response.statusCode == 200) {
-                                    new models.file({
-                                        owner: owner._id,
-                                        name: file.name,
-                                        type: file.type,
-                                        size: file.size,
-                                        room: room._id,
-                                        url: 'https://s3-' + self.config.s3.region + '.amazonaws.com/' + self.config.s3.bucket + '/' + encodeURIComponent(newFilename)
-                                    }).save(function(err, savedFile) {
-                                        self.chatServer.sendFile({
-                                            url: savedFile.url,
-                                            id: savedFile._id,
-                                            name: savedFile.name,
-                                            type: savedFile.type,
-                                            size: Math.floor(savedFile.size / 1024),
-                                            uploaded: savedFile.uploaded,
-                                            owner: owner.displayName,
-                                            room: room._id
-                                        });
+                            } : function(callback) {
+                                // otherwise, upload the file to S3
+                                var client = knox.createClient({
+                                    key: self.config.s3.accessKeyId,
+                                    secret: self.config.s3.secretAccessKey,
+                                    region: self.config.s3.region,
+                                    bucket: self.config.s3.bucket
+                                });
+                                client.putFile(file.path, '/' + filePath, {
+                                    'Content-Type': file.type,
+                                    'Content-Length': file.size
+                                }, function (err, response) {
+                                    if (response.statusCode != 200) {
+                                        callback('There was a problem with the server\'s S3 credentials.');
+                                        return;
+                                    }
+                                    var url = 'https://' + client.urlBase + '/' + filePath
+                                    callback(null, url, savedFile);
+                                });
 
-                                        res.send({
-                                            status: 'success',
-                                            message: file.name + ' has been saved!',
-                                            url: savedFile.url
-                                        });                                        
-
-                                    });
-                                } else {
+                            })(function(error, url, file) {
+                                // send the updated file to the chatserver
+                                if (error) {
                                     res.send({
                                         status: 'error',
-                                        message: 'There was a problem with the S3 credentials.'
+                                        message: error
                                     });
+                                    return;
                                 }
-                            });                    
-                        }
+
+                                self.chatServer.sendFile({
+                                    url: url,
+                                    id: file._id,
+                                    name: file.name,
+                                    type: file.type,
+                                    size: Math.floor(file.size / 1024),
+                                    uploaded: file.uploaded,
+                                    owner: owner.displayName,
+                                    room: room._id
+                                });
+                                res.send({
+                                    status: 'success',
+                                    message: file.name + ' has been saved!',
+                                    url: url
+                                }); 
+
+                            });
+                        });  
 
                     } else {
                         res.send({
