@@ -15,6 +15,7 @@ A self-hosted chat app for small teams.
 * Code pasting
 * File uploads
 * SSL/TLS
+* MIT Licensed
 
 ## Upcoming Features
 
