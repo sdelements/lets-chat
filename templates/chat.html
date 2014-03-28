@@ -1,85 +1,48 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block page_title %}Chat &middot; {% parent %}{% endblock %}
-
-{% block page_js %}
-    <script src="/socket.io/socket.io.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/lib/masonry.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/lib/jquery.tinysort.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/lib/at/at.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/lib/underscore.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/lib/backbone.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/lib/fileupload/jquery.ui.widget.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/lib/fileupload/iframe-transport.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/lib/fileupload/fileupload.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/lib/desktop-notifications.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/util/message.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/models.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/views.js" type="text/javascript"></script>
-    <script src="{{media_url}}/js/client.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        $(function() {
-            window.app = new Client({
-                title: 'Let\'s Chat',
-                host: '{{host}}',
-                port: {{port}},
-                transports: ['websocket', 'flashsocket']
-            }).start();
-        });
-    </script>
+{% block js %}
+    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="media/js/vendor/angular-socket-io/socket.js"></script>
+    <script type="text/javascript" src="media/js/ng/app.js"></script>
+    <script type="text/javascript" src="media/js/ng/controllers/client-controller.js"></script>
 {% endblock %}
 
-{% block body_class %}page-chat{% endblock %}
-
-{% block content %}
-<div id="client">
-    <header class="navbar">
-        <div id="rooms-menu" class="tabs">
-            <ul>
-                <li class="fixed tab" data-id="home">
-                    <a href="#!/" class="home" data-id="home" title="Rooms"><i class="icon-th icon-white"></i></a>
+{% block body %}
+    <div ng-app="lets-chat">
+        <div ng-controller="client-controller">
+            <h1>Chat</h1>
+            <h2>Messages</h2>
+            <ul scroll-glue style="max-height: 240px; width: 50%; overflow-y: auto;">
+                <li ng-repeat="message in messages">
+                    {$ message.text $}
                 </li>
             </ul>
-        </div>
-        <div class="user dropdown pull-right">
-            <span class="button" data-toggle="dropdown" href="#">
-                <img class="avatar" src="https://www.gravatar.com/avatar/{{ user_avatar }}?s=50" />
-                <span class="name">{{ user_firstname }} {{ user_lastname }}</span>
-                <b class="caret"></b>
-            </span>
-            <ul class="dropdown-menu">
-                <li><a data-toggle="modal" href="#edit-profile"><i class="icon-edit"></i> Edit Profile</a></li>
-                <li><a data-toggle="modal" href="#edit-account"><i class="icon-cog"></i> Account Settings</a></li>
-                <li><a data-toggle="modal" href="#experimental-features"><i class="icon-beaker"></i> Experimental</a></li>
-                <li class="divider"></li>
-                <li><a href="/logout"><i class="icon-signout"></i> Logout</a></li>
+            <form ng-submit="sendMessage()">
+                <input ng-model="forms.message.text" placeholder="Wow. Much talk." ng-keypress="$event.keyCode == 13 && send($event)" />
+                <button type="submit" data-click="send()">Send</button>
+            </form>
+            <h2>Rooms</h2>
+            <ul scroll-glue style="max-height: 240px; width: 50%; overflow-y: auto;">
+                <li ng-repeat="room in rooms">
+                    ({$ room._id $}) {$ room.name $} &middot; {$ room.description $}
+                </li>
             </ul>
+            <form ng-submit="createRoom()">
+                <input ng-model="forms.room.name" type="text" name="name" placeholder="Name" />
+                <input ng-model="forms.room.description" type="text" name="description" placeholder="Description" />
+                <button type="submit">Create</button>
+            </form>
+            <h2>Account Info</h2>
+            <table>
+                <tbody>
+                    {% for property, value in account %}
+                        <tr>
+                            <td>{{ property }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </header>
-    <div id="panes" class="views">
-        <div id="room-list" data-id="home" class="view" style="display: none;">
-            <div class="top">
-                <h1><img src="{{ media_url }}/img/rooms.png" alt="Rooms"></h1>
-                <a data-toggle="modal" href="#create-room" class="btn btn-info">
-                    <i class="icon-plus icon-white"></i> Create Room
-                </a>
-            </div>
-            <ul class="room-list list">
-                {% for room in rooms %}
-                    <li class="room" data-id="{{ room._id }}">
-                        <a class="name" href="#!/room/{{ room._id }}">{{ room.name }}</a>
-                        <p class="description">{{ room.description }}</p>
-                        <ul class="users"></ul><!-- users end -->
-                    </li>
-                {% endfor %}
-            </ul><!-- rooms list end -->
-        </div><!-- view end -->
-    </div><!-- views end -->
-    <div class="connection-status">connecting</div>
-</div><!-- client end -->
-{% endblock %}
-
-{% block page_assets %}
-    {% include "modals.html" %}
-    {% include "js-templates.html" %}
+    </div>
 {% endblock %}

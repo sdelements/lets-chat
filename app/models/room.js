@@ -1,8 +1,11 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
+//
+// Room
+//
 
-var RoomSchema = new Schema({
+var mongoose = require('mongoose'),
+    ObjectId = mongoose.Schema.Types.ObjectId;
+
+var RoomSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -13,17 +16,13 @@ var RoomSchema = new Schema({
         trim: true
     },
     owner: {
-		type: Schema.ObjectId,
+		type: ObjectId,
 		ref: 'User',
         required: true
     },
-	admins: [{
-		type: Schema.ObjectId,
-		ref: 'User' 
-	}],
 	messages: [{
-		type: Schema.ObjectId,
-		ref: 'Message' 
+		type: ObjectId,
+		ref: 'Message'
 	}],
     created: {
         type: Date,

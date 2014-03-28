@@ -1,77 +1,24 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block page_title %}Login &middot; {% parent %}{% endblock %}
-
-{% block page_js %}
-	<script src="{{media_url}}/js/login.js" type="text/javascript"></script>
+{% block js %}
+    <script type="text/javascript" src="media/js/login.js"></script>
 {% endblock %}
 
-{% block body_class %}page-login{% endblock %}
-
-{% block body_attributes %}
-    style="background-image: url({{media_url}}/img/photos/{{photo}});"
-{% endblock %}
-
-{% block content %}
-    <div class="content-wrap">
-        <div class="content">
-            <h1 class="logo">Let<span class="flavour">'</span>s Chat</h1>
-            <div class="well">
-                <div id="login-form" class="well-section">
-                    <legend>Sign in</legend>
-                    <form class="login validate" action="/ajax/login" method="post" data-refresh="true">
-                        <div class="form-group">
-                            <input class="required form-control" placeholder="Email" name="email" type="text" />
-                        </div>
-                        <div class="form-group">
-                            <input class="required form-control" placeholder="Password" name="password" type="password" /> 
-                        </div>
-                        <p class="alert response" style="display: none;"></p>
-                        <div class="bottom clearfix">
-                            <div class="pull-left links">
-                                {% if not disableRegistration %}
-                                    <a class="show-form" data-target="#register-form" href="#">I need an account</a>
-                                {% endif %}
-                            </div>
-                            <button class="btn-info btn btn-lg indicator pull-right" type="submit">Sign in <i class="icon-signin"></i></button>
-                        </div>
-                    </form>
-                </div><!-- login form end -->
-                {% if not disableRegistration %}
-                    <div id="register-form" class="well-section" style="display: none;">
-                        <legend>Register</legend>
-                        <form class="register validate" action="/ajax/register" method="post" data-refresh="true">
-                            <input type="hidden" name="next" value="{{next}}" />
-                            <div class="form-group">
-                                <input class="required email form-control" name="email" type="text" placeholder="Email" />
-                            </div>
-                            <div class="form-group">
-                                <input class="required form-control" name="password" type="password" placeholder="Password" minlength="4" maxlength="24" />
-                            </div>
-                            <div class="form-group">
-                                <input class="required form-control" name="first-name" type="text" placeholder="First Name" maxlength="24" />
-                            </div>
-                            <div class="form-group">
-                                <input class="required form-control" name="last-name" type="text" placeholder="Last Name" maxlength="24" />
-                            </div>
-                            <p class="alert response" style="display: none;"></p>
-                            <div class="bottom clearfix">
-                                <div class="pull-left links">
-                                    <a class="show-form" data-target="#login-form" href="#">I already have an account</a>
-                                </div>
-                                <button class="btn-info btn btn-lg indicator pull-right" type="submit">Register</button>
-                            </div>
-                        </form>
-                    </div><!-- register form end -->
-                {% endif %}
-            </div><!-- well end -->
-        </div><!-- content end -->
-    </div><!-- content-wrap end -->
-    <footer class="footer">
-        <p class="pull-left"><i class="icon-heart icon"></i> From Toronto with Love &mdash; Photos by <a href="http://funkaoshi.com/" target="_blank">Ramanan Sivaranjan </a></p>
-        <p class="pull-right"><a href="https://github.com/sdelements/lets-chat" target="_blank"><i class="icon-github icon"></i> Fork me on GitHub &raquo;</a></p>
-    </footer>
-{% endblock %}
-
-{% block page_assets %}
+{% block body %}
+    <h1>LETS-PIZZA</h1>
+    <form action="/account/login" method="POST">
+        <h2>Login</h2>
+        <input type="text" name="email" placeholder="Username" />
+        <input type="text" name="password" placeholder="Password" />
+        <button type="submit">Submit</button>
+    </form>
+    <form action="/account/register" method="POST">
+        <h2>Register</h2>
+        <input type="text" name="email" placeholder="Username" />
+        <input type="text" name="password" placeholder="Password" />
+        <input type="text" name="display-name" placeholder="Display Name" />
+        <input type="text" name="first-name" placeholder="First Name" />
+        <input type="text" name="last-name" placeholder="Last Name" />
+        <button type="submit">Submit</button>
+    </form>
 {% endblock %}

@@ -1,53 +1,37 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
-var check = require('validator').check;
-var hash = require('node_hash');
+//
+// User
+//
 
-var config = require('../../settings.js');
+var mongoose = require('mongoose'),
+    ObjectId = mongoose.Schema.Types.ObjectId,
+    uniqueValidator = require('mongoose-unique-validator'),
+    validate = require('mongoose-validate'),
+    bcrypt = require('bcryptjs');
 
-var UserSchema = new Schema({
+var UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
         trim: true,
         lowercase: true,
-        validate: [function(v) {
-            try {
-                check(v).isEmail();
-            } catch (e) {
-                return false;
-            }
-            return true;
-        }, 'invalid email']
+        unique: true,
+        validate: [ validate.email, 'invalid email address' ]
     },
     password: {
         type: String,
         required: true,
         trim: true,
-        set: function(p) {
-            // This is kinda wonky
-            if (p.length < 4) {
-                return false;
-            }
-            return hash.sha256(p, config.password_salt);
-        }
+        match: /^.{8,64}$/i
     },
     firstName: {
         type: String,
         required: true,
-        trim: true,
-        validate: [function(v) {
-            return (v.length <= 24);
-        }, 'invalid first name']
+        trim: true
     },
     lastName: {
         type: String,
         required: true,
-        trim: true,
-        validate: [function(v) {
-            return (v.length <= 24);
-        }, 'invalid last name']
+        trim: true
     },
     displayName: {
         type: String,
@@ -62,10 +46,64 @@ var UserSchema = new Schema({
         type: String,
         trim: true
     },
+    rooms: [{
+		type: ObjectId,
+		ref: 'Room'
+    }],
 	messages: [{
-		type: Schema.ObjectId,
-		ref: 'Message' 
+		type: ObjectId,
+		ref: 'Message'
 	}]
+});
+
+UserSchema.pre('save', function(next) {
+    var user = this;
+    if (!user.isModified('password'))
+        return next();
+    bcrypt.genSalt(10, function(err, salt) {
+        if (err)
+            return next(err);
+        bcrypt.hash(user.password, salt, function(err, hash) {
+            if (err)
+                return next(err);
+            user.password = hash;
+            next();
+        });
+    });
+});
+
+UserSchema.methods.comparePassword = function(candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+        if (err)
+            return cb(err);
+        cb(null, isMatch);
+    });
+};
+
+UserSchema.statics.authenticate = function(email, password, cb) {
+    this.findOne({
+        email: email
+    }, function(err, user) {
+        if (err) return cb(err);
+        // Does the user exist?
+        if (!user) {
+            return cb(null, null, 0);
+        }
+        // Is password okay?
+        user.comparePassword(password, function(err, isMatch) {
+            if (err)
+                return cb(err);
+            if (isMatch) {
+                return cb(null, user);
+            }
+            // Bad password bro
+            return cb(null, null, 1);
+        });
+    });
+};
+
+UserSchema.plugin(uniqueValidator, {
+    message: 'Expected {PATH} to be unique'
 });
 
 module.exports = mongoose.model('User', UserSchema);

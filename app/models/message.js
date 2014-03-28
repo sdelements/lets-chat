@@ -1,16 +1,19 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
+//
+// Message
+//
 
-var MessageSchema = new Schema({
+var mongoose = require('mongoose'),
+    ObjectId = mongoose.Schema.Types.ObjectId;
+
+var MessageSchema = new mongoose.Schema({
     room: {
-		type: Schema.ObjectId,
-		ref: 'Room',
-        required: true
+        type: ObjectId,
+        ref: 'Room',
+        // required: true
     },
     owner: {
-		type: Schema.ObjectId,
-		ref: 'User',
+        type: ObjectId,
+        ref: 'User',
         required: true
     },
     text: {
