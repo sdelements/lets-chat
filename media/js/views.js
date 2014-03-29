@@ -235,7 +235,11 @@ var FileListView = Backbone.View.extend({
             // Temporary solution to post images inside chat
             // We should make relative urls work for embeds
             if (data.result.url) {
-                var url = location.protocol + '//' + location.host + data.result.url
+                if (!data.result.url.match('://')) {
+                    var url = location.protocol + '//' + location.host + data.result.url;
+                } else {
+                    var url = data.result.url;
+                }
                 self.notifications.trigger('newmessage', {
                     room: self.room.model.id,
                     text: url

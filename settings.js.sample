@@ -46,6 +46,16 @@ var config = {
         }
     },
 
+    // s3 credentials
+    /***
+    s3: {
+        accessKeyId: 'asdf',
+        secretAccessKey: 'asdf',
+        region: 'us-west-1',
+        bucket: 'asdf'
+    },
+    ***/
+
     // Allowed file types
     allowed_file_types: [
         'image/jpeg',
