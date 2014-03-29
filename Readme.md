@@ -33,7 +33,7 @@ Install [nodejs](https://github.com/joyent/node/wiki/Installation) and [mongo](h
 Clone le repo
 
 ```php
-git clone https://github.com/sdelements/lcb.git
+git clone https://github.com/sdelements/lets-chat.git
 cd lcb
 ```
 
