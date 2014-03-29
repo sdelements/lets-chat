@@ -467,7 +467,6 @@ var Server = function(config) {
                                 });
                                 return;
                             }
-
                             self.chatServer.sendFile({
                                 url: url,
                                 id: savedFile._id,
