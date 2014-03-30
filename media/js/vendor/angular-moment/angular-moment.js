@@ -135,13 +135,9 @@
 					// Milliseconds since the epoch
 					value = new Date(parseInt(value, 10));
 				}
+				// else assume the given value is already a date
 
-				var moment = $window.moment(value);
-				if (!moment.isValid()) {
-					return '';
-				}
-
-				return applyTimezone(moment, angularMomentConfig.timezone, $log).calendar();
+				return applyTimezone($window.moment(value), angularMomentConfig.timezone, $log).calendar();
 			};
 		}])
 		.filter('amDateFormat', ['$window', '$log', 'angularMomentConfig', function ($window, $log, angularMomentConfig) {
@@ -155,13 +151,9 @@
 					// Milliseconds since the epoch
 					value = new Date(parseInt(value, 10));
 				}
+				// else assume the given value is already a date
 
-				var moment = $window.moment(value);
-				if (!moment.isValid()) {
-					return '';
-				}
-
-				return applyTimezone(moment, angularMomentConfig.timezone, $log).format(format);
+				return applyTimezone($window.moment(value), angularMomentConfig.timezone, $log).format(format);
 			};
 		}])
 		.filter('amDurationFormat', ['$window', function ($window) {

@@ -1,3 +1,6 @@
+//
+// Gruntfile
+//
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -7,7 +10,7 @@ module.exports = function(grunt) {
                     install: true,
                     cleanTargetDir: true,
                     verbose: true,
-                    targetDir: 'static_common/js/vendor',
+                    targetDir: 'media/js/vendor',
                     layout: 'byComponent',
                 }
             }

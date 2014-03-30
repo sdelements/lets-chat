@@ -1,6 +1,7 @@
 settings.js
 uploads
 node_modules
+bower_components
 .DS_Store
 *._
 *.sw[opqr]

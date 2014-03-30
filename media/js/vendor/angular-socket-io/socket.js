@@ -1,6 +1,6 @@
 /*
  * @license
- * angular-socket-io v0.4.0
+ * angular-socket-io v0.4.1
  * (c) 2014 Brian Ford http://briantford.com
  * License: MIT
  */
@@ -33,7 +33,7 @@ angular.module('btford.socket-io', []).
         var defaultScope = options.scope || $rootScope;
 
         var addListener = function (eventName, callback) {
-          socket.on(eventName, asyncAngularify(socket, callback));
+          socket.on(eventName, callback.__ng = asyncAngularify(socket, callback));
         };
 
         var wrappedSocket = {
@@ -41,10 +41,19 @@ angular.module('btford.socket-io', []).
           addListener: addListener,
 
           emit: function (eventName, data, callback) {
-            return socket.emit(eventName, data, asyncAngularify(socket, callback));
+            var lastIndex = arguments.length - 1;
+            var callback = arguments[lastIndex];
+            if(typeof callback == 'function') {
+              callback = asyncAngularify(socket, callback);
+              arguments[lastIndex] = callback;
+            }
+            return socket.emit.apply(socket, arguments);
           },
 
-          removeListener: function () {
+          removeListener: function (ev, fn) {
+            if (fn && fn.__ng) {
+              arguments[1] = fn.__ng;
+            }
             return socket.removeListener.apply(socket, arguments);
           },
 
