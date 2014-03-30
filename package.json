@@ -12,14 +12,20 @@
     "url": "git://github.com/hhaidar/IWANTPIZZA.git"
   },
   "author": "Houssam Haidar <houssam@sdelements.com>",
-    "contributors": [
-      {"name": "Jeffery Bain", "email": "jeff@sdelements.com"},
-      {"name": "Ramanan Sivaranjan", "email": "ramanan@sdelements.com"}
-    ],
-    "keywords": [
-      "chat",
-      "group chat"
-    ],
+  "contributors": [
+    {
+      "name": "Jeffery Bain",
+      "email": "jeff@sdelements.com"
+    },
+    {
+      "name": "Ramanan Sivaranjan",
+      "email": "ramanan@sdelements.com"
+    }
+  ],
+  "keywords": [
+    "chat",
+    "group chat"
+  ],
   "bugs": {
     "url": "https://github.com/sdelements/lets-chat/issues"
   },
@@ -36,5 +42,11 @@
     "mongoose-validate": "0.0.5",
     "bcryptjs": "~0.7.12",
     "express.io-middleware": "~0.9.1"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-bower-task": "~0.3.4",
+    "grunt-contrib-less": "~0.11.0"
   }
 }

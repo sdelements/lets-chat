@@ -1,0 +1,72 @@
+
+//
+// Base
+//
+
+html, body {
+    height: 100%;
+}
+
+.lcb-client {
+    .square(100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    .flex-display;
+    .flex-direction(column);
+}
+
+.lcb-header {
+    background: red;
+    .size(100%, 60px);
+    display: none;
+}
+
+.lcb-main {
+    .flex-display;
+    .flex(1);
+}
+
+.lcb-chat {
+    background: purple;
+    padding: 10px;
+    .flex-display;
+    .flex-direction(column);
+    .flex(1);
+}
+
+.lcb-messages {
+    background: salmon;
+    padding: 0;
+    margin: 0;
+    overflow-y: scroll;
+    .flex(1);
+}
+
+.lcb-entry {
+    height: 60px;
+    .flex-display;
+}
+
+.lcb-entry-input {
+    border: none;
+    padding: 10px;
+    .flex(1);
+}
+
+.lcb-subsidebar {
+    background: orange;
+    width: 300px;
+}
+
+.lcb-sidebar {
+    background: blue;
+    width: 300px;
+}
+
+.lcb-room-actions {
+    .btn {
+        border-radius: 100%;
+        .square(40px);
+    }
+}

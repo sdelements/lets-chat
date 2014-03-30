@@ -1,6 +1,8 @@
 settings.js
+uploads
 node_modules
 .DS_Store
+*._
 *.sw[opqr]
 *.swap
 .*.swp
