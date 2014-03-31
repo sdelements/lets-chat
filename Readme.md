@@ -32,26 +32,26 @@ Install [nodejs](https://github.com/joyent/node/wiki/Installation) and [mongo](h
 
 Clone le repo
 
-```php
+```
 git clone https://github.com/sdelements/lets-chat.git
-cd lcb
+cd lets-chat
 ```
 
 Install node dependencies
 
-```php
+```
 npm install
 ```
 
 Create a settings file (make sure to edit if you need to). 
 
-```php
+```
 cp settings.js.sample settings.js
 ```
 
 Run the app
 
-```php
+```
 nodejs app.js
 ```
 
