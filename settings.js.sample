@@ -2,7 +2,7 @@ var config = {
 
     // Server
     host: '', // Not required
-    port: 5000,
+    port: process.env.PORT || 5000,
 
     // Registration
     disable_registration: false,
@@ -22,6 +22,9 @@ var config = {
     db_name: 'letschatbro',
     db_user: '',
     db_password: '',
+
+    // Overrides the above settings (helpful for heroku)
+    // db_url: process.env.DATABASE_URL,
 
     // Security
     // Please change these!
