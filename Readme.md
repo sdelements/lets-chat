@@ -52,7 +52,7 @@ cp settings.js.sample settings.js
 Run the app
 
 ```
-nodejs app.js
+node app.js
 ```
 
 Party time: [http://localhost:5000](http://localhost:5000)
