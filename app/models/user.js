@@ -8,6 +8,7 @@ var config = require('../../settings.js');
 
 var UserSchema = new Schema({
     email: {
+        unique: true,
         type: String,
         required: true,
         trim: true,
