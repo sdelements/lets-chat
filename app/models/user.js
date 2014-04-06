@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 var check = require('validator').check;
 var hash = require('node_hash');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var config = require('../../settings.js');
 
@@ -67,6 +68,10 @@ var UserSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'Message' 
 	}]
+});
+
+UserSchema.plugin(uniqueValidator, {
+    message: 'Email is not unique'
 });
 
 module.exports = mongoose.model('User', UserSchema);

@@ -311,7 +311,7 @@ var Server = function(config) {
                     if (err) {
                         res.send({
                             status: 'error',
-                            message: 'Some fields did not validate',
+                            message: 'An error occured while updating your profile.',
                             errors: err
                         });
                         return;
@@ -361,7 +361,7 @@ var Server = function(config) {
                     if (err) {
                         res.send({
                             status: 'error',
-                            message: 'Some fields did not validate',
+                            message: 'An error occured while updating your account.',
                             errors: err
                         });
                         return;
