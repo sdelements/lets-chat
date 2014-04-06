@@ -32,7 +32,7 @@
         "node": ">=0.7"
     },
     "scripts": {
-        "start": "nodejs app.js"
+        "start": "node app.js"
     }
 }
 
