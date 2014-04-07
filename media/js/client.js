@@ -1,12 +1,12 @@
 var Client = function(config) {
 
     var self = this;
-    
+
     //
     // Config
     //
     this.config = config;
-    
+
     //
     // Plugins
     //
@@ -16,17 +16,17 @@ var Client = function(config) {
     // Global Notifications
     //
     this.notifications = _.extend({}, Backbone.Events);
-    
+
     //
     // Client User
     //
     this.user = new UserModel();
-    
+
     //
     // Available Rooms Collections
     //
     this.availableRooms = new AvailableRoomsCollection();
-    
+
     //
     // Rooms Collection
     //

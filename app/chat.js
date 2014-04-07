@@ -46,7 +46,7 @@ var ChatServer = function (config, server, sessionStore) {
                     if (err) {
                         // Woops
                         accept(null, false);
-                        return;  
+                        return;
                     }
                     var hashedPassword = hash.sha256(data.query.password, self.config.password_salt);
                     if (user && hashedPassword === user.password) {
@@ -151,7 +151,6 @@ var ChatServer = function (config, server, sessionStore) {
                                 name: message.owner.displayName,
                                 text: message.text,
                                 posted: message.posted,
-                                time: moment(message.posted).calendar()
                             });
                         });
                     }
@@ -186,7 +185,6 @@ var ChatServer = function (config, server, sessionStore) {
                         name: userData.displayName,
                         text: message.text,
                         posted: message.posted,
-                        time: moment(message.posted).calendar(),
                         room: message.room
                     }
                     self.io.sockets.in(message.room).emit('room:messages:new', outgoingMessage);

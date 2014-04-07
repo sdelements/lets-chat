@@ -450,6 +450,10 @@ var RoomView = Backbone.View.extend({
         message.mentioned = message.text.match(new RegExp('\\@' + this.user.get('safeName') + '\\b', 'i')) ? true : false;
         // Smells like pasta
         message.paste = message.text.match(/\n/ig) ? true : false;
+        // Convert server time to friendly version of local time
+        var time = moment(message.posted)
+        message.time = time.calendar()
+
         var $html = $(Mustache.to_html(this.messageTemplate, message).trim());
         var $text = $html.find('.text');
         $text.html(this.formatContent($text.html()));
@@ -770,7 +774,7 @@ var WindowTitleView = Backbone.View.extend({
                     notification.close();
                 }, 5 * 1000);
             }
-    
+
             //
             // Notifications for Fluid.app users.
             //
