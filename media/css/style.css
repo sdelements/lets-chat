@@ -7112,6 +7112,10 @@ button.close {
 .fa-plus-square-o:before {
   content: "\f196";
 }
+html,
+body {
+  height: 100%;
+}
 .btn {
   border-radius: 3px;
 }
@@ -7208,6 +7212,19 @@ button.close {
   background-color: #222;
   background-image: url('../img/photos/reflection.jpg');
   background-size: cover;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  -ms-justify-content: center;
+  justify-content: center;
 }
 .lcb-login:before {
   background-image: url('../img/photo-overlay.png');
@@ -7225,7 +7242,7 @@ button.close {
   text-align: center;
   margin: 0 auto;
   padding: 20px;
-  padding-bottom: 80px;
+  padding-bottom: 60px;
   position: relative;
 }
 .lcb-login-logo {
