@@ -15,7 +15,7 @@
         <script type="text/javascript" src="media/js/vendor/angularjs-scroll-glue/scrollglue.js"></script>
         {% block js %}{% endblock %}
     </head>
-    <body class="{% block class %}{% endblock %}">
+    <body class="{% block class %}{% endblock %}" {% block attributes %}{% endblock %}>
         {% block body %}{% endblock %}
     </body>
 </html>
