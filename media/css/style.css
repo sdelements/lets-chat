@@ -7238,8 +7238,9 @@ body {
   filter: alpha(opacity=40);
 }
 .lcb-login-main {
-  max-width: 470px;
+  max-width: 420px;
   text-align: center;
+  margin-top: -60px;
   margin: 0 auto;
   padding: 20px;
   padding-bottom: 60px;
@@ -7283,6 +7284,9 @@ body {
 }
 .lcb-login-box-bottom {
   overflow: hidden;
+}
+.lcb-login-box-bottom .links {
+  margin-top: 12px;
 }
 .lcb-login-footer {
   background-color: rgba(0, 0, 0, 0.4);
