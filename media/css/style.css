@@ -7125,95 +7125,6 @@ body {
   font-size: 14px;
   padding: 10px;
 }
-.lcb-client {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: -ms-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  -moz-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-}
-.lcb-header {
-  background: red;
-  width: 100%;
-  height: 60px;
-  display: none;
-}
-.lcb-main {
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: -ms-flex;
-  display: flex;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-.lcb-chat {
-  background: purple;
-  padding: 10px;
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: -ms-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  -moz-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-.lcb-messages {
-  background: salmon;
-  padding: 0;
-  margin: 0;
-  overflow-y: scroll;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-.lcb-entry {
-  height: 60px;
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: -ms-flex;
-  display: flex;
-}
-.lcb-entry-input {
-  border: none;
-  padding: 10px;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-.lcb-subsidebar {
-  background: orange;
-  width: 300px;
-}
-.lcb-sidebar {
-  background: blue;
-  width: 300px;
-}
-.lcb-room-actions .btn {
-  border-radius: 100%;
-  width: 40px;
-  height: 40px;
-}
 .lcb-login {
   background-color: #222;
   background-image: url('../img/photos/reflection.jpg');
@@ -7313,4 +7224,93 @@ body {
 }
 .lcb-login-footer .fa-heart {
   color: #f22472;
+}
+.lcb-client {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.lcb-header {
+  background: red;
+  width: 100%;
+  height: 60px;
+  display: none;
+}
+.lcb-main {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.lcb-chat {
+  background: purple;
+  padding: 10px;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.lcb-messages {
+  background: salmon;
+  padding: 0;
+  margin: 0;
+  overflow-y: scroll;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.lcb-entry {
+  height: 60px;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+}
+.lcb-entry-input {
+  border: none;
+  padding: 10px;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.lcb-subsidebar {
+  background: orange;
+  width: 300px;
+}
+.lcb-sidebar {
+  background: blue;
+  width: 300px;
+}
+.lcb-room-actions .btn {
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
 }
