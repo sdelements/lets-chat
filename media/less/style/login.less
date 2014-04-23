@@ -1,0 +1,94 @@
+//
+// Login
+//
+
+.lcb-login {
+    background-color: #222;
+    background-image: url('../img/photos/reflection.jpg');
+    background-size: cover;
+    &:before {
+        background-image: url('../img/photo-overlay.png');
+        .square(100%);
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        .opacity(.4);
+    }
+}
+
+.lcb-login-main {
+    max-width: 470px;
+    text-align: center;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 80px;
+    position: relative;
+}
+
+.lcb-login-logo {
+    font-family: Pacifico;
+    font-size: 85px;
+    text-shadow: 0 0 10px rgba(0,0,0,.2);
+    color: #fff;
+    margin: 0;
+    margin-bottom: 30px;
+    .flavour {
+        color: #f22472;
+    }
+}
+
+.lcb-login-box {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    .box-shadow(0 0 20px 3px rgba(0,0,0,.1));
+    input[type="text"],
+    input[type="password"] {
+        font-size: 14px;
+        height: auto;
+        padding: 10px;
+    }
+}
+
+.lcb-login-box-heading {
+    line-height: 100%;
+    color: #555;
+    font-family: Pacifico;
+    font-size: 24px;
+    padding: 0;
+    padding-bottom: 20px;
+    margin: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.lcb-login-box-bottom {
+    overflow: hidden;
+}
+
+.lcb-login-footer {
+    background-color: rgba(0,0,0,.4);
+    width: 100%;
+    color: #fff;
+    font-family: Tahoma;
+    font-size: 11px;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 5px 0;
+    p {
+        margin: 0 10px;
+    }
+    a {
+        color: #fff;
+    }
+    .fa {
+        margin-right: 3px;
+    }
+    .fa-heart {
+        color: #f22472;
+    }
+}

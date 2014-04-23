@@ -7,10 +7,10 @@
 {% endblock %}
 
 {% block body %}
-    <section>
-        <h1 class="logo">Let<span class="flavour">'</span>s Chat</h1>
-        <form class="validate" action="/account/login" method="post">
-            <h2>Sign in</h2>
+    <section class="lcb-login-main">
+        <h1 class="lcb-login-logo">Let<span class="flavour">'</span>s Chat</h1>
+        <form class="lcb-login-box" action="/account/login" method="post">
+            <h2 class="lcb-login-box-heading">Sign in</h2>
             <div class="form-group">
                 <input class="required form-control" placeholder="Email" name="email" type="text" />
             </div>
@@ -18,13 +18,13 @@
                 <input class="required form-control" placeholder="Password" name="password" type="password" />
             </div>
             <p class="response"></p>
-            <div class="bottom">
+            <div class="lcb-login-box-bottom">
                 <a href="#">I need an account</a>
-                <button class="btn-info btn btn-lg pull-right" type="submit">Sign in <i class="icon-signin"></i></button>
+                <button class="btn-info btn btn-lg pull-right" type="submit">Sign in <i class="fa fa-sign-in"></i></button>
             </div>
         </form>
-        <form class="register validate" action="/account/register" method="post">
-            <h2>Register</h2>
+        <form class="lcb-login-box" action="/account/register" method="post" style="display: none;">
+            <h2 class="lcb-login-box-heading">Register</h2>
             <div class="form-group">
                 <input class="required email form-control" name="email" type="text" placeholder="Email" />
             </div>
@@ -41,18 +41,18 @@
                 <input class="required form-control" name="last-name" type="text" placeholder="Last Name" maxlength="24" />
             </div>
             <p class="response"></p>
-            <div class="bottom">
+            <div class="lcb-login-box-bottom">
                 <a href="#">I already have an account</a>
                 <button class="btn-info btn btn-lg pull-right" type="submit">Register</button>
             </div>
         </form>
     </section>
-    <footer>
+    <footer class="lcb-login-footer">
         <p class="pull-left">
-            <i class="icon-heart icon"></i> From Toronto with Love &mdash; Photos by <a href="http://funkaoshi.com/" target="_blank">Ramanan Sivaranjan </a>
+            <i class="fa fa-heart"></i> From Toronto with Love &mdash; Photos by <a href="http://funkaoshi.com/" target="_blank">Ramanan Sivaranjan </a>
         </p>
         <p class="pull-right"><a href="https://github.com/sdelements/lets-chat" target="_blank">
-            <i class="icon-github icon"></i> Fork me on GitHub &raquo;</a>
+            <i class="fa fa-github"></i> Fork me on GitHub &raquo;</a>
         </p>
     </footer>
 {% endblock %}
