@@ -2,9 +2,12 @@
 
 {% block js %}
     <script type="text/javascript" src="socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="media/js/vendor/angular-socket-io/socket.js"></script>
-    <script type="text/javascript" src="media/js/ng/app.js"></script>
-    <script type="text/javascript" src="media/js/ng/controllers/client-controller.js"></script>
+    <script type="text/javascript" src="media/js/models.js"></script>
+    <script type="text/javascript" src="media/js/client.js"></script>
+    <script type="text/javascript">
+        window.client = new window.LCB.Client({
+        }).start();
+    </script>
 {% endblock %}
 
 {% block attributes %}
