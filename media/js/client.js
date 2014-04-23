@@ -23,7 +23,6 @@
     }
     Client.prototype.switchRoom = function(id) {
         var room = this.rooms.get(id);
-        console.log(id);
     }
     //
     // Router Setup
@@ -67,6 +66,9 @@
     Client.prototype.start = function() {
         this.listen();
         this.route();
+        this.view = new ClientView({
+            client: this
+        });
         return this;
     }
     //

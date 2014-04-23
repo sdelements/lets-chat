@@ -3,10 +3,13 @@
 {% block js %}
     <script type="text/javascript" src="socket.io/socket.io.js"></script>
     <script type="text/javascript" src="media/js/models.js"></script>
+    <script type="text/javascript" src="media/js/views.js"></script>
     <script type="text/javascript" src="media/js/client.js"></script>
     <script type="text/javascript">
-        window.client = new window.LCB.Client({
-        }).start();
+        window.client = new window.LCB.Client();
+        $(function() {
+           window.client.start();
+        });
     </script>
 {% endblock %}
 
@@ -15,16 +18,18 @@
 {% endblock %}
 
 {% block body %}
-    <div class="lcb-client" ng-controller="client-controller">
+    <div id="lcb-client" class="lcb-client" ng-controller="client-controller">
         <header class="lcb-header"></header>
         <section class="lcb-main">
             <section class="lcb-sidebar">
-                    <h2>Rooms</h2>
-                    <ul scroll-glue style="max-height: 240px; width: 50%; overflow-y: auto;">
-                        <li ng-repeat="room in rooms">
-                            ({$ room._id $}) {$ room.name $} &middot; {$ room.description $}
-                        </li>
-                    </ul>
+                    <div class="lcb-rooms-browser">
+                        <h2>Rooms</h2>
+                        <ul class="lcb-rooms-list">
+                            <li rv-each-room="list:rooms" rv-id="room.id">
+                                ({ room:_id }) { room:name } &middot; { room:description }
+                            </li>
+                        </ul>
+                    </div>
                     <form ng-submit="createRoom()">
                         <input ng-model="forms.room.name" type="text" name="name" placeholder="Name" />
                         <input ng-model="forms.room.description" type="text" name="description" placeholder="Description" />
