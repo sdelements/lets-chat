@@ -11,16 +11,22 @@
         this.user = new UserModel();
         this.rooms = new RoomsCollection();
         return this;
-    };
+    }
     //
-    // Room Actions
+    // Rooms
     //
+    Client.prototype.getRooms = function() {
+        var that = this;
+        this.socket.emit('rooms:list', function(rooms) {
+            that.rooms.set(rooms);
+        });
+    }
     Client.prototype.switchRoom = function(id) {
         var room = this.rooms.get(id);
         console.log(id);
     }
     //
-    // Router
+    // Router Setup
     //
     Client.prototype.route = function() {
         var that = this;
@@ -41,12 +47,28 @@
         Backbone.history.start();
     }
     //
+    // Socket Setup
+    //
+    Client.prototype.listen = function() {
+        var that = this;
+        this.socket = io.connect(null, {
+            reconnect: true
+        });
+        this.socket.on('connect', function() {
+            that.getRooms();
+        });
+        this.socket.on('disconnect', function() {
+            console.log('disconnected');
+        });
+    }
+    //
     // Start
     //
     Client.prototype.start = function() {
+        this.listen();
         this.route();
-        console.log('go!');
-    };
+        return this;
+    }
     //
     // Add to window
     //
