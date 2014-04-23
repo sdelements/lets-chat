@@ -7116,8 +7116,14 @@ html,
 body {
   height: 100%;
 }
-.btn {
+.btn,
+.form-control {
   border-radius: 3px;
+}
+.form-control {
+  height: auto;
+  font-size: 14px;
+  padding: 10px;
 }
 .lcb-client {
   width: 100%;
@@ -7240,11 +7246,13 @@ body {
 .lcb-login-main {
   max-width: 420px;
   text-align: center;
-  margin-top: -60px;
   margin: 0 auto;
   padding: 20px;
   padding-bottom: 60px;
   position: relative;
+  -webkit-transform: translate(0, -60px);
+  -ms-transform: translate(0, -60px);
+  transform: translate(0, -60px);
 }
 .lcb-login-logo {
   font-family: Pacifico;
@@ -7264,12 +7272,6 @@ body {
   border-radius: 3px;
   -webkit-box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.1);
-}
-.lcb-login-box input[type="text"],
-.lcb-login-box input[type="password"] {
-  font-size: 14px;
-  height: auto;
-  padding: 10px;
 }
 .lcb-login-box-heading {
   line-height: 100%;
