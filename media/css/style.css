@@ -7138,6 +7138,7 @@ body {
   background-color: #222;
   background-image: url('../img/photos/reflection.jpg');
   background-size: cover;
+  padding-top: 40px;
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
@@ -7170,9 +7171,6 @@ body {
   padding: 20px;
   padding-bottom: 60px;
   position: relative;
-  -webkit-transform: translate(0, -60px);
-  -ms-transform: translate(0, -60px);
-  transform: translate(0, -60px);
 }
 .lcb-login-logo {
   font-family: Pacifico;
@@ -7192,6 +7190,9 @@ body {
   border-radius: 3px;
   -webkit-box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.1);
+}
+.lcb-login-box .response:empty {
+  display: none;
 }
 .lcb-login-box-heading {
   line-height: 100%;

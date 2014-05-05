@@ -6,6 +6,7 @@
     background-color: #222;
     background-image: url('../img/photos/reflection.jpg');
     background-size: cover;
+    padding-top: 40px;
     .flex-display;
     .align-items(center);
     .justify-content(center);
@@ -27,7 +28,6 @@
     padding: 20px;
     padding-bottom: 60px;
     position: relative;
-    .translate(0, -60px);
 }
 
 .lcb-login-logo {
@@ -48,6 +48,9 @@
     border: 1px solid #e3e3e3;
     border-radius: 3px;
     .box-shadow(0 0 20px 3px rgba(0,0,0,.1));
+    .response:empty {
+        display: none;
+    }
 }
 
 .lcb-login-box-heading {
