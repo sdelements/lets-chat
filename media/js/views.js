@@ -11,7 +11,7 @@ var RoomsBrowserView = Backbone.View.extend({
         this.template = Handlebars.compile($('#template-room-browser-item').html());
         this.rooms = options.rooms;
         this.rooms.on('add', function(room) {
-            this.$el.append(this.template(room.toJSON()));
+            this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
         }, this);
     }
 });

@@ -57,10 +57,11 @@
 
 .lcb-sidebar {
     background: #131a1e;
-    color: #f2f2f2;
     width: 20%;
     max-width: 300px;
-    overflow: hidden;
+    color: #f2f2f2;
+    .flex-display;
+    .flex-direction(column);
 }
 
 .lcb-sidebar-heading {
@@ -103,9 +104,18 @@
     }
 }
 
+.lcb-rooms-browser {
+    .flex(1);
+    overflow-y: auto;
+}
+
 .lcb-rooms-list,
 .lcb-rooms-list-item {
     padding: 0;
+}
+
+.lcb-rooms-list {
+    overflow-y: auto;
 }
 
 .lcb-rooms-list-item {
