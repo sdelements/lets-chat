@@ -22,11 +22,16 @@
         <header class="lcb-header"></header>
         <section class="lcb-main">
             <section class="lcb-sidebar">
+                    <span class="lcb-account btn btn-info btn-block" href="#">
+                        <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50">
+                        <span class="name">Houssam Haidar</span>
+                        <b class="caret"></b>
+                    </span>
                     <div class="lcb-rooms-browser">
-                        <h2>Rooms</h2>
+                        <h2 class="lcb-sidebar-heading"><i class="fa fa-list"></i> Rooms</h2>
                         <ul class="lcb-rooms-list">
-                            <li rv-each-room="list:rooms" rv-id="room.id">
-                                ({ room:_id }) { room:name } &middot; { room:description }
+                            <li class="lcb-rooms-list-item" rv-each-room="list:rooms">
+                                <a> { room:name }</a>
                             </li>
                         </ul>
                     </div>
@@ -35,7 +40,7 @@
                         <input ng-model="forms.room.description" type="text" name="description" placeholder="Description" />
                         <button type="submit">Create</button>
                     </form>
-                    <h2>Account Info</h2>
+                    <h2 class="lcb-sidebar-heading">Account Info</h2>
                     <table>
                         <tbody>
                             {% for property, value in account %}

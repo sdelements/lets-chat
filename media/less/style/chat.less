@@ -3,6 +3,7 @@
 //
 
 .lcb-client {
+    background: #000;
     .square(100%);
     position: fixed;
     top: 0;
@@ -23,7 +24,6 @@
 }
 
 .lcb-chat {
-    background: purple;
     padding: 10px;
     .flex-display;
     .flex-direction(column);
@@ -31,10 +31,10 @@
 }
 
 .lcb-messages {
-    background: salmon;
+    background: #fff;
     padding: 0;
     margin: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
     .flex(1);
 }
 
@@ -50,13 +50,72 @@
 }
 
 .lcb-subsidebar {
-    background: orange;
-    width: 300px;
+    width: 20%;
+    max-width: 300px;
+    padding: 20px;
 }
 
 .lcb-sidebar {
-    background: blue;
-    width: 300px;
+    background: #131a1e;
+    color: #f2f2f2;
+    width: 20%;
+    max-width: 300px;
+    overflow: hidden;
+}
+
+.lcb-sidebar-heading {
+    line-height: 100%;
+    font-weight: 300;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    margin: 0;
+}
+
+.lcb-account {
+    @background: #111;
+    background: @background;
+    height: 50px;
+    text-align: left;
+    border: none;
+    padding: 0;
+    padding-right: 20px;
+    position: relative;
+    .text-overflow;
+    &:hover {
+        background: lighten(@background, 5%);
+    }
+    &:active {
+        background: darken(@background, 5%);
+    }
+    .avatar {
+        margin-right: 10px;
+    }
+    .name {
+        font-size: 11px;
+        text-transform: uppercase;
+    }
+    .caret {
+        margin-top: -3px;
+        position: absolute;
+        top: 50%;
+        right: 15px;
+    }
+}
+
+.lcb-rooms-list,
+.lcb-rooms-list-item {
+    padding: 0;
+}
+
+.lcb-rooms-list-item {
+    display: block;
+    .text-overflow;
+    a {
+        background: #172025;
+        padding: 10px 20px;
+        display: block;
+    }
 }
 
 .lcb-room-actions {

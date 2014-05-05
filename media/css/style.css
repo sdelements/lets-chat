@@ -7226,6 +7226,7 @@ body {
   color: #f22472;
 }
 .lcb-client {
+  background: #000;
   width: 100%;
   height: 100%;
   position: fixed;
@@ -7259,7 +7260,6 @@ body {
   flex: 1;
 }
 .lcb-chat {
-  background: purple;
   padding: 10px;
   display: -webkit-flex;
   display: -moz-flex;
@@ -7276,10 +7276,10 @@ body {
   flex: 1;
 }
 .lcb-messages {
-  background: salmon;
+  background: #fff;
   padding: 0;
   margin: 0;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
@@ -7302,12 +7302,70 @@ body {
   flex: 1;
 }
 .lcb-subsidebar {
-  background: orange;
-  width: 300px;
+  width: 20%;
+  max-width: 300px;
+  padding: 20px;
 }
 .lcb-sidebar {
-  background: blue;
-  width: 300px;
+  background: #131a1e;
+  color: #f2f2f2;
+  width: 20%;
+  max-width: 300px;
+  overflow: hidden;
+}
+.lcb-sidebar-heading {
+  line-height: 100%;
+  font-weight: 300;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  margin: 0;
+}
+.lcb-account {
+  background: #111111;
+  height: 50px;
+  text-align: left;
+  border: none;
+  padding: 0;
+  padding-right: 20px;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lcb-account:hover {
+  background: #1e1e1e;
+}
+.lcb-account:active {
+  background: #040404;
+}
+.lcb-account .avatar {
+  margin-right: 10px;
+}
+.lcb-account .name {
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.lcb-account .caret {
+  margin-top: -3px;
+  position: absolute;
+  top: 50%;
+  right: 15px;
+}
+.lcb-rooms-list,
+.lcb-rooms-list-item {
+  padding: 0;
+}
+.lcb-rooms-list-item {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lcb-rooms-list-item a {
+  background: #172025;
+  padding: 10px 20px;
+  display: block;
 }
 .lcb-room-actions .btn {
   border-radius: 100%;
