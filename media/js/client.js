@@ -8,8 +8,8 @@
     //
     var Client = function(config) {
         this.config = config;
-        this.user = new UserModel();
-        this.rooms = new RoomsCollection();
+        this.user = new UserModel;
+        this.rooms = new RoomsCollection;
         return this;
     }
     //
@@ -24,6 +24,13 @@
     Client.prototype.switchRoom = function(id) {
         var room = this.rooms.get(id);
     }
+    Client.prototype.joinRoom = function(id, switchRoom) {
+        var self = this;
+        this.socket.emit('rooms:join', id, function() {
+            var room = self.rooms.get(id);
+            room.set('joined', true);
+        });
+    }
     //
     // Router Setup
     //
@@ -36,7 +43,7 @@
                 '*path': 'list'
             },
             join: function(id) {
-                that.switchRoom(id)
+                that.switchRoom(id);
             },
             list: function() {
                 that.switchRoom();

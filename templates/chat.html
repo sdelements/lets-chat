@@ -17,46 +17,20 @@
     ng-app="lets-chat"
 {% endblock %}
 
-{% block body %}
-    <div id="lcb-client" class="lcb-client" ng-controller="client-controller">
-        <header class="lcb-header"></header>
-        <section class="lcb-main">
-            <section class="lcb-sidebar">
-                    <span class="lcb-account btn btn-info btn-block" href="#">
-                        <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50">
-                        <span class="name">Houssam Haidar</span>
-                        <b class="caret"></b>
-                    </span>
-                    <div class="lcb-rooms-browser">
-                        <h2 class="lcb-sidebar-heading"><i class="fa fa-list"></i> Rooms</h2>
-                        <ul class="lcb-rooms-list">
-                            <li class="lcb-rooms-list-item" rv-each-room="list:rooms">
-                                <a> { room:name }</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <form ng-submit="createRoom()">
-                        <input ng-model="forms.room.name" type="text" name="name" placeholder="Name" />
-                        <input ng-model="forms.room.description" type="text" name="description" placeholder="Description" />
-                        <button type="submit">Create</button>
-                    </form>
-                    <h2 class="lcb-sidebar-heading">Account Info</h2>
-                    <table>
-                        <tbody>
-                            {% for property, value in account %}
-                                <tr>
-                                    <td>{{ property }}</td>
-                                    <td>{{ value }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-            </section><!-- lcb-sidebar end -->
-            <section class="lcb-subsidebar">
+{% block templates %}
+{% raw %}
+    <script type="text/x-handlebars-template" id="template-room-browser-item">
+        <li data-id="{{_id}}" class="lcb-rooms-list-item">
+            <a href="#!/room/{{_id}}">{{name}}</a>
+        </li>
+    </script>
+    <script type="text/x-handlebars-template" id="template-room">
+        <div class="lcb-room">
+            <section class="lcb-room-sidebar">
                 <div class="lcb-room-meta">
-                    <h2 class="lcb-room-heading">Development</h2>
+                    <h2 class="lcb-room-heading">{{ room.name }}</h2>
                     <div class="lcb-room-description">
-                        <p>| (• ◡•) | (❍ᴥ❍ʋ) Build 2.27 on Tokyo soon.</p>
+                        <p>{{ room.description }}</p>
                     </div>
                 </div>
                 <div class="lcb-room-actions btn-groups">
@@ -75,7 +49,7 @@
                         </li>
                     </ul>
                 </div>
-            </section><!-- lcb-subsidebar end -->
+            </section><!-- lcb-room-sidebar end -->
             <section class="lcb-chat">
                 <ul class="lcb-messages">
                     <li class="lcb-message" ng-repeat="message in messages">
@@ -89,11 +63,50 @@
                         </div>
                     </li>
                 </ul>
-                <form class="lcb-entry" ng-submit="sendMessage()">
-                    <textarea class="lcb-entry-input" ng-model="forms.message.text" placeholder="Wow. Much talk." ng-keyup="$event.keyCode == 13 && send($event)"></textarea>
+                <form class="lcb-entry">
+                    <textarea class="lcb-entry-input" placeholder="Got something to say?"></textarea>
                     <button type="submit" class="btn btn-info lcb-entry-button" data-click="send()">Send</button>
                 </form>
             </section><!-- lcb-chat end -->
+        </div><!-- lcb-room end -->
+    </script>
+{% endraw %}
+{% endblock %}
+
+{% block body %}
+    <div id="lcb-client" class="lcb-client" ng-controller="client-controller">
+        <header class="lcb-header"></header>
+        <section class="lcb-main">
+            <section class="lcb-sidebar">
+                    <span class="lcb-account btn btn-info btn-block" href="#">
+                        <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50">
+                        <span class="name">Houssam Haidar</span>
+                        <b class="caret"></b>
+                    </span>
+                    <div class="lcb-rooms-browser">
+                        <h2 class="lcb-sidebar-heading">
+                            <i class="fa fa-list"></i> Rooms
+                        </h2>
+                        <ul class="lcb-rooms-list" data-bind="collection:$collection"></ul>
+                    </div>
+                    <form ng-submit="createRoom()">
+                        <input ng-model="forms.room.name" type="text" name="name" placeholder="Name" />
+                        <input ng-model="forms.room.description" type="text" name="description" placeholder="Description" />
+                        <button type="submit">Create</button>
+                    </form>
+                    <h2 class="lcb-sidebar-heading">Account Info</h2>
+                    <table>
+                        <tbody>
+                            {% for property, value in account %}
+                                <tr>
+                                    <td>{{ property }}</td>
+                                    <td>{{ value }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </section><!-- lcb-sidebar end -->
+            <section class="lcb-rooms"></section>
         </section><!-- lcb-main end -->
     </div><!-- lcb-client end -->
 {% endblock %}

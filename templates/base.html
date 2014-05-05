@@ -10,12 +10,13 @@
         <link href="media/css/style.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="media/js/vendor/jquery/jquery.js"></script>
         <script type="text/javascript" src="media/js/vendor/underscore/underscore.js"></script>
+        <script type="text/javascript" src="media/js/vendor/handlebars/handlebars.js"></script>
         <script type="text/javascript" src="media/js/vendor/backbone/backbone.js"></script>
-        <script type="text/javascript" src="media/js/vendor/rivets/rivets.js"></script>
-        <script type="text/javascript" src="media/js/vendor/rivets-backbone-adapter/rivets-backbone.js"></script>
+        <script type="text/javascript" src="media/js/vendor/backbone.epoxy/backbone.epoxy.js"></script>
         {% block js %}{% endblock %}
     </head>
     <body class="{% block class %}{% endblock %}" {% block attributes %}{% endblock %}>
         {% block body %}{% endblock %}
+        {% block templates %}{% endblock %}
     </body>
 </html>
