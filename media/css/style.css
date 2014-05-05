@@ -1,3 +1,12 @@
+/*********************
+ * LCB Styles
+ *********************/
+@font-face {
+  font-family: 'Pacifico';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Pacifico Regular'), local('Pacifico-Regular'), url('../font/pacifico.woff') format('woff');
+}
 /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
 html {
   font-family: sans-serif;
