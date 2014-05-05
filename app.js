@@ -287,6 +287,19 @@ app.io.route('rooms', {
     join: function(req) {
         var id = req.data;
         req.io.join(id);
+        console.log(id);
+        models.room.findById(id, function(err, room) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (!room) {
+                console.error('No room!');
+                req.io.respond();
+                return;
+            }
+            req.io.respond(room.toJSON());
+        });
     }
 });
 

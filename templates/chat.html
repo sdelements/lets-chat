@@ -20,17 +20,17 @@
 {% block templates %}
 {% raw %}
     <script type="text/x-handlebars-template" id="template-room-browser-item">
-        <li data-id="{{_id}}" class="lcb-rooms-list-item">
-            <a href="#!/room/{{_id}}">{{name}}</a>
+        <li data-id="{{ id }}" class="lcb-rooms-list-item">
+            <a href="#!/room/{{id}}">{{ name }}</a>
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room">
-        <div class="lcb-room">
+        <div class="lcb-room" data-id="{{ id }}">
             <section class="lcb-room-sidebar">
                 <div class="lcb-room-meta">
-                    <h2 class="lcb-room-heading">{{ room.name }}</h2>
+                    <h2 class="lcb-room-heading">{{ name }}</h2>
                     <div class="lcb-room-description">
-                        <p>{{ room.description }}</p>
+                        <p>{{ description }}</p>
                     </div>
                 </div>
                 <div class="lcb-room-actions btn-groups">

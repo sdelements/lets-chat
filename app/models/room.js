@@ -34,4 +34,16 @@ var RoomSchema = new mongoose.Schema({
     }
 });
 
+RoomSchema.method('toJSON', function() {
+    var room = this.toObject();
+    return {
+        id: room._id,
+        name: room.name,
+        description: room.description,
+        lastActive: room.lastActive,
+        created: room.created,
+        owner: room.owner
+    }
+ });
+
 module.exports = mongoose.model('Room', RoomSchema);

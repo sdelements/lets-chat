@@ -32,9 +32,8 @@ var RoomModel = Backbone.Model.extend({
 });
 
 var RoomsCollection = Backbone.Collection.extend({
-    model: RoomModel
-});
-
-var AvailableRoomsCollection = Backbone.Collection.extend({
-    model: RoomModel
+    model: RoomModel,
+    initialize: function() {
+        this.current = new Backbone.Model;
+    }
 });
