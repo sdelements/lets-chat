@@ -23,12 +23,25 @@
     }
     Client.prototype.switchRoom = function(id) {
         var room = this.rooms.get(id);
+        if (room && room.get('joined')) {
+            this.rooms.current.set('id', id);
+            return;
+        } else {
+            this.joinRoom(id, true)
+        }
     }
     Client.prototype.joinRoom = function(id, switchRoom) {
         var self = this;
-        this.socket.emit('rooms:join', id, function() {
-            var room = self.rooms.get(id);
+        if (!id) {
+            // nothing to do
+            return;
+        }
+        this.socket.emit('rooms:join', id, function(resRoom) {
+            var room = self.rooms.add(resRoom);
             room.set('joined', true);
+            if (switchRoom) {
+                self.rooms.current.set('id', id);
+            }
         });
     }
     //

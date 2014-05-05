@@ -20,17 +20,17 @@
 {% block templates %}
 {% raw %}
     <script type="text/x-handlebars-template" id="template-room-browser-item">
-        <li data-id="{{_id}}" class="lcb-rooms-list-item">
-            <a href="#!/room/{{_id}}">{{name}}</a>
+        <li data-id="{{ id }}" class="lcb-rooms-list-item">
+            <a href="#!/room/{{id}}">{{ name }}</a>
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room">
-        <div class="lcb-room">
+        <div class="lcb-room" data-id="{{ id }}">
             <section class="lcb-room-sidebar">
                 <div class="lcb-room-meta">
-                    <h2 class="lcb-room-heading">{{ room.name }}</h2>
+                    <h2 class="lcb-room-heading">{{ name }}</h2>
                     <div class="lcb-room-description">
-                        <p>{{ room.description }}</p>
+                        <p>{{ description }}</p>
                     </div>
                 </div>
                 <div class="lcb-room-actions btn-groups">
@@ -79,8 +79,8 @@
         <section class="lcb-main">
             <section class="lcb-sidebar">
                     <span class="lcb-account btn btn-info btn-block" href="#">
-                        <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50">
-                        <span class="name">Houssam Haidar</span>
+                        <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50" />
+                        <span class="name">{{ account.displayName }}</span>
                         <b class="caret"></b>
                     </span>
                     <div class="lcb-rooms-browser">
@@ -89,11 +89,7 @@
                         </h2>
                         <ul class="lcb-rooms-list" data-bind="collection:$collection"></ul>
                     </div>
-                    <form ng-submit="createRoom()">
-                        <input ng-model="forms.room.name" type="text" name="name" placeholder="Name" />
-                        <input ng-model="forms.room.description" type="text" name="description" placeholder="Description" />
-                        <button type="submit">Create</button>
-                    </form>
+                    <!--
                     <h2 class="lcb-sidebar-heading">Account Info</h2>
                     <table>
                         <tbody>
@@ -104,7 +100,7 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                    </table>
+                    </table> -->
             </section><!-- lcb-sidebar end -->
             <section class="lcb-rooms"></section>
         </section><!-- lcb-main end -->

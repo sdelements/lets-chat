@@ -256,8 +256,10 @@ app.io.route('messages', {
     }
 });
 
-var getRoomUsers = function (room_id, fn) {
-    var users = req.io.sockets.clients(room_id);
+var getRoomUsers = function (io, room_id, fn) {
+    console.log(io)
+    console.log("room id: " + room_id)
+    var users = io.manager.rooms['/' + room_id]
     var getProfile = function (user, callback) {
       user.get('profile', function (err, profile) {
         if (err) {
@@ -273,8 +275,9 @@ var getRoomUsers = function (room_id, fn) {
           safeName: profile.displayName.replace(/\W/g, '')
         }
         callback(null, data);
-      }
+      })
     }
+    console.log(users)
     async.map(users, getProfile, function (err, results) {
       if (err) {
         // Oh no!
@@ -314,40 +317,40 @@ app.io.route('rooms', {
         });
     },
     users: function getRoomUsers(req) {
-      var room_id = req.data;
-      getRoomUsers(room_id, function (results) {
-        req.io.respond(results)
-      })
+        var room_id = req.data;
+        getRoomUsers(req.io, room_id, function (results) {
+            req.io.respond(results)
+        })
     },
     join: function(req) {
         var room_id = req.data;
         models.room.findById(room_id, function(err, room) {
-          if (err) {
-            // Problem? TODO: Figure out how to recover?
-            return;
-          }
-          if (!room) {
-            // No room, no effect
-            return;
-          }
-        }
-        req.io.join(room_id);
-        getRoomUsers(room_id, function (results) {
-          req.io.respond({
-            id: room._id,
-            name: room.name,
-            description: room.description,
-            users: results
-          });
-          req.io.room(room_id).broadcast('room:users', results);
-        });
+            if (err) {
+                // Problem? TODO: Figure out how to recover?
+                console.error(err);
+                return;
+            }
+            if (!room) {
+                // No room, no effect
+                console.error('No room!');
+                req.io.respond();
+                return;
+            }
+            req.io.join(room_id);
+            getRoomUsers(req.io, room_id, function (results) {
+                room_data = room.toJSON();
+                room_data['users'] = results;
+                req.io.respond(room_data);
+                req.io.room(room_id).broadcast('room:users', results);
+            });
+        })
     },
     leave: function(req) {
-        var room_id = req.data;
-        req.io.leave(room_id);
-        getRoomUsers(req, function (results) {
-          req.io.room(room_id).broadcast('room:users', results);
-        });
+      var room_id = req.data;
+      req.io.leave(room_id);
+      getRoomUsers(req, function (results) {
+        req.io.room(room_id).broadcast('room:users', results);
+      });
     },
 });
 

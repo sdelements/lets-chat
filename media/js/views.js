@@ -5,32 +5,31 @@
 //
 // Rooms List
 //
-
 var RoomsBrowserView = Backbone.View.extend({
     initialize: function(options) {
         this.template = Handlebars.compile($('#template-room-browser-item').html());
         this.rooms = options.rooms;
         this.rooms.on('add', function(room) {
-            this.$el.append(this.template(room.toJSON()));
+            this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
         }, this);
     }
 });
 
-
 //
 // Rooms
 //
-
 var RoomsView = Backbone.View.extend({
     initialize: function(options) {
         this.template = Handlebars.compile($('#template-room').html());
         this.rooms = options.rooms;
         this.rooms.on('change', function(room) {
-            console.log(room);
             if (room.get('joined')) {
                 this.$el.append(this.template(room.toJSON()));
-                console.log(room.toJSON());
             }
+        }, this);
+        this.rooms.current.on('change:id', function(current, id) {
+            this.$el.find('[data-id=' + id + ']').show()
+                .siblings().hide();
         }, this);
     }
 });
