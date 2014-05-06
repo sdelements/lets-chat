@@ -7269,22 +7269,6 @@ body {
   -ms-flex: 1;
   flex: 1;
 }
-.lcb-chat {
-  padding: 10px;
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: -ms-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  -moz-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
 .lcb-messages {
   background: #fff;
   padding: 0;
@@ -7310,11 +7294,6 @@ body {
   -moz-flex: 1;
   -ms-flex: 1;
   flex: 1;
-}
-.lcb-subsidebar {
-  width: 20%;
-  max-width: 300px;
-  padding: 20px;
 }
 .lcb-sidebar {
   background: #131a1e;
@@ -7394,6 +7373,48 @@ body {
   background: #172025;
   padding: 10px 20px;
   display: block;
+}
+.lcb-rooms {
+  padding: 10px;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.lcb-room {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.lcb-room-sidebar {
+  width: 20%;
+  max-width: 300px;
+  padding: 20px;
+}
+.lcb-room-chat {
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
 }
 .lcb-room-actions .btn {
   border-radius: 100%;
