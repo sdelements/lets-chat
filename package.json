@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/sdelements/lets-chat",
   "dependencies": {
+    "async": "~0.8.0",
     "express.io": "~1.1.13",
     "underscore": "~1.6.0",
     "swig": "~1.3.2",
