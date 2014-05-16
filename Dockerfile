@@ -7,7 +7,7 @@ WORKDIR lets-chat
 RUN npm install
 RUN rm settings.js.sample
 
-ADD ./settings-docker.js lets-chat/settings.js
+ADD ./settings.js.sample lets-chat/settings.js
 
 EXPOSE 80
 
