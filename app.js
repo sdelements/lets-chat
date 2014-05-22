@@ -256,37 +256,6 @@ app.io.route('messages', {
     }
 });
 
-var getRoomUsers = function (io, room_id, fn) {
-    console.log(io)
-    console.log("room id: " + room_id)
-    var users = io.manager.rooms['/' + room_id]
-    var getProfile = function (user, callback) {
-      user.get('profile', function (err, profile) {
-        if (err) {
-          callback(err, null);
-        }
-        data = {
-          room: room_id,
-          id: profile.cid,
-          uid: profile.id,
-          avatar: profile.avatar,
-          name: profile.displayName,
-          status: profile.status,
-          safeName: profile.displayName.replace(/\W/g, '')
-        }
-        callback(null, data);
-      })
-    }
-    console.log(users)
-    async.map(users, getProfile, function (err, results) {
-      if (err) {
-        // Oh no!
-        return;
-      }
-      fn(results)
-    })
-}
-
 app.io.route('rooms', {
     create: function(req) {
         var data = req.data || req.body;
@@ -317,14 +286,12 @@ app.io.route('rooms', {
         });
     },
     users: function getRoomUsers(req) {
-        var room_id = req.data;
-        getRoomUsers(req.io, room_id, function (results) {
-            req.io.respond(results)
-        })
+        var id = req.data;
+        console.log('make userlist...');
     },
     join: function(req) {
-        var room_id = req.data;
-        models.room.findById(room_id, function(err, room) {
+        var id = req.data;
+        models.room.findById(id, function(err, room) {
             if (err) {
                 // Problem? TODO: Figure out how to recover?
                 console.error(err);
@@ -336,21 +303,17 @@ app.io.route('rooms', {
                 req.io.respond();
                 return;
             }
-            req.io.join(room_id);
-            getRoomUsers(req.io, room_id, function (results) {
-                room_data = room.toJSON();
-                room_data['users'] = results;
-                req.io.respond(room_data);
-                req.io.room(room_id).broadcast('room:users', results);
-            });
+            req.io.join(room._id);
+            req.io.respond(room.toJSON());
         })
     },
     leave: function(req) {
-      var room_id = req.data;
-      req.io.leave(room_id);
-      getRoomUsers(req, function (results) {
-        req.io.room(room_id).broadcast('room:users', results);
-      });
+        console.log('left room!');
+        var room_id = req.data;
+        req.io.leave(room_id);
+        getRoomUsers(req, function (results) {
+            req.io.room(room_id).broadcast('room:users', results);
+        });
     },
 });
 
