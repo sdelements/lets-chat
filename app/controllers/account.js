@@ -19,21 +19,21 @@ module.exports = function() {
         res.render('login.html');
     });
     app.post('/account/login', function(req, res) {
-        req.io.route('users:login');
+        req.io.route('account:login');
     });
     // TODO: you should be POST'ing to DELETE'ing this resource
     app.get('/account/logout', function(req, res) {
-        req.io.route('users:logout');
+        req.io.route('account:logout');
     });
     app.post('/account/register', function(req, res) {
-        req.io.route('users:create');
+        req.io.route('account:register');
     });
 
     //
     // Sockets
     //
-    app.io.route('users', {
-        create: function(req) {
+    app.io.route('account', {
+        register: function(req) {
             var fields = req.body || req.data;
             models.user.create({
                 email: fields.email,
