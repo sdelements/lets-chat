@@ -10,6 +10,7 @@
         this.config = config;
         this.user = new UserModel;
         this.rooms = new RoomsCollection;
+        this.events = _.extend({}, Backbone.Events);
         return this;
     }
     //
@@ -45,6 +46,20 @@
         });
     }
     //
+    // Messages
+    //
+    Client.prototype.addMessage = function(message) {
+        var room = this.rooms.get(message.room);
+        if (!room) {
+            // Unknown room, nothing to do!
+            return;
+        }
+        room.trigger('messages:new', message);
+    }
+    Client.prototype.sendMessage = function(message) {
+        this.socket.emit('messages:create', message);
+    }
+    //
     // Router Setup
     //
     Client.prototype.route = function() {
@@ -76,9 +91,13 @@
         this.socket.on('connect', function() {
             that.getRooms();
         });
+        this.socket.on('messages:new', function(message) {
+            that.addMessage(message);
+        });
         this.socket.on('disconnect', function() {
             console.log('disconnected');
         });
+        this.events.on('messages:send', this.sendMessage, this);
     }
     //
     // Start

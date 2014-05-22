@@ -26,16 +26,16 @@ module.exports = function() {
             var data = req.data || req.body;
             models.message.create({
                 owner: req.user._id,
+                room: data.room,
                 text: data.text
             }, function(err, message) {
                 if (err) {
                     console.error(err);
                     req.io.respond(err, 400);
                     return;
-
                 }
                 req.io.respond(message, 201);
-                app.io.broadcast('messages:new', message);
+                app.io.room(message.room).broadcast('messages:new', message);
             });
         },
         list: function(req) {

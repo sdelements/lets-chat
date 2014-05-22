@@ -12,6 +12,7 @@ var RoomsBrowserView = Backbone.View.extend({
         this.rooms.on('add', function(room) {
             this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
         }, this);
+        return this;
     }
 });
 
@@ -20,6 +21,7 @@ var RoomsBrowserView = Backbone.View.extend({
 //
 var RoomsView = Backbone.View.extend({
     initialize: function(options) {
+        this.client = options.client;
         this.template = Handlebars.compile($('#template-room').html());
         this.rooms = options.rooms;
         this.views = {};
@@ -33,6 +35,7 @@ var RoomsView = Backbone.View.extend({
         this.rooms.current.on('change:id', function(current, id) {
             this.switch(id);
         }, this);
+        return this;
     },
     switch: function(id) {
         this.$el.find('[data-id=' + id + ']').show()
@@ -44,6 +47,7 @@ var RoomsView = Backbone.View.extend({
             return;
         }
         this.views[room.id] = new RoomView({
+            client: this.client,
             template: this.template,
             model: room
         });
@@ -56,16 +60,33 @@ var RoomsView = Backbone.View.extend({
 //
 var RoomView = Backbone.View.extend({
     events: {
-        
+        'keypress .lcb-entry-input': 'sendMessage'
     },
     initialize: function(options) {
         this.template = options.template;
+        this.messageTemplate = Handlebars.compile($('#template-message').html());
         this.render();
+        this.model.on('messages:new', this.addMessage, this);
         return this;
     },
     render: function() {
         this.$el = $(this.template(this.model.toJSON()))
+        this.$messages = this.$el.find('.lcb-messages');
         return this;
+    },
+    sendMessage: function(e) {
+        if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
+        e.preventDefault();
+        var $textarea = this.$('.lcb-entry-input');
+        if (!$textarea.val()) return;
+        client.events.trigger('messages:send', {
+            room: this.model.id,
+            text: $textarea.val()
+        });
+        $textarea.val('');
+    },
+    addMessage: function(message) {
+        this.$messages.append(this.messageTemplate(message));
     }
 });
 
@@ -85,7 +106,9 @@ var ClientView = Backbone.View.extend({
         });
         this.rooms = new RoomsView({
             el: this.$el.find('.lcb-rooms'),
-            rooms: this.client.rooms
+            rooms: this.client.rooms,
+            client: this.client
         });
+        return this;
     }
 });

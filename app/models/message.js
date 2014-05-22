@@ -9,7 +9,7 @@ var MessageSchema = new mongoose.Schema({
     room: {
         type: ObjectId,
         ref: 'Room',
-        // required: true
+        required: true
     },
     owner: {
         type: ObjectId,
