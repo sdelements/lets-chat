@@ -1,5 +1,5 @@
 //
-// Users Controller
+// Rooms Controller
 //
 
 module.exports = function() {

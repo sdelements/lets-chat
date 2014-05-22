@@ -27,4 +27,15 @@ var MessageSchema = new mongoose.Schema({
     }
 });
 
+MessageSchema.method('toJSON', function() {
+    var message = this.toObject();
+    return {
+        id: message._id,
+        room: message.room,
+        owner: message.owner,
+        text: message.text,
+        posted: message.posted
+    }
+ });
+
 module.exports = mongoose.model('Message', MessageSchema);

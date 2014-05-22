@@ -1,5 +1,5 @@
 //
-// Users Controller
+// Messages Controller
 //
 
 module.exports = function() {
@@ -35,7 +35,7 @@ module.exports = function() {
                     return;
                 }
                 req.io.respond(message, 201);
-                app.io.room(message.room).broadcast('messages:new', message);
+                app.io.room(message.room).broadcast('messages:new', message.toJSON());
             });
         },
         list: function(req) {
