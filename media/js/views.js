@@ -22,15 +22,50 @@ var RoomsView = Backbone.View.extend({
     initialize: function(options) {
         this.template = Handlebars.compile($('#template-room').html());
         this.rooms = options.rooms;
+        this.views = {};
         this.rooms.on('change', function(room) {
+            // Joined room?
             if (room.get('joined')) {
-                this.$el.append(this.template(room.toJSON()));
+                this.add(room);
             }
         }, this);
+        // Switch room
         this.rooms.current.on('change:id', function(current, id) {
-            this.$el.find('[data-id=' + id + ']').show()
-                .siblings().hide();
+            this.switch(id);
         }, this);
+    },
+    switch: function(id) {
+        this.$el.find('[data-id=' + id + ']').show()
+            .siblings().hide();
+    },
+    add: function(room) {
+        if (this.views[room.id]) {
+            // Nothing to do, this room is here
+            return;
+        }
+        this.views[room.id] = new RoomView({
+            template: this.template,
+            model: room
+        });
+        this.$el.append(this.views[room.id].$el);
+    }
+});
+
+//
+// Room
+//
+var RoomView = Backbone.View.extend({
+    events: {
+        
+    },
+    initialize: function(options) {
+        this.template = options.template;
+        this.render();
+        return this;
+    },
+    render: function() {
+        this.$el = $(this.template(this.model.toJSON()))
+        return this;
     }
 });
 
