@@ -2,6 +2,8 @@
 // Rooms Controller
 //
 
+var _ = require('underscore');
+
 module.exports = function() {
     var app = this.app,
         middlewares = this.middlewares,
@@ -51,7 +53,34 @@ module.exports = function() {
         },
         users: function getRoomUsers(req) {
             var id = req.data;
-            console.log('make userlist...');
+            models.room.findById(id, function(err, room) {
+                if (err) {
+                    // Herpderp
+                    console.error(err);
+                    return;
+                }
+                if (!room) {
+                    // Invalid room!
+                    console.error('No room!');
+                    req.io.respond();
+                    return;
+                }
+                var ids = _.map(app.io.sockets.clients(id), function(client) {
+                    return client.handshake.session.userID;
+                });
+                models.user.find({
+                    _id: {
+                        $in: ids
+                    }
+                }, function(err, users) {
+                    if (err) {
+                        // Something bad happened
+                        console.log(err);
+                        return;
+                    }
+                    req.io.respond(users);
+                });
+            })
         },
         join: function(req) {
             var id = req.data;
@@ -69,7 +98,7 @@ module.exports = function() {
                 }
                 req.io.join(room._id);
                 req.io.respond(room.toJSON());
-            })
+            });
         },
         leave: function(req) {
             var id = req.data;

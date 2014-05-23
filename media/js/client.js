@@ -22,6 +22,14 @@
             that.rooms.set(rooms);
         });
     }
+    Client.prototype.getRoomUsers = function(id) {
+        var room = this.rooms.get(id);
+        if (room) {
+            this.socket.emit('rooms:users', id, function(users) {
+                room.users.set(users);
+            });
+        }
+    }
     Client.prototype.switchRoom = function(id) {
         var room = this.rooms.get(id);
         if (room && room.get('joined')) {

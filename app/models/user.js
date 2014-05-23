@@ -106,4 +106,15 @@ UserSchema.plugin(uniqueValidator, {
     message: 'Expected {PATH} to be unique'
 });
 
+UserSchema.method('toJSON', function() {
+    var user = this.toObject();
+    return {
+        id: user._id,
+        firstName: user.firstName,
+        lastname: user.lastName,
+        displayName: user.displayName,
+        avatar: 'FILLERLIKEABOSS'
+    }
+ });
+
 module.exports = mongoose.model('User', UserSchema);
