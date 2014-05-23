@@ -72,12 +72,9 @@ module.exports = function() {
             })
         },
         leave: function(req) {
-            console.log('left room!');
-            var room_id = req.data;
-            req.io.leave(room_id);
-            getRoomUsers(req, function (results) {
-                req.io.room(room_id).broadcast('room:users', results);
-            });
+            var id = req.data;
+            req.io.leave(id);
+            req.io.respond();
         },
     });
 }

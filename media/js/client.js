@@ -32,17 +32,26 @@
         }
     }
     Client.prototype.joinRoom = function(id, switchRoom) {
-        var self = this;
+        var that = this;
         if (!id) {
             // nothing to do
             return;
         }
         this.socket.emit('rooms:join', id, function(resRoom) {
-            var room = self.rooms.add(resRoom);
+            var room = that.rooms.add(resRoom);
             room.set('joined', true);
             if (switchRoom) {
-                self.rooms.current.set('id', id);
+                that.rooms.current.set('id', id);
             }
+        });
+    }
+    Client.prototype.leaveRoom = function(id) {
+        var room = this.rooms.get(id);
+        if (room) {
+            room.set('joined', false);
+        }
+        this.socket.emit('rooms:leave', id, function() {
+            // TODO: Do we need to wait for a response?
         });
     }
     //
@@ -81,10 +90,13 @@
         Backbone.history.start();
     }
     //
-    // Socket Setup
+    // Listen
     //
     Client.prototype.listen = function() {
         var that = this;
+        //
+        // Socket
+        //
         this.socket = io.connect(null, {
             reconnect: true
         });
@@ -94,10 +106,17 @@
         this.socket.on('messages:new', function(message) {
             that.addMessage(message);
         });
+        this.socket.on('rooms:leave', function(id) {
+            that.leaveRoom(id);
+        });
         this.socket.on('disconnect', function() {
             console.log('disconnected');
         });
+        //
+        // GUI
+        //
         this.events.on('messages:send', this.sendMessage, this);
+        this.events.on('rooms:leave', this.leaveRoom, this);
     }
     //
     // Start

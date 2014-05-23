@@ -7365,14 +7365,20 @@ body {
 }
 .lcb-rooms-list-item {
   display: block;
+  position: relative;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.lcb-rooms-list-item a {
+.lcb-rooms-list-item .lcb-rooms-list-item-link {
   background: #172025;
   padding: 10px 20px;
   display: block;
+}
+.lcb-rooms-list-item .lcb-rooms-list-item-close {
+  top: 5px;
+  right: 10px;
+  position: absolute;
 }
 .lcb-rooms {
   padding: 10px;

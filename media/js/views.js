@@ -6,13 +6,22 @@
 // Rooms List
 //
 var RoomsBrowserView = Backbone.View.extend({
+    events: {
+        'click .lcb-rooms-list-item-close': 'leave'
+    },
     initialize: function(options) {
+        this.client = options.client;
         this.template = Handlebars.compile($('#template-room-browser-item').html());
         this.rooms = options.rooms;
         this.rooms.on('add', function(room) {
             this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
         }, this);
         return this;
+    },
+    leave: function(e) {
+        e.preventDefault();
+        var id = $(e.currentTarget).closest('[data-id]').data('id');
+        this.client.events.trigger('rooms:leave', id);
     }
 });
 
@@ -60,6 +69,10 @@ var RoomsView = Backbone.View.extend({
         this.$el.append(this.views[room.id].$el);
     },
     remove: function(id) {
+        if (!this.views[id]) {
+            // Nothing to do here
+            return;
+        }
         this.views[id].destroy();
     }
 });
@@ -117,7 +130,8 @@ var ClientView = Backbone.View.extend({
         //
         this.roomsBrowser = new RoomsBrowserView({
             el: this.$el.find('.lcb-rooms-browser'),
-            rooms: this.client.rooms
+            rooms: this.client.rooms,
+            client: this.client
         });
         this.rooms = new RoomsView({
             el: this.$el.find('.lcb-rooms'),

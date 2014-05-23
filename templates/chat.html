@@ -21,7 +21,8 @@
 {% raw %}
     <script type="text/x-handlebars-template" id="template-room-browser-item">
         <li data-id="{{ id }}" class="lcb-rooms-list-item">
-            <a href="#!/room/{{id}}">{{ name }}</a>
+            <a class="lcb-rooms-list-item-link" href="#!/room/{{id}}">{{ name }}</a>
+            <a class="lcb-rooms-list-item-close" href="#">&times;</a>
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room">
