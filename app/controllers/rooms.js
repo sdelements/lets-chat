@@ -51,7 +51,7 @@ module.exports = function() {
                 req.io.respond(rooms);
             });
         },
-        users: function getRoomUsers(req) {
+        users: function(req) {
             var id = req.data;
             models.room.findById(id, function(err, room) {
                 if (err) {

@@ -42,7 +42,8 @@
     "mongoose-unique-validator": "~0.3.0",
     "mongoose-validate": "0.0.5",
     "bcryptjs": "~0.7.12",
-    "express.io-middleware": "~0.9.1"
+    "express.io-middleware": "~0.9.1",
+    "MD5": "~1.2.1"
   },
   "devDependencies": {
     "grunt": "~0.4.4",

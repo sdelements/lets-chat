@@ -6,7 +6,8 @@ var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId,
     uniqueValidator = require('mongoose-unique-validator'),
     validate = require('mongoose-validate'),
-    bcrypt = require('bcryptjs');
+    bcrypt = require('bcryptjs'),
+    md5 = require('MD5');
 
 var UserSchema = new mongoose.Schema({
     email: {
@@ -113,7 +114,7 @@ UserSchema.method('toJSON', function() {
         firstName: user.firstName,
         lastname: user.lastName,
         displayName: user.displayName,
-        avatar: 'FILLERLIKEABOSS'
+        avatar: md5(user.email)
     }
  });
 
