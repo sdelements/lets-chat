@@ -25,10 +25,16 @@ var RoomsView = Backbone.View.extend({
         this.template = Handlebars.compile($('#template-room').html());
         this.rooms = options.rooms;
         this.views = {};
-        this.rooms.on('change', function(room) {
+        this.rooms.on('change:joined', function(room, joined) {
             // Joined room?
-            if (room.get('joined')) {
+            if (joined) {
                 this.add(room);
+                return;
+            }
+            // We need to make sure room is gone
+            if (joined === false) {
+                this.remove(room.id);
+                return;
             }
         }, this);
         // Switch room
@@ -43,7 +49,7 @@ var RoomsView = Backbone.View.extend({
     },
     add: function(room) {
         if (this.views[room.id]) {
-            // Nothing to do, this room is here
+            // Nothing to do, this room is already here
             return;
         }
         this.views[room.id] = new RoomView({
@@ -52,6 +58,9 @@ var RoomsView = Backbone.View.extend({
             model: room
         });
         this.$el.append(this.views[room.id].$el);
+    },
+    remove: function(id) {
+        this.views[id].destroy();
     }
 });
 
@@ -87,6 +96,12 @@ var RoomView = Backbone.View.extend({
     },
     addMessage: function(message) {
         this.$messages.append(this.messageTemplate(message));
+    },
+    destroy: function() {
+        this.undelegateEvents();
+        this.$el.removeData().unbind();
+        this.remove();
+        Backbone.View.prototype.remove.call(this);
     }
 });
 
