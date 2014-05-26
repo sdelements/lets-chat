@@ -20,25 +20,23 @@
 {% block body %}
     <div id="lcb-client" class="lcb-client">
         <header class="lcb-header">
-            <div class="lcb-rooms-browser">
-                <ul class="lcb-tabs lcb-rooms-list">
-                    <li data-id="home" class="lcb-tab lcb-tab-home">
-                        <a href="#!/rooms">
-                            <i class="fa fa-th"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="lcb-tabs">
+                <li data-id="home" class="lcb-tab lcb-tab-home">
+                    <a href="#!/">
+                        <i class="fa fa-th"></i>
+                    </a>
+                </li>
+            </ul>
             <span class="lcb-account-button">
                 <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50" />
                 <span class="name">{{ account.displayName }}</span>
                 <b class="caret"></b>
             </span>
         </header>
-        <section class="lcb-rooms">
-            <!-- <div class="lcb-rooms-browser">
+        <section class="lcb-panes">
+            <div class="lcb-rooms-browser lcb-pane" data-id="home">
                 <ul class="lcb-rooms-list"></ul>
-            </div> -->
+            </div>
         </section>
     </div><!-- lcb-client end -->
 {% endblock %}

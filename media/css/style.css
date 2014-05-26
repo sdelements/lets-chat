@@ -7373,7 +7373,7 @@ body {
 /*********************
  * Rooms
  *********************/
-.lcb-rooms {
+.lcb-panes {
   background: yellow;
   -webkit-flex: 1;
   -moz-flex: 1;

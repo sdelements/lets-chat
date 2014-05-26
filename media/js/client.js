@@ -31,12 +31,16 @@
         }
     }
     Client.prototype.switchRoom = function(id) {
+        if (!id) {
+            this.rooms.current.set('id', null);
+            return;
+        }
         var room = this.rooms.get(id);
         if (room && room.get('joined')) {
             this.rooms.current.set('id', id);
             return;
         } else {
-            this.joinRoom(id, true)
+            this.joinRoom(id, true);
         }
     }
     Client.prototype.joinRoom = function(id, switchRoom) {
@@ -83,7 +87,7 @@
         var that = this;
         var Router = Backbone.Router.extend({
             routes: {
-                '!/room/home': 'list',
+                '!/room/': 'list',
                 '!/room/:id': 'join',
                 '*path': 'list'
             },

@@ -1,6 +1,11 @@
 {% raw %}
     <script type="text/x-handlebars-template" id="template-room-browser-item">
-        <li class="lcb-rooms-list-item lcb-tab" data-id="{{ id }}">
+        <li class="lcb-rooms-list-item" data-id="{{ id }}">
+            <a href="#!/room/{{id}}">{{ name }}</a>
+        </li>
+    </script>
+    <script type="text/x-handlebars-template" id="template-room-tab">
+        <li class="lcb-tab" data-id="{{ id }}">
             <a href="#!/room/{{id}}">
                 <span class="lcb-tab-title">{{ name }}</span>
                 <span class="lcb-tab-alerts">45</span>
@@ -9,7 +14,7 @@
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room">
-        <div class="lcb-room" data-id="{{ id }}">
+        <div class="lcb-room lcb-pane" data-id="{{ id }}">
             <div class="lcb-room-chat">
                 <ul class="lcb-messages">
                     <li class="lcb-message">

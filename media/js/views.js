@@ -1,59 +1,88 @@
-//
-// LCB Views
-//
+/*********************
+ * Let's Chat Views
+ *********************/
 
 //
 // Rooms List
 //
-var RoomsBrowserView = Backbone.View.extend({
-    events: {
-        'click .lcb-rooms-list-item-close': 'leave'
-    },
+var BrowserView = Backbone.View.extend({
     initialize: function(options) {
-        this.client = options.client;
         this.template = Handlebars.compile($('#template-room-browser-item').html());
         this.rooms = options.rooms;
         this.rooms.on('add', function(room) {
             this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
         }, this);
-        return this;
+    }
+});
+
+//
+// Tabs
+//
+var TabsView = Backbone.View.extend({
+    events: {
+        'click .lcb-tab-close': 'leave'
+    },
+    initialize: function(options) {
+        this.client = options.client;
+        this.template = Handlebars.compile($('#template-room-tab').html());
+        this.rooms = options.rooms;
+        this.rooms.on('change:joined', function(room, joined) {
+            if (joined) {
+                this.add(room.toJSON());
+                return;
+            }
+            this.remove(room.id);
+        }, this);
+        this.rooms.current.on('change:id', function(current, id) {
+            this.switch(id);
+        }, this);
+    },
+    add: function(room) {
+        this.$el.append(this.template(room));
+    },
+    remove: function(id) {
+        this.$el.find('.lcb-tab[data-id=' + id + ']').remove();
+    },
+    switch: function(id) {
+        if (!id) {
+            id = 'home';
+        }
+        this.$el.find('.lcb-tab').removeClass('selected')
+            .filter('[data-id=' + id + ']').addClass('selected');
     },
     leave: function(e) {
         e.preventDefault();
         var id = $(e.currentTarget).closest('[data-id]').data('id');
         this.client.events.trigger('rooms:leave', id);
-    }
+    },
 });
 
 //
-// Rooms
+// Panes
 //
-var RoomsView = Backbone.View.extend({
+var PanesView = Backbone.View.extend({
     initialize: function(options) {
         this.client = options.client;
         this.template = Handlebars.compile($('#template-room').html());
         this.rooms = options.rooms;
         this.views = {};
         this.rooms.on('change:joined', function(room, joined) {
-            // Joined room?
             if (joined) {
                 this.add(room);
                 return;
             }
-            // We need to make sure room is gone
-            if (joined === false) {
-                this.remove(room.id);
-                return;
-            }
+            this.remove(room.id);
         }, this);
         // Switch room
         this.rooms.current.on('change:id', function(current, id) {
             this.switch(id);
         }, this);
-        return this;
     },
     switch: function(id) {
-        this.$el.find('[data-id=' + id + ']').show()
+        if (!id) {
+            id = 'home';
+        }
+        this.$el.find('.lcb-pane[data-id=' + id + ']').show()
             .siblings().hide();
     },
     add: function(room) {
@@ -89,12 +118,10 @@ var RoomView = Backbone.View.extend({
         this.messageTemplate = Handlebars.compile($('#template-message').html());
         this.render();
         this.model.on('messages:new', this.addMessage, this);
-        return this;
     },
     render: function() {
         this.$el = $(this.template(this.model.toJSON()))
         this.$messages = this.$el.find('.lcb-messages');
-        return this;
     },
     sendMessage: function(e) {
         if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
@@ -128,13 +155,17 @@ var ClientView = Backbone.View.extend({
         //
         // Subviews
         //
-        this.roomsBrowser = new RoomsBrowserView({
+        this.browser = new BrowserView({
             el: this.$el.find('.lcb-rooms-browser'),
+            rooms: this.client.rooms
+        });
+        this.tabs = new TabsView({
+            el: this.$el.find('.lcb-tabs'),
             rooms: this.client.rooms,
             client: this.client
         });
-        this.rooms = new RoomsView({
-            el: this.$el.find('.lcb-rooms'),
+        this.panes = new PanesView({
+            el: this.$el.find('.lcb-panes'),
             rooms: this.client.rooms,
             client: this.client
         });
