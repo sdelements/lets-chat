@@ -11,7 +11,47 @@
     <script type="text/x-handlebars-template" id="template-room">
         <div class="lcb-room" data-id="{{ id }}">
             <div class="lcb-room-chat">
-                <ul class="lcb-messages"></ul>
+                <ul class="lcb-messages">
+                    <li class="lcb-message">
+                        <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/2de4d847ef9524b0b5058c68f0826b2e?s=30" />
+                        <div class="lcb-message-meta">
+                            <span class="lcb-message-name">Jarl Stefansson</span>
+                            <time class="lcb-message-time">last Friday at 3:51 PM</time>
+                            <div class="lcb-message-text">
+                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur
+                            </div>
+                        </div>
+                    </li>
+                    <li class="lcb-message">
+                        <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/49e001e5a211aa60c2195c5567a49bfd?s=30" />
+                        <div class="lcb-message-meta">
+                            <span class="lcb-message-name">Hanif Virani</span>
+                            <time class="lcb-message-time">last Friday at 3:51 PM</time>
+                            <div class="lcb-message-text">
+                                ui dolorem ipsum quia dolor sit amet, consectetur
+                                totam rem aperiam
+                            </div>
+                        </div>
+                    </li>
+                    <li class="lcb-message">
+                        <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=30" />
+                        <div class="lcb-message-meta">
+                            <span class="lcb-message-name">Ramanan</span>
+                            <time class="lcb-message-time">last Friday at 3:51 PM</time>
+                            <div class="lcb-message-text">WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW</div>
+                        </div>
+                    </li>
+                    <li class="lcb-message lcb-message-fragment">
+                        <div class="lcb-message-meta">
+                            <div class="lcb-message-text">Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui</div>
+                        </div>
+                    </li>
+                    <li class="lcb-message lcb-message-fragment">
+                        <div class="lcb-message-meta">
+                            <div class="lcb-message-text">Ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur</div>
+                        </div>
+                    </li>
+                </ul>
                 <form class="lcb-entry">
                     <textarea class="lcb-entry-input" placeholder="Got something to say?"></textarea>
                     <button type="submit" class="btn btn-info lcb-entry-button" data-click="send()">Send</button>
@@ -45,13 +85,11 @@
     </script>
     <script type="text/x-handlebars-template" id="template-message">
         <li class="lcb-message">
-            <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/{{ avatar }}?s=50" />
-            <div class="meta">
+            <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/{{ avatar }}?s=30" />
+            <div class="lcb-message-meta">
                 <span class="lcb-message-name">{{ name }}</span>
                 <time class="lcb-message-time">{{ time }}</time>
-                <ul class="lcb-message-fragments">
-                    <li class="lcb-message-fragment">{{ text }}</li>
-                </ul>
+                <div class="lcb-message-text">{{ text }}</div>
             </div>
         </li>
     </script>
