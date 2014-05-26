@@ -1,0 +1,63 @@
+/*********************
+ * Rooms
+ *********************/
+ 
+.lcb-rooms {
+    background: yellow;
+    .flex(1);
+    .flex-display;
+}
+
+.lcb-room {
+    background: pink;
+    .flex(1);
+    .flex-display;
+}
+
+.lcb-room-sidebar {
+    background: maroon;
+    width: 20%;
+    min-width: 150px;
+    max-width: 230px;
+    padding: 10px;
+    margin: 10px;
+    margin-left: 0;
+}
+
+.lcb-room-chat {
+    background: teal;
+    margin: 10px;
+    .flex(1);
+    .flex-display;
+    .flex-direction(column);
+}
+
+.lcb-messages {
+    background: #fff;
+    padding: 0;
+    overflow-y: auto;
+    margin: 0;
+    .flex(1);
+}
+
+
+.lcb-entry {
+    height: 70px;
+    .flex-display;
+}
+
+.lcb-entry-input {
+    padding: 15px;
+    border: none;
+    border-top: 1px #eee solid;
+    .flex(1);
+    &:focus {
+        outline: none;
+    }
+}
+
+.lcb-entry-button {
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 0;
+}

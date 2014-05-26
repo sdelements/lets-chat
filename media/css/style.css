@@ -7121,6 +7121,9 @@ button.close {
 .fa-plus-square-o:before {
   content: "\f196";
 }
+/*********************
+ * Let's Chat
+ *********************/
 html,
 body {
   height: 100%;
@@ -7134,6 +7137,9 @@ body {
   font-size: 14px;
   padding: 10px;
 }
+/*********************
+ * Login
+ *********************/
 .lcb-login {
   background-color: #222;
   background-image: url('../img/photos/reflection.jpg');
@@ -7235,8 +7241,11 @@ body {
 .lcb-login-footer .fa-heart {
   color: #f22472;
 }
+/*********************
+ * Client Base
+ *********************/
 .lcb-client {
-  background: #000;
+  background: orange;
   width: 100%;
   height: 100%;
   position: fixed;
@@ -7253,53 +7262,157 @@ body {
   flex-direction: column;
 }
 .lcb-header {
-  background: red;
-  width: 100%;
-  height: 60px;
-  display: none;
+  background: green;
+  height: 42px;
+  position: relative;
 }
-.lcb-main {
+.lcb-account-button {
+  background: red;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.lcb-account-button img {
+  max-height: 100%;
+}
+/*********************
+ * Tabs
+ *********************/
+.lcb-tabs {
+  background: purple;
+  padding: 0;
+  margin: 11px 0 0 25px;
+  overflow: hidden;
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
   display: -ms-flex;
   display: flex;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
 }
-.lcb-messages {
-  background: #fff;
+.lcb-tab {
+  background: #222;
+  max-width: 200px;
+  font-size: 14px;
   padding: 0;
   margin: 0;
-  overflow-y: auto;
+  margin-right: 3px;
+  border: 1px #444 solid;
+  border-bottom: none;
+  display: block;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  border-radius: 4px 4px 0 0;
+  opacity: 0.6;
+  filter: alpha(opacity=60);
 }
-.lcb-entry {
-  height: 60px;
+.lcb-tab.lcb-tab-home {
+  text-align: center;
+  -webkit-flex: 45px 0;
+  -moz-flex: 45px 0;
+  -ms-flex: 45px 0;
+  flex: 45px 0;
+}
+.lcb-tab.lcb-tab-home a {
+  padding: 0;
+}
+.lcb-tab:hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.lcb-tab.selected {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  -webkit-box-shadow: 0 0 5px #222222;
+  box-shadow: 0 0 5px #222222;
+}
+.lcb-tab a {
+  height: 30px;
+  line-height: 30px;
+  color: #fff;
+  text-decoration: none;
+  padding-left: 10px;
+  border-bottom: none;
+  display: block;
+  position: relative;
+}
+.lcb-tab-title {
+  max-width: 75%;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lcb-tab-alerts {
+  background-color: #b94a48;
+  color: #fff;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 100%;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  padding: 2px 7px;
+  position: absolute;
+  top: 7px;
+  right: 25px;
+  border-radius: 7px;
+}
+.lcb-tab-close {
+  font-size: 20px;
+  color: #aaa;
+  position: absolute;
+  top: 0;
+  right: 7px;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+.lcb-tab-close:hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+/*********************
+ * Rooms
+ *********************/
+.lcb-rooms {
+  background: yellow;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
   display: -ms-flex;
   display: flex;
 }
-.lcb-entry-input {
-  border: none;
-  padding: 10px;
+.lcb-room {
+  background: pink;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
 }
-.lcb-sidebar {
-  background: #131a1e;
+.lcb-room-sidebar {
+  background: maroon;
   width: 20%;
-  max-width: 300px;
-  color: #f2f2f2;
+  min-width: 150px;
+  max-width: 230px;
+  padding: 10px;
+  margin: 10px;
+  margin-left: 0;
+}
+.lcb-room-chat {
+  background: teal;
+  margin: 10px;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
@@ -7310,120 +7423,38 @@ body {
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.lcb-sidebar-heading {
-  line-height: 100%;
-  font-weight: 300;
-  font-size: 11px;
-  text-transform: uppercase;
-  padding: 10px 20px;
+.lcb-messages {
+  background: #fff;
+  padding: 0;
+  overflow-y: auto;
   margin: 0;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
 }
-.lcb-account {
-  background: #111111;
-  height: 50px;
-  text-align: left;
+.lcb-entry {
+  height: 70px;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+}
+.lcb-entry-input {
+  padding: 15px;
   border: none;
-  padding: 0;
+  border-top: 1px #eee solid;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.lcb-entry-input:focus {
+  outline: none;
+}
+.lcb-entry-button {
+  padding-left: 20px;
   padding-right: 20px;
-  position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.lcb-account:hover {
-  background: #1e1e1e;
-}
-.lcb-account:active {
-  background: #040404;
-}
-.lcb-account .avatar {
-  margin-right: 10px;
-}
-.lcb-account .name {
-  font-size: 11px;
-  text-transform: uppercase;
-}
-.lcb-account .caret {
-  margin-top: -3px;
-  position: absolute;
-  top: 50%;
-  right: 15px;
-}
-.lcb-rooms-browser {
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  overflow-y: auto;
-}
-.lcb-rooms-list,
-.lcb-rooms-list-item {
-  padding: 0;
-}
-.lcb-rooms-list {
-  overflow-y: auto;
-}
-.lcb-rooms-list-item {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.lcb-rooms-list-item .lcb-rooms-list-item-link {
-  background: #172025;
-  padding: 10px 20px;
-  display: block;
-}
-.lcb-rooms-list-item .lcb-rooms-list-item-close {
-  top: 5px;
-  right: 10px;
-  position: absolute;
-}
-.lcb-rooms {
-  padding: 10px;
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: -ms-flex;
-  display: flex;
-  -webkit-flex-direction: row;
-  -moz-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-.lcb-room {
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: -ms-flex;
-  display: flex;
-  -webkit-flex-direction: row;
-  -moz-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-.lcb-room-sidebar {
-  width: 20%;
-  max-width: 300px;
-  padding: 20px;
-}
-.lcb-room-chat {
-  -webkit-flex: 1;
-  -moz-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-.lcb-room-actions .btn {
-  border-radius: 100%;
-  width: 40px;
-  height: 40px;
+  border-radius: 0;
 }

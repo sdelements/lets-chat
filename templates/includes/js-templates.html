@@ -1,0 +1,58 @@
+{% raw %}
+    <script type="text/x-handlebars-template" id="template-room-browser-item">
+        <li class="lcb-rooms-list-item lcb-tab" data-id="{{ id }}">
+            <a href="#!/room/{{id}}">
+                <span class="lcb-tab-title">{{ name }}</span>
+                <span class="lcb-tab-alerts">45</span>
+                <span class="lcb-tab-close">&times;</span>
+            </a>
+        </li>
+    </script>
+    <script type="text/x-handlebars-template" id="template-room">
+        <div class="lcb-room" data-id="{{ id }}">
+            <div class="lcb-room-chat">
+                <ul class="lcb-messages"></ul>
+                <form class="lcb-entry">
+                    <textarea class="lcb-entry-input" placeholder="Got something to say?"></textarea>
+                    <button type="submit" class="btn btn-info lcb-entry-button" data-click="send()">Send</button>
+                </form>
+            </div><!-- lcb-chat end -->
+            <div class="lcb-room-sidebar">
+                <div class="lcb-room-meta">
+                    <h2 class="lcb-room-heading">{{ name }}</h2>
+                    <div class="lcb-room-description">
+                        <p>{{ description }}</p>
+                    </div>
+                </div>
+                <div class="lcb-room-actions btn-groups">
+                    <button class="btn btn-default"><i class="fa fa-cloud"></i></button>
+                    <button class="btn btn-default"><i class="fa fa-cloud"></i></button>
+                    <button class="btn btn-default"><i class="fa fa-cloud"></i></button>
+                </div>
+                <div class="lcb-item-list">
+                    <h3 class="lcb-item-list-heading">Users</h3>
+                    <ul>
+                        <li ng-repeat="user in users">
+                            <img class="lcb-item-list-avatar" src="https://www.gravatar.com/avatar/{$ user.avatar $}?s=50" />
+                            <div class="lcb-item-list-meta">
+                                  {$ user.name $}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div><!-- lcb-room-sidebar end -->
+        </div><!-- lcb-room end -->
+    </script>
+    <script type="text/x-handlebars-template" id="template-message">
+        <li class="lcb-message">
+            <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/{{ avatar }}?s=50" />
+            <div class="meta">
+                <span class="lcb-message-name">{{ name }}</span>
+                <time class="lcb-message-time">{{ time }}</time>
+                <ul class="lcb-message-fragments">
+                    <li class="lcb-message-fragment">{{ text }}</li>
+                </ul>
+            </div>
+        </li>
+    </script>
+{% endraw %}

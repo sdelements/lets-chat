@@ -1,0 +1,82 @@
+/*********************
+ * Tabs
+ *********************/
+
+.lcb-tabs {
+    background: purple;
+    padding: 0;
+    margin: 11px 0 0 25px;
+    overflow: hidden;
+    .flex-display;
+}
+
+.lcb-tab {
+    background: #222;
+    max-width: 200px;
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+    margin-right: 3px;
+    border: 1px #444 solid;
+    border-bottom: none;
+    display: block;
+    .flex(1);
+    border-radius: 4px 4px 0 0;
+    .opacity(0.6);
+    &.lcb-tab-home {
+        text-align: center;
+        .flex(45px 0);
+        a {
+            padding: 0;
+        }
+    }
+    &:hover {
+        .opacity(1);
+    }
+    &.selected {
+        .opacity(1);
+        .box-shadow(0 0 5px #222);
+    }
+    a {
+        height: 30px;
+        line-height: 30px;
+        color: #fff;
+        text-decoration: none;
+        padding-left: 10px;
+        border-bottom: none;
+        display: block;
+        position: relative;
+    }
+}
+
+.lcb-tab-title {
+    max-width: 75%;
+    display: block;
+    .text-overflow;
+}
+
+.lcb-tab-alerts {
+    background-color: #b94a48;
+    color: #fff;
+    font-weight: bold;
+    font-size: 11px;
+    line-height: 100%;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    padding: 2px 7px;
+    position: absolute;
+    top: 7px;
+    right: 25px;
+    border-radius: 7px;
+}
+
+.lcb-tab-close {
+    font-size: 20px;
+    color: #aaa;
+    position: absolute;
+    top: 0;
+    right: 7px;
+    .opacity(0.4);
+    &:hover {
+        .opacity(1);
+    }
+}

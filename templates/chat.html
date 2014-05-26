@@ -13,86 +13,32 @@
     </script>
 {% endblock %}
 
-{% block attributes %}
-    ng-app="lets-chat"
-{% endblock %}
-
 {% block templates %}
-{% raw %}
-    <script type="text/x-handlebars-template" id="template-room-browser-item">
-        <li data-id="{{ id }}" class="lcb-rooms-list-item">
-            <a class="lcb-rooms-list-item-link" href="#!/room/{{id}}">{{ name }}</a>
-            <a class="lcb-rooms-list-item-close" href="#">&times;</a>
-        </li>
-    </script>
-    <script type="text/x-handlebars-template" id="template-room">
-        <div class="lcb-room" data-id="{{ id }}">
-            <section class="lcb-room-sidebar">
-                <div class="lcb-room-meta">
-                    <h2 class="lcb-room-heading">{{ name }}</h2>
-                    <div class="lcb-room-description">
-                        <p>{{ description }}</p>
-                    </div>
-                </div>
-                <div class="lcb-room-actions btn-groups">
-                    <button class="btn btn-default"><i class="fa fa-cloud"></i></button>
-                    <button class="btn btn-default"><i class="fa fa-cloud"></i></button>
-                    <button class="btn btn-default"><i class="fa fa-cloud"></i></button>
-                </div>
-                <div class="lcb-item-list">
-                    <h3 class="lcb-item-list-heading">Users</h3>
-                    <ul>
-                        <li ng-repeat="user in users">
-                            <img class="lcb-item-list-avatar" src="https://www.gravatar.com/avatar/{$ user.avatar $}?s=50" />
-                            <div class="lcb-item-list-meta">
-                                  {$ user.name $}
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </section><!-- lcb-room-sidebar end -->
-            <section class="lcb-room-chat">
-                <ul class="lcb-messages"></ul>
-                <form class="lcb-entry">
-                    <textarea class="lcb-entry-input" placeholder="Got something to say?"></textarea>
-                    <button type="submit" class="btn btn-info lcb-entry-button" data-click="send()">Send</button>
-                </form>
-            </section><!-- lcb-chat end -->
-        </div><!-- lcb-room end -->
-    </script>
-    <script type="text/x-handlebars-template" id="template-message">
-        <li class="lcb-message">
-            <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/{{ avatar }}?s=50" />
-            <div class="meta">
-                <span class="lcb-message-name">{{ name }}</span>
-                <time class="lcb-message-time">{{ time }}</time>
-                <ul class="lcb-message-fragments">
-                    <li class="lcb-message-fragment">{{ text }}</li>
-                </ul>
-            </div>
-        </li>
-    </script>
-{% endraw %}
+    {% include 'includes/js-templates.html' %}
 {% endblock %}
 
 {% block body %}
-    <div id="lcb-client" class="lcb-client" ng-controller="client-controller">
-        <header class="lcb-header"></header>
-        <section class="lcb-main">
-            <section class="lcb-sidebar">
-                    <span class="lcb-account btn btn-info btn-block" href="#">
-                        <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50" />
-                        <span class="name">{{ account.displayName }}</span>
-                        <b class="caret"></b>
-                    </span>
-                    <div class="lcb-rooms-browser">
-                        <h2 class="lcb-sidebar-heading">
-                            <i class="fa fa-list"></i> Rooms
-                        </h2>
-                        <ul class="lcb-rooms-list" data-bind="collection:$collection"></ul>
-                    </div>
-            </section><!-- lcb-sidebar end -->
-            <section class="lcb-rooms"></section>
-        </section><!-- lcb-main end -->
+    <div id="lcb-client" class="lcb-client">
+        <header class="lcb-header">
+            <div class="lcb-rooms-browser">
+                <ul class="lcb-tabs lcb-rooms-list">
+                    <li data-id="home" class="lcb-tab lcb-tab-home">
+                        <a href="#!/rooms">
+                            <i class="fa fa-th"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <span class="lcb-account-button">
+                <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50" />
+                <span class="name">{{ account.displayName }}</span>
+                <b class="caret"></b>
+            </span>
+        </header>
+        <section class="lcb-rooms">
+            <!-- <div class="lcb-rooms-browser">
+                <ul class="lcb-rooms-list"></ul>
+            </div> -->
+        </section>
     </div><!-- lcb-client end -->
 {% endblock %}
