@@ -34,8 +34,10 @@ module.exports = function() {
                     req.io.respond(err, 400);
                     return;
                 }
-                req.io.respond(message, 201);
-                app.io.room(message.room).broadcast('messages:new', message.toJSON());
+                message.populate('owner', '_id, displayName', function(e) {
+                    req.io.respond(message, 201);
+                    app.io.room(message.room).broadcast('messages:new', message.toJSON());
+                });
             });
         },
         list: function(req) {
