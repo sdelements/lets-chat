@@ -31,8 +31,10 @@
         }
     }
     Client.prototype.switchRoom = function(id) {
-        if (!id) {
-            this.rooms.current.set('id', null);
+        // Make sure we have a last known room ID
+        this.rooms.last.set('id', this.rooms.current.get('id'));
+        if (!id || id == 'list') {
+            this.rooms.current.set('id', 'list');
             return;
         }
         var room = this.rooms.get(id);
@@ -62,9 +64,15 @@
         if (room) {
             room.set('joined', false);
         }
-        this.socket.emit('rooms:leave', id, function() {
-            // TODO: Do we need to wait for a response?
-        });
+        this.socket.emit('rooms:leave', id);
+        if (id == this.rooms.current.get('id')) {
+            var room = this.rooms.get(this.rooms.last.get('id'));
+            var uri = room && room.get('joined') == true ? '!/room/' + room.id : '!/';
+            this.router.navigate(uri, {
+                trigger: true,
+                replace: true
+            });
+        }
     }
     //
     // Messages
@@ -95,10 +103,10 @@
                 that.switchRoom(id);
             },
             list: function() {
-                that.switchRoom();
+                that.switchRoom('list');
             }
         });
-        that.router = new Router;
+        this.router = new Router;
         Backbone.history.start();
     }
     //

@@ -35,5 +35,6 @@ var RoomsCollection = Backbone.Collection.extend({
     model: RoomModel,
     initialize: function() {
         this.current = new Backbone.Model;
+        this.last = new Backbone.Model;
     }
 });

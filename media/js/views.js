@@ -36,6 +36,8 @@ var TabsView = Backbone.View.extend({
         this.rooms.current.on('change:id', function(current, id) {
             this.switch(id);
         }, this);
+        // Initial switch since router runs before view is loaded
+        this.switch(this.rooms.current.get('id'));
     },
     add: function(room) {
         this.$el.append(this.template(room));
@@ -45,7 +47,7 @@ var TabsView = Backbone.View.extend({
     },
     switch: function(id) {
         if (!id) {
-            id = 'home';
+            id = 'list';
         }
         this.$el.find('.lcb-tab').removeClass('selected')
             .filter('[data-id=' + id + ']').addClass('selected');
@@ -80,7 +82,7 @@ var PanesView = Backbone.View.extend({
     },
     switch: function(id) {
         if (!id) {
-            id = 'home';
+            id = 'list';
         }
         this.$el.find('.lcb-pane[data-id=' + id + ']').show()
             .siblings().hide();
