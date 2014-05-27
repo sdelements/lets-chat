@@ -103,6 +103,7 @@ var PanesView = Backbone.View.extend({
             return;
         }
         this.views[id].destroy();
+        delete this.views[id];
     }
 });
 
