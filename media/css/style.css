@@ -7464,7 +7464,7 @@ body {
 .lcb-message {
   min-height: 47px;
   border-top: 1px #eee solid;
-  padding: 7.5px;
+  padding: 7px;
   font-size: 13px;
   margin: 0;
   display: block;
@@ -7484,14 +7484,14 @@ body {
 .lcb-message-name {
   color: #aaa;
   font-weight: 900;
-  margin-bottom: 7.5px;
+  margin-bottom: 5px;
   display: block;
 }
 .lcb-message-time {
   color: #bbb;
   position: absolute;
-  top: 7.5px;
-  right: 7.5px;
+  top: 7px;
+  right: 7px;
 }
 .lcb-message-text {
   word-wrap: break-word;

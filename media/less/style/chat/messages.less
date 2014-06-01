@@ -2,10 +2,12 @@
  * Messages
  *********************/
 
+ @messagePaddding: 7px; 
+ 
 .lcb-message {
     min-height: 47px;
     border-top: 1px #eee solid;
-    padding: 7.5px;
+    padding: @messagePaddding;
     font-size: 13px;
     margin: 0;
     display: block;
@@ -28,15 +30,15 @@
 .lcb-message-name {
     color: #aaa;
     font-weight: 900;
-    margin-bottom: 7.5px;
+    margin-bottom: @messagePaddding - 2px;
     display: block;
 }
 
 .lcb-message-time {
     color: #bbb;
     position: absolute;
-    top: 7.5px;
-    right: 7.5px;
+    top: @messagePaddding;
+    right: @messagePaddding;
 }
 
 .lcb-message-text {
