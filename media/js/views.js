@@ -114,6 +114,7 @@ var PanesView = Backbone.View.extend({
 //
 var RoomView = Backbone.View.extend({
     events: {
+        'scroll .lcb-messages': 'updateScrollLock',
         'keypress .lcb-entry-input': 'sendMessage'
     },
     initialize: function(options) {
@@ -125,6 +126,9 @@ var RoomView = Backbone.View.extend({
     render: function() {
         this.$el = $(this.template(this.model.toJSON()))
         this.$messages = this.$el.find('.lcb-messages');
+        // Scroll Locking
+        this.scrollLocked = true;
+        this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));
     },
     sendMessage: function(e) {
         if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
@@ -139,6 +143,17 @@ var RoomView = Backbone.View.extend({
     },
     addMessage: function(message) {
         this.$messages.append(this.messageTemplate(message));
+        this.scrollMessages();
+    },
+    updateScrollLock: function() {
+        this.scrollLocked = this.$messages[0].scrollHeight -
+          this.$messages.scrollTop() - 5 <= this.$messages.outerHeight();
+        return this.scrollLocked;
+    },
+    scrollMessages: function() {
+        if (!this.scrollLocked)
+            return;
+        this.$messages[0].scrollTop = this.$messages[0].scrollHeight;
     },
     destroy: function() {
         this.undelegateEvents();
