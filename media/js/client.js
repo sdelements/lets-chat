@@ -26,6 +26,19 @@
     //
     // Rooms
     //
+    Client.prototype.createRoom = function(data) {
+        var that = this;
+        var room = {
+            name: data.name,
+            description: data.description
+        };
+        var callback = data.callback;
+        this.socket.emit('rooms:create', room, function(room) {
+            that.rooms.add(room);
+            that.switchRoom(room.id);
+            callback && callback();
+        });
+    }
     Client.prototype.getRooms = function() {
         var that = this;
         this.socket.emit('rooms:list', function(rooms) {
@@ -149,6 +162,9 @@
         this.socket.on('messages:new', function(message) {
             that.addMessage(message);
         });
+        this.socket.on('rooms:create', function(data) {
+            that.createRoom(data);
+        });
         this.socket.on('rooms:leave', function(id) {
             that.leaveRoom(id);
         });
@@ -164,6 +180,7 @@
         this.events.on('messages:send', this.sendMessage, this);
         this.events.on('rooms:update', this.updateRoom, this);
         this.events.on('rooms:leave', this.leaveRoom, this);
+        this.events.on('rooms:create', this.createRoom, this)
     }
     //
     // Start
