@@ -20,7 +20,7 @@ module.exports = function() {
     });
     app.delete('/rooms', middlewares.requireLogin, function(req, res) {
         req.io.route('rooms:delete');
-    }
+    });
 
     //
     // Sockets
