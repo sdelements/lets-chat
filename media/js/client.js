@@ -8,6 +8,7 @@
     //
     var Client = function(config) {
         this.config = config;
+        this.status = new Backbone.Model;
         this.user = new UserModel;
         this.rooms = new RoomsCollection;
         this.events = _.extend({}, Backbone.Events);
@@ -143,6 +144,7 @@
         this.socket.on('connect', function() {
             that.getUser();
             that.getRooms();
+            that.status.set('connected', true);
         });
         this.socket.on('messages:new', function(message) {
             that.addMessage(message);
@@ -154,7 +156,7 @@
             that.roomUpdate(room);
         });
         this.socket.on('disconnect', function() {
-            console.log('disconnected');
+            that.status.set('connected', false);
         });
         //
         // GUI

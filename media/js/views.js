@@ -187,6 +187,7 @@ var RoomView = Backbone.View.extend({
     sendMessage: function(e) {
         if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
         e.preventDefault();
+        if (!this.client.status.get('connected')) return;
         var $textarea = this.$('.lcb-entry-input');
         if (!$textarea.val()) return;
         this.client.events.trigger('messages:send', {
