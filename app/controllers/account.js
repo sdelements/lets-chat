@@ -3,6 +3,9 @@
 //
 
 module.exports = function() {
+
+    var _ = require('underscore');
+
     var app = this.app,
         middlewares = this.middlewares,
         models = this.models;
