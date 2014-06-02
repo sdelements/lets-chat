@@ -1,7 +1,8 @@
 {% raw %}
     <script type="text/x-handlebars-template" id="template-room-browser-item">
         <li class="lcb-rooms-list-item" data-id="{{id}}">
-            <a href="#!/room/{{id}}">{{name}}</a>
+            <a class="lcb-rooms-list-item-name" href="#!/room/{{id}}">{{name}}</a>
+            <div class="lcb-rooms-list-item-description">{{description}}</div>
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room-tab">
@@ -70,9 +71,6 @@
                     </div>
                 </div>
                 <div class="lcb-room-actions btn-groups">
-                    <button class="btn btn-default"><i class="fa fa-cloud"></i></button>
-                    <button class="btn btn-default"><i class="fa fa-cloud"></i></button>
-                    <button class="btn btn-default"><i class="fa fa-cloud"></i></button>
                 </div>
                 <div class="lcb-item-list">
                     <h3 class="lcb-item-list-heading">Users</h3>

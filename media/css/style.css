@@ -7371,6 +7371,32 @@ body {
   filter: alpha(opacity=100);
 }
 /*********************
+ * Rooms Browser
+ *********************/
+.lcb-rooms-browser {
+  overflow-y: scroll;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.lcb-rooms-list-item {
+  background: #222;
+  width: 300px;
+  padding: 10px;
+  padding-bottom: 30px;
+  margin: 5px;
+  border-top: 3px #777 solid;
+  display: block;
+  float: left;
+  position: relative;
+  border-radius: 3px;
+  box-shadow: 0 0 7px #000;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/*********************
  * Rooms
  *********************/
 .lcb-panes {

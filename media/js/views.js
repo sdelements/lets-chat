@@ -44,7 +44,8 @@ var BrowserView = Backbone.View.extend({
         this.rooms.on('change:name change:description', this.update, this);
     },
     update: function(room) {
-        this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] a').text(room.get('name'));
+        this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
+        this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
     }
 });
 
