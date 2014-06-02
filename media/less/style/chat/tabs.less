@@ -12,7 +12,7 @@
 
 .lcb-tab {
     background: #222;
-    max-width: 200px;
+    max-width: 240px;
     font-size: 14px;
     padding: 0;
     margin: 0;
@@ -50,30 +50,47 @@
 }
 
 .lcb-tab-title {
-    max-width: 75%;
+    padding-right: 70px;
     display: block;
     .text-overflow;
 }
 
 .lcb-tab-alerts {
-    background-color: #b94a48;
+    background-color: #ccc;
     color: #fff;
     font-weight: bold;
     font-size: 11px;
     line-height: 100%;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    padding: 2px 7px;
     position: absolute;
     top: 7px;
     right: 25px;
-    border-radius: 7px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.lcb-tab-alerts-mentions,
+.lcb-tab-alerts-total {
+    padding: 2px 5px;
+    float: left;
+    &:empty {
+        display: none;
+    }
+}
+
+.lcb-tab-alerts-mentions {
+    background: #f22472;
+}
+
+.lcb-tab-alerts-total {
+    background: #b94a48;
 }
 
 .lcb-tab-close {
     font-size: 20px;
     color: #aaa;
     position: absolute;
-    top: 0;
+    top: -2px;
     right: 7px;
     .opacity(0.4);
     &:hover {

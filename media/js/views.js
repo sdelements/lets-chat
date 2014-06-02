@@ -60,6 +60,7 @@ var TabsView = Backbone.View.extend({
         this.client = options.client;
         this.template = Handlebars.compile($('#template-room-tab').html());
         this.rooms = options.rooms;
+        // Room joining
         this.rooms.on('change:joined', function(room, joined) {
             if (joined) {
                 this.add(room.toJSON());
@@ -67,10 +68,14 @@ var TabsView = Backbone.View.extend({
             }
             this.remove(room.id);
         }, this);
+        // Room meta updates
         this.rooms.on('change:name change:description', this.update, this);
+        // Current room switching
         this.rooms.current.on('change:id', function(current, id) {
             this.switch(id);
         }, this);
+        // Alerts
+        this.rooms.on('messages:new', this.alert, this);
         // Initial switch since router runs before view is loaded
         this.switch(this.rooms.current.get('id'));
     },
@@ -95,6 +100,26 @@ var TabsView = Backbone.View.extend({
         var id = $(e.currentTarget).closest('[data-id]').data('id');
         this.client.events.trigger('rooms:leave', id);
     },
+    alert: function(message) {
+        var $tab = this.$('.lcb-tab[data-id=' + message.room + ']'),
+            $total = $tab.find('.lcb-tab-alerts-total'),
+            $mentions = $tab.find('.lcb-tab-alerts-mentions');
+        if ($tab.length === 0) {
+            // Whoa how did this happen
+            return;
+        }
+        var total = parseInt($tab.data('count-total')) || 0,
+            mentions = parseInt($tab.data('count-mentions')) || 0;
+        // All messages
+        $tab.data('count-total', ++total);
+        $total.text(total);
+        // Just mentions
+        // \B@(\w+)(?!@)\b
+        if (new RegExp('\\B@(' + this.client.user.get('safeName') + ')(?!@)\\b', 'i').test(message.text)) {
+            $tab.data('count-mentions', ++mentions);
+            $mentions.text(mentions);
+        }
+    }
 });
 
 //
