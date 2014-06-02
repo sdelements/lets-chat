@@ -119,6 +119,7 @@ var PanesView = Backbone.View.extend({
         }
         this.$el.find('.lcb-pane[data-id=' + id + ']').show()
             .siblings().hide();
+        this.views[id] && this.views[id].scrollMessages(true);
     },
     add: function(room) {
         if (this.views[room.id]) {
@@ -219,8 +220,8 @@ var RoomView = Backbone.View.extend({
           this.$messages.scrollTop() - 5 <= this.$messages.outerHeight();
         return this.scrollLocked;
     },
-    scrollMessages: function() {
-        if (!this.scrollLocked)
+    scrollMessages: function(force) {
+        if (!force && !this.scrollLocked)
             return;
         this.$messages[0].scrollTop = this.$messages[0].scrollHeight;
     },
