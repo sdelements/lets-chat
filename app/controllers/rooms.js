@@ -18,6 +18,9 @@ module.exports = function() {
     app.post('/rooms', middlewares.requireLogin, function(req, res) {
         req.io.route('rooms:create');
     });
+    app.delete('/rooms', middlewares.requireLogin, function(req, res) {
+        req.io.route('rooms:delete');
+    }
 
     //
     // Sockets
@@ -38,6 +41,10 @@ module.exports = function() {
                 req.io.respond(room, 201);
                 app.io.broadcast('rooms:new', room);
             });
+        },
+        delete: function(req) {
+            var data = req.data || req.body;
+            var user = req.user._id;
         },
         list: function(req) {
             models.room

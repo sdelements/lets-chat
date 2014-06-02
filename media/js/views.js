@@ -217,6 +217,9 @@ var RoomView = Backbone.View.extend({
             description: this.model.get('description')
         });
     },
+    deleteRoom: function(e) {
+        this.client.events.trigger('rooms:delete', this.model.id);
+    },
     sendMessage: function(e) {
         if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
         e.preventDefault();

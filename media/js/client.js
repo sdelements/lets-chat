@@ -13,7 +13,7 @@
         this.rooms = new RoomsCollection;
         this.events = _.extend({}, Backbone.Events);
         return this;
-    }
+    };
     //
     // Account
     //
@@ -22,7 +22,7 @@
         this.socket.emit('account:whoami', function(user) {
             that.user.set(user);
         });
-    }
+    };
     //
     // Rooms
     //
@@ -38,13 +38,21 @@
             that.switchRoom(room.id);
             callback && callback();
         });
-    }
+    };
+    Client.prototype.deleteRoom = function(id) {
+        var room = this.rooms.get(id);
+        if (room) {
+            this.socket.emit('rooms:delete', id, function() {
+                that.rooms.remove(room);
+            });
+        }
+    };
     Client.prototype.getRooms = function() {
         var that = this;
         this.socket.emit('rooms:list', function(rooms) {
             that.rooms.set(rooms);
         });
-    }
+    };
     Client.prototype.getRoomUsers = function(id) {
         var room = this.rooms.get(id);
         if (room) {
@@ -52,7 +60,7 @@
                 room.users.set(users);
             });
         }
-    }
+    };
     Client.prototype.switchRoom = function(id) {
         // Make sure we have a last known room ID
         this.rooms.last.set('id', this.rooms.current.get('id'));
