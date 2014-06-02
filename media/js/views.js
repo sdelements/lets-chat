@@ -140,7 +140,8 @@ var PanesView = Backbone.View.extend({
 var RoomView = Backbone.View.extend({
     events: {
         'scroll .lcb-messages': 'updateScrollLock',
-        'keypress .lcb-entry-input': 'sendMessage'
+        'keypress .lcb-entry-input': 'sendMessage',
+        'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta'
     },
     initialize: function(options) {
         this.client = options.client;
@@ -148,6 +149,7 @@ var RoomView = Backbone.View.extend({
         this.messageTemplate = Handlebars.compile($('#template-message').html());
         this.render();
         this.model.on('messages:new', this.addMessage, this);
+        this.model.on('change', this.updateMeta, this);
     },
     render: function() {
         this.$el = $(this.template(this.model.toJSON()))
@@ -155,6 +157,23 @@ var RoomView = Backbone.View.extend({
         // Scroll Locking
         this.scrollLocked = true;
         this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));
+    },
+    updateMeta: function(room, wat) {
+        var $heading = this.$('.lcb-room-heading'),
+            $description = this.$('.lcb-room-description');
+        !$heading.is(':focus') && $heading.text(room.get('name'));
+        !$description.is(':focus') && $description.text(room.get('description'))
+    },
+    sendMeta: function(e) {
+        this.model.set({
+            name: this.$('.lcb-room-heading').text(),
+            description: this.$('.lcb-room-description').text()
+        });
+        this.client.events.trigger('rooms:update', {
+            id: this.model.id,
+            name: this.model.get('name'),
+            description: this.model.get('description')
+        });
     },
     sendMessage: function(e) {
         if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;

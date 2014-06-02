@@ -82,6 +82,35 @@ module.exports = function() {
                 });
             })
         },
+        update: function(req) {
+            var id = req.data.id,
+                name = req.data.name,
+                description = req.data.description;
+            models.room.findById(id, function(err, room) {
+                if (err) {
+                    // Oh noes, a bad thing happened!
+                    console.error(err);
+                    return;
+                }
+                if (!room) {
+                    // WHY IS THERE NO ROOM!?
+                    console.error('No room!');
+                    req.io.respond();
+                    return;
+                }
+                room.name = name;
+                room.description = description;
+                room.save(function(err, room) {
+                    if (err) {
+                        console.error(err);
+                        req.io.respond(err, 400);
+                        return;
+                    }
+                    app.io.room(room._id).broadcast('rooms:update', room.toJSON());
+                    req.io.respond(room.toJSON(), 200);
+                })
+            });
+        },
         join: function(req) {
             var id = req.data;
             models.room.findById(id, function(err, room) {

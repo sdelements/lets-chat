@@ -54,10 +54,21 @@
             this.joinRoom(id, true);
         }
     }
+    Client.prototype.updateRoom = function(room) {
+        this.socket.emit('rooms:update', room);
+    }
+    Client.prototype.roomUpdate = function(resRoom) {
+        var room = this.rooms.get(resRoom.id);
+        if (!room) {
+            // Nothing to do
+            return;
+        }
+        room.set(resRoom);
+    }
     Client.prototype.joinRoom = function(id, switchRoom) {
         var that = this;
         if (!id) {
-            // nothing to do
+            // Nothing to do
             return;
         }
         this.socket.emit('rooms:join', id, function(resRoom) {
@@ -139,6 +150,9 @@
         this.socket.on('rooms:leave', function(id) {
             that.leaveRoom(id);
         });
+        this.socket.on('rooms:update', function(room) {
+            that.roomUpdate(room);
+        });
         this.socket.on('disconnect', function() {
             console.log('disconnected');
         });
@@ -146,6 +160,7 @@
         // GUI
         //
         this.events.on('messages:send', this.sendMessage, this);
+        this.events.on('rooms:update', this.updateRoom, this);
         this.events.on('rooms:leave', this.leaveRoom, this);
     }
     //

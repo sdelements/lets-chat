@@ -39,7 +39,7 @@ module.exports = function() {
                     message = message.toJSON();
                     message.owner = user.toJSON();
                     req.io.respond(message, 201);
-                    app.io.room(message.room).broadcast('messages:new', message);
+                    req.io.room(message.room).broadcast('messages:new', message);
                 });
             });
         },
