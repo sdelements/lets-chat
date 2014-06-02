@@ -34,9 +34,14 @@
         };
         var callback = data.callback;
         this.socket.emit('rooms:create', room, function(room) {
-            that.rooms.add(room);
-            that.switchRoom(room.id);
-            callback && callback();
+            if (room && room.id) {
+                that.rooms.add(room);
+                that.router.navigate('!/room/' + room.id, {
+                    trigger: true,
+                    replace: true
+                });
+            }
+            callback && callback(room);
         });
     };
     Client.prototype.deleteRoom = function(id) {

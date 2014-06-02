@@ -30,7 +30,6 @@ var WindowView = Backbone.View.extend({
     }
 });
 
-
 //
 // Rooms List
 //
