@@ -143,6 +143,7 @@ var RoomView = Backbone.View.extend({
         'keypress .lcb-entry-input': 'sendMessage'
     },
     initialize: function(options) {
+        this.client = options.client;
         this.template = options.template;
         this.messageTemplate = Handlebars.compile($('#template-message').html());
         this.render();
@@ -160,14 +161,22 @@ var RoomView = Backbone.View.extend({
         e.preventDefault();
         var $textarea = this.$('.lcb-entry-input');
         if (!$textarea.val()) return;
-        client.events.trigger('messages:send', {
+        this.client.events.trigger('messages:send', {
             room: this.model.id,
             text: $textarea.val()
         });
         $textarea.val('');
     },
     addMessage: function(message) {
+        // Smells like pasta
+        message.paste = /\n/i.test(message.text);
+        // Fragment or new message?
+        message.fragment = this.lastMessageOwner === message.owner.id;
+        // Mine? Mine? Mine? Mine?
+        message.own = this.client.user.id === message.owner.id;
+
         this.$messages.append(this.messageTemplate(message));
+        this.lastMessageOwner = message.owner.id;
         this.scrollMessages();
     },
     updateScrollLock: function() {

@@ -14,6 +14,15 @@
         return this;
     }
     //
+    // Account
+    //
+    Client.prototype.getUser = function() {
+        var that = this;
+        this.socket.emit('account:whoami', function(user) {
+            that.user.set(user);
+        });
+    }
+    //
     // Rooms
     //
     Client.prototype.getRooms = function() {
@@ -121,6 +130,7 @@
             reconnect: true
         });
         this.socket.on('connect', function() {
+            that.getUser();
             that.getRooms();
         });
         this.socket.on('messages:new', function(message) {

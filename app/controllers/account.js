@@ -33,6 +33,9 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('account', {
+        whoami: function(req) {
+            req.io.respond(req.user);
+        },
         register: function(req) {
             var fields = req.body || req.data;
             models.user.create({
@@ -44,7 +47,6 @@ module.exports = function() {
             }, function(err, user) {
                 // Did we get error?
                 if (err) {
-                    // console.error(err);
                     var message = 'Sorry, we could not process your request';
                     // User already exists
                     if (err.code == 11000) {

@@ -1,20 +1,20 @@
 {% raw %}
     <script type="text/x-handlebars-template" id="template-room-browser-item">
-        <li class="lcb-rooms-list-item" data-id="{{ id }}">
-            <a href="#!/room/{{id}}">{{ name }}</a>
+        <li class="lcb-rooms-list-item" data-id="{{id}}">
+            <a href="#!/room/{{id}}">{{name}}</a>
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room-tab">
-        <li class="lcb-tab" data-id="{{ id }}">
+        <li class="lcb-tab" data-id="{{id}}">
             <a href="#!/room/{{id}}">
-                <span class="lcb-tab-title">{{ name }}</span>
+                <span class="lcb-tab-title">{{name}}</span>
                 <span class="lcb-tab-alerts">45</span>
                 <span class="lcb-tab-close">&times;</span>
             </a>
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room">
-        <div class="lcb-room lcb-pane" data-id="{{ id }}">
+        <div class="lcb-room lcb-pane" data-id="{{id}}">
             <div class="lcb-room-chat">
                 <ul class="lcb-messages">
                     <li class="lcb-message">
@@ -64,9 +64,9 @@
             </div><!-- lcb-chat end -->
             <div class="lcb-room-sidebar">
                 <div class="lcb-room-meta">
-                    <h2 class="lcb-room-heading">{{ name }}</h2>
+                    <h2 class="lcb-room-heading">{{name}}</h2>
                     <div class="lcb-room-description">
-                        <p>{{ description }}</p>
+                        <p>{{description}}</p>
                     </div>
                 </div>
                 <div class="lcb-room-actions btn-groups">
@@ -89,12 +89,22 @@
         </div><!-- lcb-room end -->
     </script>
     <script type="text/x-handlebars-template" id="template-message">
-        <li class="lcb-message">
-            <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/{{ avatar }}?s=30" />
+        <li class="lcb-message {{#if fragment}}lcb-message-fragment{{/if}} {{#if own}}lcb-message-own{{/if}} {{#if fragment}}lcb-message-paste{{/if}}">
+            {{#unless fragment}}
+                <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/{{ avatar }}?s=30" />
+            {{/unless}}
             <div class="lcb-message-meta">
-                <span class="lcb-message-name">{{ owner.displayName }}</span>
-                <time class="lcb-message-time">{{ time }}</time>
-                <div class="lcb-message-text">{{ text }}</div>
+                {{#unless fragment}}
+                    <span class="lcb-message-name">{{owner.displayName}}</span>
+                    <time class="lcb-message-time">{{time}}</time>
+                {{/unless}}
+                <div class="lcb-message-text">
+                    {{#unless paste}}
+                        {{text}}
+                    {{else}}
+                        <pre>{{text}}</pre>
+                    {{/unless}}
+                </div>
             </div>
         </li>
     </script>

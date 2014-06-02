@@ -34,9 +34,12 @@ module.exports = function() {
                     req.io.respond(err, 400);
                     return;
                 }
-                message.populate('owner', '_id, displayName', function(e) {
+                // Temporary workaround for _id until populate can do aliasing
+                models.user.findOne(message.owner, function(err, user) {
+                    message = message.toJSON();
+                    message.owner = user.toJSON();
                     req.io.respond(message, 201);
-                    app.io.room(message.room).broadcast('messages:new', message.toJSON());
+                    app.io.room(message.room).broadcast('messages:new', message);
                 });
             });
         },
