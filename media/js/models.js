@@ -3,6 +3,13 @@
 //
 
 var UserModel = Backbone.Model.extend({
+    get: function (attr) {
+        if (typeof this[attr] === 'function') return this[attr]();
+        return Backbone.Model.prototype.get.call(this, attr);
+    },
+    safeName: function() {
+        return this.get('displayName') && this.get('displayName').replace(/\W/i, '');
+    }
 });
 
 var UsersCollection = Backbone.Collection.extend({
