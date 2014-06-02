@@ -14,6 +14,10 @@ var WindowView = Backbone.View.extend({
             var room = this.rooms.get(id);
             this.updateTitle(room && room.get('name') || id == 'list' && 'Rooms');
         }, this);
+        this.rooms.on('change:name', function(room) {
+            if (room.id !== this.rooms.current.get('id')) return;
+            this.updateTitle(room.get('name'));
+        }, this)
     },
     updateTitle: function(name) {
         var title;
