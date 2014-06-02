@@ -30,12 +30,16 @@ var WindowView = Backbone.View.extend({
     }
 });
 
- 
+
 //
 // Rooms List
 //
 var BrowserView = Backbone.View.extend({
+    events: {
+        'submit .lcb-rooms-add': 'add'
+    },
     initialize: function(options) {
+        this.client = options.client;
         this.template = Handlebars.compile($('#template-room-browser-item').html());
         this.rooms = options.rooms;
         this.rooms.on('add', function(room) {
@@ -46,6 +50,30 @@ var BrowserView = Backbone.View.extend({
     update: function(room) {
         this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
         this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+    },
+    add: function(e) {
+        e.preventDefault();
+
+        var $name = this.$('.lcb-room-name');
+        var $description = this.$('.lcb-room-description');
+        var $modal = this.$('#lcb-add-room');
+        var $form = this.$(e.target);
+        var data = {
+            name: $name.val().trim(),
+            description: $description.val(),
+            callback: function success() {
+                $modal.modal('hide');
+                $form.trigger('reset');
+            }
+        };
+
+        // we require name is non-empty
+        if (!data.name) {
+            $name.parent().addClass('has-error');
+            return;
+        }
+
+        this.client.events.trigger('rooms:create', data);
     }
 });
 
@@ -254,7 +282,8 @@ var ClientView = Backbone.View.extend({
         });
         this.browser = new BrowserView({
             el: this.$el.find('.lcb-rooms-browser'),
-            rooms: this.client.rooms
+            rooms: this.client.rooms,
+            client: this.client
         });
         this.tabs = new TabsView({
             el: this.$el.find('.lcb-tabs'),
