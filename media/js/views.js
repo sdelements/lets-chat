@@ -174,8 +174,16 @@ var RoomView = Backbone.View.extend({
         message.fragment = this.lastMessageOwner === message.owner.id;
         // Mine? Mine? Mine? Mine?
         message.own = this.client.user.id === message.owner.id;
-
-        this.$messages.append(this.messageTemplate(message));
+        // Templatin' time
+        var $html = $(this.messageTemplate(message).trim());
+        // var $text = $html.find('.text');
+        // $text.html(this.formatContent($text.html()));
+        if (message.paste) {
+            $html.find('pre').each(function(i) {
+                hljs.highlightBlock(this);
+            });
+        }
+        this.$messages.append($html);
         this.lastMessageOwner = message.owner.id;
         this.scrollMessages();
     },
