@@ -37,6 +37,10 @@ var BrowserView = Backbone.View.extend({
         this.rooms.on('add', function(room) {
             this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
         }, this);
+        this.rooms.on('change:name change:description', this.update, this);
+    },
+    update: function(room) {
+        this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] a').text(room.get('name'));
     }
 });
 
@@ -58,6 +62,7 @@ var TabsView = Backbone.View.extend({
             }
             this.remove(room.id);
         }, this);
+        this.rooms.on('change:name change:description', this.update, this);
         this.rooms.current.on('change:id', function(current, id) {
             this.switch(id);
         }, this);
@@ -69,6 +74,9 @@ var TabsView = Backbone.View.extend({
     },
     remove: function(id) {
         this.$el.find('.lcb-tab[data-id=' + id + ']').remove();
+    },
+    update: function(room) {
+        this.$el.find('.lcb-tab[data-id=' + room.id + '] .lcb-tab-title').text(room.get('name'));
     },
     switch: function(id) {
         if (!id) {
