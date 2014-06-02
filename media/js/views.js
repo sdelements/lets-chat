@@ -3,6 +3,31 @@
  *********************/
 
 //
+// Window & Notifications
+//
+var WindowView = Backbone.View.extend({
+    el: 'html',
+    initialize: function(options) {
+        this.rooms = options.rooms;
+        this.title = this.$('title').text();
+        this.rooms.current.on('change:id', function(current, id) {
+            var room = this.rooms.get(id);
+            this.updateTitle(room && room.get('name') || id == 'list' && 'Rooms');
+        }, this);
+    },
+    updateTitle: function(name) {
+        var title;
+        if (name) {
+            title = $('<pre />').text(name).html() + ' &middot; ' + this.title ;
+        } else {
+            title = this.title;
+        }
+        this.$('title').html(title);
+    }
+});
+
+ 
+//
 // Rooms List
 //
 var BrowserView = Backbone.View.extend({
@@ -173,6 +198,9 @@ var ClientView = Backbone.View.extend({
         //
         // Subviews
         //
+        this.window = new WindowView({
+            rooms: this.client.rooms
+        });
         this.browser = new BrowserView({
             el: this.$el.find('.lcb-rooms-browser'),
             rooms: this.client.rooms
