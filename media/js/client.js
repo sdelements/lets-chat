@@ -99,14 +99,14 @@
     //
     Client.prototype.addMessage = function(message) {
         var room = this.rooms.get(message.room);
-        if (!room) {
+        if (!room || !message) {
             // Unknown room, nothing to do!
             return;
         }
         room.trigger('messages:new', message);
     }
     Client.prototype.sendMessage = function(message) {
-        this.socket.emit('messages:create', message);
+        this.socket.emit('messages:create', message, _.bind(this.addMessage, this));
     }
     //
     // Router Setup

@@ -106,7 +106,7 @@ module.exports = function() {
                         req.io.respond(err, 400);
                         return;
                     }
-                    app.io.room(room._id).broadcast('rooms:update', room.toJSON());
+                    req.io.room(room._id).broadcast('rooms:update', room.toJSON());
                     req.io.respond(room.toJSON(), 200);
                 })
             });
