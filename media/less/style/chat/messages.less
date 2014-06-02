@@ -2,10 +2,12 @@
  * Messages
  *********************/
 
+ @messagePaddding: 7px; 
+ 
 .lcb-message {
     min-height: 47px;
     border-top: 1px #eee solid;
-    padding: 7.5px;
+    padding: @messagePaddding;
     font-size: 13px;
     margin: 0;
     display: block;
@@ -14,6 +16,16 @@
         min-height: 0;
         padding-top: 0;
         border-top: none;
+    }
+    &.lcb-message-own {
+        background: #fcffd8;
+    }
+    pre {
+        background: none;
+        border-width: 3px;
+        border-top: none;
+        border-bottom: none;
+        margin-bottom: 3px;
     }
 }
 
@@ -28,15 +40,15 @@
 .lcb-message-name {
     color: #aaa;
     font-weight: 900;
-    margin-bottom: 7.5px;
+    margin-bottom: @messagePaddding - 2px;
     display: block;
 }
 
 .lcb-message-time {
     color: #bbb;
     position: absolute;
-    top: 7.5px;
-    right: 7.5px;
+    top: @messagePaddding;
+    right: @messagePaddding;
 }
 
 .lcb-message-text {

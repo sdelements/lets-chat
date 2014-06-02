@@ -7464,7 +7464,7 @@ body {
 .lcb-message {
   min-height: 47px;
   border-top: 1px #eee solid;
-  padding: 7.5px;
+  padding: 7px;
   font-size: 13px;
   margin: 0;
   display: block;
@@ -7475,6 +7475,16 @@ body {
   padding-top: 0;
   border-top: none;
 }
+.lcb-message.lcb-message-own {
+  background: #fcffd8;
+}
+.lcb-message pre {
+  background: none;
+  border-width: 3px;
+  border-top: none;
+  border-bottom: none;
+  margin-bottom: 3px;
+}
 .lcb-message-avatar {
   position: absolute;
 }
@@ -7484,14 +7494,14 @@ body {
 .lcb-message-name {
   color: #aaa;
   font-weight: 900;
-  margin-bottom: 7.5px;
+  margin-bottom: 5px;
   display: block;
 }
 .lcb-message-time {
   color: #bbb;
   position: absolute;
-  top: 7.5px;
-  right: 7.5px;
+  top: 7px;
+  right: 7px;
 }
 .lcb-message-text {
   word-wrap: break-word;

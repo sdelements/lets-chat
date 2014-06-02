@@ -3,6 +3,31 @@
  *********************/
 
 //
+// Window & Notifications
+//
+var WindowView = Backbone.View.extend({
+    el: 'html',
+    initialize: function(options) {
+        this.rooms = options.rooms;
+        this.title = this.$('title').text();
+        this.rooms.current.on('change:id', function(current, id) {
+            var room = this.rooms.get(id);
+            this.updateTitle(room && room.get('name') || id == 'list' && 'Rooms');
+        }, this);
+    },
+    updateTitle: function(name) {
+        var title;
+        if (name) {
+            title = $('<pre />').text(name).html() + ' &middot; ' + this.title ;
+        } else {
+            title = this.title;
+        }
+        this.$('title').html(title);
+    }
+});
+
+ 
+//
 // Rooms List
 //
 var BrowserView = Backbone.View.extend({
@@ -118,6 +143,7 @@ var RoomView = Backbone.View.extend({
         'keypress .lcb-entry-input': 'sendMessage'
     },
     initialize: function(options) {
+        this.client = options.client;
         this.template = options.template;
         this.messageTemplate = Handlebars.compile($('#template-message').html());
         this.render();
@@ -135,14 +161,30 @@ var RoomView = Backbone.View.extend({
         e.preventDefault();
         var $textarea = this.$('.lcb-entry-input');
         if (!$textarea.val()) return;
-        client.events.trigger('messages:send', {
+        this.client.events.trigger('messages:send', {
             room: this.model.id,
             text: $textarea.val()
         });
         $textarea.val('');
     },
     addMessage: function(message) {
-        this.$messages.append(this.messageTemplate(message));
+        // Smells like pasta
+        message.paste = /\n/i.test(message.text);
+        // Fragment or new message?
+        message.fragment = this.lastMessageOwner === message.owner.id;
+        // Mine? Mine? Mine? Mine?
+        message.own = this.client.user.id === message.owner.id;
+        // Templatin' time
+        var $html = $(this.messageTemplate(message).trim());
+        // var $text = $html.find('.text');
+        // $text.html(this.formatContent($text.html()));
+        if (message.paste) {
+            $html.find('pre').each(function(i) {
+                hljs.highlightBlock(this);
+            });
+        }
+        this.$messages.append($html);
+        this.lastMessageOwner = message.owner.id;
         this.scrollMessages();
     },
     updateScrollLock: function() {
@@ -173,6 +215,9 @@ var ClientView = Backbone.View.extend({
         //
         // Subviews
         //
+        this.window = new WindowView({
+            rooms: this.client.rooms
+        });
         this.browser = new BrowserView({
             el: this.$el.find('.lcb-rooms-browser'),
             rooms: this.client.rooms
