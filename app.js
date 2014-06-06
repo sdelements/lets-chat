@@ -3,7 +3,6 @@
 //
 
 var _ = require('underscore'),
-    async = require('async'),
     express = require('express.io'),
     expressMiddleware = require('express.io-middleware'),
     nunjucks = require('nunjucks'),
