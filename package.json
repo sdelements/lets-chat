@@ -4,12 +4,15 @@
   "description": "A chat app for small teams.",
   "private": true,
   "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "engine": {
     "node": ">=0.8"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/hhaidar/IWANTPIZZA.git"
+    "url": "git://github.com/sdelements/lets-chat.git"
   },
   "author": "Houssam Haidar <houssam@sdelements.com>",
   "contributors": [
@@ -31,24 +34,23 @@
   },
   "homepage": "https://github.com/sdelements/lets-chat",
   "dependencies": {
-    "async": "~0.8.0",
     "express.io": "~1.1.13",
-    "underscore": "~1.6.0",
-    "swig": "~1.3.2",
-    "connect-mongo": "~0.4.1",
-    "mongoose": "~3.8.12",
+    "express.io-middleware": "~0.9.1",
     "nunjucks": "~1.0.5",
     "require-directory": "~1.2.0",
+    "connect-mongo": "~0.4.1",
+    "mongoose": "~3.8.12",
     "mongoose-unique-validator": "~0.3.0",
     "mongoose-validate": "0.0.5",
+    "underscore": "~1.6.0",
     "bcryptjs": "~0.7.12",
-    "express.io-middleware": "~0.9.1",
     "MD5": "~1.2.1"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-bower-task": "~0.3.4",
-    "grunt-contrib-less": "~0.11.0"
+    "grunt-contrib-less": "~0.11.1",
+    "grunt-bower": "~0.13.4"
   }
 }
