@@ -101,6 +101,12 @@
         this.socket.emit('rooms:join', id, function(resRoom) {
             var room = that.rooms.add(resRoom);
             room.set('joined', true);
+            // Get room history
+            that.getMessages({
+                room: room.id,
+                limit: 480
+            }, _.bind(that.addMessages, that))
+            // Do we want to switch?
             if (switchRoom) {
                 that.rooms.current.set('id', id);
             }
@@ -132,8 +138,16 @@
         }
         room.trigger('messages:new', message);
     }
+    Client.prototype.addMessages = function(messages) {
+        _.each(messages, function(message) {
+            this.addMessage(message);
+        }, this);
+    }
     Client.prototype.sendMessage = function(message) {
         this.socket.emit('messages:create', message, _.bind(this.addMessage, this));
+    }
+    Client.prototype.getMessages = function(query, callback) {
+        this.socket.emit('messages:list', query, callback)
     }
     //
     // Router Setup

@@ -2,12 +2,13 @@
 // User
 //
 
+var bcrypt = require('bcryptjs'),
+    md5 = require('MD5');
+
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId,
     uniqueValidator = require('mongoose-unique-validator'),
-    validate = require('mongoose-validate'),
-    bcrypt = require('bcryptjs'),
-    md5 = require('MD5');
+    validate = require('mongoose-validate');
 
 var UserSchema = new mongoose.Schema({
     email: {
@@ -55,6 +56,17 @@ var UserSchema = new mongoose.Schema({
 		type: ObjectId,
 		ref: 'Message'
 	}]
+}, {
+    toObject: {
+        virtuals: true
+    },
+    toJSON: {
+        virtuals: true
+    }
+});
+
+UserSchema.virtual('avatar').get(function() {
+    return md5(this.email)
 });
 
 UserSchema.pre('save', function(next) {
@@ -107,15 +119,17 @@ UserSchema.plugin(uniqueValidator, {
     message: 'Expected {PATH} to be unique'
 });
 
+// EXPOSE ONLY CERTAIN FIELDS
+// It's really important that we keep
+// stuff like password private!
 UserSchema.method('toJSON', function() {
-    var user = this.toObject();
     return {
-        id: user._id,
-        firstName: user.firstName,
-        lastname: user.lastName,
-        displayName: user.displayName,
-        avatar: md5(user.email)
+        id: this._id,
+        firstName: this.firstName,
+        lastname: this.lastName,
+        displayName: this.displayName,
+        avatar: this.avatar
     }
- });
+});
 
 module.exports = mongoose.model('User', UserSchema);
