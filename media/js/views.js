@@ -281,11 +281,11 @@ var RoomView = Backbone.View.extend({
           this.$messages.scrollTop() - 5 <= this.$messages.outerHeight();
         return this.scrollLocked;
     },
-    scrollMessages: function(force) {
+    scrollMessages: _.debounce(function(force) {
         if (!force && !this.scrollLocked)
             return;
         this.$messages[0].scrollTop = this.$messages[0].scrollHeight;
-    },
+    }, 0),
     destroy: function() {
         this.undelegateEvents();
         this.$el.removeData().unbind();

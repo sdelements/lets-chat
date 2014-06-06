@@ -60,6 +60,9 @@ module.exports = function() {
                         message = _.map(err.errors, function(error) {
                             return error.message;
                         }).join(' ');
+                    // If all else fails...
+                    } else {
+                        console.error(err);
                     }
                     // Notify
                     req.io.respond({

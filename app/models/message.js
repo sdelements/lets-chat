@@ -27,15 +27,17 @@ var MessageSchema = new mongoose.Schema({
     }
 });
 
+// EXPOSE ONLY CERTAIN FIELDS
+// This helps ensure that the client gets
+// data that can be digested properly
 MessageSchema.method('toJSON', function() {
-    var message = this.toObject();
     return {
-        id: message._id,
-        room: message.room,
-        owner: message.owner,
-        text: message.text,
-        posted: message.posted
+        id: this._id,
+        room: this.room,
+        owner: this.owner,
+        text: this.text,
+        posted: this.posted
     }
- });
+});
 
 module.exports = mongoose.model('Message', MessageSchema);
