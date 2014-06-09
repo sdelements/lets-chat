@@ -65,7 +65,7 @@ _.each(controllers, function(controller) {
 
 var authorizationIO = app.io.get('authorization');
 
-app.io.set('authorization', function(data,accept) {
+app.io.set('authorization', function(data, accept) {
     authorizationIO(data, function(err, res) {
         if (err) {
             console.error('Error authorizing socket');

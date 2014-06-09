@@ -105,7 +105,10 @@
             that.getMessages({
                 room: room.id,
                 limit: 480
-            }, _.bind(that.addMessages, that))
+            }, _.bind(that.addMessages, that));
+            that.getUsers({
+                room: room.id
+            }, _.bind(that.setUsers, that));
             // Do we want to switch?
             if (switchRoom) {
                 that.rooms.current.set('id', id);
@@ -116,6 +119,7 @@
         var room = this.rooms.get(id);
         if (room) {
             room.set('joined', false);
+            room.users.reset();
         }
         this.socket.emit('rooms:leave', id);
         if (id == this.rooms.current.get('id')) {
@@ -148,6 +152,40 @@
     }
     Client.prototype.getMessages = function(query, callback) {
         this.socket.emit('messages:list', query, callback)
+    }
+    //
+    // Users
+    //
+    Client.prototype.setUsers = function(users) {
+        if (!users || !users[0].room) {
+            // Data is not valid
+            return;
+        }
+        var room = this.rooms.get(users[0].room);
+        if (!room) {
+            // No room
+            return;
+        }
+        room.users.set(users);
+    }
+    Client.prototype.addUser = function(user) {
+        var room = this.rooms.get(user.room);
+        if (!room) {
+            // No room
+            return;
+        }
+        room.users.add(user);
+    }
+    Client.prototype.removeUser = function(user) {
+        var room = this.rooms.get(user.room);
+        if (!room) {
+            // No room
+            return;
+        }
+        room.users.remove(user.id);
+    }
+    Client.prototype.getUsers = function(id, callback) {
+        this.socket.emit('users:list', id, callback)
     }
     //
     // Router Setup
@@ -192,11 +230,14 @@
         this.socket.on('rooms:create', function(data) {
             that.createRoom(data);
         });
-        this.socket.on('rooms:leave', function(id) {
-            that.leaveRoom(id);
-        });
         this.socket.on('rooms:update', function(room) {
             that.roomUpdate(room);
+        });
+        this.socket.on('users:join', function(user) {
+            that.addUser(user);
+        });
+        this.socket.on('users:leave', function(user) {
+            that.removeUser(user);
         });
         this.socket.on('disconnect', function() {
             that.status.set('connected', false);

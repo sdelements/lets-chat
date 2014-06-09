@@ -201,6 +201,38 @@ var PanesView = Backbone.View.extend({
 });
 
 //
+// Room Users
+//
+var RoomUsersView = Backbone.View.extend({
+    events: {
+        'scroll .lcb-messages': 'updateScrollLock',
+        'keypress .lcb-entry-input': 'sendMessage',
+        'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta'
+    },
+    initialize: function(options) {
+        this.template = Handlebars.compile($('#template-user').html());
+        this.collection.on('add', function(user) {
+            this.add(user.toJSON());
+        }, this);
+        this.collection.on('remove', function(user) {
+            this.remove(user.id);
+        }, this);
+        this.render();
+    },
+    render: function() {
+        this.collection.each(function(user) {
+            this.add(user.toJSON());
+        }, this);
+    },
+    add: function(user) {
+        this.$el.append(this.template(user));
+    },
+    remove: function(id) {
+        this.$el.find('.lcb-user[data-id=' + id + ']').remove();
+    }
+});
+
+//
 // Room
 //
 var RoomView = Backbone.View.extend({
@@ -216,10 +248,17 @@ var RoomView = Backbone.View.extend({
         this.render();
         this.model.on('messages:new', this.addMessage, this);
         this.model.on('change', this.updateMeta, this);
+        //
+        // Subviews
+        //
+        this.usersList = new RoomUsersView({
+            el: this.$('.lcb-users'),
+            collection: this.model.users
+        });
     },
     render: function() {
         this.$el = $(this.template(this.model.toJSON()))
-        this.$messages = this.$el.find('.lcb-messages');
+        this.$messages = this.$('.lcb-messages');
         // Scroll Locking
         this.scrollLocked = true;
         this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));

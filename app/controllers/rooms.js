@@ -58,37 +58,6 @@ module.exports = function() {
                 req.io.respond(rooms);
             });
         },
-        users: function(req) {
-            var id = req.data;
-            models.room.findById(id, function(err, room) {
-                if (err) {
-                    // Herpderp
-                    console.error(err);
-                    return;
-                }
-                if (!room) {
-                    // Invalid room!
-                    console.error('No room!');
-                    req.io.respond();
-                    return;
-                }
-                var ids = _.map(app.io.sockets.clients(id), function(client) {
-                    return client.handshake.session.userID;
-                });
-                models.user.find({
-                    _id: {
-                        $in: ids
-                    }
-                }, function(err, users) {
-                    if (err) {
-                        // Something bad happened
-                        console.log(err);
-                        return;
-                    }
-                    req.io.respond(users);
-                });
-            })
-        },
         update: function(req) {
             var id = req.data.id,
                 name = req.data.name,
@@ -132,14 +101,39 @@ module.exports = function() {
                     req.io.respond();
                     return;
                 }
+                var user = req.user.toJSON();
+                user.room = room._id;
                 req.io.join(room._id);
+                app.io.broadcast('users:join', user);
                 req.io.respond(room.toJSON());
             });
         },
         leave: function(req) {
             var id = req.data;
+            var user = req.user.toJSON();
+            user.room = id;
             req.io.leave(id);
+            app.io.broadcast('users:leave', user);
             req.io.respond();
-        },
+        }
+    });
+    app.io.sockets.on('connection', function(socket) {
+        socket.on('disconnect', function() {
+            _.each(app.io.sockets.manager.roomClients[socket.id], function(status, room) {
+                if(_.find(app.io.sockets.clients(room.replace('/', '')), function(client) {
+                    if (socket.id === client.id) return false;
+                    return socket.handshake.session.userID === client.handshake.session.userID;
+                })) return;
+                models.user.findById(socket.handshake.session.userID, function(err, user) {
+                    if (err || !user) {
+                        console.error(err || 'No user found!');
+                        return;
+                    }
+                    user = user.toJSON();
+                    user.room = room.replace('/', '');
+                    app.io.sockets.emit('users:leave', user);
+                });
+            });
+        });
     });
 }

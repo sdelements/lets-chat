@@ -77,14 +77,7 @@
                 </div>
                 <div class="lcb-item-list">
                     <h3 class="lcb-item-list-heading">Users</h3>
-                    <ul>
-                        <li ng-repeat="user in users">
-                            <img class="lcb-item-list-avatar" src="https://www.gravatar.com/avatar/{$ user.avatar $}?s=50" />
-                            <div class="lcb-item-list-meta">
-                                  {$ user.name $}
-                            </div>
-                        </li>
-                    </ul>
+                    <ul class="lcb-users"></ul>
                 </div>
                 <div class="lcb-room-options">
                     <a href="!#/rooms/delete/{{id}}" class="lcb-remove-room">
@@ -111,6 +104,14 @@
                         <pre>{{text}}</pre>
                     {{/unless}}
                 </div>
+            </div>
+        </li>
+    </script>
+    <script type="text/x-handlebars-template" id="template-user">
+        <li class="lcb-user" data-id="{{id}}">
+            <img class="lcb-user-avatar" src="https://www.gravatar.com/avatar/{{avatar}}?s=30" />
+            <div class="lcb-user-meta">
+                {{displayName}}
             </div>
         </li>
     </script>
