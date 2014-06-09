@@ -1,5 +1,7 @@
 # **Let's Chat**
 
+**Heads up:** All new work should be done in the release/0.3.0 branch: https://github.com/sdelements/lets-chat/pull/89
+
 A self-hosted chat app for small teams.
 
 ![Screenshot](http://i.imgur.com/djnd0Uk.png)
