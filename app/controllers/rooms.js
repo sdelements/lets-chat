@@ -113,8 +113,13 @@ module.exports = function() {
             var user = req.user.toJSON();
             user.room = id;
             req.io.leave(id);
-            app.io.broadcast('users:leave', user);
             req.io.respond();
+            if(_.find(app.io.sockets.clients(id), function(client) {
+                if (req.socket.id === client.id) return false;
+                return req.session.userID === client.handshake.session.userID;
+            })) {
+                app.io.broadcast('users:leave', user);
+            }
         }
     });
     app.io.sockets.on('connection', function(socket) {
