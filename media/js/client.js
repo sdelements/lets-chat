@@ -10,6 +10,7 @@
         this.config = config;
         this.status = new Backbone.Model;
         this.user = new UserModel;
+        this.users = new UsersCollection;
         this.rooms = new RoomsCollection;
         this.events = _.extend({}, Backbone.Events);
         return this;
@@ -23,6 +24,14 @@
             that.user.set(user);
         });
     };
+
+    Client.prototype.getUsers = function() {
+        var that = this;
+        this.socket.emit('users:list', function(users) {
+            that.users.set(users);
+        });
+    };
+
     //
     // Rooms
     //
@@ -219,9 +228,6 @@
         }
         room.users.remove(user.id);
     }
-    Client.prototype.getUsers = function(id, callback) {
-        this.socket.emit('users:list', id, callback)
-    }
     //
     // Router Setup
     //
@@ -256,6 +262,7 @@
         });
         this.socket.on('connect', function() {
             that.getUser();
+            that.getUsers();
             that.getRooms();
             that.status.set('connected', true);
         });

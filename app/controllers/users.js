@@ -24,8 +24,22 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('users', {
-        list: function(req) {
+        list: function(req, next) {
             var data = req.data || req.query;
+
+            if (!data || !data.room) {
+                models.user.find(function(err, users) {
+                    if (err) {
+                        console.log(err);
+                        next(err);
+                    }
+
+                    req.io.respond(users);
+                });
+
+                return;
+            }
+
             models.room.findById(data.room || null, function(err, room) {
                 if (err) {
                    // TODO: can you create a default error handler? We have code like
@@ -62,7 +76,7 @@ module.exports = function() {
                     });
                     req.io.respond(users);
                 });
-            })
+            });
         },
         retrieve: function(req) {
             var email = req.params.email;
@@ -76,4 +90,4 @@ module.exports = function() {
             });
         }
     });
-}
+};
