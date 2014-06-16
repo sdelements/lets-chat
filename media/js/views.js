@@ -54,7 +54,6 @@ var BrowserView = Backbone.View.extend({
     },
     add: function(e) {
         e.preventDefault();
-
         var $name = this.$('.lcb-room-name');
         var $description = this.$('.lcb-room-description');
         var $modal = this.$('#lcb-add-room');
@@ -171,6 +170,8 @@ var PanesView = Backbone.View.extend({
         this.rooms.current.on('change:id', function(current, id) {
             this.switch(id);
         }, this);
+        // Initial switch since router runs before view is loaded
+        this.switch(this.rooms.current.get('id'));
     },
     switch: function(id) {
         if (!id) {

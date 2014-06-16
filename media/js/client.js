@@ -113,6 +113,19 @@
             if (switchRoom) {
                 that.rooms.current.set('id', id);
             }
+            //
+            // Add room id to localstorage so we can reopen it on refresh
+            //
+            var openRooms = store.get('openrooms');
+            if (openRooms instanceof Array) {
+                // Check for duplicates
+                if (!_.contains(openRooms, id)) {
+                    openRooms.push(id);
+                }
+                store.set('openrooms', openRooms);
+            } else {
+                store.set('openrooms', [id]);
+            }
         });
     }
     Client.prototype.leaveRoom = function(id) {
@@ -130,6 +143,10 @@
                 replace: true
             });
         }
+        //
+        // Remove room id from localstorage
+        //
+        store.set('openrooms', _.without(store.get('openrooms'), id));
     }
     //
     // Messages
@@ -259,6 +276,18 @@
         this.view = new ClientView({
             client: this
         });
+        //
+        // Join rooms from localstorage
+        //
+        var openRooms = store.get('openrooms');
+        if (openRooms instanceof Array) {
+            // Flush the stored array
+            store.set('openrooms', [])
+            // Let's open some rooms!
+            _.each(_.uniq(openRooms), function(id) {
+                this.joinRoom(id);
+            }, this);
+        }
         return this;
     }
     //
