@@ -192,8 +192,9 @@ var PanesView = Backbone.View.extend({
         if (!id) {
             id = 'list';
         }
-        this.$el.find('.lcb-pane[data-id=' + id + ']').show()
-            .siblings().hide();
+        var $pane = this.$el.find('.lcb-pane[data-id=' + id + ']');
+        $pane.show().siblings().hide();
+        $pane.find('.lcb-entry-input').focus();
         this.views[id] && this.views[id].scrollMessages(true);
     },
     add: function(room) {
