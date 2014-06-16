@@ -3,6 +3,7 @@
 //
 
 +function(window, $, _) {
+
     //
     // Base
     //
@@ -15,6 +16,7 @@
         this.events = _.extend({}, Backbone.Events);
         return this;
     };
+
     //
     // Account
     //
@@ -22,13 +24,6 @@
         var that = this;
         this.socket.emit('account:whoami', function(user) {
             that.user.set(user);
-        });
-    };
-
-    Client.prototype.getUsers = function() {
-        var that = this;
-        this.socket.emit('users:list', function(users) {
-            that.users.set(users);
         });
     };
 
@@ -66,14 +61,6 @@
         this.socket.emit('rooms:list', function(rooms) {
             that.rooms.set(rooms);
         });
-    };
-    Client.prototype.getRoomUsers = function(id) {
-        var room = this.rooms.get(id);
-        if (room) {
-            this.socket.emit('rooms:users', id, function(users) {
-                room.users.set(users);
-            });
-        }
     };
     Client.prototype.switchRoom = function(id) {
         // Make sure we have a last known room ID
@@ -228,6 +215,18 @@
         }
         room.users.remove(user.id);
     }
+    Client.prototype.getUsers = function(id, callback) {
+        var that = this;
+        if (!id) {
+            this.socket.emit('users:list', function(users) {
+                that.users.set(users);
+                callback && callback(users);
+            });
+            return;
+        }
+        this.socket.emit('users:list', id, callback);
+    };
+
     //
     // Router Setup
     //
