@@ -175,6 +175,7 @@
     }
     Client.prototype.addMessages = function(messages) {
         _.each(messages, function(message) {
+            message.historical = true;
             this.addMessage(message);
         }, this);
     }

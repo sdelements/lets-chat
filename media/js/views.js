@@ -101,6 +101,7 @@ var TabsView = Backbone.View.extend({
         // Current room switching
         this.rooms.current.on('change:id', function(current, id) {
             this.switch(id);
+            this.clearAlerts(id);
         }, this);
         // Alerts
         this.rooms.on('messages:new', this.alert, this);
@@ -139,8 +140,8 @@ var TabsView = Backbone.View.extend({
         var $tab = this.$('.lcb-tab[data-id=' + message.room + ']'),
             $total = $tab.find('.lcb-tab-alerts-total'),
             $mentions = $tab.find('.lcb-tab-alerts-mentions');
-        if ($tab.length === 0) {
-            // Whoa how did this happen
+        if (message.historical || this.rooms.current.get('id') === message.room || $tab.length === 0) {
+            // Nothing to do here!
             return;
         }
         var total = parseInt($tab.data('count-total')) || 0,
@@ -154,6 +155,14 @@ var TabsView = Backbone.View.extend({
             $tab.data('count-mentions', ++mentions);
             $mentions.text(mentions);
         }
+    },
+    clearAlerts: function(id) {
+        var $tab = this.$('.lcb-tab[data-id=' + id + ']'),
+            $total = $tab.find('.lcb-tab-alerts-total'),
+            $mentions = $tab.find('.lcb-tab-alerts-mentions');
+        $tab.data('count-total', 0).data('count-mentions', 0);
+        $total.text('');
+        $mentions.text('');
     }
 });
 
