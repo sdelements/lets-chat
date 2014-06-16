@@ -1,6 +1,8 @@
 /*********************
  * Let's Chat Views
  *********************/
+ 
+'use strict';
 
 //
 // Window & Notifications
@@ -204,11 +206,6 @@ var PanesView = Backbone.View.extend({
 // Room Users
 //
 var RoomUsersView = Backbone.View.extend({
-    events: {
-        'scroll .lcb-messages': 'updateScrollLock',
-        'keypress .lcb-entry-input': 'sendMessage',
-        'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta'
-    },
     initialize: function(options) {
         this.template = Handlebars.compile($('#template-user').html());
         this.collection.on('add', function(user) {
@@ -304,16 +301,20 @@ var RoomView = Backbone.View.extend({
         message.own = this.client.user.id === message.owner.id;
         // Templatin' time
         var $html = $(this.messageTemplate(message).trim());
-        // var $text = $html.find('.text');
-        // $text.html(this.formatContent($text.html()));
+        var $text = $html.find('.lcb-message-text');
         if (message.paste) {
             $html.find('pre').each(function(i) {
                 hljs.highlightBlock(this);
             });
+        } else {
+            $text.html(this.formatMessage($text.html()));
         }
         this.$messages.append($html);
         this.lastMessageOwner = message.owner.id;
         this.scrollMessages();
+    },
+    formatMessage: function(text) {
+        return window.utils.message.format(text, this.plugins);
     },
     updateScrollLock: function() {
         this.scrollLocked = this.$messages[0].scrollHeight -
