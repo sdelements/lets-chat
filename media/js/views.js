@@ -10,10 +10,12 @@
 var WindowView = Backbone.View.extend({
     el: 'html',
     initialize: function(options) {
+        this.client = options.client;
         this.rooms = options.rooms;
         this.originalTitle = this.$('title').text();
         this.focus = true;
         this.count = 0;
+        this.mentions = 0;
         this.rooms.current.on('change:id', function(current, id) {
             var room = this.rooms.get(id);
             this.updateTitle(room && room.get('name') || id == 'list' && 'Rooms');
@@ -23,7 +25,7 @@ var WindowView = Backbone.View.extend({
             this.updateTitle(room.get('name'));
         }, this);
         this.rooms.on('messages:new', this.countMessage, this);
-        $(window).bind('focus blur', _.bind(this.focusBlur, this));
+        $(window).on('focus blur', _.bind(this.focusBlur, this));
     },
     updateTitle: function(name) {
         if (name) {
@@ -34,12 +36,18 @@ var WindowView = Backbone.View.extend({
         this.$('title').html(this.title);
     },
     flashTitle: function() {
-        this.$('title').html(this.titleTimerFlip ? this.title : '(' + parseInt(this.count) + ') ' + this.title);
+        var title = '(' + parseInt(this.count);
+        this.mentions > 0 && (title += '/' + parseInt(this.mentions) + '@');
+        title += ') ';
+        this.$('title').html(this.titleTimerFlip ? this.title : title + this.title);
         this.titleTimerFlip = !this.titleTimerFlip;
     },
     countMessage: function(message) {
-        if (this.focus) return;
+        if (this.focus || message.historical) return;
         ++this.count;
+        if (new RegExp('\\B@(' + this.client.user.get('safeName') + ')(?!@)\\b', 'i').test(message.text)) {
+            ++this.mentions;
+        }
         if (!this.titleTimer) {
             this.flashTitle();
             this.titleTimer = setInterval(_.bind(this.flashTitle, this), 1 * 1000);
@@ -49,6 +57,7 @@ var WindowView = Backbone.View.extend({
         if (e.type === 'focus') {
             clearInterval(this.titleTimer);
             this.count = 0;
+            this.mentions = 0;
             this.focus = true;
             this.$('title').html(this.title);
             this.titleTimer = false;
@@ -390,9 +399,6 @@ var ClientView = Backbone.View.extend({
         //
         // Subviews
         //
-        this.window = new WindowView({
-            rooms: this.client.rooms
-        });
         this.browser = new BrowserView({
             el: this.$el.find('.lcb-rooms-browser'),
             rooms: this.client.rooms,
@@ -405,6 +411,10 @@ var ClientView = Backbone.View.extend({
         });
         this.panes = new PanesView({
             el: this.$el.find('.lcb-panes'),
+            rooms: this.client.rooms,
+            client: this.client
+        });
+        this.window = new WindowView({
             rooms: this.client.rooms,
             client: this.client
         });

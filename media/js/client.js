@@ -113,7 +113,10 @@
                 room: room.id,
                 limit: 480,
                 from: room.lastMessage.get('id')
-            }, _.bind(that.addMessages, that));
+            }, function(messages) {
+                that.addMessages(messages, !room.get('loaded'));
+                room.set('loaded', true);
+            });
             // Get room users
             that.getUsers({
                 room: room.id
@@ -173,9 +176,9 @@
         room.lastMessage.set(message);
         room.trigger('messages:new', message);
     }
-    Client.prototype.addMessages = function(messages) {
+    Client.prototype.addMessages = function(messages, historical) {
         _.each(messages, function(message) {
-            message.historical = true;
+            historical && (message.historical = true);
             this.addMessage(message);
         }, this);
     }
