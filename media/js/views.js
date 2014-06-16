@@ -11,7 +11,9 @@ var WindowView = Backbone.View.extend({
     el: 'html',
     initialize: function(options) {
         this.rooms = options.rooms;
-        this.title = this.$('title').text();
+        this.originalTitle = this.$('title').text();
+        this.focus = true;
+        this.count = 0;
         this.rooms.current.on('change:id', function(current, id) {
             var room = this.rooms.get(id);
             this.updateTitle(room && room.get('name') || id == 'list' && 'Rooms');
@@ -19,16 +21,41 @@ var WindowView = Backbone.View.extend({
         this.rooms.on('change:name', function(room) {
             if (room.id !== this.rooms.current.get('id')) return;
             this.updateTitle(room.get('name'));
-        }, this)
+        }, this);
+        this.rooms.on('messages:new', this.countMessage, this);
+        $(window).bind('focus blur', _.bind(this.focusBlur, this));
     },
     updateTitle: function(name) {
-        var title;
         if (name) {
-            title = $('<pre />').text(name).html() + ' &middot; ' + this.title ;
+            this.title = $('<pre />').text(name).html() + ' &middot; ' + this.originalTitle;
         } else {
-            title = this.title;
+            this.title = this.originalTitle;
         }
-        this.$('title').html(title);
+        this.$('title').html(this.title);
+    },
+    flashTitle: function() {
+        this.$('title').html(this.titleTimerFlip ? this.title : '(' + parseInt(this.count) + ') ' + this.title);
+        this.titleTimerFlip = !this.titleTimerFlip;
+    },
+    countMessage: function(message) {
+        if (this.focus) return;
+        ++this.count;
+        if (!this.titleTimer) {
+            this.flashTitle();
+            this.titleTimer = setInterval(_.bind(this.flashTitle, this), 1 * 1000);
+        }
+    },
+    focusBlur: function(e) {
+        if (e.type === 'focus') {
+            clearInterval(this.titleTimer);
+            this.count = 0;
+            this.focus = true;
+            this.$('title').html(this.title);
+            this.titleTimer = false;
+            this.titleTimerFlip = false;
+            return;
+        }
+        this.focus = false;
     }
 });
 
