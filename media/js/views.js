@@ -106,6 +106,13 @@ var TabsView = Backbone.View.extend({
         this.rooms.on('messages:new', this.alert, this);
         // Initial switch since router runs before view is loaded
         this.switch(this.rooms.current.get('id'));
+        this.render();
+    },
+    render: function() {
+        new Sortable(this.$el[0], {
+            draggable: '.lcb-tab-room',
+            ghostClass: 'lcb-tab-ghost'
+        });
     },
     add: function(room) {
         this.$el.append(this.template(room));
