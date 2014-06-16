@@ -35,6 +35,7 @@ var RoomModel = Backbone.Model.extend({
         this.messages = new MessagesCollection();
         this.users = new UsersCollection();
         this.files = new FilesCollection();
+        this.lastMessage = new Backbone.Model;
     }
 });
 

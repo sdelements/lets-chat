@@ -46,12 +46,12 @@ module.exports = function() {
         },
         list: function(req) {
             var data = req.data || req.query;
-            models.message
-                .find({
-                    room: data.room || null
-                })
-                // This is why the terrorists hate us
-                .populate('owner', 'id displayName email avatar')
+            var find = models.message.find({
+                room: data.room || null
+            });
+            data.from && find.where('_id').gt(data.from);
+            // This is why the terrorists hate us
+            find.populate('owner', 'id displayName email avatar')
                 .limit(data.limit || 500)
                 .sort({ 'posted': -1 })
                 .exec(function(err, messages) {

@@ -94,24 +94,33 @@
     }
     Client.prototype.joinRoom = function(id, switchRoom) {
         var that = this;
-        if (!id) {
+        // We need an id and unlocked joining
+        if (!id || _.contains(this.joining, id)) {
             // Nothing to do
             return;
         }
+        //
+        // Setup joining lock
+        //
+        this.joining = this.joining || [];
+        this.joining.push(id);
         this.socket.emit('rooms:join', id, function(resRoom) {
-            var room = that.rooms.add(resRoom);
+            var room = that.rooms.get(id);
+            room = that.rooms.add(resRoom);
             room.set('joined', true);
             // Get room history
             that.getMessages({
                 room: room.id,
-                limit: 480
+                limit: 480,
+                from: room.lastMessage.get('id')
             }, _.bind(that.addMessages, that));
+            // Get room users
             that.getUsers({
                 room: room.id
             }, _.bind(that.setUsers, that));
             // Do we want to switch?
             if (switchRoom) {
-                that.rooms.current.set('id', id);
+                that.switchRoom(id);
             }
             //
             // Add room id to localstorage so we can reopen it on refresh
@@ -126,6 +135,10 @@
             } else {
                 store.set('openrooms', [id]);
             }
+        });
+        // Remove joining lock
+        _.defer(function() {
+            that.joining = _.without(that.joining, id);
         });
     }
     Client.prototype.leaveRoom = function(id) {
@@ -157,6 +170,7 @@
             // Unknown room, nothing to do!
             return;
         }
+        room.lastMessage.set(message);
         room.trigger('messages:new', message);
     }
     Client.prototype.addMessages = function(messages) {
@@ -240,6 +254,11 @@
             that.getUser();
             that.getRooms();
             that.status.set('connected', true);
+        });
+        this.socket.on('reconnect', function() {
+            _.each(that.rooms.where({ joined: true }), function(room) {
+                that.joinRoom(room.id);
+            });
         });
         this.socket.on('messages:new', function(message) {
             that.addMessage(message);
