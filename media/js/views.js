@@ -150,7 +150,6 @@ var TabsView = Backbone.View.extend({
         $tab.data('count-total', ++total);
         $total.text(total);
         // Just mentions
-        // \B@(\w+)(?!@)\b
         if (new RegExp('\\B@(' + this.client.user.get('safeName') + ')(?!@)\\b', 'i').test(message.text)) {
             $tab.data('count-mentions', ++mentions);
             $mentions.text(mentions);
@@ -316,6 +315,8 @@ var RoomView = Backbone.View.extend({
         message.fragment = this.lastMessageOwner === message.owner.id;
         // Mine? Mine? Mine? Mine?
         message.own = this.client.user.id === message.owner.id;
+        // WHATS MY NAME
+        message.mentioned = new RegExp('\\B@(' + this.client.user.get('safeName') + ')(?!@)\\b', 'i').test(message.text)
         // Templatin' time
         var $html = $(this.messageTemplate(message).trim());
         var $text = $html.find('.lcb-message-text');

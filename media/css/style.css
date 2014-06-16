@@ -5291,6 +5291,15 @@ body {
 .lcb-message.lcb-message-own {
   background: #fcffd8;
 }
+.lcb-message.lcb-message-mentioned:before {
+  background: #f22472;
+  width: 3px;
+  height: 100%;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 .lcb-message pre {
   background: none;
   border-width: 3px;
@@ -5302,6 +5311,7 @@ body {
   height: 200px;
   overflow: hidden;
   display: inline-block;
+  margin: 0;
 }
 .lcb-message .thumbnail img {
   width: 100%;

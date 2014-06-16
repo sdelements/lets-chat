@@ -20,6 +20,15 @@
     &.lcb-message-own {
         background: #fcffd8;
     }
+    &.lcb-message-mentioned:before {
+        background: #f22472;
+        width: 3px;
+        height: 100%;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
     pre {
         background: none;
         border-width: 3px;
@@ -31,6 +40,7 @@
         height: 200px;
         overflow: hidden;
         display: inline-block;
+        margin: 0;
         img {
             .square(100%);
             object-fit: cover;
