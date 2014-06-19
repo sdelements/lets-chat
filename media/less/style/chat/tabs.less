@@ -4,8 +4,7 @@
 
 .lcb-tabs {
     background: purple;
-    padding: 0;
-    margin: 11px 0 0 25px;
+    padding: 11px 0 0 25px;
     overflow: hidden;
     .flex-display;
 }
@@ -20,8 +19,9 @@
     border: 1px #444 solid;
     border-bottom: none;
     display: block;
-    .flex(1);
+    position: relative;
     border-radius: 4px 4px 0 0;
+    .flex(1);
     .opacity(0.6);
     &.lcb-tab-home {
         text-align: center;
@@ -50,7 +50,7 @@
 }
 
 .lcb-tab-title {
-    padding-right: 70px;
+    padding-right: 22px;
     display: block;
     .text-overflow;
 }
@@ -63,8 +63,8 @@
     line-height: 100%;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     position: absolute;
-    top: 7px;
-    right: 25px;
+    top: -7px;
+    right: 12px;
     border-radius: 3px;
     overflow: hidden;
 }

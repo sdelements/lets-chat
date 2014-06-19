@@ -5048,8 +5048,7 @@ body {
  *********************/
 .lcb-tabs {
   background: purple;
-  padding: 0;
-  margin: 11px 0 0 25px;
+  padding: 11px 0 0 25px;
   overflow: hidden;
   display: -webkit-flex;
   display: -moz-flex;
@@ -5067,11 +5066,12 @@ body {
   border: 1px #444 solid;
   border-bottom: none;
   display: block;
+  position: relative;
+  border-radius: 4px 4px 0 0;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  border-radius: 4px 4px 0 0;
   opacity: 0.6;
   filter: alpha(opacity=60);
 }
@@ -5106,7 +5106,7 @@ body {
   position: relative;
 }
 .lcb-tab-title {
-  padding-right: 70px;
+  padding-right: 22px;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -5120,8 +5120,8 @@ body {
   line-height: 100%;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   position: absolute;
-  top: 7px;
-  right: 25px;
+  top: -7px;
+  right: 12px;
   border-radius: 3px;
   overflow: hidden;
 }
