@@ -40,10 +40,7 @@
         this.socket.emit('rooms:create', room, function(room) {
             if (room && room.id) {
                 that.rooms.add(room);
-                that.router.navigate('!/room/' + room.id, {
-                    trigger: true,
-                    replace: true
-                });
+                that.switchRoom(room.id);
             }
             callback && callback(room);
         });
@@ -67,11 +64,17 @@
         this.rooms.last.set('id', this.rooms.current.get('id'));
         if (!id || id == 'list') {
             this.rooms.current.set('id', 'list');
+            this.router.navigate('!/', {
+                replace: true
+            });
             return;
         }
         var room = this.rooms.get(id);
         if (room && room.get('joined')) {
             this.rooms.current.set('id', id);
+            this.router.navigate('!/room/' + room.id, {
+                replace: true
+            });
             return;
         } else {
             this.joinRoom(id, true);
@@ -149,15 +152,9 @@
         this.socket.emit('rooms:leave', id);
         if (id == this.rooms.current.get('id')) {
             var room = this.rooms.get(this.rooms.last.get('id'));
-            var uri = room && room.get('joined') == true ? '!/room/' + room.id : '!/';
-            this.router.navigate(uri, {
-                trigger: true,
-                replace: true
-            });
+            this.switchRoom(room && room.get('joined') ? room.id : '');
         }
-        //
         // Remove room id from localstorage
-        //
         store.set('openrooms', _.without(store.get('openrooms'), id));
     }
     //
@@ -294,7 +291,8 @@
         this.events.on('messages:send', this.sendMessage, this);
         this.events.on('rooms:update', this.updateRoom, this);
         this.events.on('rooms:leave', this.leaveRoom, this);
-        this.events.on('rooms:create', this.createRoom, this)
+        this.events.on('rooms:create', this.createRoom, this);
+        this.events.on('rooms:switch', this.switchRoom, this);
     }
     //
     // Start

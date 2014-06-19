@@ -9,6 +9,10 @@
 //
 var WindowView = Backbone.View.extend({
     el: 'html',
+    keys: {
+        'left+shift+alt right+shift+alt': 'nextRoom',
+        'down+shift+alt up+shift+alt': 'recallRoom'
+    },
     initialize: function(options) {
         this.client = options.client;
         this.rooms = options.rooms;
@@ -26,6 +30,16 @@ var WindowView = Backbone.View.extend({
         }, this);
         this.rooms.on('messages:new', this.countMessage, this);
         $(window).on('focus blur', _.bind(this.focusBlur, this));
+    },
+    nextRoom: function(e) {
+        var method = e.keyCode === 39 ? 'next' : 'prev',
+            selector = e.keyCode === 39 ? 'first' : 'last',
+            $next = this.$('.lcb-tabs').find('[data-id].selected')[method]();
+        !$next.length > 0 && ($next = this.$('.lcb-tabs').find('[data-id]:' + selector));
+        this.client.events.trigger('rooms:switch', $next.data('id'));
+    },
+    recallRoom: function() {
+        this.client.events.trigger('rooms:switch', this.rooms.last.get('id'));
     },
     updateTitle: function(name) {
         if (name) {
