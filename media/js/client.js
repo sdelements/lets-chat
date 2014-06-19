@@ -64,14 +64,17 @@
         this.rooms.last.set('id', this.rooms.current.get('id'));
         if (!id || id == 'list') {
             this.rooms.current.set('id', 'list');
+            this.router.navigate('!/', {
+                replace: true
+            });
             return;
         }
         var room = this.rooms.get(id);
         if (room && room.get('joined')) {
+            this.rooms.current.set('id', id);
             this.router.navigate('!/room/' + room.id, {
                 replace: true
             });
-            this.rooms.current.set('id', id);
             return;
         } else {
             this.joinRoom(id, true);
@@ -149,7 +152,7 @@
         this.socket.emit('rooms:leave', id);
         if (id == this.rooms.current.get('id')) {
             var room = this.rooms.get(this.rooms.last.get('id'));
-            this.switchRoom(room && room.id);
+            this.switchRoom(room && room.get('joined') ? room.id : '');
         }
         // Remove room id from localstorage
         store.set('openrooms', _.without(store.get('openrooms'), id));
