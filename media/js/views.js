@@ -17,6 +17,7 @@ var WindowView = Backbone.View.extend({
         this.client = options.client;
         this.rooms = options.rooms;
         this.originalTitle = this.$('title').text();
+        this.title = this.originalTitle;
         this.focus = true;
         this.count = 0;
         this.mentions = 0;
