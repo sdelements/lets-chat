@@ -33,7 +33,7 @@ module.exports = function(grunt) {
             },
         },
     });
-    grunt.task.registerTask('default', ['bower', 'less']);
+    grunt.task.registerTask('default', ['watch']);
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
