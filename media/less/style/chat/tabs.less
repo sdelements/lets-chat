@@ -9,7 +9,7 @@
 }
 
 .lcb-tab {
-    background: #222;
+    background: #222 url('../img/dark-noise.png');
     max-width: 240px;
     height: 31px;
     line-height: 31px;
@@ -24,6 +24,7 @@
     border-radius: 2px 2px 0 0;
     .flex(1);
     .opacity(0.4);
+    .transition(opacity .07s linear);
     &.lcb-tab-home {
         text-align: center;
         .flex(45px 0);
@@ -35,7 +36,7 @@
         .opacity(1);
     }
     &.selected {
-        height: 32px;
+        height: 33px;
         .opacity(1);
         .box-shadow(0 0 8px rgba(0,0,0,.5));
     }

@@ -4506,7 +4506,7 @@ body {
   display: flex;
 }
 .lcb-tab {
-  background: #222;
+  background: #222222 url('../img/dark-noise.png');
   max-width: 240px;
   height: 31px;
   line-height: 31px;
@@ -4525,6 +4525,9 @@ body {
   flex: 1;
   opacity: 0.4;
   filter: alpha(opacity=40);
+  -webkit-transition: opacity 0.07s linear;
+  -o-transition: opacity 0.07s linear;
+  transition: opacity 0.07s linear;
 }
 .lcb-tab.lcb-tab-home {
   text-align: center;
@@ -4541,7 +4544,7 @@ body {
   filter: alpha(opacity=100);
 }
 .lcb-tab.selected {
-  height: 32px;
+  height: 33px;
   opacity: 1;
   filter: alpha(opacity=100);
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
@@ -4639,8 +4642,8 @@ body {
  * Rooms
  *********************/
 .lcb-panes {
-  background: #222;
-  border-top: 1px #444 solid;
+  background: #222222 url('../img/dark-noise.png');
+  border-top: 1px #111 solid;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
@@ -4650,6 +4653,9 @@ body {
   display: -ms-flexbox;
   display: -ms-flex;
   display: flex;
+}
+.lcb-pane {
+  border-top: 1px #444 solid;
 }
 .lcb-room {
   -webkit-flex: 1;
