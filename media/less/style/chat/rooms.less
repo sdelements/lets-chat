@@ -15,17 +15,25 @@
 }
 
 .lcb-room-sidebar {
-    background: maroon;
     width: 20%;
     min-width: 150px;
     max-width: 230px;
+    color: #f2f2f2;
     padding: 10px;
     margin: 10px;
     margin-left: 0;
 }
 
+.lcb-room-description {
+    margin-top: 10px;
+    color: #efefef;
+}
+
+.lcb-room-heading {
+    margin: 0;
+}
+
 .lcb-room-chat {
-    background: teal;
     margin: 10px;
     .flex(1);
     .flex-display;
@@ -37,6 +45,7 @@
     padding: 0;
     margin: 0;
     overflow-y: auto;
+    border-radius: 2px 2px 0 0;
     .flex(1);
 }
 
@@ -49,6 +58,7 @@
     padding: 15px;
     border: none;
     border-top: 1px #eee solid;
+    border-radius: 0 0 0 2px;
     .flex(1);
     &:focus {
         outline: none;
@@ -59,4 +69,5 @@
     padding-left: 20px;
     padding-right: 20px;
     border-radius: 0;
+    border-radius: 0 0 2px 0;
 }

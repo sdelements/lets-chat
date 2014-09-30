@@ -4317,6 +4317,12 @@ html,
 body {
   height: 100%;
 }
+[contenteditable]:empty::before {
+  content: attr(placeholder);
+  color: inherit;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
 .form-control {
   height: auto;
   font-size: 14px;
@@ -4507,7 +4513,7 @@ body {
   font-size: 14px;
   padding: 0;
   margin: 0;
-  margin-right: 2px;
+  margin-right: 3px;
   border: 1px #444 solid;
   border-bottom: none;
   display: block;
@@ -4657,16 +4663,22 @@ body {
   display: flex;
 }
 .lcb-room-sidebar {
-  background: maroon;
   width: 20%;
   min-width: 150px;
   max-width: 230px;
+  color: #f2f2f2;
   padding: 10px;
   margin: 10px;
   margin-left: 0;
 }
+.lcb-room-description {
+  margin-top: 10px;
+  color: #efefef;
+}
+.lcb-room-heading {
+  margin: 0;
+}
 .lcb-room-chat {
-  background: teal;
   margin: 10px;
   -webkit-flex: 1;
   -moz-flex: 1;
@@ -4687,6 +4699,7 @@ body {
   padding: 0;
   margin: 0;
   overflow-y: auto;
+  border-radius: 2px 2px 0 0;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
@@ -4704,6 +4717,7 @@ body {
   padding: 15px;
   border: none;
   border-top: 1px #eee solid;
+  border-radius: 0 0 0 2px;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
@@ -4716,6 +4730,7 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   border-radius: 0;
+  border-radius: 0 0 2px 0;
 }
 /*********************
  * Messages
