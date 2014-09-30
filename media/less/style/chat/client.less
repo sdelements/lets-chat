@@ -13,17 +13,40 @@
 }
 
 .lcb-header {
-    background: green;
+    background: #222 url('../img/header.png') repeat-x center center;
     height: 42px;
     position: relative;
 }
 
 .lcb-account-button {
-    background: red;
+    max-width: 140px;
+    height: 42px;
+    line-height: 42px;
+    color: #bbb;
+    padding: 0 6px;
+    border-left: 1px #111 solid;
     position: absolute;
     top: 0;
     right: 0;
+    .user-select(none);
+    &:before {
+        background: #444;
+        height: 100%;
+        width: 1px;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    &:hover {
+        color: #fff;
+        cursor: pointer;
+    }
+    &:active {
+        background: #222;
+    }
     img {
-        max-height: 100%;
+        .square(32px);
+        margin-right: 5px;
     }
 }

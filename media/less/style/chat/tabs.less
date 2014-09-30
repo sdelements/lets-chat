@@ -3,8 +3,7 @@
  *********************/
 
 .lcb-tabs {
-    background: purple;
-    padding: 11px 0 0 25px;
+    padding: 11px 140px 0 20px;
     overflow: hidden;
     .flex-display;
 }
@@ -12,17 +11,19 @@
 .lcb-tab {
     background: #222;
     max-width: 240px;
+    height: 31px;
+    line-height: 31px;
     font-size: 14px;
     padding: 0;
     margin: 0;
-    margin-right: 3px;
+    margin-right: 2px;
     border: 1px #444 solid;
     border-bottom: none;
     display: block;
     position: relative;
-    border-radius: 4px 4px 0 0;
+    border-radius: 2px 2px 0 0;
     .flex(1);
-    .opacity(0.6);
+    .opacity(0.4);
     &.lcb-tab-home {
         text-align: center;
         .flex(45px 0);
@@ -34,8 +35,9 @@
         .opacity(1);
     }
     &.selected {
+        height: 32px;
         .opacity(1);
-        .box-shadow(0 0 5px #222);
+        .box-shadow(0 0 8px rgba(0,0,0,.5));
     }
     a {
         height: 30px;
@@ -88,9 +90,9 @@
 
 .lcb-tab-close {
     font-size: 20px;
-    color: #aaa;
+    color: #ccc;
     position: absolute;
-    top: -2px;
+    top: 0;
     right: 7px;
     .opacity(0.4);
     &:hover {

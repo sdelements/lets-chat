@@ -4447,25 +4447,51 @@ body {
   flex-direction: column;
 }
 .lcb-header {
-  background: green;
+  background: #222222 url('../img/header.png') repeat-x center center;
   height: 42px;
   position: relative;
 }
 .lcb-account-button {
-  background: red;
+  max-width: 140px;
+  height: 42px;
+  line-height: 42px;
+  color: #bbb;
+  padding: 0 6px;
+  border-left: 1px #111 solid;
   position: absolute;
   top: 0;
   right: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.lcb-account-button:before {
+  background: #444;
+  height: 100%;
+  width: 1px;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.lcb-account-button:hover {
+  color: #fff;
+  cursor: pointer;
+}
+.lcb-account-button:active {
+  background: #222;
 }
 .lcb-account-button img {
-  max-height: 100%;
+  width: 32px;
+  height: 32px;
+  margin-right: 5px;
 }
 /*********************
  * Tabs
  *********************/
 .lcb-tabs {
-  background: purple;
-  padding: 11px 0 0 25px;
+  padding: 11px 140px 0 20px;
   overflow: hidden;
   display: -webkit-flex;
   display: -moz-flex;
@@ -4476,21 +4502,23 @@ body {
 .lcb-tab {
   background: #222;
   max-width: 240px;
+  height: 31px;
+  line-height: 31px;
   font-size: 14px;
   padding: 0;
   margin: 0;
-  margin-right: 3px;
+  margin-right: 2px;
   border: 1px #444 solid;
   border-bottom: none;
   display: block;
   position: relative;
-  border-radius: 4px 4px 0 0;
+  border-radius: 2px 2px 0 0;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  opacity: 0.6;
-  filter: alpha(opacity=60);
+  opacity: 0.4;
+  filter: alpha(opacity=40);
 }
 .lcb-tab.lcb-tab-home {
   text-align: center;
@@ -4507,10 +4535,11 @@ body {
   filter: alpha(opacity=100);
 }
 .lcb-tab.selected {
+  height: 32px;
   opacity: 1;
   filter: alpha(opacity=100);
-  -webkit-box-shadow: 0 0 5px #222222;
-  box-shadow: 0 0 5px #222222;
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 .lcb-tab a {
   height: 30px;
@@ -4559,9 +4588,9 @@ body {
 }
 .lcb-tab-close {
   font-size: 20px;
-  color: #aaa;
+  color: #ccc;
   position: absolute;
-  top: -2px;
+  top: 0;
   right: 7px;
   opacity: 0.4;
   filter: alpha(opacity=40);
@@ -4574,7 +4603,7 @@ body {
  * Rooms Browser
  *********************/
 .lcb-rooms-browser {
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
@@ -4604,7 +4633,8 @@ body {
  * Rooms
  *********************/
 .lcb-panes {
-  background: yellow;
+  background: #222;
+  border-top: 1px #444 solid;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
@@ -4616,7 +4646,6 @@ body {
   display: flex;
 }
 .lcb-room {
-  background: pink;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
@@ -4656,8 +4685,8 @@ body {
 .lcb-messages {
   background: #fff;
   padding: 0;
-  overflow-y: auto;
   margin: 0;
+  overflow-y: auto;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
