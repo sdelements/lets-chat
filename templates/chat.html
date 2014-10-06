@@ -33,10 +33,28 @@
                     </a>
                 </li>
             </ul>
-            <span class="lcb-account-button">
-                <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50" />
-                <span class="name">{{ account.displayName }}</span>
-                <b class="caret"></b>
+            <span class="lcb-header-actions">
+                <span class="lcb-status-indicators">
+                    <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection">
+                        <i class="fa fa-plug"></i> ERR
+                    </span>
+                    <span class="lcb-status-indicator lcb-status-connection">
+                        <i class="fa fa-refresh"></i>
+                    </span>
+                    <span class="lcb-status-indicator lcb-status-connection">
+                        <i class="fa fa-bell-slash"></i>
+                    </span>
+                </span>
+                <span class="lcb-account-button">
+                    <span class="lcb-account-button-caret">
+                        <i class="fa fa-chevron-down"></i>
+                    </span>
+                    <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50" />
+                    {#
+                        <span class="name">{{ account.displayName }}</span> 
+                        <b class="caret"></b>
+                    #}
+                </span>
             </span>
         </header>
         <section class="lcb-panes">

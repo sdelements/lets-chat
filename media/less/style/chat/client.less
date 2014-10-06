@@ -18,6 +18,13 @@
     position: relative;
 }
 
+.lcb-header-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    .flex-display;
+}
+
 .lcb-account-button {
     max-width: 140px;
     height: 42px;
@@ -25,9 +32,7 @@
     color: #bbb;
     padding: 0 6px;
     border-left: 1px #111 solid;
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: relative;
     .user-select(none);
     &:before {
         background: #444;
@@ -48,5 +53,39 @@
     img {
         .square(32px);
         margin-right: 5px;
+        &:last-child {
+            margin-right: 0;
+        }
     }
+}
+
+.lcb-account-button-caret {
+    .square(100%);
+    color: rgba(255, 255, 255, .8);
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    .transition(opacity .2s linear);
+    .opacity(0);
+    .lcb-account-button:hover & {
+        .opacity(1);
+    }
+}
+
+.lcb-status-indicators {
+    color: #e9e9e9;
+    font-size: 10px;
+    padding: 0 4px;
+    .flex-display;
+    .justify-content(center);
+    .align-items(center);
+}
+
+.lcb-status-indicator {
+    margin: 0 3px;
+}
+
+.lcb-status-indicator-error {
+    color: #ff7878;
 }
