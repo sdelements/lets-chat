@@ -50,7 +50,8 @@
     "require-tree": "~0.3.3",
     "require-directory": "~2.0.0",
     "js-yaml": "~3.2.3",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "colors": "~1.0.3"
   },
   "devDependencies": {
     "grunt-contrib-watch": "~0.6.1",

@@ -5,6 +5,7 @@
 var _ = require('lodash'),
     fs = require('fs'),
     yaml = require('js-yaml'),
+    colors = require('colors'),
     express = require('express.io'),
     expressMiddleware = require('express.io-middleware'),
     nunjucks = require('nunjucks'),
@@ -102,3 +103,5 @@ mongoose.connection.on('disconnected', function() {
 // Go Time
 //
 app.listen(settings.server.port || 5000);
+
+console.log('\n' + fs.readFileSync('./app/misc/art.txt', 'utf8') + '\n\n' + '♥ '.red + 'From Toronto us with love\n');
