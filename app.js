@@ -2,28 +2,35 @@
 // Let's Chat
 //
 
-var _ = require('underscore'),
+var _ = require('lodash'),
+    fs = require('fs'),
+    yaml = require('js-yaml'),
     express = require('express.io'),
     expressMiddleware = require('express.io-middleware'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
     MongoStore = require('connect-mongo')(express);
+    all = require('require-tree');
 
-var models = require('./app/models'),
-    middlewares = require('./app/middlewares'),
-    controllers = require('./app/controllers');
+var models = all('./app/models'),
+    middlewares = all('./app/middlewares'),
+    controllers = all('./app/controllers');
 
-var settings = require('./settings.js');
+var defaults = yaml.safeLoad(fs.readFileSync('defaults.yml', 'utf8')),
+    settings = _.merge(defaults, yaml.safeLoad(fs.readFileSync('settings.yml', 'utf8')));
 
+//
+// Express.io Setup
+//
 var app = express().http().io();
 expressMiddleware(app);
 
 // Session
 app.use(express.cookieParser());
 app.use(express.session({
-    secret: settings.cookieSecret,
+    secret: settings.secrets.cookie,
     store: new MongoStore({
-      url: settings.mongoURI,
+      url: settings.database.uri,
       auto_reconnect: true
     })
 }));
@@ -48,7 +55,6 @@ app.use(express.urlencoded());
 //
 // Controllers
 //
-
 _.each(controllers, function(controller) {
     controller.apply({
         app: app,
@@ -62,7 +68,6 @@ _.each(controllers, function(controller) {
 //
 // Sockets
 //
-
 var authorizationIO = app.io.get('authorization');
 
 app.io.set('authorization', function(data, accept) {
@@ -82,8 +87,7 @@ app.io.set('authorization', function(data, accept) {
 //
 // Mongo
 //
-
-mongoose.connect(settings.mongoURI);
+mongoose.connect(settings.database.uri);
 
 mongoose.connection.on('error', function (err) {
     if (err)
@@ -97,5 +101,4 @@ mongoose.connection.on('disconnected', function() {
 //
 // Go Time
 //
-
-app.listen(settings.port || 5000);
+app.listen(settings.server.port || 5000);

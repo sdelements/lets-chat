@@ -1,0 +1,12 @@
+#
+# Let's Chat Settings
+#
+
+server:
+  port: 5000
+
+database:
+  uri: mongodb://localhost/letschat
+
+secrets:
+  cookie: secretsauce

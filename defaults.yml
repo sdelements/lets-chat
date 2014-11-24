@@ -1,0 +1,9 @@
+#
+# Let's Chat Built-in Defaults
+#
+
+server:
+  port: 5000
+
+database:
+  uri: mongodb://localhost/letschat
