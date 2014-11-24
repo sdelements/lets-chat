@@ -91,7 +91,7 @@ mongoose.connection.on('error', function (err) {
 });
 
 mongoose.connection.on('disconnected', function() {
-    mongoose.connect(settings.mongoURI);
+    throw new Error('Could not connect to database');
 });
 
 //
