@@ -104,4 +104,4 @@ mongoose.connection.on('disconnected', function() {
 //
 app.listen(settings.server.port || 5000);
 
-console.log('\n' + fs.readFileSync('./app/misc/art.txt', 'utf8') + '\n\n' + '♥ '.red + 'From Toronto us with love\n');
+console.log('\n' + fs.readFileSync('./app/misc/art.txt', 'utf8') + '\n\n' + '♥ '.red + 'From Toronto with love\n');
