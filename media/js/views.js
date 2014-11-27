@@ -407,6 +407,20 @@ var RoomView = Backbone.View.extend({
 //
 // Client
 //
+var StatusView = Backbone.View.extend({
+    initialize: function(options) {
+        var that = this;
+        this.client = options.client;
+        this.client.status.on('change:connected', function(status, connected) {
+            that.$el.find('[data-status="connected"]').toggle(connected);
+            that.$el.find('[data-status="disconnected"]').toggle(!connected);
+        });
+    }
+});
+
+//
+// Client
+//
 var ClientView = Backbone.View.extend({
     el: '#lcb-client',
     initialize: function(options) {
@@ -433,6 +447,10 @@ var ClientView = Backbone.View.extend({
             rooms: this.client.rooms,
             client: this.client
         });
+        this.status = new StatusView({
+            el: this.$el.find('.lcb-status-indicators'),
+            client: this.client
+        })
         return this;
     }
 });
