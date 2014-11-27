@@ -23,9 +23,36 @@
     min-width: 150px;
     max-width: 230px;
     color: #f2f2f2;
-    padding: 10px;
     margin: 10px;
     margin-left: 0;
+
+    & > div {
+        padding: 10px;
+    }
+
+    @media (max-width: @screen-xs-max) {
+        background: #222 url('../img/dark-noise.png');
+        width: 100%%;
+        max-width: 100%;
+        min-width: 100%;
+        position: absolute !important;
+        height: 100%;
+        margin: 0;
+
+        & > div:first-child {
+            height: ~"calc(100% - 134px)";
+            overflow: auto;
+        }
+        & > div:last-child {
+            text-align: right;
+
+            button {
+                padding-top: 18px;
+                padding-bottom: 18px;
+                border-radius: 2px;
+            }
+        }
+    }
 }
 
 .lcb-room-description {
@@ -55,7 +82,7 @@
 
 .lcb-entry {
     height: 70px;
-    .flex-display;
+    .flex-display; 
 }
 
 .lcb-entry-input {
@@ -74,4 +101,22 @@
     padding-right: 20px;
     border-radius: 0;
     border-radius: 0 0 2px 0;
+    
+    @media (max-width: @screen-xs-max) {
+
+        border-radius: 0;
+        &:last-child {
+            border-radius: 0 0 2px 0;
+        }
+    }
+
+    .icon-bar {
+        display: block;
+        width: 22px;
+        height: 4px;
+        border-radius: 1px;
+        background-color: #ffffff;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
 }
