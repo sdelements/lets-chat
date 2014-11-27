@@ -5308,6 +5308,11 @@ body {
   opacity: 0.4;
   filter: alpha(opacity=40);
 }
+@media (max-width: 767px) {
+  .lcb-login {
+    display: block;
+  }
+}
 .lcb-login-main {
   max-width: 420px;
   text-align: center;
@@ -5326,6 +5331,11 @@ body {
 }
 .lcb-login-logo .flavour {
   color: #f22472;
+}
+@media (max-width: 767px) {
+  .lcb-login-logo {
+    font-size: 56px;
+  }
 }
 .lcb-login-box {
   background-color: #fff;
@@ -5354,6 +5364,7 @@ body {
 }
 .lcb-login-box-bottom .links {
   margin-top: 12px;
+  margin-right: 12px;
 }
 .lcb-login-footer {
   background-color: rgba(0, 0, 0, 0.4);
@@ -5378,6 +5389,12 @@ body {
 }
 .lcb-login-footer .fa-heart {
   color: #f22472;
+}
+@media (max-width: 767px) {
+  .lcb-login-footer {
+    position: relative;
+    font-size: 16px;
+  }
 }
 /*********************
  * Client Base

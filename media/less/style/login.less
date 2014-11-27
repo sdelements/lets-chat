@@ -19,6 +19,10 @@
         left: 0;
         .opacity(.4);
     }
+
+    @media (max-width: @screen-xs-max) {
+        display: block;
+    }
 }
 
 .lcb-login-main {
@@ -39,6 +43,10 @@
     margin-bottom: 30px;
     .flavour {
         color: #f22472;
+    }
+
+    @media (max-width: @screen-xs-max) {
+        font-size: 56px;
     }
 }
 
@@ -69,6 +77,7 @@
     overflow: hidden;
     .links {
         margin-top: 12px;
+        margin-right: 12px;
     }
 }
 
@@ -94,5 +103,10 @@
     }
     .fa-heart {
         color: #f22472;
+    }
+
+    @media (max-width: @screen-xs-max) {
+        position: relative;
+        font-size: 16px;
     }
 }
