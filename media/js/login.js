@@ -8,7 +8,7 @@
         $('.lcb-show-box').on('click', function() {
             var $target = $('html').find($(this).data('target'));
             if ($target.length > 0) {
-                $target.siblings().hide();
+                $target.siblings('.lcb-login-box').hide();
                 $target.show();
             }
         });

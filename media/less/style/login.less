@@ -6,13 +6,15 @@
     background-color: #222;
     background-image: url('../img/photos/reflection.jpg');
     background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
     padding-top: 40px;
     .flex-display;
     .align-items(center);
     .justify-content(center);
     &:before {
         background-image: url('../img/photo-overlay.png');
-        .square(100%);
+        .size(100%);
         content: '';
         position: fixed;
         top: 0;
@@ -54,6 +56,8 @@
     background-color: #fff;
     padding: 20px;
     border: 1px solid #e3e3e3;
+    position: relative;
+    z-index: 1;
     border-radius: 3px;
     .box-shadow(0 0 20px 3px rgba(0,0,0,.1));
     .response:empty {
@@ -81,10 +85,18 @@
     }
 }
 
+.lcb-login-footer-heart {
+    float: left;
+}
+
+.lcb-login-footer-github {
+    float: right;
+}
+
 .lcb-login-footer {
     background-color: rgba(0,0,0,.4);
     width: 100%;
-    color: #fff;
+    color: #f2f2f2;
     font-family: Tahoma;
     font-size: 11px;
     text-align: center;
@@ -104,9 +116,20 @@
     .fa-heart {
         color: #f22472;
     }
-
     @media (max-width: @screen-xs-max) {
         position: relative;
-        font-size: 16px;
+        font-size: 14px;
+        margin-top: -5px;
+        border-radius: 0 0 3px 3px;
+        .lcb-login-footer-heart,
+        .lcb-login-footer-github {
+            margin: 10px 0;
+            float: none;
+        }
+        .dash {
+            line-height: 0;
+            visibility: hidden;
+            display: block;
+        }
     }
 }

@@ -4,7 +4,9 @@
 
 module.exports = function() {
 
-    var _ = require('underscore');
+    var _ = require('underscore'),
+        fs = require('fs'),
+        path = require('path');
 
     var app = this.app,
         middlewares = this.middlewares,
@@ -19,7 +21,12 @@ module.exports = function() {
         });
     });
     app.get('/login', function(req, res) {
-        res.render('login.html');
+        var image = _.chain(fs.readdirSync(path.resolve('media/img/photos'))).filter(function(file){
+            return /\.(gif|jpg|jpeg|png)$/i.test(file);
+        }).sample().value();
+        res.render('login.html', {
+            photo: image
+        });
     });
     app.post('/account/login', function(req, res) {
         req.io.route('account:login');
