@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block js %}
+    <script type="text/javascript" src="media/js/vendor/md5/md5.js"></script>
     <script type="text/javascript" src="media/js/login.js"></script>
 {% endblock %}
 
@@ -16,6 +17,7 @@
         <div class="lcb-login-boxes">
             <form class="lcb-login-box lcb-login-box-login validate" action="/account/login" method="post" data-refresh="true">
                 <h2 class="lcb-login-box-heading">Sign in</h2>
+                <img class="lcb-login-avatar" />
                 <div class="form-group">
                     <input class="required form-control" placeholder="Email" name="email" type="text" />
                 </div>

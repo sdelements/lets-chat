@@ -9688,6 +9688,43 @@ body {
   margin-bottom: 20px;
   border-bottom: 1px solid #e5e5e5;
 }
+.lcb-login-avatar {
+  width: 0px;
+  height: 0px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  border-radius: 100%;
+  border: 1px #eee solid;
+}
+.lcb-login-avatar.show {
+  width: 100px;
+  height: 100px;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  -o-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -ms-animation-name: fadeInUp;
+  -webkit-animation-name: fadeInUp;
+  -moz-animation-name: fadeInUp;
+  -o-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+}
+.lcb-login-avatar.show.infinite {
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+.lcb-login-avatar.show.hinge {
+  -webkit-animation-duration: 2s;
+  -moz-animation-duration: 2s;
+  -o-animation-duration: 2s;
+  animation-duration: 2s;
+}
 .lcb-login-box-bottom {
   overflow: hidden;
 }
