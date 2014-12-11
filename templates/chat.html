@@ -25,7 +25,29 @@
 
 {% block body %}
     <div id="lcb-client" class="lcb-client">
-        <header class="lcb-header">
+        <div class="lcb-header">
+            <button type="button" class="btn lcb-header-toggle" onclick="$('.lcb-client').toggleClass('lcb-sidebar-opened')">
+                <i class="fa fa-bars"></i>
+            </button>
+            <div class="lcb-header-logo">Let's Chat</div>
+        </div>
+        <section class="lcb-sidebar">
+            <a class="lcb-account-button">
+                <img class="lcb-account-button-avatar lcb-avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50" />
+                <span class="lcb-account-button-name">{{ account.displayName }}</span> 
+                <i class="lcb-account-button-chevron fa fa-chevron-down"></i>
+            </a>
+            <div class="lcb-status-indicators">
+                <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection" data-status="disconnected" style="display: none;">
+                    <i class="fa fa-plug"></i> Disconnected
+                </span>
+                <span class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
+                    <i class="fa fa-refresh"></i> Connected
+                </span>
+                <span class="lcb-status-indicator lcb-status-connection" style="display: none;">
+                    <i class="fa fa-bell-slash"></i>
+                </span>
+            </div>
             <ul class="lcb-tabs">
                 <li data-id="list" class="lcb-tab lcb-tab-home">
                     <a href="#!/">
@@ -33,39 +55,16 @@
                     </a>
                 </li>
             </ul>
-            <span class="lcb-header-actions">
-                <span class="lcb-status-indicators">
-                    <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection" data-status="disconnected" style="display: none;">
-                        <i class="fa fa-plug"></i> ERR
-                    </span>
-                    <span class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
-                        <i class="fa fa-refresh"></i>
-                    </span>
-                    <span class="lcb-status-indicator lcb-status-connection" style="display: none;">
-                        <i class="fa fa-bell-slash"></i>
-                    </span>
-                </span>
-                <span class="lcb-account-button">
-                    <span class="lcb-account-button-caret">
-                        <i class="fa fa-chevron-down"></i>
-                    </span>
-                    <img class="avatar" src="http://www.gravatar.com/avatar/bfa5bfae39ce7bdd1e0f385c961d4afa?s=50" />
-                    {#
-                        <span class="name">{{ account.displayName }}</span> 
-                        <b class="caret"></b>
-                    #}
-                </span>
-            </span>
-        </header>
+        </section>
         <section class="lcb-panes">
             <div class="lcb-rooms-browser lcb-pane" data-id="list" style="display: none;">
                 {% include 'includes/add-room-modal.html' %}
                 <ul class="lcb-rooms-list">
                     <li class="lcb-rooms-list-item" data-id="{{id}}">
-                    <a data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
-                        <i class="fa fa-plus"> New Room</i>
-                    </a>
-                    <div class="lcb-rooms-list-item-description">Create a new room.</div>
+                        <a data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
+                            <i class="fa fa-plus"> New Room</i>
+                        </a>
+                        <div class="lcb-rooms-list-item-description">Create a new room.</div>
                     </li>
                 </ul>
             </div>

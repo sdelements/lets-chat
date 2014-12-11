@@ -1,82 +1,155 @@
 /*********************
  * Client Base
  *********************/
- 
+
 .lcb-client {
-    background: orange;
+    background: #222 url('../img/dark-noise.png');
     .size(100%);
     position: fixed;
     top: 0;
     left: 0;
     .flex-display;
-    .flex-direction(column);
-}
-
-.lcb-header {
-    background: #222 url('../img/header.png') repeat-x center center;
-    height: 42px;
-    position: relative;
-}
-
-.lcb-header-actions {
-    position: absolute;
-    top: 0;
-    right: 0;
-    .flex-display;
-}
-
-.lcb-account-button {
-    max-width: 140px;
-    height: 42px;
-    line-height: 42px;
-    color: #bbb;
-    padding: 0 6px;
-    border-left: 1px #111 solid;
-    position: relative;
-    .user-select(none);
-    &:before {
-        background: #444;
-        height: 100%;
-        width: 1px;
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-    &:hover {
-        color: #fff;
-        cursor: pointer;
-    }
-    &:active {
-        background: #222;
-    }
-    img {
-        .size(32px);
-        margin-right: 5px;
-        &:last-child {
-            margin-right: 0;
+    .flex-direction(row);
+    .transition(.1s linear);
+    @media (max-width: @screen-xs-max) {
+        padding-top: 43px;
+        &.lcb-sidebar-opened {
+            .translateX(200px);
+            .modal {
+                .translateX(-200px);
+            }
         }
     }
 }
 
-.lcb-account-button-caret {
-    .size(100%);
-    color: rgba(255, 255, 255, .8);
+.lcb-header {
+    background: #222 url('../img/header.png');
+    width: 100%;
+    height: 43px;
     text-align: center;
-    position: absolute;
+    line-height: 44px;
+    position: fixed;
     top: 0;
     left: 0;
+    border-bottom: 1px #111 solid;
+    z-index: 1;
+    display: none;
+    &:after {
+        background-color: #333;
+        width: 100%;
+        height: 1px;
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+    }
+    @media (max-width: @screen-xs-max) {
+        display: block;
+    }
+}
+
+.lcb-header-toggle {
+    width: 40px;
+    height: 30px;
+    line-height: 100%;
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    padding: 0;
+}
+
+.lcb-header-logo {
+    color: #fff;
+    font-family: Pacifico;
+    font-size: 20px;
+}
+
+.lcb-sidebar {
+    background: #222 url('../img/dark-noise.png');
+    width: 200px;
+    height: 100%;
+    border-right: 1px #333 solid;
+    position: relative;
+    &:after {
+        background: #000;
+        width: 1px;
+        height: 100%;
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    @media (max-width: @screen-xs-max) {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: -200px;
+        z-index: 1;
+    }
+}
+
+.lcb-panes {
+    .flex(1);
+    .flex-display;
+}
+
+.lcb-account-button {
+    background: #222 url('../img/header.png');
+    height: 42px;
+    line-height: 45px;
+    color: #bbb;
+    padding: 0 6px;
+    display: block;
+    position: relative;
+    .user-select(none);
+    .transition(color .2s linear);
+    &:hover {
+        color: #fff;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    &:active {
+        background: #222;
+    }
+}
+
+.lcb-account-button-avatar {
+    .size(32px);
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.lcb-account-button-name {
+    display: block;
+    margin-left: 40px;
+    margin-right: 15px;
+    .text-overflow;
+}
+
+.lcb-account-button-chevron {
+    height: 100%;
+    line-height: inherit;
+    color: rgba(255, 255, 255, .8);
+    font-size: 80%;
+    position: absolute;
+    top: 0;
+    right: 10px;
     .transition(opacity .2s linear);
-    .opacity(0);
+    .opacity(.4);
     .lcb-account-button:hover & {
         .opacity(1);
     }
 }
 
 .lcb-status-indicators {
-    color: #e9e9e9;
+    color: rgba(255, 255, 255, .7);
     font-size: 10px;
-    padding: 0 4px;
+    text-transform: uppercase;
+    padding: 6px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     .flex-display;
     .justify-content(center);
     .align-items(center);

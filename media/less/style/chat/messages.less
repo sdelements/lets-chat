@@ -4,6 +4,14 @@
 
  @messagePaddding: 7px; 
  
+.lcb-messages {
+    background: #fff;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    .flex(1);
+}
+ 
 .lcb-message {
     min-height: 47px;
     border-top: 1px #eee solid;
@@ -12,6 +20,9 @@
     margin: 0;
     display: block;
     position: relative;
+    &:first-child {
+        border-top: none;
+    }
     &.lcb-message-fragment {
         min-height: 0;
         padding-top: 0;

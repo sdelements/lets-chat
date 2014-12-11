@@ -2,53 +2,68 @@
  * Tabs
  *********************/
 
+.lcb-tabs,
+.lab-tab {
+    padding: 0;
+    margin: 0;
+}
+
 .lcb-tabs {
-    padding: 11px 140px 0 20px;
-    overflow: hidden;
-    .flex-display;
+    border: 1px #333 solid;
+    border-top-color: #111;
+    border-left: none;
+    border-right: none;
 }
 
 .lcb-tab {
-    background: #222 url('../img/dark-noise.png');
-    max-width: 240px;
-    height: 31px;
-    line-height: 31px;
+    height: 30px;
+    line-height: 30px;
     font-size: 14px;
-    padding: 0;
-    margin: 0;
-    margin-right: 3px;
-    border: 1px #444 solid;
-    border-bottom: none;
+    border: 1px #111 solid;
+    border-top-color: #333;
     display: block;
     position: relative;
-    border-radius: 2px 2px 0 0;
-    .flex(1);
-    .opacity(0.4);
-    .transition(opacity .07s linear);
-    &.lcb-tab-home {
-        text-align: center;
-        .flex(45px 0);
-        a {
-            padding: 0;
-        }
-    }
-    &:hover {
-        .opacity(1);
-    }
-    &.selected {
-        height: 33px;
-        .opacity(1);
-        .box-shadow(0 0 8px rgba(0,0,0,.5));
+    .box-sizing(content-box);
+    .opacity(.7);
+    &:after {
+        background-color: transparent;
+        width: 1px;
+        height: 100%;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        .transition(background .02s linear);
     }
     a {
-        height: 30px;
-        line-height: 30px;
-        color: #fff;
+        height: inherit;
+        color: #999;
         text-decoration: none;
         padding-left: 10px;
         border-bottom: none;
         display: block;
         position: relative;
+        .transition(color .07s linear);
+    }
+    &:hover {
+        .opacity(.8);
+        a {
+            color: #bbb;
+        }
+    }
+    &.selected {
+        background: #222 url('../img/dark-noise.png');
+        padding-right: 1px;
+        margin-right: -1px;
+        border-right-color: transparent;
+        z-index: 1;
+        &:after {
+            background: rgba(255, 255, 255, .9);
+        }
+        a {
+            color: #fff;
+        }
+        .opacity(1);
     }
 }
 
@@ -95,8 +110,12 @@
     position: absolute;
     top: 0;
     right: 7px;
-    .opacity(0.4);
+    .transition(opacity .07s linear);
+    .opacity(0);
     &:hover {
         .opacity(1);
+    }
+    .lcb-tab:hover & {
+        .opacity(.4);
     }
 }

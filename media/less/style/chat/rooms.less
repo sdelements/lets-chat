@@ -1,66 +1,21 @@
 /*********************
  * Rooms
  *********************/
- 
-.lcb-panes {
-    background: #222 url('../img/dark-noise.png');
-    border-top: 1px #111 solid;
-    .flex(1);
-    .flex-display;
-}
-
-.lcb-pane {
-    border-top: 1px #444 solid;
-}
 
 .lcb-room {
     .flex(1);
     .flex-display;
 }
 
-.lcb-room-sidebar {
-    width: 20%;
-    min-width: 150px;
-    max-width: 230px;
-    color: #f2f2f2;
-    margin: 10px;
-    margin-left: 0;
-
-    & > div {
-        padding: 10px;
-    }
-
-    @media (max-width: @screen-xs-max) {
-        background: #222 url('../img/dark-noise.png');
-        width: 100%%;
-        max-width: 100%;
-        min-width: 100%;
-        position: absolute !important;
-        height: 100%;
-        margin: 0;
-
-        & > div:first-child {
-            height: ~"calc(100% - 134px)";
-            overflow: auto;
-        }
-        & > div:last-child {
-            text-align: right;
-
-            button {
-                padding-top: 18px;
-                padding-bottom: 18px;
-                border-radius: 2px;
-            }
-        }
-    }
-}
-
-.lcb-room-description {
-    margin-top: 10px;
-    color: #efefef;
+.lcb-room-header {
+    background: #fff;
+    padding: 10px;
+    border-bottom: 1px #eee solid;
+    border-radius: 2px 2px 0 0;
 }
 
 .lcb-room-heading {
+    line-height: 100%;
     margin: 0;
 }
 
@@ -69,20 +24,17 @@
     .flex(1);
     .flex-display;
     .flex-direction(column);
-}
-
-.lcb-messages {
-    background: #fff;
-    padding: 0;
-    margin: 0;
-    overflow-y: auto;
-    border-radius: 2px 2px 0 0;
-    .flex(1);
+    @media (max-width: @screen-xs-max) {
+        margin: 3px;
+    }
 }
 
 .lcb-entry {
     height: 70px;
-    .flex-display; 
+    .flex-display;
+    @media (max-width: @screen-xs-max) {
+        height: 42px;
+    }
 }
 
 .lcb-entry-input {
@@ -94,6 +46,9 @@
     &:focus {
         outline: none;
     }
+    @media (max-width: @screen-xs-max) {
+        padding: 10px;
+    }
 }
 
 .lcb-entry-button {
@@ -101,22 +56,4 @@
     padding-right: 20px;
     border-radius: 0;
     border-radius: 0 0 2px 0;
-    
-    @media (max-width: @screen-xs-max) {
-
-        border-radius: 0;
-        &:last-child {
-            border-radius: 0 0 2px 0;
-        }
-    }
-
-    .icon-bar {
-        display: block;
-        width: 22px;
-        height: 4px;
-        border-radius: 1px;
-        background-color: #ffffff;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
 }
