@@ -17,7 +17,8 @@ var models = all('./app/models'),
     middlewares = all('./app/middlewares'),
     controllers = all('./app/controllers');
 
-var defaults = yaml.safeLoad(fs.readFileSync('defaults.yml', 'utf8')),
+var psjon = require('./package.json'),
+    defaults = yaml.safeLoad(fs.readFileSync('defaults.yml', 'utf8')),
     settings = _.merge(defaults, yaml.safeLoad(fs.readFileSync('settings.yml', 'utf8')));
 
 //
@@ -104,4 +105,4 @@ mongoose.connection.on('disconnected', function() {
 //
 app.listen(settings.server.port || 5000);
 
-console.log('\n' + fs.readFileSync('./app/misc/art.txt', 'utf8') + '\n\n' + '♥ '.red + 'From Toronto with love\n');
+console.log('\n' + fs.readFileSync('./app/misc/art.txt', 'utf8') + '\n\n' + 'Release ' + psjon.version.yellow + '\n');
