@@ -9260,6 +9260,7 @@ body {
   height: 100%;
   border-right: 1px #333 solid;
   position: relative;
+  z-index: 1;
 }
 .lcb-sidebar:after {
   background: #000;
@@ -9276,7 +9277,6 @@ body {
     position: absolute;
     top: 0;
     left: -200px;
-    z-index: 1;
   }
 }
 .lcb-panes {
