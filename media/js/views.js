@@ -276,8 +276,8 @@ var PanesView = Backbone.View.extend({
 var RoomUsersView = Backbone.View.extend({
     initialize: function(options) {
         this.template = Handlebars.compile($('#template-user').html());
-        this.collection.on('add remove', function(user, users) {
-            this.count(users);
+        this.collection.on('add remove', function() {
+            this.count();
         }, this);
         this.collection.on('add', function(user) {
             this.add(user.toJSON());
@@ -291,6 +291,7 @@ var RoomUsersView = Backbone.View.extend({
         this.collection.each(function(user) {
             this.add(user.toJSON());
         }, this);
+        this.count();
     },
     add: function(user) {
         this.$('.lcb-room-sidebar-list').prepend(this.template(user));
@@ -299,8 +300,7 @@ var RoomUsersView = Backbone.View.extend({
         this.$('.lcb-room-sidebar-user[data-id=' + id + ']').remove();
     },
     count: function(users) {
-        console.log(users.length);
-        this.$('.lcb-room-sidebar-users-count').text(users.length);
+        this.$('.lcb-room-sidebar-users-count').text(this.collection.length);
     }
 });
 
