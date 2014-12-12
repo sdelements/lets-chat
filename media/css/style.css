@@ -9590,9 +9590,6 @@ body {
   font-size: 14px;
   padding: 10px;
 }
-.lcb-avatar {
-  border-radius: 100%;
-}
 /*********************
  * Login
  *********************/
@@ -10010,6 +10007,44 @@ body {
 }
 .lcb-status-indicator-error {
   color: #ff7878;
+}
+.lcb-avatar {
+  border-radius: 100%;
+}
+/*********************
+ * Client Loading
+ *********************/
+.lcb-loading {
+  background: #222222 url('../img/dark-noise.png');
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -moz-justify-content: center;
+  -ms-justify-content: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.lcb-loading-indicator {
+  width: 64px;
+  height: 64px;
 }
 /*********************
  * Tabs

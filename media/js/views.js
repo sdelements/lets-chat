@@ -450,7 +450,10 @@ var ClientView = Backbone.View.extend({
         this.status = new StatusView({
             el: this.$el.find('.lcb-status-indicators'),
             client: this.client
-        })
+        });
+        this.client.status.once('change:connected', _.bind(function(status, connected) {
+            this.$el.find('.lcb-client-loading').hide(connected);
+        }, this));
         return this;
     }
 });
