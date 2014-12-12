@@ -8,7 +8,7 @@
     background: #fff;
     padding: 0;
     margin: 0;
-    overflow-y: auto;
+    overflow: auto;
     .flex(1);
 }
  
@@ -83,4 +83,11 @@
 
 .lcb-message-text {
     word-wrap: break-word;
+}
+
+@-moz-document url-prefix() {
+    .lcb-message-text {
+        width: 0;
+        word-wrap: normal;
+    }
 }
