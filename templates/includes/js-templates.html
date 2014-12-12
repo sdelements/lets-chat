@@ -27,7 +27,7 @@
                             <p>{{description}}</p>
                         </div>
                     </div>
-                </div><!-- lcb-room-sidebar end -->
+                </div><!-- lcb-room-header end -->
                 <ul class="lcb-messages">
                     <li class="lcb-message">
                         <img class="lcb-message-avatar" src="https://www.gravatar.com/avatar/2de4d847ef9524b0b5058c68f0826b2e?s=30" />
@@ -74,6 +74,24 @@
                     <button type="submit" class="btn btn-info lcb-entry-button">Send</button>
                 </form>
             </div><!-- lcb-chat end -->
+            <div class="lcb-room-sidebar">
+                <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
+                    <header class="lcb-room-sidebar-header">
+                        <h3 class="lcb-room-sidebar-heading">
+                            <i class="fa fa-users"></i> Who's Here (<span class="lcb-room-sidebar-users-count"></span>)
+                        </h3>
+                    </header>
+                    <ul class="lcb-room-sidebar-list"></ul>
+                </div>
+                <div class="lcb-room-sidebar-group">
+                    <header class="lcb-room-sidebar-header">
+                        <h3 class="lcb-room-sidebar-heading">
+                            <i class="fa fa-file-text"></i> Files
+                        </h3>
+                    </header>
+                    <ul class="lcb-room-sidebar-list"></ul>
+                </div>
+            </div><!-- lcb-room-sidebar end -->
         </div><!-- lcb-room end -->
     </script>
     <script type="text/x-handlebars-template" id="template-message">
@@ -97,10 +115,12 @@
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-user">
-        <li class="lcb-user" data-id="{{id}}">
-            <img class="lcb-user-avatar" src="https://www.gravatar.com/avatar/{{avatar}}?s=30" />
-            <div class="lcb-user-meta">
-                {{displayName}}
+        <li class="lcb-room-sidebar-item lcb-room-sidebar-user" data-id="{{id}}">
+            <img class="lcb-avatar lcb-room-sidebar-user-avatar" src="https://www.gravatar.com/avatar/{{avatar}}?s=30" />
+            <div class="lcb-room-sidebar-user-meta">
+                <span class="lcb-room-sidebar-user-name">
+                    {{displayName}}
+                </span>
             </div>
         </li>
     </script>
