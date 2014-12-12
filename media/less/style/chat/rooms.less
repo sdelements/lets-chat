@@ -88,19 +88,21 @@
 }
 
 .lcb-room-sidebar-group {
+    min-height: 36px;
     margin-bottom: 5px;
     border: 1px #444 solid;
     border-radius: 3px;
+    overflow: hidden;
+    .flex-display;
+    .flex-direction(column);
     @media (max-width: @screen-xs-max) {
         margin-bottom: 3px;
-    }
-    &:last-child {
-        margin-bottom: 0;
     }
 }
 
 .lcb-room-sidebar-header {
-    background: #222 url('../img/header.png');
+    background: #222 url('../img/header.png') repeat-x;
+    min-height: inherit;
     padding: 10px 7px;
     border-radius: 3px 3px 0 0;
 }
@@ -124,7 +126,8 @@
 
 .lcb-room-sidebar-list {
     overflow: hidden;
-    border-radius: 0 0 3px 3px;
+    border-radius: 3px;
+    overflow-y: auto;
 }
 
 .lcb-room-sidebar-item {

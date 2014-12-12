@@ -10366,20 +10366,33 @@ body {
   }
 }
 .lcb-room-sidebar-group {
+  min-height: 36px;
   margin-bottom: 5px;
   border: 1px #444 solid;
   border-radius: 3px;
+  overflow: hidden;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -moz-flex-direction: column;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 @media (max-width: 767px) {
   .lcb-room-sidebar-group {
     margin-bottom: 3px;
   }
 }
-.lcb-room-sidebar-group:last-child {
-  margin-bottom: 0;
-}
 .lcb-room-sidebar-header {
-  background: #222222 url('../img/header.png');
+  background: #222222 url('../img/header.png') repeat-x;
+  min-height: inherit;
   padding: 10px 7px;
   border-radius: 3px 3px 0 0;
 }
@@ -10400,7 +10413,8 @@ body {
 }
 .lcb-room-sidebar-list {
   overflow: hidden;
-  border-radius: 0 0 3px 3px;
+  border-radius: 3px;
+  overflow-y: auto;
 }
 .lcb-room-sidebar-item {
   background: #e9e9e9;
