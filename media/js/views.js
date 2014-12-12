@@ -311,7 +311,8 @@ var RoomView = Backbone.View.extend({
     events: {
         'scroll .lcb-messages': 'updateScrollLock',
         'keypress .lcb-entry-input': 'sendMessage',
-        'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta'
+        'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta',
+        'click .lcb-room-toggle-sidebar': 'toggleSidebar'
     },
     initialize: function(options) {
         this.client = options.client;
@@ -403,6 +404,10 @@ var RoomView = Backbone.View.extend({
             return;
         this.$messages[0].scrollTop = this.$messages[0].scrollHeight;
     }, 0),
+    toggleSidebar: function(e) {
+        e && e.preventDefault && e.preventDefault();
+        this.$el.toggleClass('lcb-room-sidebar-opened');
+    },
     destroy: function() {
         this.undelegateEvents();
         this.$el.removeData().unbind();

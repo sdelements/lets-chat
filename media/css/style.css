@@ -9643,6 +9643,19 @@ body {
   margin: 10px;
   border: 1px #111 solid;
   border-radius: 2px;
+  -webkit-transition: -webkit-transform 0.1s ease;
+  -moz-transition: -moz-transform 0.1s ease;
+  -ms-transition: -ms-transform 0.1s ease;
+  transition: transform .1s ease;
+}
+@media (max-width: 991px) {
+  .lcb-room.lcb-room-sidebar-opened {
+    -webkit-transform: translateX(-200px);
+    -moz-transform: translateX(-200px);
+    -ms-transform: translateX(-200px);
+    -o-transform: translateX(-200px);
+    transform: translateX(-200px);
+  }
 }
 @media (max-width: 767px) {
   .lcb-room {
@@ -9651,13 +9664,46 @@ body {
 }
 .lcb-room-header {
   background: #fff;
+  min-height: 46px;
   padding: 10px;
   border-bottom: 1px #eee solid;
+  position: relative;
   border-radius: 2px 2px 0 0;
+}
+@media (max-width: 767px) {
+  .lcb-room-header {
+    padding: 5px 8px;
+  }
+}
+.lcb-room-header-actions {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+.lcb-room-header-actions a {
+  color: #777;
+}
+@media (max-width: 767px) {
+  .lcb-room-header-actions {
+    top: 3px;
+  }
 }
 .lcb-room-heading {
   line-height: 100%;
   margin: 0;
+}
+@media (max-width: 767px) {
+  .lcb-room-heading {
+    font-size: 20px;
+  }
+}
+.lcb-room-description {
+  color: #777;
+}
+@media (max-width: 767px) {
+  .lcb-room-description {
+    font-size: 12px;
+  }
 }
 .lcb-room-chat {
   -moz-flex: 1;
@@ -9719,6 +9765,15 @@ body {
   border-radius: 0;
   border-radius: 0 0 2px 0;
 }
+.lcb-room-toggle-sidebar {
+  font-size: 30px;
+  display: none;
+}
+@media (max-width: 991px) {
+  .lcb-room-toggle-sidebar {
+    display: block;
+  }
+}
 .lcb-room-sidebar {
   background: #222;
   width: 20%;
@@ -9742,22 +9797,17 @@ body {
   -ms-flex-direction: column;
   flex-direction: column;
 }
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .lcb-room-sidebar {
-    width: 0;
+    background: none;
+    width: 200px;
     height: 100%;
-    margin: 0;
+    padding: 0;
+    padding-left: 3px;
     border: none;
     position: absolute;
     top: 0;
     right: -200px;
-    z-index: 1;
-    border-radius: 0;
-  }
-}
-@media (max-width: 767px) {
-  .lcb-room-sidebar {
-    padding: 3px;
   }
 }
 .lcb-room-sidebar-group {
