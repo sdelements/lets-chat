@@ -2,6 +2,8 @@
 // Populate User (if logged in!)
 //
 
+'use strict';
+
 var models = require('../models');
 
 module.exports = function(req, res, next) {

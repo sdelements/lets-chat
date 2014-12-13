@@ -2,11 +2,18 @@
 // Messages Controller
 //
 
+'use strict';
+
 module.exports = function() {
 
     var app = this.app,
-        middlewares = this.middlewares,
-        models = this.models;
+        core = this.core,
+        middlewares = this.middlewares;
+
+    core.messages.on('messages:new', function(message) {
+        app.io.room(message.room)
+              .broadcast('messages:new', message);
+    });
 
     //
     // Routes
@@ -24,45 +31,38 @@ module.exports = function() {
     //
     app.io.route('messages', {
         create: function(req) {
-            var data = req.data || req.body;
-            models.message.create({
-                owner: req.user._id,
-                room: data.room,
-                text: data.text
-            }, function(err, message) {
+            var data = req.data || req.body,
+                options = {
+                    owner: req.user._id,
+                    room: data.room,
+                    text: data.text
+                };
+
+            core.messages.create(options, function(err, message) {
                 if (err) {
-                    console.error(err);
                     req.io.respond(err, 400);
                     return;
                 }
-                // Temporary workaround for _id until populate can do aliasing
-                models.user.findOne(message.owner, function(err, user) {
-                    message = message.toJSON();
-                    message.owner = user.toJSON();
-                    req.io.respond(message, 201);
-                    req.io.room(message.room).broadcast('messages:new', message);
-                });
+
+                req.io.respond(message, 201);
             });
         },
         list: function(req) {
-            var data = req.data || req.query;
-            var find = models.message.find({
-                room: data.room || null
-            });
-            data.from && find.where('_id').gt(data.from);
-            // This is why the terrorists hate us
-            find.populate('owner', 'id displayName email avatar')
-                .limit(data.limit || 500)
-                .sort({ 'posted': -1 })
-                .exec(function(err, messages) {
+            var data = req.data || req.query,
+                options = {
+                    room: data.room || null,
+                    from: data.from || null,
+                    limit: data.limit || null,
+                };
+
+            core.messages.list(options, function(err, messages) {
                 if (err) {
-                    console.error(err);
                     req.io.respond(err, 400);
                     return;
                 }
-                req.io.respond(messages.reverse());
+                req.io.respond(messages);
             });
         }
     });
 
-}
+};

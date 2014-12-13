@@ -2,6 +2,8 @@
 // Account Controller
 //
 
+'use strict';
+
 module.exports = function() {
 
     var _ = require('underscore'),
@@ -10,7 +12,8 @@ module.exports = function() {
 
     var app = this.app,
         middlewares = this.middlewares,
-        models = this.models;
+        models = this.models,
+        User = models.user;
 
     //
     // Routes
@@ -20,21 +23,28 @@ module.exports = function() {
             account: req.user.toJSON()
         });
     });
+
     app.get('/login', function(req, res) {
-        var image = _.chain(fs.readdirSync(path.resolve('media/img/photos'))).filter(function(file){
+        var imagePath = path.resolve('media/img/photos');
+        var images = fs.readdirSync(imagePath);
+        var image = _.chain(images).filter(function(file) {
             return /\.(gif|jpg|jpeg|png)$/i.test(file);
         }).sample().value();
+
         res.render('login.html', {
             photo: image
         });
     });
+
     app.post('/account/login', function(req, res) {
         req.io.route('account:login');
     });
+
     // TODO: you should be POST'ing to DELETE'ing this resource
     app.get('/account/logout', function(req, res) {
         req.io.route('account:logout');
     });
+
     app.post('/account/register', function(req, res) {
         req.io.route('account:register');
     });
@@ -48,7 +58,7 @@ module.exports = function() {
         },
         register: function(req) {
             var fields = req.body || req.data;
-            models.user.create({
+            User.create({
                 email: fields.email,
                 password: fields.password,
                 firstName: fields.firstName || fields.firstname || fields['first-name'],
@@ -59,7 +69,7 @@ module.exports = function() {
                 if (err) {
                     var message = 'Sorry, we could not process your request';
                     // User already exists
-                    if (err.code == 11000) {
+                    if (err.code === 11000) {
                         message = 'Email has already been taken';
                     }
                     // Invalid username
@@ -87,7 +97,7 @@ module.exports = function() {
         },
         login: function(req) {
             var fields = req.body || req.data;
-            models.user.authenticate(fields.email, fields.password, function(err, user) {
+            User.authenticate(fields.email, fields.password, function(err, user) {
                 if (err) {
                     // Something bad
                     req.io.respond({
@@ -122,4 +132,4 @@ module.exports = function() {
             }, 200);
         }
     });
-}
+};

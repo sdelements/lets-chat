@@ -2,17 +2,17 @@
 // LCB Client
 //
 
-+function(window, $, _) {
+(function(window, $, _) {
 
     //
     // Base
     //
     var Client = function(config) {
         this.config = config;
-        this.status = new Backbone.Model;
-        this.user = new UserModel;
-        this.users = new UsersCollection;
-        this.rooms = new RoomsCollection;
+        this.status = new Backbone.Model();
+        this.user = new UserModel();
+        this.users = new UsersCollection();
+        this.rooms = new RoomsCollection();
         this.events = _.extend({}, Backbone.Events);
         return this;
     };
@@ -46,6 +46,7 @@
         });
     };
     Client.prototype.deleteRoom = function(id) {
+        var that = this;
         var room = this.rooms.get(id);
         if (room) {
             this.socket.emit('rooms:delete', id, function() {
@@ -79,10 +80,10 @@
         } else {
             this.joinRoom(id, true);
         }
-    }
+    };
     Client.prototype.updateRoom = function(room) {
         this.socket.emit('rooms:update', room);
-    }
+    };
     Client.prototype.roomUpdate = function(resRoom) {
         var room = this.rooms.get(resRoom.id);
         if (!room) {
@@ -90,7 +91,7 @@
             return;
         }
         room.set(resRoom);
-    }
+    };
     Client.prototype.joinRoom = function(id, switchRoom) {
         var that = this;
         // We need an id and unlocked joining
@@ -142,7 +143,7 @@
         _.defer(function() {
             that.joining = _.without(that.joining, id);
         });
-    }
+    };
     Client.prototype.leaveRoom = function(id) {
         var room = this.rooms.get(id);
         if (room) {
@@ -150,13 +151,13 @@
             room.users.reset();
         }
         this.socket.emit('rooms:leave', id);
-        if (id == this.rooms.current.get('id')) {
+        if (id === this.rooms.current.get('id')) {
             var room = this.rooms.get(this.rooms.last.get('id'));
             this.switchRoom(room && room.get('joined') ? room.id : '');
         }
         // Remove room id from localstorage
         store.set('openrooms', _.without(store.get('openrooms'), id));
-    }
+    };
     //
     // Messages
     //
@@ -168,19 +169,19 @@
         }
         room.lastMessage.set(message);
         room.trigger('messages:new', message);
-    }
+    };
     Client.prototype.addMessages = function(messages, historical) {
         _.each(messages, function(message) {
             historical && (message.historical = true);
             this.addMessage(message);
         }, this);
-    }
+    };
     Client.prototype.sendMessage = function(message) {
-        this.socket.emit('messages:create', message, _.bind(this.addMessage, this));
-    }
+        this.socket.emit('messages:create', message);
+    };
     Client.prototype.getMessages = function(query, callback) {
         this.socket.emit('messages:list', query, callback)
-    }
+    };
     //
     // Users
     //
@@ -195,7 +196,7 @@
             return;
         }
         room.users.set(users);
-    }
+    };
     Client.prototype.addUser = function(user) {
         var room = this.rooms.get(user.room);
         if (!room) {
@@ -203,7 +204,7 @@
             return;
         }
         room.users.add(user);
-    }
+    };
     Client.prototype.removeUser = function(user) {
         var room = this.rooms.get(user.room);
         if (!room) {
@@ -211,7 +212,7 @@
             return;
         }
         room.users.remove(user.id);
-    }
+    };
     Client.prototype.getUsers = function(id, callback) {
         var that = this;
         if (!id) {
@@ -242,9 +243,9 @@
                 that.switchRoom('list');
             }
         });
-        this.router = new Router;
+        this.router = new Router();
         Backbone.history.start();
-    }
+    };
     //
     // Listen
     //
@@ -293,7 +294,7 @@
         this.events.on('rooms:leave', this.leaveRoom, this);
         this.events.on('rooms:create', this.createRoom, this);
         this.events.on('rooms:switch', this.switchRoom, this);
-    }
+    };
     //
     // Start
     //
@@ -309,17 +310,17 @@
         var openRooms = store.get('openrooms');
         if (openRooms instanceof Array) {
             // Flush the stored array
-            store.set('openrooms', [])
+            store.set('openrooms', []);
             // Let's open some rooms!
             _.each(_.uniq(openRooms), function(id) {
                 this.joinRoom(id);
             }, this);
         }
         return this;
-    }
+    };
     //
     // Add to window
     //
     window.LCB = window.LCB || {};
     window.LCB.Client = Client;
-}(window, $, _);
+})(window, $, _);

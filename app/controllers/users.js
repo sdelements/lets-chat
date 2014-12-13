@@ -2,13 +2,17 @@
 // Users Controller
 //
 
+'use strict';
+
 module.exports = function() {
 
     var _ = require('underscore');
 
     var app = this.app,
+        core = this.core,
         middlewares = this.middlewares,
-        models = this.models;
+        models = this.models,
+        User = models.user;
 
     //
     // Routes
@@ -28,7 +32,7 @@ module.exports = function() {
             var data = req.data || req.query;
 
             if (!data || !data.room) {
-                models.user.find(function(err, users) {
+                User.find(function(err, users) {
                     if (err) {
                         console.log(err);
                         next(err);
@@ -42,45 +46,42 @@ module.exports = function() {
 
             models.room.findById(data.room || null, function(err, room) {
                 if (err) {
-                   // TODO: can you create a default error handler? We have code like
-                   //       this all over the place.
+                   // TODO: can you create a default error handler?
+                   // We have code like this all over the place.
                     console.error(err);
                     return;
                 }
+
                 if (!room) {
                     // Invalid room!
                     req.io.respond('This room does not exist', 404);
                     return;
                 }
-                // Distill the user ids from connected clients
-                var ids = _.map(app.io.sockets.clients(room._id), function(client) {
-                    return client.handshake.session.userID;
-                });
-                models.user.find({
-                    _id: {
-                        $in: ids
-                    }
-                }, function(err, users) {
+
+                var userIds = core.presence.rooms
+                                  .getOrAdd(data.room).getUserIds();
+
+                User.find({ _id: { $in: userIds } }, function(err, users) {
                     if (err) {
                         // Something bad happened
                         console.error(err);
                         req.io.respond(err, 400);
                         return;
                     }
-                    // The client needs user.room in 
+                    // The client needs user.room in
                     // order to properly route users
-                    var users = _.map(users, function(user) {
+                    users = _.map(users, function(user) {
                         user = user.toJSON();
-                        user.room = room.id
+                        user.room = room.id;
                         return user;
                     });
+
                     req.io.respond(users);
                 });
             });
         },
         retrieve: function(req) {
-            var email = req.params.email;
-            models.user.find({email: email}).exec(function (err, user) {
+            User.find({ email: req.params.email }, function (err, user) {
                 if (err) {
                     console.error(err);
                     req.io.respond(err, 400);

@@ -3,6 +3,7 @@ settings.js
 uploads
 node_modules
 bower_components
+npm-debug.log
 .DS_Store
 *._
 *.sw[opqr]

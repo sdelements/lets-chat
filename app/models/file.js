@@ -1,15 +1,17 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
+'use strict';
+
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId;
 
 var FileSchema = new Schema({
     room: {
-        type: Schema.ObjectId,
+        type: ObjectId,
         ref: 'Room',
         required: true
     },
     owner: {
-        type: Schema.ObjectId,
+        type: ObjectId,
         ref: 'User',
         required: true
     },

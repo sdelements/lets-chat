@@ -2,24 +2,25 @@
 // Let's Chat
 //
 
+'use strict';
+
 var _ = require('lodash'),
     fs = require('fs'),
-    yaml = require('js-yaml'),
     colors = require('colors'),
     express = require('express.io'),
     expressMiddleware = require('express.io-middleware'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
-    MongoStore = require('connect-mongo')(express);
+    MongoStore = require('connect-mongo')(express),
     all = require('require-tree');
+
+var psjon = require('./package.json'),
+    settings = require('./app/config.js');
 
 var models = all('./app/models'),
     middlewares = all('./app/middlewares'),
-    controllers = all('./app/controllers');
-
-var psjon = require('./package.json'),
-    defaults = yaml.safeLoad(fs.readFileSync('defaults.yml', 'utf8')),
-    settings = _.merge(defaults, yaml.safeLoad(fs.readFileSync('settings.yml', 'utf8')));
+    controllers = all('./app/controllers'),
+    core = require('./app/core/index');
 
 //
 // Express.io Setup
@@ -60,6 +61,7 @@ app.use(express.urlencoded());
 _.each(controllers, function(controller) {
     controller.apply({
         app: app,
+        core: core,
         settings: settings,
         middlewares: middlewares,
         models: models,
@@ -92,8 +94,9 @@ app.io.set('authorization', function(data, accept) {
 mongoose.connect(settings.database.uri);
 
 mongoose.connection.on('error', function (err) {
-    if (err)
+    if (err) {
         console.warn(err);
+    }
 });
 
 mongoose.connection.on('disconnected', function() {
@@ -105,4 +108,10 @@ mongoose.connection.on('disconnected', function() {
 //
 app.listen(settings.server.port || 5000);
 
-console.log('\n' + fs.readFileSync('./app/misc/art.txt', 'utf8') + '\n\n' + 'Release ' + psjon.version.yellow + '\n');
+if (settings.xmpp.enable) {
+    var xmpp = require('./app/xmpp/index');
+    xmpp(core);
+}
+
+var art = fs.readFileSync('./app/misc/art.txt', 'utf8');
+console.log('\n' + art + '\n\n' + 'Release ' + psjon.version.yellow + '\n');

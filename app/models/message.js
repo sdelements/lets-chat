@@ -2,6 +2,8 @@
 // Message
 //
 
+'use strict';
+
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId;
 
@@ -37,7 +39,7 @@ MessageSchema.method('toJSON', function() {
         owner: this.owner,
         text: this.text,
         posted: this.posted
-    }
+    };
 });
 
 module.exports = mongoose.model('Message', MessageSchema);

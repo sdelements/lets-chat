@@ -2,8 +2,11 @@
 // Room
 //
 
+'use strict';
+
 var mongoose = require('mongoose'),
-    ObjectId = mongoose.Schema.Types.ObjectId;
+    ObjectId = mongoose.Schema.Types.ObjectId,
+    settings = require('./../config');
 
 var RoomSchema = new mongoose.Schema({
     name: {
@@ -43,7 +46,7 @@ RoomSchema.method('toJSON', function() {
         lastActive: room.lastActive,
         created: room.created,
         owner: room.owner
-    }
+    };
  });
 
 module.exports = mongoose.model('Room', RoomSchema);

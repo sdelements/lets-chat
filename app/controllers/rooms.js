@@ -2,12 +2,34 @@
 // Rooms Controller
 //
 
+'use strict';
+
 var _ = require('underscore');
 
 module.exports = function() {
     var app = this.app,
+        core = this.core,
         middlewares = this.middlewares,
-        models = this.models;
+        models = this.models,
+        Room = models.room,
+        User = models.user;
+
+    core.presence.rooms.on('user_join', function(data) {
+        User.findById(data.userId, function (err, user) {
+            user = user.toJSON();
+            user.room = data.roomId;
+            app.io.sockets.emit('users:join', user);
+        });
+    });
+
+    core.presence.rooms.on('user_leave', function(data) {
+        User.findById(data.userId, function (err, user) {
+            user = user.toJSON();
+            user.room = data.roomId;
+            app.io.sockets.emit('users:leave', user);
+        });
+    });
+
 
     //
     // Routes
@@ -15,9 +37,11 @@ module.exports = function() {
     app.get('/rooms', middlewares.requireLogin, function(req, res) {
         req.io.route('rooms:list');
     });
+
     app.post('/rooms', middlewares.requireLogin, function(req, res) {
         req.io.route('rooms:create');
     });
+
     app.delete('/rooms', middlewares.requireLogin, function(req, res) {
         req.io.route('rooms:delete');
     });
@@ -27,12 +51,14 @@ module.exports = function() {
     //
     app.io.route('rooms', {
         create: function(req) {
-            var data = req.data || req.body;
-            models.room.create({
-                owner: req.user._id,
-                name: data.name,
-                description: data.description
-            }, function(err, room) {
+            var data = req.data || req.body,
+                options = {
+                    owner: req.user._id,
+                    name: data.name,
+                    description: data.description
+                };
+
+            core.rooms.create(options, function(err, room) {
                 if (err) {
                     console.error(err);
                     req.io.respond(err, 400);
@@ -44,12 +70,10 @@ module.exports = function() {
         },
         delete: function(req) {
             var data = req.data || req.body;
-            var user = req.user._id;
+            var userId = req.user._id;
         },
         list: function(req) {
-            models.room
-                .find()
-                .exec(function(err, rooms) {
+            core.rooms.list(null, function(err, rooms) {
                 if (err) {
                     console.error(err);
                     req.io.respond(err, 400);
@@ -59,37 +83,24 @@ module.exports = function() {
             });
         },
         update: function(req) {
-            var id = req.data.id,
-                name = req.data.name,
-                description = req.data.description;
-            models.room.findById(id, function(err, room) {
-                if (err) {
-                    // Oh noes, a bad thing happened!
-                    console.error(err);
+            var roomId = req.data.id,
+                options = {
+                    name: req.data.name,
+                    description: req.data.description
+                };
+
+            core.rooms.update(roomId, options, function(err, room) {
+                if (err || !room) {
+                    req.io.respond(err, 400);
                     return;
                 }
-                if (!room) {
-                    // WHY IS THERE NO ROOM!?
-                    console.error('No room!');
-                    req.io.respond();
-                    return;
-                }
-                room.name = name;
-                room.description = description;
-                room.save(function(err, room) {
-                    if (err) {
-                        console.error(err);
-                        req.io.respond(err, 400);
-                        return;
-                    }
-                    req.io.broadcast('rooms:update', room.toJSON());
-                    req.io.respond(room.toJSON(), 200);
-                })
+                req.io.broadcast('rooms:update', room.toJSON());
+                req.io.respond(room.toJSON(), 200);
             });
         },
         join: function(req) {
-            var id = req.data;
-            models.room.findById(id, function(err, room) {
+            var roomId = req.data;
+            core.rooms.get(roomId, function(err, room) {
                 if (err) {
                     // Problem? TODO: Figure out how to recover?
                     console.error(err);
@@ -103,42 +114,20 @@ module.exports = function() {
                 }
                 var user = req.user.toJSON();
                 user.room = room._id;
+
+                core.presence.join(req.socket.conn, room._id);
                 req.io.join(room._id);
-                app.io.broadcast('users:join', user);
                 req.io.respond(room.toJSON());
             });
         },
         leave: function(req) {
-            var id = req.data;
+            var roomId = req.data;
             var user = req.user.toJSON();
-            user.room = id;
-            req.io.leave(id);
+            user.room = roomId;
+
+            core.presence.leave(req.socket.conn, roomId);
+            req.io.leave(roomId);
             req.io.respond();
-            if(_.find(app.io.sockets.clients(id), function(client) {
-                if (req.socket.id === client.id) return false;
-                return req.session.userID === client.handshake.session.userID;
-            })) {
-                app.io.broadcast('users:leave', user);
-            }
         }
     });
-    app.io.sockets.on('connection', function(socket) {
-        socket.on('disconnect', function() {
-            _.each(app.io.sockets.manager.roomClients[socket.id], function(status, room) {
-                if(_.find(app.io.sockets.clients(room.replace('/', '')), function(client) {
-                    if (socket.id === client.id) return false;
-                    return socket.handshake.session.userID === client.handshake.session.userID;
-                })) return;
-                models.user.findById(socket.handshake.session.userID, function(err, user) {
-                    if (err || !user) {
-                        console.error(err || 'No user found!');
-                        return;
-                    }
-                    user = user.toJSON();
-                    user.room = room.replace('/', '');
-                    app.io.sockets.emit('users:leave', user);
-                });
-            });
-        });
-    });
-}
+};

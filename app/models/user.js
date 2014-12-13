@@ -2,8 +2,11 @@
 // User
 //
 
+'use strict';
+
 var bcrypt = require('bcryptjs'),
-    md5 = require('MD5');
+    md5 = require('MD5'),
+    settings = require('./../config');
 
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId,
@@ -66,19 +69,23 @@ var UserSchema = new mongoose.Schema({
 });
 
 UserSchema.virtual('avatar').get(function() {
-    return md5(this.email)
+    return md5(this.email);
 });
 
 UserSchema.pre('save', function(next) {
     var user = this;
-    if (!user.isModified('password'))
+    if (!user.isModified('password')) {
         return next();
+    }
+
     bcrypt.genSalt(10, function(err, salt) {
-        if (err)
+        if (err) {
             return next(err);
+        }
         bcrypt.hash(user.password, salt, function(err, hash) {
-            if (err)
+            if (err) {
                 return next(err);
+            }
             user.password = hash;
             next();
         });
@@ -87,25 +94,35 @@ UserSchema.pre('save', function(next) {
 
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-        if (err)
+        if (err) {
             return cb(err);
+        }
         cb(null, isMatch);
     });
 };
 
-UserSchema.statics.authenticate = function(email, password, cb) {
-    this.findOne({
-        email: email
-    }, function(err, user) {
-        if (err) return cb(err);
+UserSchema.statics.authenticate = function(identifier, password, cb) {
+    var options = {};
+
+    if (identifier.indexOf('@') === -1) {
+        options._id = identifier;
+    } else {
+        options.email = identifier;
+    }
+
+    this.findOne(options, function(err, user) {
+        if (err) {
+            return cb(err);
+        }
         // Does the user exist?
         if (!user) {
             return cb(null, null, 0);
         }
         // Is password okay?
         user.comparePassword(password, function(err, isMatch) {
-            if (err)
+            if (err) {
                 return cb(err);
+            }
             if (isMatch) {
                 return cb(null, user);
             }
@@ -129,7 +146,7 @@ UserSchema.method('toJSON', function() {
         lastname: this.lastName,
         displayName: this.displayName,
         avatar: this.avatar
-    }
+    };
 });
 
 module.exports = mongoose.model('User', UserSchema);
