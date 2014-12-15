@@ -1,6 +1,7 @@
 'use strict';
 
-var MessageProcessor = require('./../msg-processor'),
+var _ = require('underscore'),
+    MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config');
 
 module.exports = MessageProcessor.extend({
@@ -13,20 +14,23 @@ module.exports = MessageProcessor.extend({
     then: function(cb) {
         var roomId = this.request.attrs.to.split('@')[0];
 
+        var body = _.find(this.request.children, function (child) {
+            return child.name === 'body';
+        });
+
+        if (!body) {
+            return;
+        }
+
         var options = {
             owner: this.client.user._id,
             room: roomId,
-            text: this.request.children[0].text()
+            text: body.text()
         };
 
         this.core.messages.create(options, function(err, message) {
-            if (err) {
-                return;
-            }
-
             // Message will be sent by listener
-            cb(null);
-
+            cb(err);
         }.bind(this));
     }
 

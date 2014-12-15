@@ -22,9 +22,7 @@ module.exports = MessageProcessor.extend({
 
             this.core.presence.leave(this.client.conn, roomId);
 
-            var presence = new this.Presence({
-                to: this.request.attrs.from,
-                from: this.request.attrs.to,
+            var presence = this.Presence({
                 type: 'unavailable'
             });
 

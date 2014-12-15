@@ -14,10 +14,14 @@ function MessageProcessor(client, request, core) {
 
     this.run = this.run.bind(this);
     this.send = this.send.bind(this);
+
+    this.Stanza = this.Stanza.bind(this);
     this.Iq = this.Iq.bind(this);
+    this.Message = this.Message.bind(this);
+    this.Presence = this.Presence.bind(this);
 }
 
-MessageProcessor.prototype.Iq = function(attr) {
+MessageProcessor.prototype.Stanza = function(name, attr) {
     attr = _.extend({
         type: 'result',
         id: this.request.attrs.id,
@@ -25,11 +29,20 @@ MessageProcessor.prototype.Iq = function(attr) {
         from: this.request.attrs.to
     }, attr || {});
 
-    return new Stanza.Iq(attr);
+    return new Stanza.Stanza(name, attr);
 };
 
-MessageProcessor.prototype.Presence = Stanza.Presence;
-MessageProcessor.prototype.Message = Stanza.Message;
+MessageProcessor.prototype.Iq = function(attr) {
+    return this.Stanza('iq', attr);
+};
+
+MessageProcessor.prototype.Presence = function(attr) {
+    return this.Stanza('presence', attr);
+};
+
+MessageProcessor.prototype.Message = function(attr) {
+    return this.Stanza('message', attr);
+};
 
 MessageProcessor.prototype.preRun = function() {
     this.to = this.request.attrs.to || '';
@@ -40,7 +53,9 @@ MessageProcessor.prototype.preRun = function() {
     this.ns = this.ns || {};
 
     this.request.children.forEach(function(child) {
-        this.ns[child.attrs.xmlns] = child;
+        if (child.attrs && child.attrs.xmlns) {
+            this.ns[child.attrs.xmlns] = child;
+        }
     }, this);
 };
 

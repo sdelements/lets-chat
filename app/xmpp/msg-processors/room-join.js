@@ -26,9 +26,7 @@ module.exports = MessageProcessor.extend({
 
             var presences = userIds.map(function(userId) {
 
-                var presence = new this.Presence({
-                    id: this.request.attrs.id,
-                    to: this.request.attrs.from,
+                var presence = this.Presence({
                     from: roomUrl + '/' + userId
                 });
 
@@ -45,10 +43,7 @@ module.exports = MessageProcessor.extend({
 
             }, this);
 
-            var message = new this.Message({
-                id: this.request.attrs.id,
-                to: this.request.attrs.from,
-                from: this.request.attrs.to,
+            var message = this.Message({
                 type: 'groupchat'
             });
 
