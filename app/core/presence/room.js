@@ -5,9 +5,10 @@ var EventEmitter = require('events').EventEmitter,
     _ = require('underscore'),
     ConnectionCollection = require('./connection-collection');
 
-function Room(roomId) {
+function Room(roomId, roomSlug) {
     EventEmitter.call(this);
     this.roomId = roomId;
+    this.roomSlug = roomSlug;
     this.connections = new ConnectionCollection();
 
     this.getUserIds = this.getUserIds.bind(this);
@@ -31,6 +32,7 @@ Room.prototype.addConnection = function(connection) {
         // User joining room
         this.emit('user_join', {
             roomId: this.roomId,
+            roomSlug: this.roomSlug,
             userId: connection.userId,
             screenName: connection.screenName
         });
@@ -44,6 +46,7 @@ Room.prototype.removeConnection = function(connection) {
             // Leaving room altogether
             this.emit('user_leave', {
                 roomId: this.roomId,
+                roomSlug: this.roomSlug,
                 userId: connection.userId,
                 screenName: connection.screenName
             });

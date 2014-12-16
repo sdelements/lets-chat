@@ -23,11 +23,12 @@ RoomCollection.prototype.get = function(roomId) {
     return this.rooms[roomId];
 };
 
-RoomCollection.prototype.getOrAdd = function(roomId) {
+RoomCollection.prototype.getOrAdd = function(roomId, roomSlug) {
     roomId = roomId.toString();
+    roomSlug = roomSlug.toString();
     var room = this.rooms[roomId];
     if (!room) {
-        room = this.rooms[roomId] = new Room(roomId);
+        room = this.rooms[roomId] = new Room(roomId, roomSlug);
         room.on('user_join', this.onJoin);
         room.on('user_leave', this.onLeave);
     }

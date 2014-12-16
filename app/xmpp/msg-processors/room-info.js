@@ -11,9 +11,9 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
-        var roomId = this.request.attrs.to.split('@')[0];
+        var roomSlug = this.request.attrs.to.split('@')[0];
 
-        this.core.rooms.get(roomId, function(err, room) {
+        this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
                 return;
             }

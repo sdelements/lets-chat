@@ -27,14 +27,16 @@ PresenceManager.prototype.disconnect = function(connection) {
     this.rooms.removeConnection(connection);
 };
 
-PresenceManager.prototype.join = function(connection, roomId) {
-    var room = this.rooms.getOrAdd(roomId);
+PresenceManager.prototype.join = function(connection, roomId, roomSlug) {
+    var room = this.rooms.getOrAdd(roomId, roomSlug);
     room.addConnection(connection);
 };
 
 PresenceManager.prototype.leave = function(connection, roomId) {
-    var room = this.rooms.getOrAdd(roomId);
-    room.removeConnection(connection);
+    var room = this.rooms.get(roomId);
+    if (room) {
+        room.removeConnection(connection);
+    }
 };
 
 PresenceManager.Connection = Connection;

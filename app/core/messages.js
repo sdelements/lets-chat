@@ -13,6 +13,7 @@ util.inherits(MessageManager, EventEmitter);
 
 MessageManager.prototype.create = function(options, cb) {
     var Message = mongoose.model('Message'),
+        Room = mongoose.model('Room'),
         User = mongoose.model('User');
 
     Message.create(options, function(err, message) {
@@ -27,10 +28,17 @@ MessageManager.prototype.create = function(options, cb) {
                 console.error(err);
                 return cb(err);
             }
-            message = message.toJSON();
-            message.owner = user.toJSON();
-            cb(null, message);
-            this.emit('messages:new', message);
+            Room.findOne(message.room, function(err, room) {
+                if (err) {
+                    console.error(err);
+                    return cb(err);
+                }
+                message = message.toJSON();
+                message.owner = user.toJSON();
+                message.room = room.toJSON();
+                cb(null, message);
+                this.emit('messages:new', message);
+            }.bind(this));
         }.bind(this));
     }.bind(this));
 };

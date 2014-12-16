@@ -34,6 +34,7 @@
         var that = this;
         var room = {
             name: data.name,
+            slug: data.slug,
             description: data.description
         };
         var callback = data.callback;
@@ -162,7 +163,7 @@
     // Messages
     //
     Client.prototype.addMessage = function(message) {
-        var room = this.rooms.get(message.room);
+        var room = this.rooms.get(message.room.id || message.room);
         if (!room || !message) {
             // Unknown room, nothing to do!
             return;

@@ -59,7 +59,7 @@ module.exports = function() {
                 }
 
                 var userIds = core.presence.rooms
-                                  .getOrAdd(data.room).getUserIds();
+                                  .getOrAdd(room._id, room.slug).getUserIds();
 
                 User.find({ _id: { $in: userIds } }, function(err, users) {
                     if (err) {

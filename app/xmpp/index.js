@@ -67,14 +67,14 @@ function xmppStart(core) {
 
     core.messages.on('messages:new', function(msg) {
         var connections =
-            core.presence.rooms.get(msg.room).connections.byType('xmpp');
+            core.presence.rooms.get(msg.room.id).connections.byType('xmpp');
 
         connections.forEach(function(conn) {
             var stanza = new Stanza.Message({
                 id: msg._id,
                 type: 'groupchat',
-                to: helper.getRoomJid(msg.room),
-                from: helper.getRoomJid(msg.room, msg.owner.screenName)
+                to: helper.getRoomJid(msg.room.slug),
+                from: helper.getRoomJid(msg.room.slug, msg.owner.screenName)
             });
 
             stanza.c('active', {
@@ -98,8 +98,8 @@ function xmppStart(core) {
 
         connections.forEach(function(conn) {
             var presence = new Stanza.Presence({
-                to: helper.getRoomJid(data.roomId, conn.screenName),
-                from: helper.getRoomJid(data.roomId, data.screenName)
+                to: helper.getRoomJid(data.roomSlug, conn.screenName),
+                from: helper.getRoomJid(data.roomSlug, data.screenName)
             });
 
             presence
@@ -107,7 +107,7 @@ function xmppStart(core) {
                 xmlns:'http://jabber.org/protocol/muc#user'
             })
             .c('item', {
-                jid: helper.getRoomJid(data.roomId, data.screenName),
+                jid: helper.getRoomJid(data.roomSlug, data.screenName),
                 affiliation: 'none',
                 role: 'participant'
             });
@@ -128,8 +128,8 @@ function xmppStart(core) {
 
         connections.forEach(function(conn) {
             var presence = new Stanza.Presence({
-                to: helper.getRoomJid(data.roomId, conn.screenName),
-                from: helper.getRoomJid(data.roomId, data.screenName),
+                to: helper.getRoomJid(data.roomSlug, conn.screenName),
+                from: helper.getRoomJid(data.roomSlug, data.screenName),
                 type: 'unavailable'
             });
 
@@ -137,7 +137,7 @@ function xmppStart(core) {
                 xmlns: 'http://jabber.org/protocol/muc#user'
             });
             x.c('item', {
-                jid: helper.getRoomJid(data.roomId, data.screenName),
+                jid: helper.getRoomJid(data.roomSlug, data.screenName),
                 role: 'none',
                 affiliation: 'none'
             });

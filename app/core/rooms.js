@@ -43,6 +43,8 @@ RoomManager.prototype.update = function(roomId, options, cb) {
         }
 
         room.name = options.name;
+        // DO NOT UPDATE SLUG
+        // room.slug = options.slug;
         room.description = options;
         room.save(function(err, room) {
             if (err) {
@@ -66,6 +68,11 @@ RoomManager.prototype.list = function(options, cb) {
 RoomManager.prototype.get = function(roomId, cb) {
     var Room = mongoose.model('Room');
     Room.findById(roomId, cb);
+};
+
+RoomManager.prototype.slug = function(slug, cb) {
+    var Room = mongoose.model('Room');
+    Room.findOne({slug: slug}, cb);
 };
 
 module.exports = RoomManager;

@@ -106,11 +106,13 @@ var BrowserView = Backbone.View.extend({
     add: function(e) {
         e.preventDefault();
         var $name = this.$('.lcb-room-name');
+        var $slug = this.$('.lcb-room-slug');
         var $description = this.$('.lcb-room-description');
         var $modal = this.$('#lcb-add-room');
         var $form = this.$(e.target);
         var data = {
             name: $name.val().trim(),
+            slug: $slug.val().trim(),
             description: $description.val(),
             callback: function success() {
                 $modal.modal('hide');
@@ -121,6 +123,12 @@ var BrowserView = Backbone.View.extend({
         // we require name is non-empty
         if (!data.name) {
             $name.parent().addClass('has-error');
+            return;
+        }
+
+        // we require slug is non-empty
+        if (!data.slug) {
+            $slug.parent().addClass('has-error');
             return;
         }
 

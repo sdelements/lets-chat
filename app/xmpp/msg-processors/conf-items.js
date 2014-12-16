@@ -25,7 +25,7 @@ module.exports = MessageProcessor.extend({
 
             rooms.forEach(function(room) {
                 query.c('item', {
-                    jid: helper.getRoomJid(room.id),
+                    jid: helper.getRoomJid(room.slug),
                     name: room.name
                 });
             });

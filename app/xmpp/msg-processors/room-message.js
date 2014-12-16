@@ -12,7 +12,7 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
-        var roomId = this.request.attrs.to.split('@')[0];
+        var roomSlug = this.request.attrs.to.split('@')[0];
 
         var body = _.find(this.request.children, function (child) {
             return child.name === 'body';
@@ -22,15 +22,19 @@ module.exports = MessageProcessor.extend({
             return;
         }
 
-        var options = {
-            owner: this.client.user._id,
-            room: roomId,
-            text: body.text()
-        };
+        this.core.rooms.slug(roomSlug, function(err, room) {
+            
+            var options = {
+                owner: this.client.user._id,
+                room: room._id,
+                text: body.text()
+            };
 
-        this.core.messages.create(options, function(err, message) {
-            // Message will be sent by listener
-            cb(err);
+            this.core.messages.create(options, function(err, message) {
+                // Message will be sent by listener
+                cb(err);
+            }.bind(this));
+
         }.bind(this));
     }
 

@@ -55,6 +55,7 @@ module.exports = function() {
                 options = {
                     owner: req.user._id,
                     name: data.name,
+                    slug: data.slug,
                     description: data.description
                 };
 
@@ -86,6 +87,7 @@ module.exports = function() {
             var roomId = req.data.id,
                 options = {
                     name: req.data.name,
+                    slug: req.data.slug,
                     description: req.data.description
                 };
 
@@ -115,7 +117,7 @@ module.exports = function() {
                 var user = req.user.toJSON();
                 user.room = room._id;
 
-                core.presence.join(req.socket.conn, room._id);
+                core.presence.join(req.socket.conn, room._id, room.slug);
                 req.io.join(room._id);
                 req.io.respond(room.toJSON());
             });

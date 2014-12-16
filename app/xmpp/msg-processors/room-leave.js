@@ -13,14 +13,17 @@ module.exports = MessageProcessor.extend({
 
     then: function(cb) {
         var roomUrl = this.request.attrs.to.split('/')[0],
-            roomId = roomUrl.split('@')[0];
+            roomSlug = roomUrl.split('@')[0];
 
-        this.core.rooms.get(roomId, function(err, room) {
+        this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
                 return;
             }
+            if (!room) {
+                return;
+            }
 
-            this.core.presence.leave(this.client.conn, roomId);
+            this.core.presence.leave(this.client.conn, room._id);
 
             var presence = this.Presence({
                 type: 'unavailable'

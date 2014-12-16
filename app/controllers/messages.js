@@ -11,7 +11,7 @@ module.exports = function() {
         middlewares = this.middlewares;
 
     core.messages.on('messages:new', function(message) {
-        app.io.room(message.room)
+        app.io.room(message.room.id)
               .broadcast('messages:new', message);
     });
 
