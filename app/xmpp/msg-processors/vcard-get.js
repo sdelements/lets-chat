@@ -19,6 +19,13 @@ module.exports = MessageProcessor.extend({
         v.c('FN').t(this.client.user.firstName + ' ' +
                     this.client.user.lastName);
 
+
+        var name = v.c('N');
+        name.c('GIVEN').t(this.client.user.firstName);
+        name.c('FAMILY').t(this.client.user.lastName);
+
+        v.c('NICKNAME').t(this.client.user.username);
+
         cb(null, stanza);
     }
 
