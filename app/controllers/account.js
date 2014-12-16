@@ -63,7 +63,7 @@ module.exports = function() {
                 password: fields.password,
                 firstName: fields.firstName || fields.firstname || fields['first-name'],
                 lastName: fields.lastName || fields.lastname || fields['last-name'],
-                displayName: fields.displayName || fields.displayname || fields['display-name']
+                username: fields.username || fields.username || fields['username']
             }, function(err, user) {
                 // Did we get error?
                 if (err) {

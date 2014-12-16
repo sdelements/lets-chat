@@ -38,9 +38,17 @@ var UserSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    displayName: {
+    username: {
         type: String,
         required: true,
+        trim: true,
+        unique: true,
+        match: /^[a-zA-Z0-9_]+$/i
+    },
+    displayName: {
+        // Legacy
+        type: String,
+        required: false,
         trim: true
     },
     joined: {
@@ -66,6 +74,10 @@ var UserSchema = new mongoose.Schema({
     toJSON: {
         virtuals: true
     }
+});
+
+UserSchema.virtual('screenName').get(function() {
+    return this.username || this.displayName.replace(/\W/i, '');
 });
 
 UserSchema.virtual('avatar').get(function() {
@@ -105,7 +117,7 @@ UserSchema.statics.authenticate = function(identifier, password, cb) {
     var options = {};
 
     if (identifier.indexOf('@') === -1) {
-        options._id = identifier;
+        options.username = identifier;
     } else {
         options.email = identifier;
     }
@@ -144,7 +156,7 @@ UserSchema.method('toJSON', function() {
         id: this._id,
         firstName: this.firstName,
         lastname: this.lastName,
-        displayName: this.displayName,
+        screenName: this.screenName,
         avatar: this.avatar
     };
 });

@@ -1,7 +1,7 @@
 /*********************
  * Let's Chat Views
  *********************/
- 
+
 'use strict';
 
 //
@@ -60,7 +60,7 @@ var WindowView = Backbone.View.extend({
     countMessage: function(message) {
         if (this.focus || message.historical) return;
         ++this.count;
-        if (new RegExp('\\B@(' + this.client.user.get('safeName') + ')(?!@)\\b', 'i').test(message.text)) {
+        if (new RegExp('\\B@(' + this.client.user.get('screenName') + ')(?!@)\\b', 'i').test(message.text)) {
             ++this.mentions;
         }
         if (!this.titleTimer) {
@@ -201,7 +201,7 @@ var TabsView = Backbone.View.extend({
         $tab.data('count-total', ++total);
         $total.text(total);
         // Just mentions
-        if (new RegExp('\\B@(' + this.client.user.get('safeName') + ')(?!@)\\b', 'i').test(message.text)) {
+        if (new RegExp('\\B@(' + this.client.user.get('screenName') + ')(?!@)\\b', 'i').test(message.text)) {
             $tab.data('count-mentions', ++mentions);
             $mentions.text(mentions);
         }
@@ -376,7 +376,7 @@ var RoomView = Backbone.View.extend({
         // Mine? Mine? Mine? Mine?
         message.own = this.client.user.id === message.owner.id;
         // WHATS MY NAME
-        message.mentioned = new RegExp('\\B@(' + this.client.user.get('safeName') + ')(?!@)\\b', 'i').test(message.text)
+        message.mentioned = new RegExp('\\B@(' + this.client.user.get('screenName') + ')(?!@)\\b', 'i').test(message.text)
         // Templatin' time
         var $html = $(this.messageTemplate(message).trim());
         var $text = $html.find('.lcb-message-text');

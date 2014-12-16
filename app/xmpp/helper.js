@@ -2,14 +2,14 @@
 
 var settings = require('./../config');
 
-function getUserJid(userId) {
-    return userId + '@' + settings.xmpp.host;
+function getUserJid(screenName) {
+    return screenName + '@' + settings.xmpp.host;
 }
 
-function getRoomJid(roomId, userId) {
+function getRoomJid(roomId, screenName) {
     var jid = roomId + '@' + settings.xmpp.confhost;
-    if (userId) {
-        jid += '/' + userId;
+    if (screenName) {
+        jid += '/' + screenName;
     }
     return jid;
 }

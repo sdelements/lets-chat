@@ -26,6 +26,14 @@ ConnectionCollection.prototype.getUserIds = function() {
     return _.uniq(userIds);
 };
 
+ConnectionCollection.prototype.getScreenNames = function() {
+    var screenNames = Object.keys(this.connections).map(function(key) {
+        return this.connections[key].screenName;
+    }, this);
+
+    return _.uniq(screenNames);
+};
+
 ConnectionCollection.prototype.byType = function(type) {
     return Object.keys(this.connections).map(function(key) {
         return this.connections[key];

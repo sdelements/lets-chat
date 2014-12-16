@@ -3,8 +3,8 @@
 var util = require('util'),
     Connection = require('./../core/presence').Connection;
 
-function SocketIoConnection(userId, socket) {
-    Connection.call(this, 'socket.io', userId);
+function SocketIoConnection(userId, screenName, socket) {
+    Connection.call(this, 'socket.io', userId, screenName);
     this.socket = socket;
     socket.conn = this;
     socket.on('disconnect', this.disconnect.bind(this));
@@ -21,10 +21,18 @@ SocketIoConnection.prototype.disconnect = function() {
 
 module.exports = function() {
     var app = this.app,
-        core = this.core;
+        core = this.core,
+        User = this.models.user;
 
     app.io.sockets.on('connection', function(socket) {
         var userId = socket.handshake.session.userID;
-        core.presence.connect(new SocketIoConnection(userId, socket));
+        User.findById(userId, function (err, user) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            var conn = new SocketIoConnection(userId, user.screenName, socket);
+            core.presence.connect(conn);
+        });
     });
 };

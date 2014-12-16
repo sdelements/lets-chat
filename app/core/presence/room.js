@@ -22,12 +22,17 @@ Room.prototype.getUserIds = function() {
     return this.connections.getUserIds();
 };
 
+Room.prototype.getScreenNames = function() {
+    return this.connections.getScreenNames();
+};
+
 Room.prototype.addConnection = function(connection) {
     if (this.getUserIds().indexOf(connection.userId) === -1) {
         // User joining room
         this.emit('user_join', {
             roomId: this.roomId,
-            userId: connection.userId
+            userId: connection.userId,
+            screenName: connection.screenName
         });
     }
     this.connections.add(connection);
@@ -39,7 +44,8 @@ Room.prototype.removeConnection = function(connection) {
             // Leaving room altogether
             this.emit('user_leave', {
                 roomId: this.roomId,
-                userId: connection.userId
+                userId: connection.userId,
+                screenName: connection.screenName
             });
         }
     }

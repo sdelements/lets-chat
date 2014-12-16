@@ -1,7 +1,8 @@
 'use strict';
 
 var MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config');
+    settings = require('./../../config'),
+    helper = require('./../helper');
 
 module.exports = MessageProcessor.extend({
 
@@ -22,12 +23,13 @@ module.exports = MessageProcessor.extend({
 
             this.core.presence.join(this.client.conn, roomId);
 
-            var userIds = this.core.presence.rooms.get(roomId).getUserIds();
+            var screenNames = this.core.presence.rooms
+                                  .get(roomId).getScreenNames();
 
-            var presences = userIds.map(function(userId) {
+            var presences = screenNames.map(function(screenName) {
 
                 var presence = this.Presence({
-                    from: roomUrl + '/' + userId
+                    from: helper.getRoomJid(roomId, screenName)
                 });
 
                 presence
