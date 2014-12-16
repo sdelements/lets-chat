@@ -13,6 +13,9 @@ xmpp:
   port: 5222
   host: 'localhost'
   confhost: 'conference.localhost'
+  # tls:
+  #   keyPath: ./server.key
+  #   certPath: ./server.crt
 
 database:
   uri: mongodb://localhost/letschat

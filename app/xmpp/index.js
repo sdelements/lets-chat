@@ -17,10 +17,19 @@ var msgProcessors = (function(){
     })();
 
 function xmppStart(core) {
-    var c2s = new xmpp.C2SServer({
+    var options = {
         port: settings.xmpp.port,
         domain: settings.xmpp.host
-    });
+    };
+
+    if (settings.xmpp.tls) {
+        options.tls = {
+            keyPath: settings.xmpp.tls.keyPath,
+            certPath: settings.xmpp.tls.certPath
+        };
+    }
+    
+    var c2s = new xmpp.C2SServer(options);
 
     c2s.on('connect', function(client) {
 
