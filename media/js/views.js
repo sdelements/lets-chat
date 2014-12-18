@@ -395,6 +395,7 @@ var RoomView = Backbone.View.extend({
         } else {
             $text.html(this.formatMessage($text.html()));
         }
+        $html.find('time').updateTimeStamp();
         this.$messages.append($html);
         this.lastMessageOwner = message.owner.id;
         this.scrollMessages();
