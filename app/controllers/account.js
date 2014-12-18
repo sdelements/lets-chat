@@ -8,6 +8,7 @@ module.exports = function() {
 
     var _ = require('underscore'),
         fs = require('fs'),
+        passport = require('passport'),
         path = require('path');
 
     var app = this.app,
@@ -54,7 +55,7 @@ module.exports = function() {
     //
     app.io.route('account', {
         whoami: function(req) {
-            req.io.respond(req.user);
+            req.io.respond(req.handshake.user);
         },
         register: function(req) {
             var fields = req.body || req.data;
@@ -97,33 +98,36 @@ module.exports = function() {
             });
         },
         login: function(req) {
-            var fields = req.body || req.data;
-            User.authenticate(fields.email, fields.password, function(err, user) {
+            passport.authenticate('local', function(err, user, info) {
                 if (err) {
-                    // Something bad
                     req.io.respond({
                         status: 'error',
-                        message: 'An error occured while trying to log you in'
-                    }, 400);
-                    return;
-                }
-                if (user && user) {
-                    // Hello user <3
-                    req.session.userID = user._id;
-                    req.session.save(function() {
-                        req.io.respond({
-                            status: 'success',
-                            message: 'You\'ve been logged in!'
-                        });
+                        message: 'There were problems logging you in.',
+                        errors: err
                     });
                     return;
                 }
-                // NOPE!
-                req.io.respond({
-                    status: 'error',
-                    message: 'Could not log you in'
-                }, 401);
-            });
+                if (!user) {
+                    req.io.respond({
+                        status: 'error',
+                        message: 'Incorrect login credentials.'
+                    });
+                    return;
+                }
+                req.login(user, function(err) {
+                    if (err) {
+                        req.io.respond({
+                            status: 'error',
+                            message: 'There were problems logging you in.'
+                        });
+                        return;
+                    }
+                    req.io.respond({
+                        status: 'success',
+                        message: 'Logging you in...'
+                    });
+                });
+            })(req);
         },
         logout: function(req) {
             req.session.destroy();

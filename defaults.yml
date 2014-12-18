@@ -22,3 +22,4 @@ database:
 
 secrets:
   cookie: secretsauce
+  password_salt: 'Hello. Yes, This is Dog'

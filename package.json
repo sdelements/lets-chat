@@ -51,7 +51,11 @@
     "node-uuid": "^1.4.2",
     "node-xmpp-core": "^1.0.0-alpha12",
     "node-xmpp-server": "^1.0.0-alpha11",
+    "node_hash": "^0.2.0",
     "nunjucks": "~1.1.0",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "passport.socketio": "^3.4.1",
     "require-directory": "~2.0.0",
     "require-tree": "~0.3.3",
     "underscore": "~1.7.0"

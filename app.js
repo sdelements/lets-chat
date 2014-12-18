@@ -17,7 +17,8 @@ var _ = require('lodash'),
 var psjon = require('./package.json'),
     settings = require('./app/config.js');
 
-var models = all('./app/models'),
+var passport = require('./app-passport'),
+    models = all('./app/models'),
     middlewares = all('./app/middlewares'),
     controllers = all('./app/controllers'),
     core = require('./app/core/index');
@@ -29,18 +30,22 @@ var app = express().http().io();
 expressMiddleware(app);
 
 // Session
-app.use(express.cookieParser());
-app.use(express.session({
-    secret: settings.secrets.cookie,
-    store: new MongoStore({
-      url: settings.database.uri,
-      auto_reconnect: true
-    })
-}));
+var sessionStore = new MongoStore({
+    url: settings.database.uri,
+    auto_reconnect: true
+});
 
-// Populate user for each request
-app.use(middlewares.populateUser);
-app.io.use(middlewares.populateUser);
+// Session
+var session = {
+    key: 'connect.sid',
+    secret: settings.secrets.cookie,
+    store: sessionStore
+};
+
+app.use(express.cookieParser());
+app.use(express.session(session));
+
+passport.setupPassport(app, session);
 
 // Public
 app.use('/media', express.static(__dirname + '/media'));
@@ -66,25 +71,6 @@ _.each(controllers, function(controller) {
         middlewares: middlewares,
         models: models,
         controllers: controllers
-    });
-});
-
-//
-// Sockets
-//
-var authorizationIO = app.io.get('authorization');
-
-app.io.set('authorization', function(data, accept) {
-    authorizationIO(data, function(err, res) {
-        if (err) {
-            console.error('Error authorizing socket');
-            console.error(err);
-        }
-        if (data.session && data.session.userID) {
-            accept(null, true);
-            return;
-        }
-        accept(null, false);
     });
 });
 

@@ -6,12 +6,14 @@
 
 var bcrypt = require('bcryptjs'),
     md5 = require('MD5'),
+    hash = require('node_hash'),
     settings = require('./../config');
 
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId,
     uniqueValidator = require('mongoose-unique-validator'),
-    validate = require('mongoose-validate');
+    validate = require('mongoose-validate'),
+    settings = require('./../config');
 
 var UserSchema = new mongoose.Schema({
     email: {
@@ -103,13 +105,17 @@ UserSchema.pre('save', function(next) {
     });
 });
 
-UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-        if (err) {
-            return cb(err);
+UserSchema.methods.comparePassword = function(password, cb) {
+    bcrypt.compare(password, this.password, function(err, isMatch) {
+        if (isMatch) {
+            return cb(null, true);
         }
-        cb(null, isMatch);
-    });
+
+        var legacyPassowrd = hash.sha256(password,
+                                         settings.secrets.password_salt);
+        cb(null, legacyPassowrd === this.password);
+
+    }.bind(this));
 };
 
 UserSchema.statics.authenticate = function(identifier, password, cb) {
@@ -137,7 +143,7 @@ UserSchema.statics.authenticate = function(identifier, password, cb) {
             if (isMatch) {
                 return cb(null, user);
             }
-            // Bad password bro
+            // Bad password
             return cb(null, null, 1);
         });
     });

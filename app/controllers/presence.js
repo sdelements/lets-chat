@@ -25,7 +25,7 @@ module.exports = function() {
         User = this.models.user;
 
     app.io.sockets.on('connection', function(socket) {
-        var userId = socket.handshake.session.userID;
+        var userId = socket.handshake.user._id;
         User.findById(userId, function (err, user) {
             if (err) {
                 console.error(err);
