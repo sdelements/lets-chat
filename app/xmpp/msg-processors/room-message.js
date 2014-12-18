@@ -8,6 +8,7 @@ module.exports = MessageProcessor.extend({
 
     if: function() {
         return this.request.name === 'message' &&
+               this.request.type === 'groupchat' &&
                this.toARoom;
     },
 
