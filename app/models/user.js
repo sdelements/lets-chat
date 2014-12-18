@@ -46,9 +46,8 @@ var UserSchema = new mongoose.Schema({
         match: /^[a-zA-Z0-9_]+$/i
     },
     displayName: {
-        // Legacy
         type: String,
-        required: false,
+        required: true,
         trim: true
     },
     joined: {
@@ -157,6 +156,7 @@ UserSchema.method('toJSON', function() {
         firstName: this.firstName,
         lastname: this.lastName,
         screenName: this.screenName,
+        displayName: this.displayName,
         avatar: this.avatar
     };
 });

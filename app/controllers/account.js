@@ -59,11 +59,12 @@ module.exports = function() {
         register: function(req) {
             var fields = req.body || req.data;
             User.create({
+                username: fields.username,
                 email: fields.email,
                 password: fields.password,
                 firstName: fields.firstName || fields.firstname || fields['first-name'],
                 lastName: fields.lastName || fields.lastname || fields['last-name'],
-                username: fields.username || fields.username || fields['username']
+                displayName: fields.displayName || fields.displayname || fields['display-name']
             }, function(err, user) {
                 // Did we get error?
                 if (err) {
