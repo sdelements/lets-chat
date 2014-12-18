@@ -343,6 +343,14 @@ var RoomView = Backbone.View.extend({
         // Scroll Locking
         this.scrollLocked = true;
         this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));
+
+        this.$('.lcb-entry-input')
+            .atwho({
+                at: '@',
+                search_key: 'screenName',
+                data: '/users',
+                tpl: "<li data-value='@${screenName}'><img src='http://www.gravatar.com/avatar/${avatar}?s=50' height='20' width='20'/> ${screenName} </li>"
+            })
     },
     updateMeta: function(room, wat) {
         var $heading = this.$('.lcb-room-heading'),
