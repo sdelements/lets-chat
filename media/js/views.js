@@ -349,7 +349,7 @@ var RoomView = Backbone.View.extend({
             at: '@',
             search_key: 'screenName',
             data: '/users',
-            tpl: "<li data-value='${name}'><img src='http://www.gravatar.com/avatar/${avatar}?s=50' height='20' width='20'/> ${screenName} </li>"
+            tpl: "<li data-value='@${screenName}'><img src='http://www.gravatar.com/avatar/${avatar}?s=50' height='20' width='20'/> ${screenName} </li>"
         })
     },
     updateMeta: function(room, wat) {
