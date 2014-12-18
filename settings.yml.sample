@@ -5,6 +5,12 @@
 server:
   port: 5000
 
+xmpp:
+  enable: true
+  port: 5222
+  host: 'localhost'
+  confhost: 'conference.localhost'
+
 database:
   uri: mongodb://localhost/letschat
 

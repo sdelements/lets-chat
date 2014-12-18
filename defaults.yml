@@ -19,3 +19,6 @@ xmpp:
 
 database:
   uri: mongodb://localhost/letschat
+
+secrets:
+  cookie: secretsauce
