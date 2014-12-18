@@ -196,10 +196,10 @@ var TabsView = Backbone.View.extend({
         this.client.events.trigger('rooms:leave', id);
     },
     alert: function(message) {
-        var $tab = this.$('.lcb-tab[data-id=' + message.room + ']'),
+        var $tab = this.$('.lcb-tab[data-id=' + message.room.id + ']'),
             $total = $tab.find('.lcb-tab-alerts-total'),
             $mentions = $tab.find('.lcb-tab-alerts-mentions');
-        if (message.historical || this.rooms.current.get('id') === message.room || $tab.length === 0) {
+        if (message.historical || this.rooms.current.get('id') === message.room.id || $tab.length === 0) {
             // Nothing to do here!
             return;
         }
