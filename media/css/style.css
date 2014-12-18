@@ -9332,6 +9332,19 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 18px;
+  padding-top: 5px;
+  font-size: 18px;
+}
+.lcb-account-button-username {
+  display: block;
+  margin-left: 40px;
+  margin-right: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 15px;
+  font-size: 12px;
 }
 .lcb-account-button-chevron {
   height: 100%;
@@ -9880,8 +9893,19 @@ body {
   min-height: 40px;
 }
 .lcb-room-sidebar-user-name {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 17px;
+  margin-left: 36px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lcb-room-sidebar-user-username {
+  color: #888;
   font-size: 12px;
-  margin-top: 8px;
+  line-height: 13px;
   margin-left: 36px;
   display: block;
   overflow: hidden;
@@ -9964,10 +9988,14 @@ body {
   margin-left: 40px;
 }
 .lcb-message-name {
-  color: #aaa;
+  color: #666;
   font-weight: 900;
   margin-bottom: 5px;
   display: block;
+}
+.lcb-message-name .lcb-message-username {
+  color: #aaa;
+  font-weight: 400;
 }
 .lcb-message-time {
   color: #bbb;

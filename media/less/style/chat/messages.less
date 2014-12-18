@@ -2,8 +2,8 @@
  * Messages
  *********************/
 
- @messagePaddding: 7px; 
- 
+ @messagePaddding: 7px;
+
 .lcb-messages {
     background: #fff;
     padding: 0;
@@ -11,7 +11,7 @@
     overflow: auto;
     .flex(1);
 }
- 
+
 .lcb-message {
     min-height: 47px;
     border-top: 1px #eee solid;
@@ -68,10 +68,14 @@
 }
 
 .lcb-message-name {
-    color: #aaa;
+    color: #666;
     font-weight: 900;
     margin-bottom: @messagePaddding - 2px;
     display: block;
+    .lcb-message-username {
+        color: #aaa;
+        font-weight: 400;
+    }
 }
 
 .lcb-message-time {
