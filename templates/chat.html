@@ -33,12 +33,19 @@
             <div class="lcb-header-logo">Let's Chat</div>
         </div>
         <section class="lcb-sidebar">
-            <a class="lcb-account-button">
-                <img class="lcb-account-button-avatar lcb-avatar" src="http://www.gravatar.com/avatar/{{ account.avatar }}?s=50" />
-                <span class="lcb-account-button-name">{{ account.displayName }}</span>
-                <span class="lcb-account-button-username">@{{ account.screenName }}</span>
-                <i class="lcb-account-button-chevron fa fa-chevron-down"></i>
-            </a>
+            <div class="dropdown">
+                <a class="lcb-account-button dropdown-toggle" data-toggle="dropdown" href="3">
+                    <img class="lcb-account-button-avatar lcb-avatar" src="http://www.gravatar.com/avatar/{{ account.avatar }}?s=50" />
+                    <span class="lcb-account-button-name">{{ account.displayName }}</span>
+                    <span class="lcb-account-button-username">@{{ account.screenName }}</span>
+                    <i class="lcb-account-button-chevron fa fa-chevron-down"></i>
+                </a>
+                <ul class="lcb-account-dropdown dropdown-menu">
+                    <li><a data-toggle="modal" href="#notifications"><i class="fa fa-bell"></i> Notifications</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/account/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                </ul>
+            </div>
             <div class="lcb-status-indicators">
                 <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection" data-status="disconnected" style="display: none;">
                     <i class="fa fa-plug"></i> Disconnected
@@ -74,5 +81,6 @@
         <div class="lcb-loading lcb-client-loading">
             <img class="lcb-loading-indicator" src="media/img/loading.svg" alt="Loading..." />
         </div>
+        {% include 'includes/notifications-modal.html' %}
     </div><!-- lcb-client end -->
 {% endblock %}
