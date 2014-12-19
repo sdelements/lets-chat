@@ -8,9 +8,15 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
+                        <label class="control-label col-sm-4">Username</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" name="user-name" type="text" value="{{ account.username }}" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-sm-4">Email</label>
                         <div class="col-sm-7">
-                            <input class="required email form-control" name="email" type="text" value="{{ user_email }}" />
+                            <input class="required email form-control" name="email" type="text" value="{{ account.email }}" />
                         </div>
                     </div>
                     <div class="form-group">

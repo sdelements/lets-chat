@@ -157,7 +157,9 @@ UserSchema.method('toJSON', function() {
         lastname: this.lastName,
         screenName: this.screenName,
         displayName: this.displayName,
-        avatar: this.avatar
+        avatar: this.avatar,
+        email: this.email,
+        username: this.username
     };
 });
 
