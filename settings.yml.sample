@@ -1,6 +1,8 @@
 #
 # Let's Chat Settings
 #
+# See defaults.yml for all available options
+#
 
 server:
   port: 5000
@@ -16,3 +18,17 @@ database:
 
 secrets:
   cookie: secretsauce
+  password_salt: secretsauce
+
+auth:
+  local:
+    enable: true
+
+  kerberos:
+    enable: false
+    realm: example.com
+
+  ldap:
+    # See defaults.yml for all LDAP options
+    authentication: false
+    authorization: false
