@@ -2,8 +2,11 @@ var _ = require('underscore'),
     express = require('express.io'),
     mongoose = require('mongoose'),
     passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy,
-    passportSocketIo = require("passport.socketio");
+    passportSocketIo = require("passport.socketio"),
+    settings = require('./../config'),
+    localAuth = require('./local'),
+    kerberosAuth = require('./kerberos'),
+    ldapAuth = require('./ldap');
 
 function middleware(req, res, next) {
     // Let's make sure req.user is always populated
@@ -31,26 +34,11 @@ function middleware(req, res, next) {
     next();
 }
 
-function setupPassport(app, session) {
+function setup(app, session) {
 
-    passport.use(new LocalStrategy({
-        usernameField: 'email',
-        passwordField: 'password'
-    }, function(identifier, password, done) {
-        var User = mongoose.model('User');
-        User.authenticate(identifier, password, function(err, user) {
-            if (err) {
-                return done(null, false,  {
-                    message: 'Some fields did not validate.'
-                });
-            }
-            if (user) {
-                return done(null, user);
-            } else {
-                return done(null, false, { message: 'Incorrect password.' });
-            }
-        });
-    }));
+    localAuth.setup();
+    kerberosAuth.setup();
+    ldapAuth.setup();
 
     passport.serializeUser(function(user, done) {
         done(null, user._id);
@@ -77,6 +65,22 @@ function setupPassport(app, session) {
     app.io.use(middleware);
 }
 
+function authenticate(req, cb) {
+
+    if (settings.auth.kerberos && settings.auth.kerberos.enable) {
+        kerberosAuth.authenticate(req, cb);
+    }
+
+    if (settings.auth.ldap && settings.auth.ldap.authenticate) {
+        ldapAuth.authenticate(req, cb);
+    }
+
+    if (settings.auth.local && settings.auth.local.enable) {
+        localAuth.authenticate(req, cb);
+    }
+}
+
 module.exports = {
-    setupPassport: setupPassport
+    setup: setup,
+    authenticate: authenticate
 };

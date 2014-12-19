@@ -17,7 +17,7 @@ var _ = require('lodash'),
 var psjon = require('./package.json'),
     settings = require('./app/config.js');
 
-var passport = require('./app-passport'),
+var auth = require('./app/auth/index'),
     models = all('./app/models'),
     middlewares = all('./app/middlewares'),
     controllers = all('./app/controllers'),
@@ -45,7 +45,7 @@ var session = {
 app.use(express.cookieParser());
 app.use(express.session(session));
 
-passport.setupPassport(app, session);
+auth.setup(app, session);
 
 // Public
 app.use('/media', express.static(__dirname + '/media'));
