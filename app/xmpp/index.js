@@ -4,6 +4,7 @@ var xmpp = require('node-xmpp-server'),
     Stanza = require('node-xmpp-core').Stanza,
     mongoose = require('mongoose'),
     settings = require('./../config'),
+    auth = require('./../auth/index'),
     all = require('require-tree'),
     helper = require('./helper');
 
@@ -28,16 +29,20 @@ function xmppStart(core) {
             certPath: settings.xmpp.tls.certPath
         };
     }
-    
+
     var c2s = new xmpp.C2SServer(options);
 
     c2s.on('connect', function(client) {
 
         client.on('authenticate', function(opts, cb) {
-            var User = mongoose.model('User');
-            User.authenticate(opts.jid.local,
-                              opts.password, function(err, user) {
+            var req = {
+                body: {
+                    email: opts.jid.local,
+                    password: opts.password
+                }
+            };
 
+            auth.authenticate(req, function(err, user) {
                 if (err || !user) {
                     return cb(false);
                 }

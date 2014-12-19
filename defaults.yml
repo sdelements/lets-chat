@@ -23,3 +23,35 @@ database:
 secrets:
   cookie: secretsauce
   password_salt: 'Hello. Yes, This is Dog'
+
+auth:
+  local:
+    enable: true
+
+  kerberos:
+    enable: false
+    realm: example.com
+
+  ldap:
+    authentication: false
+    authorization: false
+    connect_settings:
+      url: ldap://example.com
+    #   tlsOptions:
+    #     ca: ca.pem
+    server_certs: []
+    bind_options:
+      bindDN:
+      bindCredentials:
+    search:
+      base:
+      opts:
+        scope: one
+        filter: (uid={{username}})
+        attributes: []
+    field_mappings:
+      uid: uid
+      firstName: givenName
+      lastName: sn
+      displayName: givenName
+      email: mail

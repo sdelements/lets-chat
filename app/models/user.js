@@ -16,6 +16,14 @@ var mongoose = require('mongoose'),
     settings = require('./../config');
 
 var UserSchema = new mongoose.Schema({
+    uid: {
+        type: String,
+        required: false,
+        trim: true,
+        validate: [function(v) {
+            return (v.length <= 24);
+        }, 'invalid ldap/kerberos username']
+    },
     email: {
         type: String,
         required: true,
@@ -26,7 +34,7 @@ var UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: false, // Only required if local
         trim: true,
         match: /^.{8,64}$/i
     },

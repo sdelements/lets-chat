@@ -4,11 +4,47 @@
 
 'use strict';
 
+var settings = require('./../config');
+
+function getAuthCb(req) {
+    return function(err, user, info) {
+        if (err) {
+            req.io.respond({
+                status: 'error',
+                message: 'There were problems logging you in.',
+                errors: err
+            });
+            return;
+        }
+        if (!user) {
+            req.io.respond({
+                status: 'error',
+                message: 'Incorrect login credentials.'
+            });
+            return;
+        }
+        req.login(user, function(err) {
+            if (err) {
+                req.io.respond({
+                    status: 'error',
+                    message: 'There were problems logging you in.'
+                });
+                return;
+            }
+            req.io.respond({
+                status: 'success',
+                message: 'Logging you in...'
+            });
+        });
+    };
+}
+
 module.exports = function() {
 
     var _ = require('underscore'),
         fs = require('fs'),
         passport = require('passport'),
+        auth = require('./../auth/index'),
         path = require('path');
 
     var app = this.app,
@@ -188,36 +224,8 @@ module.exports = function() {
             });
         },
         login: function(req) {
-            passport.authenticate('local', function(err, user, info) {
-                if (err) {
-                    req.io.respond({
-                        status: 'error',
-                        message: 'There were problems logging you in.',
-                        errors: err
-                    });
-                    return;
-                }
-                if (!user) {
-                    req.io.respond({
-                        status: 'error',
-                        message: 'Incorrect login credentials.'
-                    });
-                    return;
-                }
-                req.login(user, function(err) {
-                    if (err) {
-                        req.io.respond({
-                            status: 'error',
-                            message: 'There were problems logging you in.'
-                        });
-                        return;
-                    }
-                    req.io.respond({
-                        status: 'success',
-                        message: 'Logging you in...'
-                    });
-                });
-            })(req);
+            var cb = getAuthCb(req);
+            auth.authenticate(req, cb);
         },
         logout: function(req) {
             req.session.destroy();
