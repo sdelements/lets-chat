@@ -72,8 +72,21 @@ module.exports = function() {
         });
     });
 
+    app.get('/logout', function(req, res ) {
+        req.session.destroy();
+        res.redirect('/login');
+    });
+
     app.post('/account/login', function(req, res) {
         req.io.route('account:login');
+    });
+
+    app.post('/account/logout', function(req, res) {
+        req.io.route('account:logout');
+    });
+
+    app.post('/account/register', function(req, res) {
+        req.io.route('account:register');
     });
 
     app.post('/account/profile', function(req, res) {
@@ -82,15 +95,6 @@ module.exports = function() {
 
     app.post('/account/settings', function(req, res) {
         req.io.route('account:settings');
-    });
-
-    // TODO: you should be POST'ing to DELETE'ing this resource
-    app.get('/account/logout', function(req, res) {
-        req.io.route('account:logout');
-    });
-
-    app.post('/account/register', function(req, res) {
-        req.io.route('account:register');
     });
 
     //
