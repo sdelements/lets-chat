@@ -11,7 +11,8 @@ var WindowView = Backbone.View.extend({
     el: 'html',
     keys: {
         'up+shift+alt down+shift+alt': 'nextRoom',
-        'space+shift+alt': 'recallRoom'
+        'space+shift+alt': 'recallRoom',
+        'left+shift+alt right+shift+alt': 'toggleRoomSidebar'
     },
     initialize: function(options) {
         this.client = options.client;
@@ -120,6 +121,9 @@ var WindowView = Backbone.View.extend({
             return;
         }
         this.focus = false;
+    },
+    toggleRoomSidebar: function(e) {
+        this.$('.lcb-room:visible').toggleClass('lcb-room-sidebar-opened');
     }
 });
 
