@@ -98,10 +98,7 @@
 
 .lcb-room-toggle-sidebar {
     font-size: 30px;
-    display: none;
-    @media (max-width: @screen-sm-max) {
-        display: block;
-    }
+    display: block;
 }
 
 .lcb-room-sidebar {
@@ -125,6 +122,12 @@
         position: absolute;
         top: 0;
         right: -200px;
+    }
+    @media (min-width: @screen-sm-max) {
+        display: none;
+        .lcb-room-sidebar-opened & {
+            display: block;
+        }
     }
 }
 
