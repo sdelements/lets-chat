@@ -31,12 +31,11 @@ module.exports = function() {
     //
     app.io.route('messages', {
         create: function(req) {
-            var data = req.data || req.body,
-                options = {
-                    owner: req.user._id,
-                    room: data.room,
-                    text: data.text
-                };
+            var options = {
+                owner: req.user._id,
+                room: req.param('room'),
+                text: req.param('text')
+            };
 
             core.messages.create(options, function(err, message) {
                 if (err) {

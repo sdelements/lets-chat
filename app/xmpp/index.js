@@ -75,8 +75,11 @@ function xmppStart(core) {
     });
 
     core.messages.on('messages:new', function(msg) {
-        var connections =
-            core.presence.rooms.get(msg.room.id).connections.byType('xmpp');
+        var room = core.presence.rooms.get(msg.room.id);
+        if(!room)
+            return;
+
+        var connections = room.connections.byType('xmpp');
 
         connections.forEach(function(conn) {
             var stanza = new Stanza.Message({
