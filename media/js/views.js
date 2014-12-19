@@ -483,7 +483,7 @@ var StatusView = Backbone.View.extend({
 // Notifications
 //
 var NotificationsView = Backbone.View.extend({
-    el: '#notifications',
+    el: '#lcb-notifications',
     focus: true,
     count: 0,
     events: {
