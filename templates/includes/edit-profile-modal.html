@@ -1,7 +1,7 @@
 <div id="edit-profile" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form class="validate form-horizontal" action="/ajax/profile" method="post">
+            <form class="validate form-horizontal" action="/account/profile" method="post">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title"><i class="icon-edit"></i> Profile Settings</h4>
@@ -10,7 +10,7 @@
                     <div class="form-group">
                         <label class="control-label col-sm-4">Display Name</label>
                         <div class="col-sm-7">
-                            <input class="required form-control" name="display-name" type="text" value="{{ account.screenName }}" />
+                            <input class="required form-control" name="display-name" type="text" value="{{ account.displayName }}" />
                         </div>
                     </div>
                     <div class="form-group">
