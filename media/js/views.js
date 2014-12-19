@@ -10,8 +10,8 @@
 var WindowView = Backbone.View.extend({
     el: 'html',
     keys: {
-        'left+shift+alt right+shift+alt': 'nextRoom',
-        'down+shift+alt up+shift+alt': 'recallRoom'
+        'up+shift+alt down+shift+alt': 'nextRoom',
+        'space+shift+alt': 'recallRoom'
     },
     initialize: function(options) {
         this.client = options.client;
@@ -73,8 +73,8 @@ var WindowView = Backbone.View.extend({
         $(window).on('focus blur', _.bind(this.focusBlur, this));
     },
     nextRoom: function(e) {
-        var method = e.keyCode === 39 ? 'next' : 'prev',
-            selector = e.keyCode === 39 ? 'first' : 'last',
+        var method = e.keyCode === 40 ? 'next' : 'prev',
+            selector = e.keyCode === 40 ? 'first' : 'last',
             $next = this.$('.lcb-tabs').find('[data-id].selected')[method]();
         !$next.length > 0 && ($next = this.$('.lcb-tabs').find('[data-id]:' + selector));
         this.client.events.trigger('rooms:switch', $next.data('id'));
