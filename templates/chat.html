@@ -40,7 +40,9 @@
                     <span class="lcb-account-button-username">@{{ account.screenName }}</span>
                     <i class="lcb-account-button-chevron fa fa-chevron-down"></i>
                 </a>
-                <ul class="lcb-account-dropdown dropdown-menu">
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a data-toggle="modal" href="#edit-profile"><i class="fa fa-edit"></i> Edit Profile</a></li>
+                    <li><a data-toggle="modal" href="#edit-account"><i class="fa fa-cogs"></i> Account Settings</a></li>
                     <li><a data-toggle="modal" href="#notifications"><i class="fa fa-bell"></i> Notifications</a></li>
                     <li class="divider"></li>
                     <li><a href="/account/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
