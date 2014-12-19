@@ -31,18 +31,17 @@ module.exports = function() {
     //
     app.io.route('messages', {
         create: function(req) {
-            var options = {
-                owner: req.user._id,
-                room: req.param('room'),
-                text: req.param('text')
-            };
-
+            var data = req.data || req.body,
+                options = {
+                    owner: req.user._id,
+                    room: data.room,
+                    text: data.text
+                };
             core.messages.create(options, function(err, message) {
                 if (err) {
                     req.io.respond(err, 400);
                     return;
                 }
-
                 req.io.respond(message, 201);
             });
         },
@@ -53,7 +52,6 @@ module.exports = function() {
                     from: data.from || null,
                     limit: data.limit || null,
                 };
-
             core.messages.list(options, function(err, messages) {
                 if (err) {
                     req.io.respond(err, 400);
