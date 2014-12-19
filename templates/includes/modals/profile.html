@@ -1,0 +1,36 @@
+<div id="lcb-profile" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="validate form-horizontal" action="/account/profile" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><i class="icon-edit"></i> Profile Settings</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Display Name</label>
+                        <div class="col-sm-7">
+                            <input class="required form-control" name="display-name" type="text" value="{{ account.displayName }}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">First Name</label>
+                        <div class="col-sm-7">
+                            <input class="required form-control" name="first-name" type="text" value="{{ account.firstName }}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Last Name</label>
+                        <div class="col-sm-7">
+                            <input class="required form-control" name="last-name" type="text" value="{{ account.lastname }}" />
+                        </div>
+                    </div>
+                    <p class="alert response" style="display: none;"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info indicator" name="submit"><i class="icon-ok"></i> Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

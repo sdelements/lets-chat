@@ -21,6 +21,9 @@ var WindowView = Backbone.View.extend({
         this.focus = true;
         this.count = 0;
         this.mentions = 0;
+        this.activeDesktopNotifications = [];
+        this.activeDesktopNotificationMentions = [];
+
         this.rooms.current.on('change:id', function(current, id) {
             var room = this.rooms.get(id);
             this.updateTitle(room && room.get('name') || id == 'list' && 'Rooms');
@@ -29,7 +32,44 @@ var WindowView = Backbone.View.extend({
             if (room.id !== this.rooms.current.get('id')) return;
             this.updateTitle(room.get('name'));
         }, this);
-        this.rooms.on('messages:new', this.countMessage, this);
+        this.rooms.on('messages:new', function(message){
+            // Nothing to do here if focused
+            if (this.focus) return;
+
+            // Up the new message count
+            ++this.count;
+
+            this.flashTitle();
+
+            // Desktop Notifications
+            var icon = 'https://www.gravatar.com/avatar/' + message.owner.avatar + '?s=50'
+            var title = message.owner.screenName + ' in ' + message.room.name
+            var mention = message.mentioned;
+
+            if (notify.isSupported && notify.permissionLevel() == notify.PERMISSION_GRANTED) {
+                var notification = notify.createNotification(title, {
+                    body: message.text,
+                    icon: icon,
+                    tag: message.id
+                });
+                // If it's a mention, keep it sticky
+                if (mention) {
+                    this.activeDesktopNotificationMentions.push(notification);
+                    return;
+                }
+                // Clear excessive notifications
+                if (this.activeDesktopNotifications.length > 2) {
+                    this.activeDesktopNotifications[0].close();
+                    this.activeDesktopNotifications.shift();
+                }
+                this.activeDesktopNotifications.push(notification);
+
+                // Close after a few seconds
+                setTimeout(function() {
+                    notification.close();
+                }, 5 * 1000);
+            }
+        }, this);
         $(window).on('focus blur', _.bind(this.focusBlur, this));
     },
     nextRoom: function(e) {
@@ -448,6 +488,48 @@ var StatusView = Backbone.View.extend({
 });
 
 //
+// Notifications
+//
+var NotificationsView = Backbone.View.extend({
+    el: '#lcb-notifications',
+    focus: true,
+    count: 0,
+    events: {
+        'click [name=desktop-notifications]': 'toggleDesktopNotifications'
+    },
+    initialize: function() {
+        this.render();
+    },
+    render: function() {
+        var $input = this.$('[name=desktop-notifications]');
+        $input.find('.disabled').show()
+          .siblings().hide();
+        if (!notify.isSupported) {
+            $input.attr('disabled', true);
+            // Welp we're done here
+            return;
+        }
+        if (notify.permissionLevel() === notify.PERMISSION_GRANTED) {
+            $input.find('.enabled').show()
+              .siblings().hide();
+        }
+        if (notify.permissionLevel() === notify.PERMISSION_DENIED) {
+            $input.find('.blocked').show()
+              .siblings().hide();
+        }
+    },
+    toggleDesktopNotifications: function() {
+        var self = this;
+        if (!notify.isSupported) {
+            return;
+        }
+        notify.requestPermission(function() {
+            self.render();
+        });
+    }
+});
+
+//
 // Client
 //
 var ClientView = Backbone.View.extend({
@@ -476,6 +558,8 @@ var ClientView = Backbone.View.extend({
             rooms: this.client.rooms,
             client: this.client
         });
+        this.notifications = new NotificationsView();
+
         this.status = new StatusView({
             el: this.$el.find('.lcb-status-indicators'),
             client: this.client

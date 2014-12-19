@@ -31,7 +31,6 @@ module.exports = function() {
         var image = _.chain(images).filter(function(file) {
             return /\.(gif|jpg|jpeg|png)$/i.test(file);
         }).sample().value();
-
         res.render('login.html', {
             photo: image
         });
@@ -39,6 +38,14 @@ module.exports = function() {
 
     app.post('/account/login', function(req, res) {
         req.io.route('account:login');
+    });
+
+    app.post('/account/profile', function(req, res) {
+        req.io.route('account:profile');
+    });
+
+    app.post('/account/settings', function(req, res) {
+        req.io.route('account:settings');
     });
 
     // TODO: you should be POST'ing to DELETE'ing this resource
@@ -55,7 +62,90 @@ module.exports = function() {
     //
     app.io.route('account', {
         whoami: function(req) {
-            req.io.respond(req.handshake.user);
+            req.io.respond(req.user);
+        },
+        profile: function(req) {
+            var form = req.body;
+            var profile = models.user.findOne({
+                _id: req.user._id
+            }).exec(function (err, user) {
+                if (err) {
+                    // fark
+                    req.io.respond({
+                        status: 'error',
+                        message: 'Unable to update your profile.'
+                    });
+                    return;
+                }
+                _.each({
+                    displayName: form['display-name'],
+                    firstName: form['first-name'],
+                    lastName: form['last-name']
+                }, function(value, field) {
+                    if (value && value.length > 0) {
+                        user[field] = value;
+                    }
+                });
+                user.save(function (err) {
+                    if (err) {
+                        req.io.respond({
+                            status: 'error',
+                            message: 'An error occurred while updating your profile.',
+                            errors: err
+                        });
+                        return;
+                    }
+
+                    // tell dem sockets ya KNO
+                    // TO DO ^^
+
+                    req.io.respond({
+                        status: 'success',
+                        message: 'Your profile has been saved.'
+                    });
+                });
+            });
+        },
+        settings: function(req) {
+            var form = req.body;
+            var user = models.user.findOne({
+                _id: req.user.id
+            }).exec(function (err, user) {
+                if (err) {
+                    req.io.respond({
+                        status: 'error',
+                        message: 'Unable to update your account.'
+                    });
+                    return;
+                }
+                _.each({
+                    username: form['username'],
+                    email: form['email']
+                }, function (value, field) {
+                    if (value && value.length > 0) {
+                        user[field] = value;
+                        console.log(value + ' and ' + field);
+                    }
+                });
+                user.save(function (err) {
+                    if (err) {
+                        req.io.respond({
+                            status: 'error',
+                            message: 'An error occurred while updating your account.',
+                            errors: err
+                        });
+                        return;
+                    }
+
+                    //tell da sockets ya no bruh
+                    // to do ^^
+
+                    req.io.respond({
+                        status: 'success',
+                        message: 'You account has been saved.'
+                    });
+                });
+            });
         },
         register: function(req) {
             var fields = req.body || req.data;

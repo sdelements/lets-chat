@@ -1,0 +1,48 @@
+<div id="lcb-account" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="validate form-horizontal" action="/account/settings" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><i class="icon-cogs"></i> Account Settings</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Username</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" name="username" type="text" value="{{ account.username }}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Email</label>
+                        <div class="col-sm-7">
+                            <input class="required email form-control" name="email" type="text" value="{{ account.email }}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Current Password</label>
+                        <div class="col-sm-7">
+                            <input class="required form-control" name="password" type="password" data-clear="true" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">New Password</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="account-modal-password" name="new-password" type="password" minlength="4" maxlength="24" data-clear="true" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Confirm New Password</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" name="confirm-password" type="password" data-equal-to="#account-modal-password" data-clear="true" minlength="4" maxlength="24" />
+                        </div>
+                    </div>
+                    <p class="alert response" style="display: none;"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info indicator" name="submit"><i class="icon-ok"></i> Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
