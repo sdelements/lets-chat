@@ -9292,6 +9292,16 @@ body {
   display: -ms-flex;
   display: flex;
 }
+.lcb-pane {
+  margin: 10px;
+  border: 1px #111 solid;
+  border-radius: 2px;
+}
+@media (max-width: 767px) {
+  .lcb-pane {
+    margin: 3px;
+  }
+}
 .lcb-account-button {
   background: #222222 url('../img/header.png');
   height: 42px;
@@ -9610,6 +9620,7 @@ body {
  * Rooms Browser
  *********************/
 .lcb-rooms-browser {
+  background: #fff;
   overflow-y: auto;
   -moz-flex: 1;
   -webkit-box-flex: 1;
@@ -9617,26 +9628,58 @@ body {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -moz-flex-direction: column;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.lcb-rooms-browser-heading {
+  color: #777;
+  text-transform: uppercase;
+  font-weight: 400;
+  padding: 8px 12px;
+  margin: 0;
+  position: relative;
+}
+.lcb-rooms-browser-new {
+  position: absolute;
+  right: 12px;
 }
 .lcb-rooms-list {
-  padding: 14px;
-  overflow: hidden;
+  padding: 4px;
+  margin: 0;
+  border: 1px #eee solid;
+  border-radius: 2px;
+  -moz-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
 }
 .lcb-rooms-list-item {
   background: #222;
-  width: 300px;
-  padding: 10px;
-  padding-bottom: 30px;
-  margin: 5px;
-  border-top: 3px #777 solid;
+  width: 30%;
+  color: #f2f2f2;
+  position: relative;
+  padding: 10px 15px;
+  border: 1px #111 solid;
+  margin: 4px;
+  border-radius: 3px;
   display: block;
   float: left;
-  position: relative;
-  border-radius: 3px;
-  box-shadow: 0 0 7px #000;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+}
+.lcb-rooms-list-item-name {
+  font-size: 20px;
 }
 /*********************
  * Rooms
@@ -9653,9 +9696,6 @@ body {
   display: -ms-flexbox;
   display: -ms-flex;
   display: flex;
-  margin: 10px;
-  border: 1px #111 solid;
-  border-radius: 2px;
   -webkit-transition: -webkit-transform 0.1s ease;
   -moz-transition: -moz-transform 0.1s ease;
   -ms-transition: -ms-transform 0.1s ease;
@@ -9668,11 +9708,6 @@ body {
     -ms-transform: translateX(-200px);
     -o-transform: translateX(-200px);
     transform: translateX(-200px);
-  }
-}
-@media (max-width: 767px) {
-  .lcb-room {
-    margin: 3px;
   }
 }
 .lcb-room-header {

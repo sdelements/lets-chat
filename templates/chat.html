@@ -69,15 +69,14 @@
         </section>
         <section class="lcb-panes">
             <div class="lcb-rooms-browser lcb-pane" data-id="list" style="display: none;">
+                <h2 class="lcb-rooms-browser-heading">
+                    All Rooms
+                    <a class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </h2>
+                <ul class="lcb-rooms-list"></ul>
                 {% include 'includes/modals/add-room.html' %}
-                <ul class="lcb-rooms-list">
-                    <li class="lcb-rooms-list-item" data-id="{{id}}">
-                        <a data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
-                            <i class="fa fa-plus"> New Room</i>
-                        </a>
-                        <div class="lcb-rooms-list-item-description">Create a new room.</div>
-                    </li>
-                </ul>
             </div>
         </section>
         <div class="lcb-loading lcb-client-loading">

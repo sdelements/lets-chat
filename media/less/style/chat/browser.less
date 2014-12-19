@@ -3,26 +3,48 @@
  *********************/
 
 .lcb-rooms-browser {
+    background: #fff;
     overflow-y: auto;
     .flex(1);
+    .flex-display;
+    .flex-direction(column);
+}
+
+.lcb-rooms-browser-heading {
+    color: #777;
+    text-transform: uppercase;
+    font-weight: 400;
+    padding: 8px 12px;
+    margin: 0;
+    position: relative;
+}
+
+.lcb-rooms-browser-new {
+    position: absolute;
+    right: 12px;
 }
 
 .lcb-rooms-list {
-    padding: 14px;
-    overflow: hidden;
+    padding: 4px;
+    margin: 0;
+    border: 1px #eee solid;
+    border-radius: 2px;
+    .flex(1);
 }
 
 .lcb-rooms-list-item {
     background: #222;
-    width: 300px;
-    padding: 10px;
-    padding-bottom: 30px;
-    margin: 5px;
-    border-top: 3px #777 solid;
+    width: 30%;
+    color: #f2f2f2;
+    position: relative;
+    padding: 10px 15px;
+    border: 1px #111 solid;
+    margin: 4px;
+    border-radius: 3px;
     display: block;
     float: left;
-    position: relative;
-    border-radius: 3px;
-    box-shadow: 0 0 7px #000;
-    .box-sizing(border-box);
+}
+
+.lcb-rooms-list-item-name {
+    font-size: 20px;
 }
