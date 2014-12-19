@@ -28,6 +28,11 @@ Room.prototype.getScreenNames = function() {
 };
 
 Room.prototype.addConnection = function(connection) {
+    if (!connection) {
+        console.error('Attempt to add an invalid connection was detected');
+        return;
+    }
+
     if (this.getUserIds().indexOf(connection.userId) === -1) {
         // User joining room
         this.emit('user_join', {
@@ -41,6 +46,11 @@ Room.prototype.addConnection = function(connection) {
 };
 
 Room.prototype.removeConnection = function(connection) {
+    if (!connection) {
+        console.error('Attempt to remove an invalid connection was detected');
+        return;
+    }
+
     if (this.connections.remove(connection)) {
         if (this.getUserIds().indexOf(connection.userId) === -1) {
             // Leaving room altogether
