@@ -3,12 +3,14 @@ var mongoose = require('mongoose'),
     LocalStrategy = require('passport-local').Strategy,
     settings = require('./../config');
 
+var enabled = settings.auth.local && settings.auth.local.enable;
+
 function setup() {
 
-    if (settings.auth.local && settings.auth.local.enable) {
+    if (enabled) {
 
         passport.use(new LocalStrategy({
-            usernameField: 'email',
+            usernameField: 'username',
             passwordField: 'password'
         }, function(identifier, password, done) {
             var User = mongoose.model('User');
@@ -37,6 +39,9 @@ function authenticate(req, cb) {
 }
 
 module.exports = {
+    key: 'local',
+    enabled: enabled,
+    options: enabled ? settings.auth.local : null,
     setup: setup,
     authenticate: authenticate
 };

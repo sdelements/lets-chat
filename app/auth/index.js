@@ -4,9 +4,12 @@ var _ = require('underscore'),
     passport = require('passport'),
     passportSocketIo = require("passport.socketio"),
     settings = require('./../config'),
-    localAuth = require('./local'),
-    kerberosAuth = require('./kerberos'),
-    ldapAuth = require('./ldap');
+    providers = [
+        require('./local'),
+        require('./kerberos'),
+        require('./ldap')
+    ],
+    providerSettings = {};
 
 function middleware(req, res, next) {
     // Let's make sure req.user is always populated
@@ -24,9 +27,10 @@ function middleware(req, res, next) {
 
 function setup(app, session) {
 
-    localAuth.setup();
-    kerberosAuth.setup();
-    ldapAuth.setup();
+    providers.forEach(function(provider) {
+        provider.setup();
+        providerSettings[provider.key] = provider.options;
+    });
 
     passport.serializeUser(function(user, done) {
         done(null, user._id);
@@ -54,21 +58,17 @@ function setup(app, session) {
 }
 
 function authenticate(req, cb) {
-
-    if (settings.auth.kerberos && settings.auth.kerberos.enable) {
-        kerberosAuth.authenticate(req, cb);
-    }
-
-    if (settings.auth.ldap && settings.auth.ldap.authenticate) {
-        ldapAuth.authenticate(req, cb);
-    }
-
-    if (settings.auth.local && settings.auth.local.enable) {
-        localAuth.authenticate(req, cb);
-    }
+    providers.some(function(provider) {
+        if (provider.enabled) {
+            provider.authenticate(req, cb);
+            return true;
+        }
+        return false;
+    });
 }
 
 module.exports = {
     setup: setup,
-    authenticate: authenticate
+    authenticate: authenticate,
+    providers: providerSettings
 };

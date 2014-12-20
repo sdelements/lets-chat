@@ -4,15 +4,14 @@
 
 'use strict';
 
-var settings = require('./../config');
+var _ = require('underscore'),
+    fs = require('fs'),
+    passport = require('passport'),
+    auth = require('./../auth/index'),
+    path = require('path'),
+    settings = require('./../config');
 
 module.exports = function() {
-
-    var _ = require('underscore'),
-        fs = require('fs'),
-        passport = require('passport'),
-        auth = require('./../auth/index'),
-        path = require('path');
 
     var app = this.app,
         middlewares = this.middlewares,
@@ -35,7 +34,8 @@ module.exports = function() {
             return /\.(gif|jpg|jpeg|png)$/i.test(file);
         }).sample().value();
         res.render('login.html', {
-            photo: image
+            photo: image,
+            auth: auth.providers
         });
     });
 
@@ -144,6 +144,15 @@ module.exports = function() {
             });
         },
         register: function(req) {
+
+            if (!auth.providers.local || !auth.providers.local.registration) {
+                req.io.respond({
+                    status: 'error',
+                    message: 'Permission denied'
+                }, 403);
+                return;
+            }
+
             var fields = req.body || req.data;
             User.create({
                 username: fields.username,

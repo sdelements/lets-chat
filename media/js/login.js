@@ -13,11 +13,11 @@
             }
         });
         // Show avatar
-        $('[action="/account/login"] [name="email"]').on('blur', function(e) {
+        $('[action="/account/login"] [name="username"]').on('blur', function(e) {
             var email = $(this).val();
             var valid = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(email);
             if (valid) {
-                $('.lcb-login-avatar').attr('src', 'https://www.gravatar.com/avatar/' + md5(email) + '?s=100?d=mm').addClass('show');
+                $('.lcb-login-avatar').attr('src', 'https://www.gravatar.com/avatar/' + md5(getLdapSearchCallback) + '?s=100?d=mm').addClass('show');
             } else {
                 $('.lcb-login-avatar').removeClass('show');
             }

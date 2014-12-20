@@ -10,6 +10,8 @@ var fs = require('fs'),
     ldapsettings = settings.auth.ldap,
     field_mappings = ldapsettings.field_mappings;
 
+var enabled = settings.auth.ldap && settings.auth.ldap.authentication;
+
 function createLdapUser(ldapEntry, callback) {
     var User = mongoose.model('User');
     var data = {
@@ -161,7 +163,7 @@ function getLdapStrategy() {
                 searchAttributes: ldapsettings.search.opts.attributes,
                 searchScope: ldapsettings.search.opts.scope
             },
-            usernameField: 'email',
+            usernameField: 'username',
             passwordField: 'password'
         },
         function (user, done) {
@@ -171,22 +173,21 @@ function getLdapStrategy() {
 }
 
 function authenticate(req, cb) {
-
-    if (settings.auth.ldap && settings.auth.ldap.authenticate) {
+    if (enabled) {
         passport.authenticate('ldapauth', cb)(req);
     }
-
 }
 
 function setup() {
-
-    if (ldapsettings && ldapsettings.authenticate) {
+    if (enabled) {
         passport.use(getLdapStrategy());
     }
-
 }
 
 module.exports = {
+    key: 'ldap',
+    enabled: enabled,
+    options: enabled ? ldapsettings : null,
     setup: setup,
     authenticate: authenticate,
     authorize: authorize

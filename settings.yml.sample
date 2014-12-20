@@ -23,6 +23,7 @@ secrets:
 auth:
   local:
     enable: true
+    registration: true
 
   kerberos:
     enable: false

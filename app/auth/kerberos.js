@@ -8,6 +8,8 @@ var _ = require('underscore'),
     kerberossettings = settings.auth.kerberos,
     ldapsettings = settings.auth.ldap;
 
+var enabled = kerberossettings && kerberossettings.enable;
+
 function createSimpleKerberosUser(username, realm, cb) {
     var User = mongoose.model('User');
     var user = new User({
@@ -24,7 +26,7 @@ function createSimpleKerberosUser(username, realm, cb) {
 function getKerberosStrategy() {
     return new KerberosStrategy(
         {
-            usernameField: 'email',
+            usernameField: 'username',
             passwordField: 'password'
         },
         function (username, done) {
@@ -75,23 +77,22 @@ function getKerberosCallback(done) {
 }
 
 function authenticate(req, cb) {
-
-    if (settings.auth.kerberos && settings.auth.kerberos.enable) {
+    if (enabled) {
         cb = getKerberosCallback(cb);
         passport.authenticate('kerberos', cb)(req);
     }
-
 }
 
 function setup() {
-
-    if (kerberossettings && kerberossettings.enable) {
+    if (enabled) {
         passport.use(getKerberosStrategy());
     }
-
 }
 
 module.exports = {
+    key: 'kerberos',
+    enabled: enabled,
+    options: enabled ? kerberossettings : null,
     setup: setup,
     authenticate: authenticate
 };
