@@ -85,8 +85,9 @@ module.exports = function() {
     });
 
     // TODO: you should be POST'ing to DELETE'ing this resource
-    app.get('/account/logout', function(req, res) {
-        req.io.route('account:logout');
+    app.get('/logout', function(req, res) {
+        req.session.destroy();
+        res.redirect('/');
     });
 
     app.post('/account/register', function(req, res) {
@@ -226,13 +227,6 @@ module.exports = function() {
         login: function(req) {
             var cb = getAuthCb(req);
             auth.authenticate(req, cb);
-        },
-        logout: function(req) {
-            req.session.destroy();
-            req.io.respond({
-                status: 'succcess',
-                message: 'Session deleted'
-            }, 200);
         }
     });
 };
