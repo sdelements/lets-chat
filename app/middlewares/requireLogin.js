@@ -5,7 +5,7 @@
 'use strict';
 
 module.exports = function(req, res, next) {
-    if (req.session.userID) {
+    if (req.user) {
         next();
         return;
     }

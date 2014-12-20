@@ -6,39 +6,6 @@
 
 var settings = require('./../config');
 
-function getAuthCb(req) {
-    return function(err, user, info) {
-        if (err) {
-            req.io.respond({
-                status: 'error',
-                message: 'There were problems logging you in.',
-                errors: err
-            });
-            return;
-        }
-        if (!user) {
-            req.io.respond({
-                status: 'error',
-                message: 'Incorrect login credentials.'
-            });
-            return;
-        }
-        req.login(user, function(err) {
-            if (err) {
-                req.io.respond({
-                    status: 'error',
-                    message: 'There were problems logging you in.'
-                });
-                return;
-            }
-            req.io.respond({
-                status: 'success',
-                message: 'Logging you in...'
-            });
-        });
-    };
-}
-
 module.exports = function() {
 
     var _ = require('underscore'),
@@ -81,10 +48,6 @@ module.exports = function() {
         req.io.route('account:login');
     });
 
-    app.post('/account/logout', function(req, res) {
-        req.io.route('account:logout');
-    });
-
     app.post('/account/register', function(req, res) {
         req.io.route('account:register');
     });
@@ -110,7 +73,6 @@ module.exports = function() {
                 _id: req.user._id
             }).exec(function (err, user) {
                 if (err) {
-                    // fark
                     req.io.respond({
                         status: 'error',
                         message: 'Unable to update your profile.'
@@ -135,9 +97,6 @@ module.exports = function() {
                         });
                         return;
                     }
-
-                    // tell dem sockets ya KNO
-                    // TO DO ^^
 
                     req.io.respond({
                         status: 'success',
@@ -176,9 +135,6 @@ module.exports = function() {
                         });
                         return;
                     }
-
-                    //tell da sockets ya no bruh
-                    // to do ^^
 
                     req.io.respond({
                         status: 'success',
@@ -228,15 +184,36 @@ module.exports = function() {
             });
         },
         login: function(req) {
-            var cb = getAuthCb(req);
-            auth.authenticate(req, cb);
-        },
-        logout: function(req) {
-            req.session.destroy();
-            req.io.respond({
-                status: 'succcess',
-                message: 'Session deleted'
-            }, 200);
+            auth.authenticate(req, function(err, user, info) {
+                if (err) {
+                    req.io.respond({
+                        status: 'error',
+                        message: 'There were problems logging you in.',
+                        errors: err
+                    }, 400);
+                    return;
+                }
+                if (!user) {
+                    req.io.respond({
+                        status: 'error',
+                        message: 'Incorrect login credentials.'
+                    }, 401);
+                    return;
+                }
+                req.login(user, function(err) {
+                    if (err) {
+                        req.io.respond({
+                            status: 'error',
+                            message: 'There were problems logging you in.'
+                        }, 400);
+                        return;
+                    }
+                    req.io.respond({
+                        status: 'success',
+                        message: 'Logging you in...'
+                    });
+                });
+            });
         }
     });
 };

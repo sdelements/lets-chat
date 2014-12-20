@@ -13,22 +13,10 @@ function middleware(req, res, next) {
 
     next = next || res; // No res object if called as a socket.io middleware
 
-    if (!req.user && req.handshake && req.handshake.user) {
-        req.user = req.handshake.user;
-    }
-
     if (!req.user) {
-        return next();
-    }
-
-    if (!req.handshake || req.handshake.user) {
-        req.handshake = req.handshake || {};
-        req.handshake.user = req.user;
-    }
-
-    if (!req.session || !req.session.userID) {
-        req.session = req.session || {};
-        req.session.userID = req.user._id;
+        if (req.handshake && req.handshake.user) {
+            req.user = req.handshake.user;
+        }
     }
 
     next();
