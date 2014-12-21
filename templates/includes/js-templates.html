@@ -26,6 +26,9 @@
                         <div class="lcb-room-description" placeholder="Description...">
                             <p>{{description}}</p>
                         </div>
+                    <button class="btn btn-default btn-sm show-edit-room" title="Edit Room">
+                         <i class="fa fa-edit"></i>
+                    </button>
                     </div>
                     <div class="lcb-room-header-actions">
                         <a class="lcb-room-toggle-sidebar" href="#">
@@ -58,6 +61,45 @@
                     <ul class="lcb-room-sidebar-list"></ul>
                 </div>
             </div><!-- lcb-room-sidebar end -->
+            <div class="edit-room modal fade lcb-room-edit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/rooms/update" class="validate form-horizontal" method="post">
+                        <div class="modal-header">
+                            <button class="close hide-edit-room" type="button">&times;</button>
+                            <h4 class="modal-title">Edit Room</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Name</label>
+
+                                <div class="col-sm-7">
+                                    <input class="required name form-control" name=
+                                    "name" type="text" value="{{ name }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class=
+                                "control-label col-sm-4">Description</label>
+
+                                <div class="col-sm-7">
+                                    <textarea class="form-control" name=
+                                    "description"> {{ description }}</textarea>
+                                </div>
+                            </div>
+                            <p class="response" style="display: none;"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success pull-right" type=
+                            "submit"><i class="icon-ok"></i> Save</button>
+                            <a class="delete-room btn btn-danger pull-left"
+                            tabindex="-1"><i class="icon-remove icon-white"></i>
+                            Delete Room</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+</div><!-- edit room end -->
         </div><!-- lcb-room end -->
     </script>
     <script type="text/x-handlebars-template" id="template-message">
@@ -98,4 +140,5 @@
             </div>
         </li>
     </script>
+
 {% endraw %}

@@ -410,7 +410,11 @@ var RoomView = Backbone.View.extend({
         'scroll .lcb-messages': 'updateScrollLock',
         'keypress .lcb-entry-input': 'sendMessage',
         'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta',
-        'click .lcb-room-toggle-sidebar': 'toggleSidebar'
+        'click .lcb-room-toggle-sidebar': 'toggleSidebar',
+        'click .show-edit-room': 'showEditRoom',
+        'click .hide-edit-room': 'hideEditRoom',
+        'click .submit-edit-room': 'submitEditRoom',
+        'click .delete-room': 'deleteRoom'
     },
     initialize: function(options) {
         this.client = options.client;
@@ -459,8 +463,35 @@ var RoomView = Backbone.View.extend({
             description: this.model.get('description')
         });
     },
+    showEditRoom: function(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        this.$('.lcb-room-edit').modal();
+    },
+    hideEditRoom: function(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        this.$('.lcb-room-edit').modal('hide');
+    },
+    submitEditRoom: function(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        var name = this.$('.edit-room input[name="name"]').val();
+        var description = this.$('.edit-room input[description="description"]').val();
+        this.client.events.trigger('rooms:update', {
+            room: this.model.id,
+            name: name,
+            description: description
+        });
+    },
     deleteRoom: function(e) {
-        this.client.events.trigger('rooms:delete', this.model.id);
+        var serious = confirm('Do you really want to to delete "' + this.model.get('name') + '"?');
+        if (serious === true) {
+            this.client.events.trigger('rooms:delete', this.model.id);
+        }
     },
     sendMessage: function(e) {
         if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
