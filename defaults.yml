@@ -22,12 +22,12 @@ database:
 
 secrets:
   cookie: secretsauce
-  password_salt: secretsauce
 
 auth:
   local:
     enable: true
     registration: true
+    salt: secretsauce
 
   kerberos:
     enable: false

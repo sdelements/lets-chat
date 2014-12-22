@@ -120,7 +120,7 @@ UserSchema.methods.comparePassword = function(password, cb) {
         }
 
         var legacyPassowrd = hash.sha256(password,
-                                         settings.secrets.password_salt);
+                                         settings.auth.local.salt);
         cb(null, legacyPassowrd === this.password);
 
     }.bind(this));
