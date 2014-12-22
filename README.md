@@ -4,55 +4,37 @@ A self-hosted chat app for small teams.
 
 ![Screenshot](http://i.imgur.com/djnd0Uk.png)
 
-## Getting started
-
-Install [nodejs](https://github.com/joyent/node/wiki/Installation) and [mongo](http://www.mongodb.org/display/DOCS/Quickstart)
-
-Clone le repo
-
-```php
-git clone https://github.com/sdelements/lets-chat.git
-cd lcb
-```
-
-Install node dependencies
-
-```php
-npm install
-```
-
-Create a settings file (make sure to edit if you need to). 
-
-```php
-cp settings.js.sample settings.js
-```
-
-Run the app
-
-```php
-nodejs app.js
-```
-
-Party time: [http://localhost:5000](http://localhost:5000)
-
 ## Features and Stuff
 
 * BYOS (bring your own server)
 * Persistent messages
 * Multiple rooms
-* New message alerts
+* New message alerts / notifications
 * Mentions (hey @you)
 * Image embeds
 * Code pasting
-* File uploads
-* SSL/TLS
+* XMPP Multi-user chat (MUC)
 * MIT Licensed
 
-## Upcoming Features
+## Running locally
 
-* API
-* Better transcripts with search
-* Better error handling
-* Emote autocomplete
-* Access control
-* Mobile client
+Make sure you have [Node.js](https://github.com/joyent/node/wiki/Installation) and [MongoDB](http://www.mongodb.org/display/DOCS/Quickstart) installed.
+
+```
+git clone https://github.com/sdelements/lets-chat.git
+cd lets-chat
+npm install
+npm start
+```
+
+For custom settings, copy and edit ```settings.yml.sample```:
+
+```
+cp settings.yml.sample settings.yml
+```
+
+Party time: [http://localhost:5000](http://localhost:5000)
+
+## Deploying to Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
