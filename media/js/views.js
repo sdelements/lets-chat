@@ -22,11 +22,19 @@ var WindowView = Backbone.View.extend({
         this.focus = true;
         this.count = 0;
         this.mentions = 0;
-        this.roomNotifications = store.get('roomNotifications', true);
-        this.mentionNotifications = store.get('mentionNotifications', true);
         this.activeDesktopNotifications = [];
         this.activeDesktopNotificationMentions = [];
 
+        this.roomNotifications = store.get('roomNotifications')
+        if (this.roomNotifications === undefined){
+            this.roomNotifications = true;
+        }
+
+        this.mentionNotifications = store.get('mentionNotifications');
+        if (this.mentionNotifications === undefined){
+            this.mentionNotifications = true;
+        }
+ 
         $(window).on('focus blur', _.bind(this.focusBlur, this));
 
         this.rooms.current.on('change:id', function(current, id) {
