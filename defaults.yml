@@ -6,7 +6,7 @@ server:
   port: 5000
 
 xmpp:
-  enable: true
+  enable: false
   debug:
     handled: false
     unhandled: false

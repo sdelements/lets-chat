@@ -45,8 +45,19 @@ function getEnvSettings() {
     return envSettings;
 }
 
-module.exports = _.merge(
+var settings = _.merge(
     getDefaultSettings(),
     getFileSettings(),
     getEnvSettings()
 );
+
+
+// Override database URI - if using a Heroku add-on
+settings.database.uri = settings.MONGOHQ && settings.MONGOHQ.URL ||
+                        settings.MONGOLAB && settings.MONGOLAB.URI ||
+                        settings.database.uri;
+
+// Override port
+settings.server.port = settings.PORT || settings.server.port;
+
+module.exports = settings;
