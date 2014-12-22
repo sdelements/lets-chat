@@ -37,7 +37,7 @@ function xmppStart(core) {
         client.on('authenticate', function(opts, cb) {
             var req = {
                 body: {
-                    email: opts.jid.local,
+                    username: opts.jid.local,
                     password: opts.password
                 }
             };
