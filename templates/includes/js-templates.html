@@ -63,7 +63,7 @@
     <script type="text/x-handlebars-template" id="template-message">
         <li class="lcb-message {{#if mentioned}}lcb-message-mentioned{{/if}} {{#if fragment}}lcb-message-fragment{{/if}} {{#if own}}lcb-message-own{{/if}} {{#if fragment}}lcb-message-paste{{/if}}">
             {{#unless fragment}}
-                <img class="lcb-message-avatar lcb-avatar" src="https://www.gravatar.com/avatar/{{ avatar }}?s=30" />
+                <img class="lcb-message-avatar lcb-avatar" src="https://www.gravatar.com/avatar/{{ owner.avatar }}?s=30" />
             {{/unless}}
             <div class="lcb-message-meta">
                 {{#unless fragment}}
