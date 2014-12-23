@@ -9,10 +9,6 @@
         "secrets_cookie": {
             "description": "Session cookies are signed with this secret to prevent tampering",
             "generator": "secret"
-        },
-        "auth_local_salt": {
-            "description": "Passwords are salted with this secret",
-            "generator": "secret"
         }
     }
 }

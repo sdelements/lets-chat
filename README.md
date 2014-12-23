@@ -14,6 +14,7 @@ A self-hosted chat app for small teams.
 * Image embeds
 * Code pasting
 * XMPP Multi-user chat (MUC)
+* Local / Kerberos / LDAP authentication
 * MIT Licensed
 
 ## Running locally

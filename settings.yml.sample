@@ -23,7 +23,7 @@ auth:
   local:
     enable: true
     registration: true
-    salt: secretsauce
+    salt: secretsauce # Required when upgrading from version < 0.3
 
   kerberos:
     enable: false
