@@ -57,7 +57,7 @@ MessageManager.prototype.list = function(options, cb) {
 
     // This is why the terrorists hate us
     find
-        .populate('owner', 'id username displayName email avatar')
+        .populate('owner', 'id username uid displayName email avatar')
         .limit(options.limit || 500)
         .sort({ 'posted': -1 })
         .exec(function(err, messages) {

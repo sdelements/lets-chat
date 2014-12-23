@@ -123,7 +123,6 @@ module.exports = function() {
                 }, function (value, field) {
                     if (value && value.length > 0) {
                         user[field] = value;
-                        console.log(value + ' and ' + field);
                     }
                 });
                 user.save(function (err) {
@@ -138,7 +137,7 @@ module.exports = function() {
 
                     req.io.respond({
                         status: 'success',
-                        message: 'You account has been saved.'
+                        message: 'Your account has been saved.'
                     });
                 });
             });

@@ -36,7 +36,14 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: false, // Only required if local
         trim: true,
-        match: /^.{8,64}$/i
+        match: /^.{8,64}$/i,
+        set: function(value) {
+            // User can only change their password if it's a local account
+            if (this.local) {
+                return value;
+            }
+            return this.password;
+        }
     },
     firstName: {
         type: String,
@@ -53,7 +60,14 @@ var UserSchema = new mongoose.Schema({
         required: true,
         trim: true,
         unique: true,
-        match: /^[a-zA-Z0-9_]+$/i
+        match: /^[a-zA-Z0-9_]+$/i,
+        set: function(value) {
+            // User can only change their username if it's a local account
+            if (this.local) {
+                return value;
+            }
+            return this.username || this.uid;
+        }
     },
     displayName: {
         type: String,
@@ -85,12 +99,24 @@ var UserSchema = new mongoose.Schema({
     }
 });
 
+UserSchema.virtual('local').get(function() {
+    return typeof this.uid !== 'string';
+});
+
 UserSchema.virtual('screenName').get(function() {
-    return this.username || this.displayName.replace(/\W/i, '');
+    return this.username || this.uid || this.displayName.replace(/\W/i, '');
 });
 
 UserSchema.virtual('avatar').get(function() {
     return md5(this.email);
+});
+
+UserSchema.post('init', function (doc) {
+    if (!this.username) {
+        if (this.uid) {
+            this.username = this.uid;
+        }
+    }
 });
 
 UserSchema.pre('save', function(next) {
@@ -173,7 +199,8 @@ UserSchema.method('toJSON', function() {
         displayName: this.displayName,
         avatar: this.avatar,
         email: this.email,
-        username: this.username
+        username: this.username,
+        local: this.local
     };
 });
 
