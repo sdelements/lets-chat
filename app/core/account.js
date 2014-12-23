@@ -34,16 +34,29 @@ AccountManager.prototype.update = function(id, options, cb) {
         }
 
         if (user.local) {
-            if (options.username) {
+
+            if (options.username && options.username !== user.username) {
+                var xmppConns = this.core.presence.connections.query({
+                    userId: user._id,
+                    type: 'xmpp'
+                });
+
+                if (xmppConns.length) {
+                    return cb('You can not change your username ' +
+                    'with active XMPP sessions.');
+                }
+
                 user.username = options.username;
             }
+
             if (options.password) {
                 user.password = options.password;
             }
+
         }
-        
+
         user.save(cb);
-    });
+    }.bind(this));
 };
 
 module.exports = AccountManager;

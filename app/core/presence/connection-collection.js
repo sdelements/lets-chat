@@ -34,6 +34,29 @@ ConnectionCollection.prototype.getScreenNames = function() {
     return _.uniq(screenNames);
 };
 
+ConnectionCollection.prototype.query = function(options) {
+    if (options.userId) {
+        options.userId = options.userId.toString();
+    }
+
+    return Object.keys(this.connections).map(function(key) {
+        return this.connections[key];
+    }, this).filter(function(conn) {
+        var result = true;
+
+        if (options.userId && conn.userId !== options.userId) {
+            result = false;
+        }
+
+        if (options.type && conn.type !== options.type) {
+            result = false;
+        }
+
+        return result;
+
+    });
+};
+
 ConnectionCollection.prototype.byType = function(type) {
     return Object.keys(this.connections).map(function(key) {
         return this.connections[key];
