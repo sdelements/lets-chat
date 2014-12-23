@@ -43,6 +43,12 @@ RoomCollection.prototype.onLeave = function(data) {
     this.emit('user_leave', data);
 };
 
+RoomCollection.prototype.screenNameChanged = function(data) {
+    Object.keys(this.rooms).forEach(function(key) {
+        this.rooms[key].screenNameChanged(data);
+    }, this);
+};
+
 RoomCollection.prototype.removeConnection = function(connection) {
     Object.keys(this.rooms).forEach(function(key) {
         this.rooms[key].removeConnection(connection);

@@ -14,6 +14,7 @@ util.inherits(AccountManager, EventEmitter);
 
 AccountManager.prototype.update = function(id, options, cb) {
     var User = mongoose.model('User');
+    var usernameChange = false;
 
     User.findById(id, function (err, user) {
         if (err) {
@@ -46,6 +47,7 @@ AccountManager.prototype.update = function(id, options, cb) {
                     'with active XMPP sessions.');
                 }
 
+                usernameChange = true;
                 user.username = options.username;
             }
 
@@ -55,7 +57,23 @@ AccountManager.prototype.update = function(id, options, cb) {
 
         }
 
-        user.save(cb);
+        user.save(function(err) {
+            if (err) {
+                return cb(err);
+            }
+
+            if (usernameChange) {
+                this.emit('username_changed', {
+                    userId: user._id.toString(),
+                    username: user.username
+                });
+            }
+
+            if (cb) {
+                cb(null, user);
+            }
+
+        }.bind(this));
     }.bind(this));
 };
 
