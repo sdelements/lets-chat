@@ -14,6 +14,7 @@ var _ = require('underscore'),
 module.exports = function() {
 
     var app = this.app,
+        core = this.core,
         middlewares = this.middlewares,
         models = this.models,
         User = models.user;
@@ -69,76 +70,55 @@ module.exports = function() {
         },
         profile: function(req) {
             var form = req.body;
-            var profile = models.user.findOne({
-                _id: req.user._id
-            }).exec(function (err, user) {
+
+            var data = {
+                displayName: form['display-name'],
+                firstName: form['first-name'],
+                lastName: form['last-name']
+            };
+
+            core.account.update(req.user._id, data, function (err, user) {
                 if (err) {
                     req.io.respond({
                         status: 'error',
-                        message: 'Unable to update your profile.'
+                        message: 'Unable to update your profile.',
+                        errors: err
                     });
                     return;
                 }
-                _.each({
-                    displayName: form['display-name'],
-                    firstName: form['first-name'],
-                    lastName: form['last-name']
-                }, function(value, field) {
-                    if (value && value.length > 0) {
-                        user[field] = value;
-                    }
-                });
-                user.save(function (err) {
-                    if (err) {
-                        req.io.respond({
-                            status: 'error',
-                            message: 'An error occurred while updating your profile.',
-                            errors: err
-                        });
-                        return;
-                    }
 
-                    req.io.respond({
-                        status: 'success',
-                        message: 'Your profile has been saved.'
-                    });
+                req.io.respond({
+                    status: 'success',
+                    message: 'Your profile has been saved.'
                 });
             });
         },
         settings: function(req) {
             var form = req.body;
-            var user = models.user.findOne({
-                _id: req.user.id
-            }).exec(function (err, user) {
+
+            var data = {
+                username: form.username,
+                email: form.email
+            };
+
+            if (form['new-password'] &&
+                form['new-password'] === form['confirm-password']) {
+                    data.password = form['new-password'];
+            }
+
+            core.account.update(req.user._id, data, function (err, user) {
                 if (err) {
                     req.io.respond({
                         status: 'error',
-                        message: 'Unable to update your account.'
+                        message: 'Unable to update your account.',
+                        errors: err
                     });
                     return;
                 }
-                _.each({
-                    username: form['username'],
-                    email: form['email']
-                }, function (value, field) {
-                    if (value && value.length > 0) {
-                        user[field] = value;
-                    }
-                });
-                user.save(function (err) {
-                    if (err) {
-                        req.io.respond({
-                            status: 'error',
-                            message: 'An error occurred while updating your account.',
-                            errors: err
-                        });
-                        return;
-                    }
 
-                    req.io.respond({
-                        status: 'success',
-                        message: 'Your account has been saved.'
-                    });
+                req.io.respond({
+                    status: 'success',
+                    message: 'Your account has been saved.'
                 });
             });
         },

@@ -1,11 +1,26 @@
 'use strict';
 
-var MessageManager = require('./messages'),
+var AccountManager = require('./account'),
+    MessageManager = require('./messages'),
     PresenceManager = require('./presence'),
     RoomManager = require('./rooms');
 
-module.exports = {
-    presence: new PresenceManager(),
-    messages: new MessageManager(),
-    rooms: new RoomManager()
-};
+var core = {};
+
+core.account = new AccountManager({
+    core: core
+});
+
+core.messages = new MessageManager({
+    core: core
+});
+
+core.presence = new PresenceManager({
+    core: core
+});
+
+core.rooms = new RoomManager({
+    core: core
+});
+
+module.exports = core;
