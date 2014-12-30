@@ -24,7 +24,7 @@
                     <div class="lcb-room-meta">
                         <h2 class="lcb-room-heading" placeholder="Room Name...">{{name}}</h2>
                         <div class="lcb-room-description" placeholder="Description...">
-                            <p>{{description}}</p>
+                            <p>{{ description }}</p>
                         </div>
                     <button class="btn btn-default btn-sm show-edit-room" title="Edit Room">
                          <i class="fa fa-edit"></i>
@@ -64,7 +64,7 @@
             <div class="edit-room modal fade lcb-room-edit">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="/rooms/update" class="validate form-horizontal" method="post">
+                    <form action="" class="validate form-horizontal" method="post">
                         <div class="modal-header">
                             <button class="close hide-edit-room" type="button">&times;</button>
                             <h4 class="modal-title">Edit Room</h4>
@@ -90,7 +90,7 @@
                             <p class="response" style="display: none;"></p>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-success pull-right" type=
+                            <button class="btn btn-success pull-right submit-edit-room" type=
                             "submit"><i class="icon-ok"></i> Save</button>
                             <a class="delete-room btn btn-danger pull-left"
                             tabindex="-1"><i class="icon-remove icon-white"></i>

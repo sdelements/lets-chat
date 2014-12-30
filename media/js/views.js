@@ -446,11 +446,9 @@ var RoomView = Backbone.View.extend({
                 tpl: "<li data-value='@${screenName}'><img src='http://www.gravatar.com/avatar/${avatar}?s=50' height='20' width='20'/> ${screenName} </li>"
             })
     },
-    updateMeta: function(room, wat) {
-        var $heading = this.$('.lcb-room-heading'),
-            $description = this.$('.lcb-room-description');
-        !$heading.is(':focus') && $heading.text(room.get('name'));
-        !$description.is(':focus') && $description.text(room.get('description'))
+    updateMeta: function() {
+        this.$('.lcb-room-heading').text(this.model.get('name'));
+        this.$('.lcb-room-description').text(this.model.get('description'));
     },
     sendMeta: function(e) {
         this.model.set({
@@ -480,12 +478,13 @@ var RoomView = Backbone.View.extend({
             e.preventDefault();
         }
         var name = this.$('.edit-room input[name="name"]').val();
-        var description = this.$('.edit-room input[description="description"]').val();
+        var description = this.$('.edit-room textarea[name="description"]').val();
         this.client.events.trigger('rooms:update', {
-            room: this.model.id,
+            id: this.model.id,
             name: name,
             description: description
         });
+        this.$('.lcb-room-edit').modal('hide');
     },
     deleteRoom: function(e) {
         var serious = confirm('Do you really want to to delete "' + this.model.get('name') + '"?');

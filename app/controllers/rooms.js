@@ -84,20 +84,20 @@ module.exports = function() {
             });
         },
         update: function(req) {
-            var roomId = req.data.id,
+            var data = req.data || req.body;
+            var roomId = data.id,
                 options = {
-                    name: req.data.name,
-                    slug: req.data.slug,
-                    description: req.data.description
+                    name: data.name,
+                    slug: data.slug,
+                    description: data.description
                 };
-
             core.rooms.update(roomId, options, function(err, room) {
                 if (err || !room) {
                     req.io.respond(err, 400);
                     return;
                 }
-                req.io.broadcast('rooms:update', room.toJSON());
-                req.io.respond(room.toJSON(), 200);
+                app.io.broadcast('rooms:update', room);
+                req.io.respond(room, 200);
             });
         },
         join: function(req) {

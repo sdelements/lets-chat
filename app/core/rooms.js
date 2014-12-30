@@ -31,6 +31,7 @@ RoomManager.prototype.update = function(roomId, options, cb) {
     var Room = mongoose.model('Room');
 
     Room.findById(roomId, function(err, room) {
+
         if (err) {
             // Oh noes, a bad thing happened!
             console.error(err);
@@ -45,7 +46,7 @@ RoomManager.prototype.update = function(roomId, options, cb) {
         room.name = options.name;
         // DO NOT UPDATE SLUG
         // room.slug = options.slug;
-        room.description = options;
+        room.description = options.description;
         room.save(function(err, room) {
             if (err) {
                 console.error(err);
