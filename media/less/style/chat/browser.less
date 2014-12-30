@@ -16,7 +16,9 @@
     font-weight: 400;
     padding: 8px 12px;
     margin: 0;
+    border-bottom: 1px #ddd solid;
     position: relative;
+    box-shadow: 0 4px 5px -5px rgba(0, 0, 0, .1);
 }
 
 .lcb-rooms-browser-new {
@@ -24,27 +26,55 @@
     right: 12px;
 }
 
-.lcb-rooms-list {
-    padding: 4px;
+.lcb-rooms-list,
+.lcb-rooms-list-item {
+    display: block;
+    padding: 0;
     margin: 0;
-    border: 1px #eee solid;
-    border-radius: 2px;
-    .flex(1);
 }
 
 .lcb-rooms-list-item {
-    background: #222;
-    width: 30%;
-    color: #f2f2f2;
+    color: #777;
     position: relative;
     padding: 10px 15px;
-    border: 1px #111 solid;
-    margin: 4px;
-    border-radius: 3px;
-    display: block;
-    float: left;
+    border-bottom: 1px #f2f2f2 solid;
+    &:hover {
+        background: #f2f2f2;
+    }
 }
 
 .lcb-rooms-list-item-name {
     font-size: 20px;
+}
+
+.lcb-rooms-list-users,
+.lcb-rooms-list-user {
+    padding: 0;
+    margin: 0;
+}
+
+.lcb-rooms-list-users {
+    margin-top: 5px;
+    margin-left: -2px;
+    overflow: hidden;
+}
+
+.lcb-rooms-list-user {
+    margin: 2px;
+    display: block;
+    float: left;
+}
+
+.lcb-rooms-list-user-avatar {
+    .size(30px);
+    border-radius: 100%;
+}
+
+.lcb-rooms-list-item-switch {
+    position: absolute;
+    right: 24px;
+    top: 12px;
+    @media (min-width: @screen-sm-max) {
+        font-size: 8px;
+    }
 }

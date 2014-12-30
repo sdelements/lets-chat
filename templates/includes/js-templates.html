@@ -3,6 +3,16 @@
         <li class="lcb-rooms-list-item" data-id="{{id}}">
             <a class="lcb-rooms-list-item-name" href="#!/room/{{id}}">{{name}}</a>
             <div class="lcb-rooms-list-item-description">{{description}}</div>
+            <ul class="lcb-rooms-list-users"></ul>
+            <div class="lcb-rooms-list-item-switch onoffswitch">
+                <input type="checkbox" class="switch" id="room-switch-{{id}}" />
+                <label for="room-switch-{{id}}"></label>
+            </div>
+        </li>
+    </script>
+    <script type="text/x-handlebars-template" id="template-room-browser-item-user">
+        <li class="lcb-rooms-list-user">
+            <img class="lcb-rooms-list-user-avatar" src="http://www.gravatar.com/avatar/bcea6b8c06220e389093f36a8895fab4?s=50" alt="USERNAME" />
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room-tab">

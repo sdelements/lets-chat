@@ -8955,6 +8955,53 @@ button.close {
   -o-animation-name: wobble;
   animation-name: wobble;
 }
+.onoffswitch {
+  font-size: 10px;
+}
+.onoffswitch input[type="checkbox"] {
+  display: none;
+}
+.onoffswitch .switch + label {
+  position: relative;
+  display: block;
+  width: 5.5em;
+  height: 3em;
+  cursor: pointer;
+  border-radius: 1.5em;
+  background: linear-gradient(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0)), #dddddd;
+  box-shadow: 0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset, 0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7);
+}
+.onoffswitch .switch + label::before {
+  position: absolute;
+  content: '';
+  width: 2em;
+  height: 2em;
+  top: 0.5em;
+  left: 0.5em;
+  border-radius: 50%;
+  transition: 250ms ease-in-out;
+  background: linear-gradient(#f5f5f5 10%, #eeeeee);
+  box-shadow: 0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.9) inset, 0 0.5em 0.3em -0.1em rgba(0, 0, 0, 0.25);
+}
+.onoffswitch .switch + label::after {
+  position: absolute;
+  content: '';
+  width: 1em;
+  height: 1em;
+  top: 1em;
+  left: 6em;
+  border-radius: 50%;
+  transition: 250ms ease-in;
+  background: linear-gradient(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.1)), #dddddd;
+  box-shadow: 0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset, 0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7), -7.25em 0 0 -0.25em rgba(0, 0, 0, 0.3);
+}
+.onoffswitch .switch:checked + label::after {
+  background: linear-gradient(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.1)), #f22472;
+  box-shadow: 0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset, 0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7), -7.25em 0 0 -0.25em rgba(0, 0, 0, 0.12);
+}
+.onoffswitch .switch:checked + label::before {
+  left: 3em;
+}
 /*********************
  * Let's Chat
  *********************/
@@ -9648,38 +9695,61 @@ body {
   font-weight: 400;
   padding: 8px 12px;
   margin: 0;
+  border-bottom: 1px #ddd solid;
   position: relative;
+  box-shadow: 0 4px 5px -5px rgba(0, 0, 0, 0.1);
 }
 .lcb-rooms-browser-new {
   position: absolute;
   right: 12px;
 }
-.lcb-rooms-list {
-  padding: 4px;
+.lcb-rooms-list,
+.lcb-rooms-list-item {
+  display: block;
+  padding: 0;
   margin: 0;
-  border: 1px #eee solid;
-  border-radius: 2px;
-  -moz-flex: 1;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
 }
 .lcb-rooms-list-item {
-  background: #222;
-  width: 30%;
-  color: #f2f2f2;
+  color: #777;
   position: relative;
   padding: 10px 15px;
-  border: 1px #111 solid;
-  margin: 4px;
-  border-radius: 3px;
-  display: block;
-  float: left;
+  border-bottom: 1px #f2f2f2 solid;
+}
+.lcb-rooms-list-item:hover {
+  background: #f2f2f2;
 }
 .lcb-rooms-list-item-name {
   font-size: 20px;
+}
+.lcb-rooms-list-users,
+.lcb-rooms-list-user {
+  padding: 0;
+  margin: 0;
+}
+.lcb-rooms-list-users {
+  margin-top: 5px;
+  margin-left: -2px;
+  overflow: hidden;
+}
+.lcb-rooms-list-user {
+  margin: 2px;
+  display: block;
+  float: left;
+}
+.lcb-rooms-list-user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+}
+.lcb-rooms-list-item-switch {
+  position: absolute;
+  right: 24px;
+  top: 12px;
+}
+@media (min-width: 991px) {
+  .lcb-rooms-list-item-switch {
+    font-size: 8px;
+  }
 }
 /*********************
  * Rooms
