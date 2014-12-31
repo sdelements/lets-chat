@@ -433,14 +433,12 @@ var RoomView = Backbone.View.extend({
         // Scroll Locking
         this.scrollLocked = true;
         this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));
-
-        this.$('.lcb-entry-input')
-            .atwho({
-                at: '@',
-                search_key: 'screenName',
-                data: '/users',
-                tpl: "<li data-value='@${screenName}'><img src='http://www.gravatar.com/avatar/${avatar}?s=50' height='20' width='20'/> ${screenName} </li>"
-            })
+        this.$('.lcb-entry-input').atwho({
+            at: '@',
+            search_key: 'screenName',
+            data: '/users',
+            tpl: "<li data-value='@${screenName}'><img src='https://www.gravatar.com/avatar/${avatar}?s=50' height='20' width='20' /> ${screenName}</li>"
+        });
     },
     updateMeta: function(room, wat) {
         var $heading = this.$('.lcb-room-heading'),
@@ -506,11 +504,11 @@ var RoomView = Backbone.View.extend({
           this.$messages.scrollTop() - 5 <= this.$messages.outerHeight();
         return this.scrollLocked;
     },
-    scrollMessages: _.debounce(function(force) {
+    scrollMessages: function(force) {
         if (!force && !this.scrollLocked)
             return;
         this.$messages[0].scrollTop = this.$messages[0].scrollHeight;
-    }, 0),
+    },
     toggleSidebar: function(e) {
         e && e.preventDefault && e.preventDefault();
         this.$el.toggleClass('lcb-room-sidebar-opened');
