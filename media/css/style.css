@@ -9367,7 +9367,8 @@ body {
   -o-transition: color 0.2s linear;
   transition: color 0.2s linear;
 }
-.lcb-account-button:hover {
+.lcb-account-button:hover,
+.lcb-account-button:focus {
   color: #fff;
   cursor: pointer;
   text-decoration: none;
