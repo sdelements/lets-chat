@@ -104,6 +104,12 @@
         this.joining = this.joining || [];
         this.joining.push(id);
         this.socket.emit('rooms:join', id, function(resRoom) {
+
+            // Room was likely deleted if this returns
+            if (!resRoom) {
+                return;
+            }
+
             var room = that.rooms.get(id);
             room = that.rooms.add(resRoom);
             room.set('joined', true);
