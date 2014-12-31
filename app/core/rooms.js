@@ -59,6 +59,22 @@ RoomManager.prototype.update = function(roomId, options, cb) {
     });
 };
 
+RoomManager.prototype.delete = function(id, cb) {
+    var Room = mongoose.model('Room');
+    Room.findByIdAndRemove(id, function(err, room) {
+        if (err) {
+            console.log(err);
+            return cb(err);
+        }
+        if (!room) {
+            // WHY NO ROOM?!!!!!
+            console.log('No room!');
+            return cb(null, null);
+        }
+        cb(null, room);
+    });
+}
+
 RoomManager.prototype.list = function(options, cb) {
     var Room = mongoose.model('Room');
     Room

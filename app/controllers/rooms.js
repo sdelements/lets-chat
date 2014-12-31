@@ -71,7 +71,16 @@ module.exports = function() {
         },
         delete: function(req) {
             var data = req.data || req.body;
-            var userId = req.user._id;
+            var roomId = data.room;
+            core.rooms.delete(roomId, function(err, room) {
+                if (err) {
+                    console.log(err);
+                    req.io.respond(err, 400);
+                    return;
+                }
+                req.io.respond(room);
+                app.io.broadcast('rooms:delete', room);
+            });
         },
         list: function(req) {
             core.rooms.list(null, function(err, rooms) {
