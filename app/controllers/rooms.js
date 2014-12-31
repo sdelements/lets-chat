@@ -71,7 +71,16 @@ module.exports = function() {
         },
         delete: function(req) {
             var data = req.data || req.body;
-            var userId = req.user._id;
+            var roomId = data.room;
+            core.rooms.delete(roomId, function(err, room) {
+                if (err) {
+                    console.log(err);
+                    req.io.respond(err, 400);
+                    return;
+                }
+                req.io.respond(room);
+                app.io.broadcast('rooms:delete', room);
+            });
         },
         list: function(req) {
             core.rooms.list(null, function(err, rooms) {
@@ -84,20 +93,20 @@ module.exports = function() {
             });
         },
         update: function(req) {
-            var roomId = req.data.id,
+            var data = req.data || req.body;
+            var roomId = data.id,
                 options = {
-                    name: req.data.name,
-                    slug: req.data.slug,
-                    description: req.data.description
+                    name: data.name,
+                    slug: data.slug,
+                    description: data.description
                 };
-
             core.rooms.update(roomId, options, function(err, room) {
                 if (err || !room) {
                     req.io.respond(err, 400);
                     return;
                 }
-                req.io.broadcast('rooms:update', room.toJSON());
-                req.io.respond(room.toJSON(), 200);
+                app.io.broadcast('rooms:update', room);
+                req.io.respond(room, 200);
             });
         },
         join: function(req) {

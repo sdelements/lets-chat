@@ -178,22 +178,27 @@ var WindowView = Backbone.View.extend({
 //
 var BrowserView = Backbone.View.extend({
     events: {
-        'submit .lcb-rooms-add': 'add'
+        'submit .lcb-rooms-add': 'create'
     },
     initialize: function(options) {
         this.client = options.client;
         this.template = Handlebars.compile($('#template-room-browser-item').html());
         this.rooms = options.rooms;
-        this.rooms.on('add', function(room) {
-            this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
-        }, this);
+        this.rooms.on('add', this.add, this);
+        this.rooms.on('remove', this.remove, this);
         this.rooms.on('change:name change:description', this.update, this);
+    },
+    add: function(room) {
+        this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
+    },
+    remove: function(room) {
+        this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + ']').remove();
     },
     update: function(room) {
         this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
         this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
     },
-    add: function(e) {
+    create: function(e) {
         e.preventDefault();
         var $name = this.$('.lcb-room-name');
         var $slug = this.$('.lcb-room-slug');
@@ -410,7 +415,11 @@ var RoomView = Backbone.View.extend({
         'scroll .lcb-messages': 'updateScrollLock',
         'keypress .lcb-entry-input': 'sendMessage',
         'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta',
-        'click .lcb-room-toggle-sidebar': 'toggleSidebar'
+        'click .lcb-room-toggle-sidebar': 'toggleSidebar',
+        'click .show-edit-room': 'showEditRoom',
+        'click .hide-edit-room': 'hideEditRoom',
+        'click .submit-edit-room': 'submitEditRoom',
+        'click .delete-room': 'deleteRoom'
     },
     initialize: function(options) {
         this.client = options.client;
@@ -440,11 +449,9 @@ var RoomView = Backbone.View.extend({
             tpl: "<li data-value='@${screenName}'><img src='https://www.gravatar.com/avatar/${avatar}?s=50' height='20' width='20' /> ${screenName}</li>"
         });
     },
-    updateMeta: function(room, wat) {
-        var $heading = this.$('.lcb-room-heading'),
-            $description = this.$('.lcb-room-description');
-        !$heading.is(':focus') && $heading.text(room.get('name'));
-        !$description.is(':focus') && $description.text(room.get('description'))
+    updateMeta: function() {
+        this.$('.lcb-room-heading').text(this.model.get('name'));
+        this.$('.lcb-room-description').text(this.model.get('description'));
     },
     sendMeta: function(e) {
         this.model.set({
@@ -457,8 +464,53 @@ var RoomView = Backbone.View.extend({
             description: this.model.get('description')
         });
     },
+    showEditRoom: function(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        this.$('.lcb-room-edit').modal();
+    },
+    hideEditRoom: function(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        this.$('.lcb-room-edit').modal('hide');
+    },
+    submitEditRoom: function(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        var name = this.$('.edit-room input[name="name"]').val();
+        var description = this.$('.edit-room textarea[name="description"]').val();
+        this.client.events.trigger('rooms:update', {
+            id: this.model.id,
+            name: name,
+            description: description
+        });
+        this.$('.lcb-room-edit').modal('hide');
+    },
     deleteRoom: function(e) {
-        this.client.events.trigger('rooms:delete', this.model.id);
+        var that = this;
+        swal({title: 'Do you really want to delete "' + this.model.get('name') + '"?',
+              text: "You will not be able to recover it!",
+              type: "error",
+              confirmButtonText: "Yes, I'm sure",
+              allowOutsideClick: true,
+              confirmButtonColor: "#DD6B55",
+              showCancelButton: true,
+              closeOnConfirm: false,
+          }, function(isConfirm) {
+                if (isConfirm) {
+                    that.$('.lcb-room-edit').modal('hide');
+                    that.client.events.trigger('rooms:delete', {
+                        room: that.model.id
+                    });
+                    swal("Deleted!", 'The room has been deleted!', 'success');
+
+               } else {
+                    swal("Cancelled", "The room was not deleted.", "error");
+               }
+          });
     },
     sendMessage: function(e) {
         if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;

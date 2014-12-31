@@ -46,15 +46,6 @@
             callback && callback(room);
         });
     };
-    Client.prototype.deleteRoom = function(id) {
-        var that = this;
-        var room = this.rooms.get(id);
-        if (room) {
-            this.socket.emit('rooms:delete', id, function() {
-                that.rooms.remove(room);
-            });
-        }
-    };
     Client.prototype.getRooms = function() {
         var that = this;
         this.socket.emit('rooms:list', function(rooms) {
@@ -93,6 +84,13 @@
         }
         room.set(resRoom);
     };
+    Client.prototype.deleteRoom = function(id) {
+        this.socket.emit('rooms:delete', id);
+    }
+    Client.prototype.roomDelete = function(room) {
+        this.leaveRoom(room.id);
+        this.rooms.remove(room.id);
+    };
     Client.prototype.joinRoom = function(id, switchRoom) {
         var that = this;
         // We need an id and unlocked joining
@@ -106,6 +104,12 @@
         this.joining = this.joining || [];
         this.joining.push(id);
         this.socket.emit('rooms:join', id, function(resRoom) {
+
+            // Room was likely deleted if this returns
+            if (!resRoom) {
+                return;
+            }
+
             var room = that.rooms.get(id);
             room = that.rooms.add(resRoom);
             room.set('joined', true);
@@ -278,6 +282,9 @@
         this.socket.on('rooms:update', function(room) {
             that.roomUpdate(room);
         });
+        this.socket.on('rooms:delete', function(room) {
+            that.roomDelete(room);
+        });
         this.socket.on('users:join', function(user) {
             that.addUser(user);
         });
@@ -295,6 +302,7 @@
         this.events.on('rooms:leave', this.leaveRoom, this);
         this.events.on('rooms:create', this.createRoom, this);
         this.events.on('rooms:switch', this.switchRoom, this);
+        this.events.on('rooms:delete', this.deleteRoom, this);
     };
     //
     // Start
