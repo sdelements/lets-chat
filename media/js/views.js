@@ -178,7 +178,8 @@ var WindowView = Backbone.View.extend({
 //
 var BrowserView = Backbone.View.extend({
     events: {
-        'submit .lcb-rooms-add': 'create'
+        'submit .lcb-rooms-add': 'create',
+        'change .lcb-rooms-switch': 'toggle'
     },
     initialize: function(options) {
         this.client = options.client;
@@ -187,6 +188,18 @@ var BrowserView = Backbone.View.extend({
         this.rooms.on('add', this.add, this);
         this.rooms.on('remove', this.remove, this);
         this.rooms.on('change:name change:description', this.update, this);
+        this.rooms.on('change:joined', this.updateToggles, this);
+    },
+    updateToggles: function(room, joined) {
+        this.$el.find('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
+    },
+    toggle: function(e) {
+        var $input = $(e.currentTarget);
+        var room = this.rooms.get($input.data('id'));
+        if (!room) {
+            return;
+        }
+        room.set('joined', $input.is(':checked'));
     },
     add: function(room) {
         this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
@@ -200,33 +213,27 @@ var BrowserView = Backbone.View.extend({
     },
     create: function(e) {
         e.preventDefault();
-        var $name = this.$('.lcb-room-name');
-        var $slug = this.$('.lcb-room-slug');
-        var $description = this.$('.lcb-room-description');
-        var $modal = this.$('#lcb-add-room');
-        var $form = this.$(e.target);
-        var data = {
-            name: $name.val().trim(),
-            slug: $slug.val().trim(),
-            description: $description.val(),
-            callback: function success() {
-                $modal.modal('hide');
-                $form.trigger('reset');
-            }
-        };
-
+        var $modal = this.$('#lcb-add-room'),
+            $form = this.$(e.target),
+            data = {
+                name: this.$('.lcb-room-name').val().trim(),
+                slug: this.$('.lcb-room-name').val().trim(),
+                description: this.$('.lcb-room-description').val(),
+                callback: function success() {
+                    $modal.modal('hide');
+                    $form.trigger('reset');
+                }
+            };
         // we require name is non-empty
         if (!data.name) {
             $name.parent().addClass('has-error');
             return;
         }
-
         // we require slug is non-empty
         if (!data.slug) {
             $slug.parent().addClass('has-error');
             return;
         }
-
         this.client.events.trigger('rooms:create', data);
     }
 });
