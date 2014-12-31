@@ -263,12 +263,6 @@ var TabsView = Backbone.View.extend({
         this.switch(this.rooms.current.get('id'));
         this.render();
     },
-    render: function() {
-        new Sortable(this.$el[0], {
-            draggable: '.lcb-tab-room',
-            ghostClass: 'lcb-tab-ghost'
-        });
-    },
     add: function(room) {
         this.$el.append(this.template(room));
     },
