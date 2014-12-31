@@ -87,12 +87,22 @@
 
 .lcb-message-text {
     word-wrap: break-word;
+    pre {
+        padding: 10px;
+        margin: 0;
+        border: 3px solid #cccccc;
+        border-top: none;
+        border-bottom: none;
+        border-radius: 4px;
+    }
 }
 
 // Eugh Firefox
 @-moz-document url-prefix() {
     .lcb-message-text {
-        width: 0;
-        word-wrap: normal;
+        word-break: break-all;
+        pre {
+            white-space: pre-wrap;
+        }
     }
 }
