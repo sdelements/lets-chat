@@ -14,7 +14,7 @@ if (typeof exports !== 'undefined') {
     //
     exports.format = function(text, extras) {
         var imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
-            linkPattern = /((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|])/ig,
+            linkPattern = /((https?|ftp):\/\/[-A-Z0-9+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|])/ig,
             mentionPattern = /\B@(\w+)(?!@)\b/g;
         text = text.trim();
         text = text.replace(mentionPattern, '<strong>@$1</strong>');

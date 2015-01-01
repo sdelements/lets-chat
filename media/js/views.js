@@ -25,6 +25,16 @@ var WindowView = Backbone.View.extend({
         this.activeDesktopNotifications = [];
         this.activeDesktopNotificationMentions = [];
 
+        this.roomNotifications = store.get('roomNotifications')
+        if (this.roomNotifications === undefined){
+            this.roomNotifications = true;
+        }
+
+        this.mentionNotifications = store.get('mentionNotifications');
+        if (this.mentionNotifications === undefined){
+            this.mentionNotifications = true;
+        }
+ 
         $(window).on('focus blur', _.bind(this.focusBlur, this));
 
         this.rooms.current.on('change:id', function(current, id) {
@@ -41,6 +51,14 @@ var WindowView = Backbone.View.extend({
         }, this);
 
         this.rooms.on('messages:new', this.onNewMessage, this);
+    },
+    toggleRoomNotifications: function() {
+        this.roomNotifications = !this.roomNotifications;
+        store.set('roomNotifications', this.roomNotifications);
+    },
+    toggleMentionNotifications: function() {
+        this.mentionNotifications = !this.mentionNotifications;
+        store.set('mentionNotifications', this.mentionNotifications);
     },
     updateTitle: function(name) {
         if (name) {
@@ -132,6 +150,14 @@ var WindowView = Backbone.View.extend({
 
         if (!notify.isSupported ||
             notify.permissionLevel() != notify.PERMISSION_GRANTED) {
+            return;
+        }
+
+        if (!message.mentioned && !this.roomNotifications) {
+            return;
+        }
+
+        if (message.mentioned && !this.mentionNotifications) {
             return;
         }
 
@@ -596,22 +622,31 @@ var NotificationsView = Backbone.View.extend({
     focus: true,
     count: 0,
     events: {
-        'click [name=desktop-notifications]': 'toggleDesktopNotifications'
+        'click [name=desktop-notifications]': 'toggleDesktopNotifications',
+        'click [name=room-notifications]': 'toggleRoomNotifications',
+        'click [name=mention-notifications]': 'toggleMentionNotifications',
     },
-    initialize: function() {
+    initialize: function(options) {
+        this.window = options.windowView;
         this.render();
     },
     render: function() {
-        var $input = this.$('[name=desktop-notifications]');
-        $input.find('.disabled').show()
+        var $desktopNotications = this.$('[name=desktop-notifications]');
+        var $roomNotifications = this.$('[name=room-notifications]');
+        var $mentionNotifications = this.$('[name=mention-notifications]');
+
+        $desktopNotications.find('.disabled').show()
           .siblings().hide();
+        $roomNotifications.prop('checked', this.window.roomNotifications);
+        $mentionNotifications.prop('checked', this.window.mentionNotifications);
+
         if (!notify.isSupported) {
-            $input.attr('disabled', true);
+            $desktopNotications.attr('disabled', true);
             // Welp we're done here
             return;
         }
         if (notify.permissionLevel() === notify.PERMISSION_GRANTED) {
-            $input.find('.enabled').show()
+            $desktopNotications.find('.enabled').show()
               .siblings().hide();
         }
         if (notify.permissionLevel() === notify.PERMISSION_DENIED) {
@@ -627,6 +662,12 @@ var NotificationsView = Backbone.View.extend({
         notify.requestPermission(function() {
             self.render();
         });
+    },
+    toggleRoomNotifications: function() {
+        this.window.toggleRoomNotifications();
+    },
+    toggleMentionNotifications: function() {
+        this.window.toggleMentionNotifications();
     }
 });
 
@@ -659,7 +700,9 @@ var ClientView = Backbone.View.extend({
             rooms: this.client.rooms,
             client: this.client
         });
-        this.notifications = new NotificationsView();
+        this.notifications = new NotificationsView({
+            windowView: this.window
+        });
 
         this.status = new StatusView({
             el: this.$el.find('.lcb-status-indicators'),
