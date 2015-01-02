@@ -217,7 +217,7 @@ var BrowserView = Backbone.View.extend({
             $form = this.$(e.target),
             data = {
                 name: this.$('.lcb-room-name').val().trim(),
-                slug: this.$('.lcb-room-name').val().trim(),
+                slug: this.$('.lcb-room-slug').val().trim(),
                 description: this.$('.lcb-room-description').val(),
                 callback: function success() {
                     $modal.modal('hide');
