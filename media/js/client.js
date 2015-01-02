@@ -84,10 +84,10 @@
         }
         room.set(resRoom);
     };
-    Client.prototype.deleteRoom = function(id) {
-        this.socket.emit('rooms:delete', id);
+    Client.prototype.archiveRoom = function(id) {
+        this.socket.emit('rooms:archive', id);
     }
-    Client.prototype.roomDelete = function(room) {
+    Client.prototype.roomArchive = function(room) {
         this.leaveRoom(room.id);
         this.rooms.remove(room.id);
     };
@@ -105,7 +105,7 @@
         this.joining.push(id);
         this.socket.emit('rooms:join', id, function(resRoom) {
 
-            // Room was likely deleted if this returns
+            // Room was likely archived if this returns
             if (!resRoom) {
                 return;
             }
@@ -282,8 +282,8 @@
         this.socket.on('rooms:update', function(room) {
             that.roomUpdate(room);
         });
-        this.socket.on('rooms:delete', function(room) {
-            that.roomDelete(room);
+        this.socket.on('rooms:archive', function(room) {
+            that.roomArchive(room);
         });
         this.socket.on('users:join', function(user) {
             that.addUser(user);
@@ -302,7 +302,7 @@
         this.events.on('rooms:leave', this.leaveRoom, this);
         this.events.on('rooms:create', this.createRoom, this);
         this.events.on('rooms:switch', this.switchRoom, this);
-        this.events.on('rooms:delete', this.deleteRoom, this);
+        this.events.on('rooms:archive', this.archiveRoom, this);
     };
     //
     // Start

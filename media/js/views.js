@@ -420,7 +420,7 @@ var RoomView = Backbone.View.extend({
         'click .show-edit-room': 'showEditRoom',
         'click .hide-edit-room': 'hideEditRoom',
         'click .submit-edit-room': 'submitEditRoom',
-        'click .delete-room': 'deleteRoom'
+        'click .archive-room': 'archiveRoom'
     },
     initialize: function(options) {
         this.client = options.client;
@@ -490,28 +490,28 @@ var RoomView = Backbone.View.extend({
         });
         this.$('.lcb-room-edit').modal('hide');
     },
-    deleteRoom: function(e) {
+    archiveRoom: function(e) {
         var that = this;
-        swal({title: 'Do you really want to delete "' + this.model.get('name') + '"?',
-              text: "You will not be able to recover it!",
-              type: "error",
-              confirmButtonText: "Yes, I'm sure",
-              allowOutsideClick: true,
-              confirmButtonColor: "#DD6B55",
-              showCancelButton: true,
-              closeOnConfirm: false,
-          }, function(isConfirm) {
-                if (isConfirm) {
-                    that.$('.lcb-room-edit').modal('hide');
-                    that.client.events.trigger('rooms:delete', {
-                        room: that.model.id
-                    });
-                    swal("Deleted!", 'The room has been deleted!', 'success');
+        swal({
+            title: 'Do you really want to archive "' +
+                   this.model.get('name') + '"?',
+            text: "You will not be able to open it!",
+            type: "error",
+            confirmButtonText: "Yes, I'm sure",
+            allowOutsideClick: true,
+            confirmButtonColor: "#DD6B55",
+            showCancelButton: true,
+            closeOnConfirm: false,
+        }, function(isConfirm) {
+            if (isConfirm) {
+                that.$('.lcb-room-edit').modal('hide');
+                that.client.events.trigger('rooms:archive', {
+                    room: that.model.id
+                });
+                swal("Archived!", 'The room has been archived!', 'success');
 
-               } else {
-                    swal("Cancelled", "The room was not deleted.", "error");
-               }
-          });
+            }
+        });
     },
     sendMessage: function(e) {
         if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;

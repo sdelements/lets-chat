@@ -16,19 +16,24 @@ MessageManager.prototype.create = function(options, cb) {
         Room = mongoose.model('Room'),
         User = mongoose.model('User');
 
-    Message.create(options, function(err, message) {
+    Room.findById(options.room, function(err, room) {
         if (err) {
             console.error(err);
             return cb(err);
         }
 
-        // Temporary workaround for _id until populate can do aliasing
-        User.findOne(message.owner, function(err, user) {
+        if (room.archived) {
+            return cb('Room is archived.');
+        }
+
+        Message.create(options, function(err, message) {
             if (err) {
                 console.error(err);
                 return cb(err);
             }
-            Room.findOne(message.room, function(err, room) {
+
+            // Temporary workaround for _id until populate can do aliasing
+            User.findOne(message.owner, function(err, user) {
                 if (err) {
                     console.error(err);
                     return cb(err);

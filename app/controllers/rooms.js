@@ -43,7 +43,7 @@ module.exports = function() {
     });
 
     app.delete('/rooms', middlewares.requireLogin, function(req, res) {
-        req.io.route('rooms:delete');
+        req.io.route('rooms:archive');
     });
 
     //
@@ -69,17 +69,17 @@ module.exports = function() {
                 app.io.broadcast('rooms:new', room);
             });
         },
-        delete: function(req) {
+        archive: function(req) {
             var data = req.data || req.body;
             var roomId = data.room;
-            core.rooms.delete(roomId, function(err, room) {
+            core.rooms.archive(roomId, function(err, room) {
                 if (err) {
                     console.log(err);
                     req.io.respond(err, 400);
                     return;
                 }
                 req.io.respond(room);
-                app.io.broadcast('rooms:delete', room);
+                app.io.broadcast('rooms:archive', room);
             });
         },
         list: function(req) {
