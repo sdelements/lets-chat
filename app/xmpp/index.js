@@ -79,10 +79,55 @@ function xmppStart(core) {
         });
     });
 
+    core.rooms.on('rooms:archived', function(room) {
+        var roomm = core.presence.rooms.get(room._id);
+
+        if (!roomm) {
+            return;
+        }
+
+        var connections = roomm.connections.byType('xmpp');
+
+        connections.forEach(function(conn) {
+
+            // Kick connection from room!
+
+            var presence = new Stanza.Presence({
+                to: helper.getRoomJid(roomm.roomSlug, conn.screenName),
+                from: helper.getRoomJid(roomm.roomSlug, conn.screenName),
+                type: 'unavailable'
+            });
+
+            var x = presence
+                    .c('x', {
+                        xmlns:'http://jabber.org/protocol/muc#user'
+                    });
+
+            x.c('item', {
+                jid: helper.getRoomJid(roomm.roomSlug, conn.screenName),
+                affiliation: 'none',
+                role: 'none'
+            });
+
+            x.c('destroy').c('reason').t('Room closed');
+
+            if (settings.xmpp.debug.handled) {
+                console.log(' ');
+                console.log(presence.root().toString().yellow);
+            }
+
+            conn.client.send(presence);
+        });
+
+        roomm.connections.removeAll();
+    });
+
     core.messages.on('messages:new', function(msg) {
         var room = core.presence.rooms.get(msg.room.id);
-        if(!room)
+
+        if (!room) {
             return;
+        }
 
         var connections = room.connections.byType('xmpp');
 
@@ -135,7 +180,6 @@ function xmppStart(core) {
             }
 
             conn.client.send(presence);
-
         });
     });
 

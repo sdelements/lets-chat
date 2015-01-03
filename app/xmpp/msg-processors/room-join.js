@@ -18,7 +18,7 @@ module.exports = MessageProcessor.extend({
 
         this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
-                return;
+                return cb(err);
             }
             if (!room) {
                 return cb(null);

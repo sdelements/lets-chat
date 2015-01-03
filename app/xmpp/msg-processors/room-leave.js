@@ -17,10 +17,11 @@ module.exports = MessageProcessor.extend({
 
         this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
-                return;
+                return cb(err);
             }
+
             if (!room) {
-                return;
+                return cb();
             }
 
             this.core.presence.leave(this.client.conn, room._id);

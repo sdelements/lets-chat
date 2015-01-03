@@ -15,7 +15,7 @@ module.exports = MessageProcessor.extend({
 
         this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
-                return;
+                return cb(err);
             }
 
             var stanza = this.Iq();

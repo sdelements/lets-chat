@@ -12,6 +12,7 @@ function ConnectionCollection() {
 
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
+    this.removeAll = this.removeAll.bind(this);
 }
 
 ConnectionCollection.prototype.get = function(connectionId) {
@@ -81,6 +82,16 @@ ConnectionCollection.prototype.remove = function(connection) {
     } else {
         return false;
     }
+};
+
+ConnectionCollection.prototype.removeAll = function() {
+    var keys = Object.keys(this.connections);
+
+    keys.forEach(function(key) {
+        delete this.connections[key];
+    }, this);
+
+    return true;
 };
 
 module.exports = ConnectionCollection;

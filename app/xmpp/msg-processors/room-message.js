@@ -20,11 +20,14 @@ module.exports = MessageProcessor.extend({
         });
 
         if (!body) {
-            return;
+            return cb();
         }
 
         this.core.rooms.slug(roomSlug, function(err, room) {
-            
+            if (!room) {
+                return cb();
+            }
+
             var options = {
                 owner: this.client.user._id,
                 room: room._id,
