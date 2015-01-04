@@ -85,7 +85,11 @@
         room.set(resRoom);
     };
     Client.prototype.archiveRoom = function(id) {
-        this.socket.emit('rooms:archive', id);
+        this.socket.emit('rooms:archive', id, function(room) {
+            if (!room.id) {
+                swal('Unable to Archive!', 'Unable to archive this room!', 'error');
+            }
+        });
     }
     Client.prototype.roomArchive = function(room) {
         this.leaveRoom(room.id);

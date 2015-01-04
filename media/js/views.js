@@ -433,6 +433,7 @@ var RoomView = Backbone.View.extend({
         this.render();
         this.model.on('messages:new', this.addMessage, this);
         this.model.on('change', this.updateMeta, this);
+        this.model.on('remove', this.goodbye, this);
         //
         // Subviews
         //
@@ -453,6 +454,9 @@ var RoomView = Backbone.View.extend({
             data: '/users',
             tpl: "<li data-value='@${screenName}'><img src='https://www.gravatar.com/avatar/${avatar}?s=50' height='20' width='20' /> ${screenName}</li>"
         });
+    },
+    goodbye: function() {
+        swal('Archived!', 'The room has been archived!', 'success');
     },
     updateMeta: function() {
         this.$('.lcb-room-heading').text(this.model.get('name'));
@@ -512,8 +516,6 @@ var RoomView = Backbone.View.extend({
                 that.client.events.trigger('rooms:archive', {
                     room: that.model.id
                 });
-                swal("Archived!", 'The room has been archived!', 'success');
-
             }
         });
     },
