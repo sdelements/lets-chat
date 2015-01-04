@@ -25,7 +25,7 @@ RoomCollection.prototype.get = function(roomId) {
 
 RoomCollection.prototype.getOrAdd = function(roomId, roomSlug) {
     roomId = roomId.toString();
-    roomSlug = roomSlug.toString();
+    roomSlug = roomSlug && roomSlug.toString() || roomId.toString();
     var room = this.rooms[roomId];
     if (!room) {
         room = this.rooms[roomId] = new Room(roomId, roomSlug);
