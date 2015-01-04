@@ -314,7 +314,7 @@
     Client.prototype.start = function() {
         this.listen();
         this.route();
-        this.view = new ClientView({
+        this.view = new window.LCB.ClientView({
             client: this
         });
         //
