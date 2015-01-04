@@ -179,7 +179,8 @@ var WindowView = Backbone.View.extend({
 var BrowserView = Backbone.View.extend({
     events: {
         'submit .lcb-rooms-add': 'create',
-        'change .lcb-rooms-switch': 'toggle'
+        'change .lcb-rooms-switch': 'toggle',
+        'click .lcb-rooms-switch-label': 'toggle'
     },
     initialize: function(options) {
         this.client = options.client;
@@ -194,13 +195,15 @@ var BrowserView = Backbone.View.extend({
         this.$el.find('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
     },
     toggle: function(e) {
-        var $input = $(e.currentTarget),
+        e.preventDefault();
+        var $target = $(e.currentTarget),
+            $input = $target.is(':checkbox') && $target || $target.siblings('[type="checkbox"]'),
             id = $input.data('id'),
             room = this.rooms.get(id);
         if (!room) {
             return;
         }
-        $input.is(':checked') && this.client.joinRoom(room.id) || this.client.leaveRoom(room.id);
+        !$input.is(':checked') && this.client.joinRoom(room.id) || this.client.leaveRoom(room.id);
     },
     add: function(room) {
         this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
