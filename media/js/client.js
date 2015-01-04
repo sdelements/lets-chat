@@ -191,7 +191,7 @@
     // Users
     //
     Client.prototype.setUsers = function(users) {
-        if (!users || !users[0].room) {
+        if (!users || !users[0] ||!users[0].room) {
             // Data is not valid
             return;
         }

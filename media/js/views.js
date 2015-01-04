@@ -194,12 +194,13 @@ var BrowserView = Backbone.View.extend({
         this.$el.find('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
     },
     toggle: function(e) {
-        var $input = $(e.currentTarget);
-        var room = this.rooms.get($input.data('id'));
+        var $input = $(e.currentTarget),
+            id = $input.data('id'),
+            room = this.rooms.get(id);
         if (!room) {
             return;
         }
-        room.set('joined', $input.is(':checked'));
+        $input.is(':checked') && this.client.joinRoom(room.id) || this.client.leaveRoom(room.id);
     },
     add: function(room) {
         this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
