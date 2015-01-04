@@ -9304,6 +9304,7 @@ body {
 .lcb-sidebar {
   background: #222;
   width: 200px;
+  min-width: 200px;
   height: 100%;
   border-right: 1px #333 solid;
   position: relative;
