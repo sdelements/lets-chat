@@ -456,7 +456,7 @@ var RoomView = Backbone.View.extend({
         });
     },
     goodbye: function() {
-        swal('Archived!', 'The room has been archived!', 'success');
+        swal('Archived!', '"' + this.model.get('name') + '" has been archived.', 'warning');
     },
     updateMeta: function() {
         this.$('.lcb-room-heading').text(this.model.get('name'));
