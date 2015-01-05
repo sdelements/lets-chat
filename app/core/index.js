@@ -9,30 +9,32 @@ var EventEmitter = require('events').EventEmitter,
 
 function Core() {
     EventEmitter.call(this);
+
+    this.account = new AccountManager({
+        core: this
+    });
+
+    this.messages = new MessageManager({
+        core: this
+    });
+
+    this.presence = new PresenceManager({
+        core: this
+    });
+
+    this.rooms = new RoomManager({
+        core: this
+    });
+
+    this.onUsernameChanged = this.onUsernameChanged.bind(this);
+
+    this.on('account:username_changed', this.onUsernameChanged);
 }
 
 util.inherits(Core, EventEmitter);
 
-var core = new Core();
-
-core.account = new AccountManager({
-    core: core
-});
-
-core.messages = new MessageManager({
-    core: core
-});
-
-core.presence = new PresenceManager({
-    core: core
-});
-
-core.rooms = new RoomManager({
-    core: core
-});
-
-core.account.on('username_changed', function(data) {
-    var connections = core.presence.connections.query({
+Core.prototype.onUsernameChanged = function(data) {
+    var connections = this.presence.connections.query({
         userId: data.userId
     });
 
@@ -52,7 +54,7 @@ core.account.on('username_changed', function(data) {
     });
 
     // Emit to all rooms, that this user has changed their screenName
-    core.presence.rooms.screenNameChanged(new_data);
-});
+    this.presence.rooms.screenNameChanged(new_data);
+};
 
-module.exports = core;
+module.exports = new Core();

@@ -1,16 +1,11 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter,
-    util = require('util'),
-    mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
 
 function AccountManager(options) {
-    EventEmitter.call(this);
     this.core = options.core;
 }
-
-util.inherits(AccountManager, EventEmitter);
 
 AccountManager.prototype.update = function(id, options, cb) {
     var User = mongoose.model('User');
@@ -63,7 +58,7 @@ AccountManager.prototype.update = function(id, options, cb) {
             }
 
             if (usernameChange) {
-                this.emit('username_changed', {
+                this.core.emit('account:username_changed', {
                     userId: user._id.toString(),
                     username: user.username
                 });

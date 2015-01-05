@@ -1,16 +1,10 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter,
-    util = require('util'),
-    mongoose = require('mongoose');
-
+var mongoose = require('mongoose');
 
 function MessageManager(options) {
-    EventEmitter.call(this);
     this.core = options.core;
 }
-
-util.inherits(MessageManager, EventEmitter);
 
 MessageManager.prototype.create = function(options, cb) {
     var Message = mongoose.model('Message'),

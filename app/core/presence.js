@@ -1,8 +1,6 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter,
-    util = require('util'),
-    _ = require('underscore'),
+var _ = require('underscore'),
     Connection = require('./presence/connection'),
     ConnectionCollection = require('./presence/connection-collection'),
     RoomCollection = require('./presence/room-collection');
