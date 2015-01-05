@@ -6,16 +6,17 @@ var xmpp = require('node-xmpp-server'),
     settings = require('./../config'),
     auth = require('./../auth/index'),
     all = require('require-tree'),
-    helper = require('./helper');
-
-var XmppConnection = require('./xmpp-connection');
-
-var msgProcessors = (function(){
-        var modules = all('./msg-processors');
+    helper = require('./helper'),
+    allArray = function(path) {
+        var modules = all(path);
         return Object.keys(modules).map(function(key) {
-            return { key: key, Processor: modules[key]};
+            return modules[key];
         });
-    })();
+    };
+
+var XmppConnection = require('./xmpp-connection'),
+    msgProcessors = allArray('./msg-processors'),
+    eventListeners = allArray('./events');
 
 function xmppStart(core) {
     var options = {
@@ -62,8 +63,8 @@ function xmppStart(core) {
         });
 
         client.on('stanza', function(stanza) {
-            var handled = msgProcessors.some(function(pro) {
-                var processor = new pro.Processor(client, stanza, core);
+            var handled = msgProcessors.some(function(Processor) {
+                var processor = new Processor(client, stanza, core);
                 return processor.run();
             });
 
@@ -79,141 +80,9 @@ function xmppStart(core) {
         });
     });
 
-    core.rooms.on('rooms:archived', function(room) {
-        var roomm = core.presence.rooms.get(room._id);
-
-        if (!roomm) {
-            return;
-        }
-
-        var connections = roomm.connections.byType('xmpp');
-
-        connections.forEach(function(conn) {
-
-            // Kick connection from room!
-
-            var presence = new Stanza.Presence({
-                to: helper.getRoomJid(roomm.roomSlug, conn.screenName),
-                from: helper.getRoomJid(roomm.roomSlug, conn.screenName),
-                type: 'unavailable'
-            });
-
-            var x = presence
-                    .c('x', {
-                        xmlns:'http://jabber.org/protocol/muc#user'
-                    });
-
-            x.c('item', {
-                jid: helper.getRoomJid(roomm.roomSlug, conn.screenName),
-                affiliation: 'none',
-                role: 'none'
-            });
-
-            x.c('destroy').c('reason').t('Room closed');
-
-            if (settings.xmpp.debug.handled) {
-                console.log(' ');
-                console.log(presence.root().toString().yellow);
-            }
-
-            conn.client.send(presence);
-        });
-
-        roomm.connections.removeAll();
-    });
-
-    core.messages.on('messages:new', function(msg) {
-        var room = core.presence.rooms.get(msg.room.id);
-
-        if (!room) {
-            return;
-        }
-
-        var connections = room.connections.byType('xmpp');
-
-        connections.forEach(function(conn) {
-            var stanza = new Stanza.Message({
-                id: msg._id,
-                type: 'groupchat',
-                to: helper.getRoomJid(msg.room.slug),
-                from: helper.getRoomJid(msg.room.slug, msg.owner.screenName)
-            });
-
-            stanza.c('active', {
-                xmlns: 'http://jabber.org/protocol/chatstates'
-            });
-
-            stanza.c('body').t(msg.text);
-
-            if (settings.xmpp.debug.handled) {
-                console.log(' ');
-                console.log(stanza.root().toString().yellow);
-            }
-
-            conn.client.send(stanza);
-        });
-    });
-
-    core.presence.rooms.on('user_join', function(data) {
-        var connections =
-            core.presence.rooms.get(data.roomId).connections.byType('xmpp');
-
-        connections.forEach(function(conn) {
-            var presence = new Stanza.Presence({
-                to: helper.getRoomJid(data.roomSlug, conn.screenName),
-                from: helper.getRoomJid(data.roomSlug, data.screenName)
-            });
-
-            presence
-            .c('x', {
-                xmlns:'http://jabber.org/protocol/muc#user'
-            })
-            .c('item', {
-                jid: helper.getRoomJid(data.roomSlug, data.screenName),
-                affiliation: 'none',
-                role: 'participant'
-            });
-
-            if (settings.xmpp.debug.handled) {
-                console.log(' ');
-                console.log(presence.root().toString().yellow);
-            }
-
-            conn.client.send(presence);
-        });
-    });
-
-    core.presence.rooms.on('user_leave', function(data) {
-        var connections =
-            core.presence.rooms.get(data.roomId).connections.byType('xmpp');
-
-        connections.forEach(function(conn) {
-            var presence = new Stanza.Presence({
-                to: helper.getRoomJid(data.roomSlug, conn.screenName),
-                from: helper.getRoomJid(data.roomSlug, data.screenName),
-                type: 'unavailable'
-            });
-
-            var x = presence.c('x', {
-                xmlns: 'http://jabber.org/protocol/muc#user'
-            });
-            x.c('item', {
-                jid: helper.getRoomJid(data.roomSlug, data.screenName),
-                role: 'none',
-                affiliation: 'none'
-            });
-            x.c('status', {
-                code: '110'
-            });
-
-            if (settings.xmpp.debug.handled) {
-                console.log(' ');
-                console.log(presence.root().toString().yellow);
-            }
-
-            conn.client.send(presence);
-
-        });
+    eventListeners.forEach(function(EventListener) {
+        var listener = new EventListener(core);
+        core.on(listener.on, listener.then);
     });
 }
 

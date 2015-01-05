@@ -1,11 +1,19 @@
 'use strict';
 
-var AccountManager = require('./account'),
+var EventEmitter = require('events').EventEmitter,
+    util = require('util'),
+    AccountManager = require('./account'),
     MessageManager = require('./messages'),
     PresenceManager = require('./presence'),
     RoomManager = require('./rooms');
 
-var core = {};
+function Core() {
+    EventEmitter.call(this);
+}
+
+util.inherits(Core, EventEmitter);
+
+var core = new Core();
 
 core.account = new AccountManager({
     core: core

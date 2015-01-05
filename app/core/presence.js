@@ -7,9 +7,12 @@ var EventEmitter = require('events').EventEmitter,
     ConnectionCollection = require('./presence/connection-collection'),
     RoomCollection = require('./presence/room-collection');
 
-function PresenceManager() {
+function PresenceManager(options) {
+    this.core = options.core;
     this.connections = new ConnectionCollection();
     this.rooms = new RoomCollection();
+    this.rooms.on('user_join', this.onJoin.bind(this));
+    this.rooms.on('user_leave', this.onLeave.bind(this));
 
     this.connect = this.connect.bind(this);
 }
@@ -37,6 +40,14 @@ PresenceManager.prototype.leave = function(connection, roomId) {
     if (room) {
         room.removeConnection(connection);
     }
+};
+
+PresenceManager.prototype.onJoin = function(data) {
+    this.core.emit('presence:user_join', data);
+};
+
+PresenceManager.prototype.onLeave = function(data) {
+    this.core.emit('presence:user_leave', data);
 };
 
 PresenceManager.Connection = Connection;

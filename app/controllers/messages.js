@@ -10,7 +10,7 @@ module.exports = function() {
         core = this.core,
         middlewares = this.middlewares;
 
-    core.messages.on('messages:new', function(message) {
+    core.on('messages:new', function(message) {
         app.io.room(message.room.id)
               .broadcast('messages:new', message);
     });

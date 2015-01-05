@@ -14,7 +14,7 @@ module.exports = function() {
         Room = models.room,
         User = models.user;
 
-    core.presence.rooms.on('user_join', function(data) {
+    core.on('presence:user_join', function(data) {
         User.findById(data.userId, function (err, user) {
             user = user.toJSON();
             user.room = data.roomId;
@@ -22,7 +22,7 @@ module.exports = function() {
         });
     });
 
-    core.presence.rooms.on('user_leave', function(data) {
+    core.on('presence:user_leave', function(data) {
         User.findById(data.userId, function (err, user) {
             user = user.toJSON();
             user.room = data.roomId;

@@ -5,8 +5,9 @@ var EventEmitter = require('events').EventEmitter,
     mongoose = require('mongoose');
 
 
-function RoomManager() {
+function RoomManager(options) {
     EventEmitter.call(this);
+    this.core = options.core;
 }
 
 util.inherits(RoomManager, EventEmitter);
@@ -22,7 +23,7 @@ RoomManager.prototype.create = function(options, cb) {
         if (cb) {
             room = room.toJSON();
             cb(null, room);
-            this.emit('rooms:new', room);
+            this.core.emit('rooms:new', room);
         }
     }.bind(this));
 };
@@ -54,7 +55,7 @@ RoomManager.prototype.update = function(roomId, options, cb) {
             }
             room = room.toJSON();
             cb(null, room);
-            this.emit('rooms:update', room);
+            this.core.emit('rooms:update', room);
 
         }.bind(this));
     }.bind(this));
@@ -83,7 +84,7 @@ RoomManager.prototype.archive = function(roomId, cb) {
                 return cb(err);
             }
             cb(null, room);
-            this.emit('rooms:archived', room);
+            this.core.emit('rooms:archived', room);
 
         }.bind(this));
     }.bind(this));

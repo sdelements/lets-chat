@@ -5,8 +5,9 @@ var EventEmitter = require('events').EventEmitter,
     mongoose = require('mongoose');
 
 
-function MessageManager() {
+function MessageManager(options) {
     EventEmitter.call(this);
+    this.core = options.core;
 }
 
 util.inherits(MessageManager, EventEmitter);
@@ -42,7 +43,7 @@ MessageManager.prototype.create = function(options, cb) {
                 message.owner = user.toJSON();
                 message.room = room.toJSON();
                 cb(null, message);
-                this.emit('messages:new', message);
+                this.core.emit('messages:new', message);
             }.bind(this));
         }.bind(this));
     }.bind(this));
