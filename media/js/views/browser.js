@@ -18,11 +18,14 @@
         initialize: function(options) {
             this.client = options.client;
             this.template = Handlebars.compile($('#template-room-browser-item').html());
+            this.userTemplate = Handlebars.compile($('#template-room-browser-item-user').html());
             this.rooms = options.rooms;
             this.rooms.on('add', this.add, this);
             this.rooms.on('remove', this.remove, this);
             this.rooms.on('change:name change:description', this.update, this);
             this.rooms.on('change:joined', this.updateToggles, this);
+            this.rooms.on('users:add', this.addUser, this);
+            this.rooms.on('users:remove', this.removeUser, this);
         },
         updateToggles: function(room, joined) {
             this.$el.find('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
@@ -36,7 +39,8 @@
             if (!room) {
                 return;
             }
-            !$input.is(':checked') && this.client.joinRoom(room.id) || this.client.leaveRoom(room.id);
+            (!$input.is(':checked') && this.client.joinRoom(room.id)) ||
+                (this.rooms.get(room.id).get('joined') && this.client.leaveRoom(room.id));
         },
         add: function(room) {
             this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
@@ -72,6 +76,15 @@
                 return;
             }
             this.client.events.trigger('rooms:create', data);
+        },
+        addUser: function(user, room) {
+            this.$('.lcb-rooms-list-item[data-id="' + room.id + '"]')
+                .find('.lcb-rooms-list-users').prepend(this.userTemplate(user.toJSON()));
+        },
+        removeUser: function(user, room) {
+            console.log(user);
+            this.$('[data-id="' + room.id + '"]')
+                .find('.lcb-rooms-list-user[data-id="' + user.id + '"]').remove();
         }
     });
 

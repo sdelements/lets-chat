@@ -50,6 +50,13 @@
         var that = this;
         this.socket.emit('rooms:list', function(rooms) {
             that.rooms.set(rooms);
+            // Get users for each room!
+            // We do it here for the room browser
+            _.each(rooms, function(room) {
+                that.getUsers({
+                    room: room.id
+                }, _.bind(that.setUsers, that));
+            });
         });
     };
     Client.prototype.switchRoom = function(id) {
@@ -108,12 +115,10 @@
         this.joining = this.joining || [];
         this.joining.push(id);
         this.socket.emit('rooms:join', id, function(resRoom) {
-
             // Room was likely archived if this returns
             if (!resRoom) {
                 return;
             }
-
             var room = that.rooms.get(id);
             room = that.rooms.add(resRoom);
             room.set('joined', true);
@@ -126,10 +131,6 @@
                 that.addMessages(messages, !room.get('loaded'));
                 room.set('loaded', true);
             });
-            // Get room users
-            that.getUsers({
-                room: room.id
-            }, _.bind(that.setUsers, that));
             // Do we want to switch?
             if (switchRoom) {
                 that.switchRoom(id);
@@ -157,7 +158,6 @@
         var room = this.rooms.get(id);
         if (room) {
             room.set('joined', false);
-            room.users.reset();
         }
         this.socket.emit('rooms:leave', id);
         if (id === this.rooms.current.get('id')) {

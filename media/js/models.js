@@ -29,6 +29,15 @@ var RoomModel = Backbone.Model.extend({
         this.users = new UsersCollection();
         this.files = new FilesCollection();
         this.lastMessage = new Backbone.Model();
+        //
+        // Child events
+        //
+        this.users.on('add', _.bind(function(user) {
+            this.trigger('users:add', user, this);
+        }, this));
+        this.users.on('remove', function(user) {
+            this.trigger('users:remove', user, this);
+        }, this);
     },
     loaded: false
 });
