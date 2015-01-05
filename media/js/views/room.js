@@ -44,6 +44,7 @@
         events: {
             'scroll .lcb-messages': 'updateScrollLock',
             'keypress .lcb-entry-input': 'sendMessage',
+            'click .lcb-entry-button': 'sendMessage',
             'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta',
             'click .lcb-room-toggle-sidebar': 'toggleSidebar',
             'click .show-edit-room': 'showEditRoom',
