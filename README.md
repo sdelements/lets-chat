@@ -22,13 +22,13 @@ A self-hosted chat app for small teams.
 Make sure you have [Node.js](https://github.com/joyent/node/wiki/Installation) and [MongoDB](http://www.mongodb.org/display/DOCS/Quickstart) installed.
 
 ```
-git clone https://github.com/sdelements/lets-chat.git
+git clone -b release/0.3.0 https://github.com/sdelements/lets-chat.git
 cd lets-chat
 npm install
 npm start
 ```
 
-For custom settings, copy and edit ```settings.yml.sample```:
+(Optional) For custom settings, copy and edit ```settings.yml.sample```:
 
 ```
 cp settings.yml.sample settings.yml
@@ -39,3 +39,25 @@ Party time: [http://localhost:5000](http://localhost:5000)
 ## Deploying to Heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+## Using Docker
+
+Make sure you have [Docker](https://www.docker.com/) installed. The following is a basic example of how to use the Dockerfile. We recommend reading documentation and/or tutorials, if you have never used Docker before.
+
+```
+docker pull mongo
+
+git clone -b release/0.3.0 https://github.com/sdelements/lets-chat.git
+cd lets-chat
+docker build -t lets-chat .
+
+docker run -d --name db mongo
+docker run -p 5000:5000 --link db:db lets-chat
+```
+
+If you're using Mac OS X or Windows, you'll need to use this command to get the IP address of the Docker VM:
+
+```
+boot2docker ip
+```
+You can now access the app at ```http://<boot2docker ip>:5000``` or ```http://localhost:5000```
