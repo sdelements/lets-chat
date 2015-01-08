@@ -30,8 +30,9 @@ if (typeof exports !== 'undefined') {
             });
         }
         _.each(extras.emotes, function(emote) {
-            text = text.replace(new RegExp('(\\B:' + emote.emote + '\\b)', 'i'), function() {
-                return '<img class="emote" src="' + _.escape(emote.image) + '" title=":'+ _.escape(emote.emote) + '" alt=":' + _.escape(emote.emote) + '" width="50" height="50" />';
+            var regex = new RegExp('\\B(:' + emote.emote + ':?)[\\b]?', 'i');
+            text = text.replace(regex, function() {
+                return '<img class="emote" src="' + _.escape(emote.image) + '" title=":'+ _.escape(emote.emote) + ':" alt=":' + _.escape(emote.emote) + ':" width="50" height="50" />';
             });
         });
         _.each(extras.replacements, function(replacement) {

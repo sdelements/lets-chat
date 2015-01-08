@@ -84,7 +84,7 @@
                     at: ':',
                     search_key: 'emote',
                     data: '/extras/emotes',
-                    tpl: '<li data-value=":${emote}"><img src="${image}" height="32" width="32" alt=":${emote}" /> :${emote}</li>'
+                    tpl: '<li data-value=":${emote}:"><img src="${image}" height="32" width="32" alt=":${emote}:" /> :${emote}:</li>'
                 });
         },
         goodbye: function() {
