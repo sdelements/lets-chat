@@ -29,6 +29,11 @@ if (typeof exports !== 'undefined') {
                 return '<a href="' + url + '" target="_blank">' + url + '</a>';
             });
         }
+        _.each(extras.emotes, function(emote) {
+            text = text.replace(new RegExp('(\\B:' + emote.emote + '\\b)', 'i'), function() {
+                return '<img class="emote" src="' + _.escape(emote.image) + '" title=":'+ _.escape(emote.emote) + '" alt=":' + _.escape(emote.emote) + '" width="50" height="50" />';
+            });
+        });
         return text;
     }
 })(typeof exports === 'undefined' ? window.utils.message = {} : exports);

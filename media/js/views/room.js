@@ -74,12 +74,18 @@
             // Scroll Locking
             this.scrollLocked = true;
             this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));
-            this.$('.lcb-entry-input').atwho({
-                at: '@',
-                search_key: 'screenName',
-                data: '/users',
-                tpl: "<li data-value='@${screenName}'><img src='https://www.gravatar.com/avatar/${avatar}?s=50' height='20' width='20' /> ${screenName}</li>"
-            });
+            this.$('.lcb-entry-input')
+                .atwho({
+                    at: '@',
+                    search_key: 'screenName',
+                    data: '/users',
+                    tpl: '<li data-value="@${screenName}"><img src="https://www.gravatar.com/avatar/${avatar}?s=50" height="24" width="24" alt="@${screenName}" /> ${screenName}</li>'
+                }).atwho({
+                    at: ':',
+                    search_key: 'emote',
+                    data: '/extras/emotes',
+                    tpl: '<li data-value=":${emote}"><img src="${image}" height="32" width="32" alt=":${emote}" /> :${emote}</li>'
+                });
         },
         goodbye: function() {
             swal('Archived!', '"' + this.model.get('name') + '" has been archived.', 'warning');
@@ -182,7 +188,7 @@
             this.scrollMessages();
         },
         formatMessage: function(text) {
-            return window.utils.message.format(text, this.plugins);
+            return window.utils.message.format(text, this.client.extras || {});
         },
         updateScrollLock: function() {
             this.scrollLocked = this.$messages[0].scrollHeight -
