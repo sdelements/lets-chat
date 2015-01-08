@@ -44,7 +44,7 @@ if (typeof exports !== 'undefined') {
     }
 
     function emotes(text, extras) {
-        var regex = new RegExp('\\B(:[a-z0-9_\\+\\-]+:?)[\\b]?', 'i');
+        var regex = new RegExp('\\B(:[a-z0-9_\\+\\-]+:?)[\\b]?', 'ig');
 
         return text.replace(regex, function(group) {
             var key = group.split(':')[1];
@@ -57,10 +57,10 @@ if (typeof exports !== 'undefined') {
             }
 
             var image = _.escape(emote.image),
-                emo = _.escape(emote.emote),
+                emo = _.escape(':' + emote.emote + ':'),
                 size = _.escape(emote.size || 20);
 
-            return '<img class="emote" src="' + image + '" title=":' + emo + ':" alt=":' + emo + ':" width="' + size + '" height="' + size + '" />';
+            return '<img class="emote" src="' + image + '" title="' + emo + '" alt="' + emo + '" width="' + size + '" height="' + size + '" />';
         });
     }
 
