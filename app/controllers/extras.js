@@ -24,6 +24,10 @@ module.exports = function() {
         req.io.route('extras:emotes:list');
     });
 
+    app.get('/extras/replacements', middlewares.requireLogin, function(req, res) {
+        req.io.route('extras:replacements:list');
+    });
+
     //
     // Sockets
     //
@@ -38,10 +42,19 @@ module.exports = function() {
                         emote.image = '/extras/emotes/' + emote.image;
                         emotes.push(emote);
                     });
-                    // emotes = _.merge(emotes, data);
-                } 
+                }
             });
             req.io.respond(emotes, 200);
+        },
+        'replacements:list': function(req, next) {
+            var replacements = [];
+            ['default.yml', 'local.yml'].forEach(function(filename) {
+                var fullpath = path.join(process.cwd(), 'extras/replacements/' + filename);
+                if (fs.existsSync(fullpath)) {
+                    replacements = _.merge(replacements, yaml.safeLoad(fs.readFileSync(fullpath, 'utf8')));
+                }
+            });
+            req.io.respond(replacements, 200);
         }
     });
 

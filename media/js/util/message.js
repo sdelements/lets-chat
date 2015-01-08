@@ -34,6 +34,9 @@ if (typeof exports !== 'undefined') {
                 return '<img class="emote" src="' + _.escape(emote.image) + '" title=":'+ _.escape(emote.emote) + '" alt=":' + _.escape(emote.emote) + '" width="50" height="50" />';
             });
         });
+        _.each(extras.replacements, function(replacement) {
+            text = text.replace(new RegExp(replacement.regex, 'ig'), replacement.template);
+        });
         return text;
     }
 })(typeof exports === 'undefined' ? window.utils.message = {} : exports);
