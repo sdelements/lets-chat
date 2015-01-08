@@ -34,17 +34,35 @@ module.exports = function() {
     app.io.route('extras', {
         'emotes:list': function(req, next) {
             var emotes = [];
-            ['default.yml', 'local.yml'].forEach(function(filename) {
-                var fullpath = path.join(process.cwd(), 'extras/emotes/' + filename);
-                if (fs.existsSync(fullpath)) {
-                    var data = yaml.safeLoad(fs.readFileSync(fullpath, 'utf8'));
+
+            var dir = path.join(process.cwd(), 'extras/emotes');
+            fs.readdir(dir, function(err, files) {
+                var regex = new RegExp('\\.yml$');
+
+                files = files.filter(function(fileName) {
+                    return regex.test(fileName);
+                });
+
+                files.forEach(function(fileName) {
+                    var fullpath = path.join(
+                        process.cwd(),
+                        'extras/emotes',
+                        fileName
+                    );
+
+                    var imgDir = '/extras/emotes/' +
+                        fileName.replace('.yml', '') + '/';
+
+                    var file = fs.readFileSync(fullpath, 'utf8');
+                    var data = yaml.safeLoad(file);
                     _.each(data, function(emote) {
-                        emote.image = '/extras/emotes/' + emote.image;
+                        emote.image = imgDir + emote.image;
                         emotes.push(emote);
                     });
-                }
+                });
+                
+                req.io.respond(emotes, 200);
             });
-            req.io.respond(emotes, 200);
         },
         'replacements:list': function(req, next) {
             var replacements = [];
