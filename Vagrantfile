@@ -21,6 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define :lcb do |lcb|
       lcb.vm.network "forwarded_port", guest: 5000, host: 5000
+      lcb.vm.network "forwarded_port", guest: 5222, host: 5222
       lcb.vm.provision :shell, :inline => $LCB_SCRIPT, :privileged => false
   end
   
