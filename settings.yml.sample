@@ -6,6 +6,10 @@
 
 server:
   port: 5000
+# https:
+#   port: 5001
+#   key: key.pem
+#   cert: certificate.pem
 
 xmpp:
   enable: true
