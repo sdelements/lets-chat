@@ -61,3 +61,19 @@ If you're using Mac OS X or Windows, you'll need to use this command to get the 
 boot2docker ip
 ```
 You can now access the app at ```http://<boot2docker ip>:5000``` or ```http://localhost:5000```
+
+## Using Vagrant
+
+Make sure you have a recent version of [Vagrant](https://www.vagrantup.com/) installed.
+
+```
+git clone -b release/0.3.0 https://github.com/sdelements/lets-chat.git
+cd lets-chat
+vagrant up
+```
+
+Access the app at: [http://localhost:5000](http://localhost:5000)
+
+XMPP Details:
+ * Server: localhost
+ * Port: 5222

@@ -14,7 +14,7 @@ function setup() {
             passwordField: 'password'
         }, function(identifier, password, done) {
             var User = mongoose.model('User');
-            User.authenticate(identifier, password, function(err, user) {
+            User.authenticate(identifier, password, function(err, user, reason) {
                 if (err) {
                     return done(null, false,  {
                         message: 'Some fields did not validate.'
@@ -24,7 +24,7 @@ function setup() {
                     return done(null, user);
                 } else {
                     return done(null, false, {
-                        message: 'Incorrect password.'
+                        message: reason
                     });
                 }
             });

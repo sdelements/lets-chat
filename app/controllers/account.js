@@ -184,7 +184,7 @@ module.exports = function() {
                 if (!user) {
                     req.io.respond({
                         status: 'error',
-                        message: 'Incorrect login credentials.'
+                        message: info.message
                     }, 401);
                     return;
                 }
