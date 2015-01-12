@@ -24,7 +24,7 @@ function setup() {
                     return done(null, user);
                 } else {
                     return done(null, false, {
-                        message: 'Incorrect password.'
+                        message: 'Incorrect login credentials.'
                     });
                 }
             });
