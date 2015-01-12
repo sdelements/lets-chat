@@ -7,7 +7,9 @@
 var bcrypt = require('bcryptjs'),
     md5 = require('MD5'),
     hash = require('node_hash'),
-    settings = require('./../config');
+    settings = require('./../config'),
+    NO_DELAY_AUTH_ATTEMPTS = 3,
+    MAX_AUTH_DELAY_TIME = 24 * 60 * 60 * 1000;
 
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId,
@@ -44,6 +46,14 @@ var UserSchema = new mongoose.Schema({
             }
             return this.password;
         }
+    },
+    authAttempts: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    lockedUntil: {
+        type: Number
     },
     firstName: {
         type: String,
@@ -86,10 +96,10 @@ var UserSchema = new mongoose.Schema({
 		type: ObjectId,
 		ref: 'Room'
     }],
-	messages: [{
-		type: ObjectId,
-		ref: 'Message'
-	}]
+    messages: [{
+	type: ObjectId,
+	ref: 'Message'
+    }]
 }, {
     toObject: {
         virtuals: true
@@ -134,15 +144,19 @@ UserSchema.pre('save', function(next) {
     });
 });
 
+UserSchema.virtual('isLocked').get(function() {
+    return (this.lockedUntil && this.lockedUntil > Date.now());
+});
+
 UserSchema.methods.comparePassword = function(password, cb) {
     bcrypt.compare(password, this.password, function(err, isMatch) {
         if (isMatch) {
             return cb(null, true);
         }
 
-        var legacyPassowrd = hash.sha256(password,
+        var legacyPassword = hash.sha256(password,
                                          settings.auth.local.salt);
-        cb(null, legacyPassowrd === this.password);
+        cb(null, legacyPassword === this.password);
 
     }.bind(this));
 };
@@ -164,18 +178,55 @@ UserSchema.statics.authenticate = function(identifier, password, cb) {
         if (!user) {
             return cb(null, null, 0);
         }
+        // Is the user locked out?
+        if (user.isLocked) {
+            return cb(null, null, 'Account locked.');
+        }
+
         // Is password okay?
         user.comparePassword(password, function(err, isMatch) {
             if (err) {
                 return cb(err);
             }
             if (isMatch) {
-                return cb(null, user);
+                // if there's no lock or failed attempts, just return the user
+                if (!user.authAttempts && !user.lockedUntil) return cb(null, user);
+
+                // Reset auth lockout details
+                var updates = {
+                    $set: { authAttempts: 0 },
+                    $unset: { lockedUntil: 1 }
+                };
+                return user.update(updates, function(err) {
+                    if (err) return cb(err);
+                    return cb(null, user);
+                });
             }
-            // Bad password
-            return cb(null, null, 1);
+            // Increment login attemp
+            user.incAuthAttempts(function(err) {
+                if (err) return cb(err);
+                return cb(null, null, 'Incorrect login credentials.');
+            });
         });
     });
+};
+
+UserSchema.methods.incAuthAttempts = function(cb) {
+    // Has the lock expired?
+    if (this.lockedUntil && this.lockedUntil < Date.now()) {
+        return this.update({
+            $unset: { lockedUntil: 1 }
+        }, cb);
+    }
+    // Increment auth attempt
+    var updates = { $inc: { authAttempts: 1 } };
+
+    // Lock the account if too many attempts are made
+    if (this.authAttempts + 1 >= NO_DELAY_AUTH_ATTEMPTS && !this.isLocked) {
+        var lock = Math.min(5000 * Math.pow(2,(this.authAttempts - NO_DELAY_AUTH_ATTEMPTS), MAX_AUTH_DELAY_TIME));
+        updates.$set = { lockedUntil: Date.now() + lock };
+    }
+    return this.update(updates, cb);
 };
 
 UserSchema.plugin(uniqueValidator, {
