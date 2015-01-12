@@ -72,6 +72,8 @@ cd lets-chat
 vagrant up
 ```
 
-Access the app locally: [http://localhost:5000](http://localhost:5000)
-XMPP Server: localhost
-XMPP Port: 5222
+Access the app at: [http://localhost:5000](http://localhost:5000)
+
+XMPP Details:
+ * Server: localhost
+ * Port: 5222
