@@ -113,7 +113,7 @@ mongoose.connect(settings.database.uri, function(err) {
         // Create an HTTP -> HTTPS redirect server
         var redirectServer = express();
         redirectServer.get('*', function(req, res) {
-            var urlPort = port === 80 ? ':' + port : '';
+            var urlPort = port === 80 ? '' : ':' + port;
             res.redirect('https://' + req.host + urlPort + req.path);
         });
         http.createServer(redirectServer).listen(settings.http.port || 5000);
