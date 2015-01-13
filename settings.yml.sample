@@ -10,8 +10,8 @@ server:
 xmpp:
   enable: true
   port: 5222
-  host: 'localhost'
-  confhost: 'conference.localhost'
+  host: localhost
+  confhost: conference.localhost
 
 database:
   uri: mongodb://localhost/letschat
@@ -20,16 +20,16 @@ secrets:
   cookie: secretsauce
 
 auth:
+  enable: [local]
+
   local:
-    enable: true
     registration: true
     salt: secretsauce # Required when upgrading from version < 0.3
 
   kerberos:
-    enable: false
     realm: example.com
+    use_ldap_authorization: false
+    #ldap: # See defaults.yml for LDAP options
 
   ldap:
     # See defaults.yml for all LDAP options
-    authentication: false
-    authorization: false

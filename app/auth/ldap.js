@@ -4,16 +4,66 @@ var fs = require('fs'),
     passport = require('passport'),
     ldap = require('ldapjs'),
     LDAPStrategy = require('passport-ldapauth').Strategy,
-    KerberosStrategy = require('passport-kerberos').Strategy,
-    settings = require('./../config'),
-    kerberossettings = settings.auth.kerberos,
-    ldapsettings = settings.auth.ldap,
-    field_mappings = ldapsettings.field_mappings;
+    KerberosStrategy = require('passport-kerberos').Strategy;
 
-var enabled = settings.auth.ldap && settings.auth.ldap.authentication;
+function Ldap(options) {
+    this.options = options;
+    this.key = 'ldap';
 
-function createLdapUser(ldapEntry, callback) {
+    this.setup = this.setup.bind(this);
+    this.getLdapStrategy = this.getLdapStrategy.bind(this);
+}
+
+Ldap.key = 'ldap';
+
+Ldap.prototype.setup = function() {
+    passport.use(this.getLdapStrategy());
+};
+
+Ldap.prototype.authenticate = function(req, cb) {
+    passport.authenticate('ldapauth', cb)(req);
+};
+
+Ldap.prototype.getLdapStrategy = function() {
+    return new LDAPStrategy(
+        {
+            server: {
+                url: this.options.connect_settings.url,
+                tlsOptions: this.options.connect_settings.tlsOptions,
+                adminDn: this.options.bind_options.bindDN,
+                adminPassword: this.options.bind_options.bindCredentials,
+                searchBase: this.options.search.base,
+                searchFilter: this.options.search.opts.filter,
+                searchAttributes: this.options.search.opts.attributes,
+                searchScope: this.options.search.opts.scope
+            },
+            usernameField: 'username',
+            passwordField: 'password'
+        },
+        function (user, done) {
+            return Ldap.findOrCreateFromLDAP(this.options, user, done);
+        }.bind(this)
+    );
+};
+
+Ldap.findOrCreateFromLDAP = function(options, ldapEntry, callback) {
     var User = mongoose.model('User');
+
+    User.findOne({ uid: ldapEntry.uid }, function (err, user) {
+        if (err) {
+            return callback(err);
+        }
+        if (!user) {
+            Ldap.createLdapUser(options, ldapEntry, callback);
+        } else {
+            return callback(null, user);
+        }
+    });
+};
+
+Ldap.createLdapUser = function(options, ldapEntry, callback) {
+    var User = mongoose.model('User');
+    var field_mappings = options.field_mappings;
     var data = {
         uid: ldapEntry[field_mappings.uid],
         username: ldapEntry[field_mappings.uid],
@@ -33,42 +83,55 @@ function createLdapUser(ldapEntry, callback) {
             console.error(err);
             return callback(err);
         }
-        if (kerberossettings.enabled) {
-            return callback(null, user, kerberossettings.realm);
-        } else {
-            return callback(null, user);
-        }
+        return callback(null, user);
     });
-}
-
-function findOrCreateFromLDAP(ldapEntry, callback) {
-    var User = mongoose.model('User');
-
-    User.findOne({ uid: ldapEntry.uid }, function (err, user) {
-        if (err) {
-            return callback(err);
-        }
-        if (!user) {
-            createLdapUser(ldapEntry, callback);
-        } else {
-            if (kerberossettings.enabled) {
-                return callback(null, user, kerberossettings.realm);
-            } else {
-                return callback(null, user);
-            }
-        }
-    });
-}
+};
 
 //LDAP sanitization
-function sanitizeLDAP(ldapString) {
+Ldap.sanitizeLDAP = function(ldapString) {
     return ldapString.replace(/[*\(\)\\\u0000!&|:~]{1}/g, function (match) {
         var cleanChar = match.charCodeAt(0).toString(16);
         return '\\' + (cleanChar.length === 1 ? '0': '') + cleanChar;
     });
-}
+};
 
-function getLdapSearchCallback(client, done) {
+// LDAP Authorization for external providers (ie. Kerberos)
+Ldap.authorize = function(ldap_options, username, done) {
+    try {
+        var options = {
+            url: ldap_options.connect_settings.url,
+            ca: fs.readFileSync(ldap_options.connect_settings.tlsOptions.ca)
+        };
+
+        var client = ldap.createClient(options);
+
+        client.bind(ldap_options.bind_options.bindDN,
+            ldap_options.bind_options.bindCredentials,
+            function (err) {
+
+            if (err) {
+                console.error(err);
+                return done(err);
+            }
+
+            var clientOpts = _.clone(ldap_options.search.opts);
+
+            var filter = (clientOpts.filter || '')
+                .replace(/{{username}}/g, Ldap.sanitizeLDAP(username));
+
+            clientOpts.filter = filter;
+
+            client.search(ldap_options.search.base,
+                clientOpts,
+                Ldap.getLdapSearchCallback(ldap_options, client, username, done));
+        });
+    } catch (err) {
+        console.error(err);
+        return done(err);
+    }
+};
+
+Ldap.getLdapSearchCallback = function(options, client, username, done) {
     return function(err, res) {
         if (err) {
             console.error(err);
@@ -90,7 +153,7 @@ function getLdapSearchCallback(client, done) {
         res.on('end', function (result) {
             if (result.status !== 0) {
                 var err = new Error('non-zero status from LDAP search: ' +
-                                    result.status);
+                result.status);
                 return done(err);
             }
 
@@ -98,7 +161,7 @@ function getLdapSearchCallback(client, done) {
                 case 0:
                     return done();
                 case 1:
-                    findOrCreateFromLDAP(foundUsers[0], done);
+                    Ldap.findOrCreateFromLDAP(options, foundUsers[0], done);
                     break;
                 default:
                     var error = new Error(format(
@@ -107,88 +170,11 @@ function getLdapSearchCallback(client, done) {
                     return done(error);
             }
 
-            if (!ldapsettings.connect_settings.maxConnections) {
+            if (!options.connect_settings.maxConnections) {
                 client.unbind();
             }
         });
     };
-}
-
-// LDAP Authorization for Kerberos
-function authorize(username, done) {
-    try {
-        var options = {
-            url: ldapsettings.connect_settings.url,
-            ca: fs.readFileSync(ldapsettings.connect_settings.tlsOptions.ca)
-        };
-
-        var client = ldap.createClient(options);
-
-        client.bind(ldapsettings.bind_options.bindDN,
-                    ldapsettings.bind_options.bindCredentials,
-                    function (err) {
-
-            if (err) {
-                console.error(err);
-                return done(err);
-            }
-
-            var clientOpts = _.clone(ldapsettings.search.opts);
-
-            var filter = (clientOpts.filter || '')
-                .replace(/{{username}}/g, sanitizeLDAP(username));
-
-            clientOpts.filter = filter;
-
-            client.search(ldapsettings.search.base,
-                          clientOpts,
-                          getLdapSearchCallback(client, done));
-        });
-    } catch (err) {
-        console.error(err);
-        return done(err);
-    }
-}
-
-function getLdapStrategy() {
-    return new LDAPStrategy(
-        {
-            server: {
-                url: ldapsettings.connect_settings.url,
-                tlsOptions: ldapsettings.connect_settings.tlsOptions,
-                adminDn: ldapsettings.bind_options.bindDN,
-                adminPassword: ldapsettings.bind_options.bindCredentials,
-                searchBase: ldapsettings.search.base,
-                searchFilter: ldapsettings.search.opts.filter,
-                searchAttributes: ldapsettings.search.opts.attributes,
-                searchScope: ldapsettings.search.opts.scope
-            },
-            usernameField: 'username',
-            passwordField: 'password'
-        },
-        function (user, done) {
-            return findOrCreateFromLDAP(user, done);
-        }
-    );
-}
-
-function authenticate(req, cb) {
-    if (enabled) {
-        passport.authenticate('ldapauth', cb)(req);
-    }
-}
-
-function setup() {
-    if (enabled) {
-        passport.use(getLdapStrategy());
-    }
-}
-
-module.exports = {
-    key: 'ldap',
-    enabled: enabled,
-    options: enabled ? ldapsettings : null,
-    setup: setup,
-    authenticate: authenticate,
-    authorize: authorize
 };
+
+module.exports = Ldap;

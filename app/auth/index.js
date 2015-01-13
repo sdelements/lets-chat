@@ -4,7 +4,7 @@ var _ = require('underscore'),
     passport = require('passport'),
     passportSocketIo = require("passport.socketio"),
     settings = require('./../config'),
-    providers = [
+    available_providers = [
         require('./local'),
         require('./kerberos'),
         require('./ldap')
@@ -12,7 +12,20 @@ var _ = require('underscore'),
     providerSettings = {},
     NO_DELAY_AUTH_ATTEMPTS = 3,
     MAX_AUTH_DELAY_TIME = 24 * 60 * 60 * 1000,
-    loginAttempts = {};
+    loginAttempts = {},
+    enabledProviders = [];
+
+function getProviders() {
+    return settings.auth.providers.enable.map(function(key) {
+        var Provider = _.find(available_providers, function (p) {
+            return p.key === key;
+        });
+
+        var provider_settings = settings.auth.providers[key];
+
+        return new Provider(provider_settings);
+    });
+}
 
 function middleware(req, res, next) {
     // Let's make sure req.user is always populated
@@ -30,7 +43,9 @@ function middleware(req, res, next) {
 
 function setup(app, session) {
 
-    providers.forEach(function(provider) {
+    enabledProviders = getProviders();
+
+    enabledProviders.forEach(function(provider) {
         provider.setup();
         providerSettings[provider.key] = provider.options;
     });
@@ -104,19 +119,21 @@ function wrapAuthCallback(username, cb) {
 
 function authenticate(req, cb) {
     checkIfAccountLocked(req.body.username, function(locked) {
+        if (settings.auth.login_throttling &&
+            settings.auth.login_throttling.enable) {
+            cb = wrapAuthCallback(req.body.username, cb);
+        }
+
+
         if (locked) {
             return cb(null, null, {
                 message: 'Account is locked.'
             });
         }
 
-        providers.some(function(provider) {
-            if (provider.enabled) {
-                cb = wrapAuthCallback(req.body.username, cb);
-                provider.authenticate(req, cb);
-                return true;
-            }
-            return false;
+        enabledProviders.some(function(provider) {
+            provider.authenticate(req, cb);
+            return true;
         });
     });
 }
