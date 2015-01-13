@@ -37,8 +37,7 @@ cp settings.yml.sample settings.yml
 Each time Let's Chat is upgraded, the database migrations should be run:
 
 ```
-npm install -g migroose-cli
-migroose
+npm run-script migrate
 ```
 
 Party time: [http://localhost:5000](http://localhost:5000)
