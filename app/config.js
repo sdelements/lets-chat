@@ -57,7 +57,4 @@ settings.database.uri = settings.MONGOHQ && settings.MONGOHQ.URL ||
                         settings.MONGOLAB && settings.MONGOLAB.URI ||
                         settings.database.uri;
 
-// Override port
-settings.server.port = settings.PORT || settings.server.port;
-
 module.exports = settings;

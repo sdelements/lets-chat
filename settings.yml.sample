@@ -4,12 +4,15 @@
 # See defaults.yml for all available options
 #
 
-server:
+http:
+  enable: true
   port: 5000
-# https:
-#   port: 5001
-#   key: key.pem
-#   cert: certificate.pem
+
+https:
+  enable: false
+  port: 5001
+  key: key.pem
+  cert: certificate.pem
 
 xmpp:
   enable: true

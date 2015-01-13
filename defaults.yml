@@ -2,8 +2,15 @@
 # Let's Chat Built-in Defaults
 #
 
-server:
+http:
+  enable: true
   port: 5000
+
+https:
+  enable: false
+  port: 5001
+  key: key.pem
+  cert: certificate.pem
 
 xmpp:
   enable: false
