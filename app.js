@@ -16,22 +16,24 @@ var _ = require('lodash'),
     all = require('require-tree');
 
 var psjon = require('./package.json'),
-    settings = require('./app/config.js');
+    settings = require('./app/config.js'),
+    httpEnabled = settings.http && settings.http.enable,
+    httpsEnabled = settings.https && settings.https.enable;
 
 var auth = require('./app/auth/index'),
     models = all('./app/models'),
     middlewares = all('./app/middlewares'),
     controllers = all('./app/controllers'),
-    core = require('./app/core/index');
+    core = require('./app/core/index'),
+    app;
 
 //
 // Express.io Setup
 //
-var app;
-if (settings.server.https) {
+if (httpsEnabled) {
      app = express().https({
-        key: fs.readFileSync(settings.server.https.key),
-        cert: fs.readFileSync(settings.server.https.cert)
+        key: fs.readFileSync(settings.https.key),
+        cert: fs.readFileSync(settings.https.cert)
     }).io();
 } else {
     app = express().http().io();
@@ -99,22 +101,26 @@ mongoose.connection.on('disconnected', function() {
 // Go Time
 //
 mongoose.connect(settings.database.uri, function(err) {
-    if (err) throw err;
-    //
-    // HTTPS / HTTP
-    //
-    if (settings.server.https) {
-        // Create an HTTP -> HTTPS redirect server
-        var redirectServer = express(),
-            port = settings.server.https.port || 5001;
-        redirectServer.get('*', function(req, res) {
-            res.redirect('https://' + req.host + ':' + port + req.path)
-        });
-        http.createServer(redirectServer).listen(settings.server.port || 5000);
-        app.listen(port);
-    } else {
-        app.listen(settings.server.port || 5000);
+    if (err) {
+        throw err;
     }
+
+    var port = settings.PORT ||
+               httpsEnabled && settings.https.port ||
+               httpEnabled && settings.http.port;
+
+    if (httpsEnabled && httpEnabled) {
+        // Create an HTTP -> HTTPS redirect server
+        var redirectServer = express();
+        redirectServer.get('*', function(req, res) {
+            var urlPort = port === 80 ? ':' + port : '';
+            res.redirect('https://' + req.host + urlPort + req.path);
+        });
+        http.createServer(redirectServer).listen(settings.http.port || 5000);
+    }
+
+    app.listen(port);
+
     //
     // XMPP
     //
