@@ -1,0 +1,6 @@
+#
+# Emotes
+#
+
+- emote: myemote
+  image: myemote.png

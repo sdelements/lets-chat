@@ -233,6 +233,23 @@
         }
         this.socket.emit('users:list', id, callback);
     };
+    //
+    // Extras
+    //
+    Client.prototype.getEmotes = function(callback) {
+        this.socket.emit('extras:emotes:list', _.bind(function(emotes) {
+            this.extras = this.extras || {};
+            this.extras.emotes = emotes;
+            callback && callback(emotes);
+        }, this));
+    };
+    Client.prototype.getReplacements = function(callback) {
+        this.socket.emit('extras:replacements:list', _.bind(function(replacements) {
+            this.extras = this.extras || {};
+            this.extras.replacements = replacements;
+            callback && callback(replacements);
+        }, this));
+    };
 
     //
     // Router Setup
@@ -267,12 +284,16 @@
             reconnect: true
         });
         this.socket.on('connect', function() {
+            that.getEmotes();
+            that.getReplacements();
             that.getUser();
             that.getUsers();
             that.getRooms();
             that.status.set('connected', true);
         });
         this.socket.on('reconnect', function() {
+            that.getEmotes();
+            that.getReplacements();
             _.each(that.rooms.where({ joined: true }), function(room) {
                 that.joinRoom(room.id);
             });
