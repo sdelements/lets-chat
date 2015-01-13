@@ -8,7 +8,8 @@
     "start": "node app.js"
   },
   "engine": {
-    "node": ">=0.8"
+    "node": "0.10.x",
+    "npm": "2.1.x"
   },
   "repository": {
     "type": "git",
