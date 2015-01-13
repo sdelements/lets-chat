@@ -16,6 +16,11 @@ var mongoose = require('mongoose'),
     settings = require('./../config');
 
 var UserSchema = new mongoose.Schema({
+    provider: {
+        type: String,
+        required: true,
+        trim: true
+    },
     uid: {
         type: String,
         required: false,
@@ -67,7 +72,7 @@ var UserSchema = new mongoose.Schema({
             if (this.local) {
                 return value.toLowerCase();
             }
-            return (this.username || this.uid).toLowerCase();
+            return this.username;
         }
     },
     displayName: {
@@ -101,23 +106,15 @@ var UserSchema = new mongoose.Schema({
 });
 
 UserSchema.virtual('local').get(function() {
-    return typeof this.uid !== 'string';
+    return this.provider === 'local';
 });
 
 UserSchema.virtual('screenName').get(function() {
-    return this.username || this.uid || this.displayName.replace(/\W/i, '');
+    return this.username;
 });
 
 UserSchema.virtual('avatar').get(function() {
     return md5(this.email);
-});
-
-UserSchema.post('init', function (doc) {
-    if (!this.username) {
-        if (this.uid) {
-            this.username = this.uid;
-        }
-    }
 });
 
 UserSchema.pre('save', function(next) {
@@ -146,7 +143,7 @@ UserSchema.methods.comparePassword = function(password, cb) {
             var legacyPassowrd = hash.sha256(password, salt);
             isMatch = legacyPassowrd === this.password;
         }
-        
+
         cb(null, isMatch);
 
     }.bind(this));

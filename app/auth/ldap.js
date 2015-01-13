@@ -65,6 +65,7 @@ Ldap.createLdapUser = function(options, ldapEntry, callback) {
     var User = mongoose.model('User');
     var field_mappings = options.field_mappings;
     var data = {
+        provider: options.kerberos ? 'kerberos' : 'ldap',
         uid: ldapEntry[field_mappings.uid],
         username: ldapEntry[field_mappings.uid],
         email: ldapEntry[field_mappings.email],

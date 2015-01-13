@@ -56,7 +56,8 @@ Kerberos.prototype.getKerberosCallback = function(done) {
             }
 
             if (this.options.use_ldap_authorization) {
-                return ldap.authorize(this.options.ldap, username, done);
+                var opts = _.extend(this.options.ldap, {kerberos: true});
+                return ldap.authorize(opts, username, done);
 
             } else {
                 // Not using LDAP
@@ -81,6 +82,7 @@ Kerberos.prototype.getKerberosCallback = function(done) {
 Kerberos.prototype.createSimpleKerberosUser = function(username, realm, cb) {
     var User = mongoose.model('User');
     var user = new User({
+        provider: 'kerberos',
         uid: username,
         username: username,
         displayName: username,
