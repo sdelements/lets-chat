@@ -172,7 +172,8 @@ module.exports = function() {
             });
         },
         login: function(req) {
-            auth.authenticate(req, function(err, user, info) {
+            auth.authenticate(req.body.username, req.body.password,
+                                                 function(err, user, info) {
                 if (err) {
                     req.io.respond({
                         status: 'error',

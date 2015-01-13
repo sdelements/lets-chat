@@ -140,9 +140,13 @@ UserSchema.methods.comparePassword = function(password, cb) {
             return cb(null, true);
         }
 
-        var legacyPassowrd = hash.sha256(password,
-                                         settings.auth.local.salt);
-        cb(null, legacyPassowrd === this.password);
+        var salt = settings.auth.local && settings.auth.local.salt;
+        if (salt) {
+            var legacyPassowrd = hash.sha256(password, salt);
+            isMatch = legacyPassowrd === this.password;
+        }
+        
+        cb(null, isMatch);
 
     }.bind(this));
 };

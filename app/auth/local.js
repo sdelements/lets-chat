@@ -24,7 +24,7 @@ Local.prototype.setup = function() {
             if (user) {
                 return done(null, user);
             } else {
-                return done(null, false, {
+                return done(null, null, {
                     message: 'Incorrect login credentials.'
                 });
             }

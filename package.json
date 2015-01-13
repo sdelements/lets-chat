@@ -38,6 +38,7 @@
   "homepage": "https://github.com/sdelements/lets-chat",
   "dependencies": {
     "MD5": "~1.2.1",
+    "async": "^0.9.0",
     "bcryptjs": "~2.1.0",
     "colors": "~1.0.3",
     "connect-mongo": "~0.4.1",

@@ -1,4 +1,5 @@
 var _ = require('underscore'),
+    async = require('async'),
     express = require('express.io'),
     mongoose = require('mongoose'),
     passport = require('passport'),
@@ -112,16 +113,15 @@ function wrapAuthCallback(username, cb) {
                 delete loginAttempts[username];
             }
             cb(err, user, info);
-
         }
     };
 }
 
-function authenticate(req, cb) {
-    checkIfAccountLocked(req.body.username, function(locked) {
+function authenticate(username, password, cb) {
+    checkIfAccountLocked(username, function(locked) {
         if (settings.auth.login_throttling &&
             settings.auth.login_throttling.enable) {
-            cb = wrapAuthCallback(req.body.username, cb);
+            cb = wrapAuthCallback(username, cb);
         }
 
 
@@ -131,9 +131,34 @@ function authenticate(req, cb) {
             });
         }
 
-        enabledProviders.some(function(provider) {
-            provider.authenticate(req, cb);
-            return true;
+        var req = {
+            body: {
+                username: username,
+                password: password
+            }
+        };
+
+        var series = enabledProviders.map(function(provider) {
+            return function() {
+                var args = Array.prototype.slice.call(arguments);
+                var callback = args.slice(args.length - 1)[0];
+
+                if (args.length > 1 && args[0]) {
+                    return callback.apply(this, args[0]);
+                }
+
+                provider.authenticate(req, function(err, user, info) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    return callback(null, user);
+                });
+            };
+        });
+
+        async.series(series, function(err, results) {
+            var last = results.slice(results.length - 1);
+            cb.apply(this, [err].concat(last));
         });
     });
 }
