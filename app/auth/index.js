@@ -118,6 +118,8 @@ function wrapAuthCallback(username, cb) {
 }
 
 function authenticate(username, password, cb) {
+    username = username.toLowerCase();
+    
     checkIfAccountLocked(username, function(locked) {
         if (settings.auth.login_throttling &&
             settings.auth.login_throttling.enable) {
@@ -144,7 +146,7 @@ function authenticate(username, password, cb) {
                 var callback = args.slice(args.length - 1)[0];
 
                 if (args.length > 1 && args[0]) {
-                    return callback.apply(this, args[0]);
+                    return callback(null, args[0]);
                 }
 
                 provider.authenticate(req, function(err, user, info) {
@@ -156,9 +158,8 @@ function authenticate(username, password, cb) {
             };
         });
 
-        async.series(series, function(err, results) {
-            var last = results.slice(results.length - 1);
-            cb.apply(this, [err].concat(last));
+        async.waterfall(series, function(err, user) {
+            cb(err, user);
         });
     });
 }

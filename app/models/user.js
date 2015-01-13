@@ -59,14 +59,15 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
+        lowercase: true,
         unique: true,
-        match: /^[a-zA-Z0-9_]+$/i,
+        match: /^[a-z0-9_]+$/i,
         set: function(value) {
             // User can only change their username if it's a local account
             if (this.local) {
-                return value;
+                return value.toLowerCase();
             }
-            return this.username || this.uid;
+            return (this.username || this.uid).toLowerCase();
         }
     },
     displayName: {
