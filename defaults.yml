@@ -32,7 +32,7 @@ auth:
     enable: [local] # [local, kerberos, ldap] - You can specify the order
 
     local:
-      registration: true
+      enable_registration: true
       salt: secretsauce # Required when upgrading from version < 0.3
 
     kerberos:

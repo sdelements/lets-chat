@@ -27,7 +27,7 @@
                 <p class="response alert"></p>
                 <div class="lcb-login-box-bottom">
                     {% if auth.local %}
-                    {% if auth.local.registration %}
+                    {% if auth.local.enable_registration %}
                     <div class="links pull-left">
                         <a href="#" class="lcb-show-box" data-target=".lcb-login-box-registration">I need an account</a>
                     </div>
@@ -37,7 +37,7 @@
                 </div>
             </form>
             {% if auth.local %}
-            {% if auth.local.registration %}
+            {% if auth.local.enable_registration %}
             <form class="lcb-login-box lcb-login-box-registration validate" action="/account/register" method="post" style="display: none;">
                 <h2 class="lcb-login-box-heading">Register</h2>
                 <div class="form-group">

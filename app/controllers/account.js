@@ -124,7 +124,8 @@ module.exports = function() {
         },
         register: function(req) {
 
-            if (!auth.providers.local || !auth.providers.local.registration) {
+            if (!auth.providers.local ||
+                !auth.providers.local.enable_registration) {
                 req.io.respond({
                     status: 'error',
                     message: 'Permission denied'
