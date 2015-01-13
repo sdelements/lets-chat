@@ -5,7 +5,9 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "install": "migroose",
+    "migrate": "migroose"
   },
   "engine": {
     "node": "0.10.x",
@@ -49,6 +51,7 @@
     "ldapjs": "^0.7.1",
     "lodash": "~2.4.1",
     "migroose": "^0.2.1",
+    "migroose-cli": "^0.1.0",
     "mongoose": "~3.8.19",
     "mongoose-unique-validator": "~0.4.1",
     "mongoose-validate": "0.0.5",

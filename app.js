@@ -12,6 +12,7 @@ var _ = require('lodash'),
     http = require('http'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
+    migroose = require('./migroose'),
     MongoStore = require('connect-mongo')(express),
     all = require('require-tree');
 
@@ -100,14 +101,11 @@ mongoose.connection.on('disconnected', function() {
 //
 // Go Time
 //
-mongoose.connect(settings.database.uri, function(err) {
-    if (err) {
-        throw err;
-    }
 
+function startApp() {
     var port = settings.PORT ||
-               httpsEnabled && settings.https.port ||
-               httpEnabled && settings.http.port;
+    httpsEnabled && settings.https.port ||
+    httpEnabled && settings.http.port;
 
     if (httpsEnabled && httpEnabled) {
         // Create an HTTP -> HTTPS redirect server
@@ -128,7 +126,28 @@ mongoose.connect(settings.database.uri, function(err) {
         var xmpp = require('./app/xmpp/index');
         xmpp(core);
     }
-});
 
-var art = fs.readFileSync('./app/misc/art.txt', 'utf8');
-console.log('\n' + art + '\n\n' + 'Release ' + psjon.version.yellow + '\n');
+    var art = fs.readFileSync('./app/misc/art.txt', 'utf8');
+    console.log('\n' + art + '\n\n' + 'Release ' + psjon.version.yellow + '\n');
+}
+
+mongoose.connect(settings.database.uri, function(err) {
+    if (err) {
+        throw err;
+    }
+
+    migroose.needsMigration(function(migrationRequired) {
+        if (migrationRequired) {
+            console.log('Database migration required'.red);
+            console.log('Ensure you backup your database first.');
+            console.log('');
+            console.log(
+                'Run the following command: ' + 'npm run-script migrate'.yellow
+            );
+
+            return process.exit();
+        }
+
+        startApp();
+    });
+});
