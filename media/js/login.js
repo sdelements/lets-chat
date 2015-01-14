@@ -4,6 +4,8 @@
 
 +function() {
     $(function() {
+        // JVFloat
+        $('input[placeholder]').jvFloat();
         // Switch between login boxes
         $('.lcb-show-box').on('click', function() {
             var $target = $('html').find($(this).data('target'));
