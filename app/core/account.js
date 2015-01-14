@@ -83,4 +83,29 @@ AccountManager.prototype.update = function(id, options, cb) {
     }.bind(this));
 };
 
+AccountManager.prototype.generateToken = function(id, cb) {
+    var User = mongoose.model('User');
+    var usernameChange = false;
+
+    User.findById(id, function (err, user) {
+        if (err) {
+            return cb(err);
+        }
+
+        user.generateToken(function(err, token) {
+            if (err) {
+                return cb(err);
+            }
+
+            user.save(function(err) {
+                if (err) {
+                    return cb(err);
+                }
+
+                cb(null, token);
+            });
+        });
+    });
+};
+
 module.exports = AccountManager;

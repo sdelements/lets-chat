@@ -61,6 +61,10 @@ module.exports = function() {
         req.io.route('account:settings');
     });
 
+    app.post('/account/token/generate', function(req, res) {
+        req.io.route('account:generate_token');
+    });
+
     //
     // Sockets
     //
@@ -119,6 +123,24 @@ module.exports = function() {
                 req.io.respond({
                     status: 'success',
                     message: 'Your account has been saved.'
+                });
+            });
+        },
+        generate_token: function(req) {
+            core.account.generateToken(req.user._id, function (err, token) {
+                if (err) {
+                    req.io.respond({
+                        status: 'error',
+                        message: 'Unable to generate a token.',
+                        errors: err
+                    });
+                    return;
+                }
+
+                req.io.respond({
+                    status: 'success',
+                    message: 'Token generated.',
+                    token: token
                 });
             });
         },

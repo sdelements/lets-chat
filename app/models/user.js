@@ -5,6 +5,7 @@
 'use strict';
 
 var bcrypt = require('bcryptjs'),
+    crypto = require('crypto'),
     md5 = require('MD5'),
     hash = require('node_hash'),
     settings = require('./../config');
@@ -133,6 +134,58 @@ UserSchema.pre('save', function(next) {
         next();
     });
 });
+
+UserSchema.methods.generateToken = function(cb) {
+    if (!this._id) {
+        return cb('User needs to be saved.');
+    }
+
+    crypto.randomBytes(24, function(ex, buf) {
+        var password = buf.toString('hex');
+
+        bcrypt.hash(password, 10, function(err, hash) {
+            if (err) {
+                return cb(err);
+            }
+
+            this.token = hash;
+
+            var userToken = new Buffer(
+                this._id.toString() + ':' + password
+            ).toString('base64');
+
+            cb(null, userToken);
+
+        }.bind(this));
+    }.bind(this));
+};
+
+UserSchema.statics.findByToken = function(token, cb) {
+
+    if (!token) {
+        return cb(null, null);
+    }
+
+    var tokenParts = new Buffer(token, 'base64').toString('ascii').split(':');
+
+    this.findById(tokenParts[0], function(err, user) {
+        if (err) {
+            return cb(err);
+        }
+
+        if (!user) {
+            return cb(null, null);
+        }
+
+        bcrypt.compare(tokenParts[1], user.token, function(err, isMatch) {
+            if (isMatch) {
+                return cb(null, user);
+            }
+
+            cb(null, null);
+        });
+    });
+};
 
 UserSchema.methods.comparePassword = function(password, cb) {
     bcrypt.compare(password, this.password, function(err, isMatch) {

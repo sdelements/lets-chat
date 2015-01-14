@@ -77,7 +77,7 @@ function setup(app, session, core) {
         var User = mongoose.model('User');
 
         if (data.query && data.query.token) {
-            User.findOne({ token: data.query.token }, function(err, user) {
+            User.findByToken(data.query.token, function(err, user) {
                 if (err || !user) {
                     return cb(err, false);
                 }
