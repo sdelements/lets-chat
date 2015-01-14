@@ -222,6 +222,19 @@
         }
         room.users.remove(user.id);
     };
+    Client.prototype.updateUser = function(user) {
+        var rooms = this.rooms;
+        _.each(this.rooms, function(room) {
+            var users = room.users;
+            var current = users.where({id: user.id});
+            console.log(current.length)
+            current.set({
+                displayName: user.displayName,
+                firstName: user.firstName,
+                lastName: user.lastName
+            });
+        });
+    }
     Client.prototype.getUsers = function(id, callback) {
         var that = this;
         if (!id) {
@@ -316,6 +329,9 @@
         this.socket.on('users:leave', function(user) {
             that.removeUser(user);
         });
+        this.socket.on('users:update', function(user) {
+            that.updateUser(user);
+        });
         this.socket.on('disconnect', function() {
             that.status.set('connected', false);
         });
@@ -328,6 +344,7 @@
         this.events.on('rooms:create', this.createRoom, this);
         this.events.on('rooms:switch', this.switchRoom, this);
         this.events.on('rooms:archive', this.archiveRoom, this);
+        this.events.on('users:update', this.updateUser, this);
     };
     //
     // Start
