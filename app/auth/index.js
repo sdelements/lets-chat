@@ -70,7 +70,23 @@ function setup(app, session, core) {
         passport: passport
     });
 
-    app.io.set('authorization', passportSocketIo.authorize(session));
+
+    var psiAuth = passportSocketIo.authorize(session);
+
+    app.io.set('authorization', function (data, cb) {
+        var User = mongoose.model('User');
+
+        if (data.query && data.query.apiKey) {
+            User.findOne({ apiKey: data.query.apiKey }, function(err, user) {
+                data['user'] = user;
+                data['user'].logged_in = true;
+                cb(err, user);
+            });
+        } else {
+            psiAuth(data, cb);
+        }
+
+    });
 
     app.use(middleware);
     app.io.use(middleware);

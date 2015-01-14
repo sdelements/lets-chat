@@ -50,6 +50,11 @@ var UserSchema = new mongoose.Schema({
             return this.password;
         }
     },
+    apiKey: {
+        type: String,
+        required: false,
+        trim: true
+    },
     firstName: {
         type: String,
         required: true,
