@@ -72,7 +72,7 @@
             $tab.data('count-total', ++total);
             $total.text(total);
             // Just mentions
-            if (new RegExp('\\B@(' + this.client.user.get('screenName') + ')(?!@)\\b', 'i').test(message.text)) {
+            if (new RegExp('\\B@(' + this.client.user.get('username') + ')(?!@)\\b', 'i').test(message.text)) {
                 $tab.data('count-mentions', ++mentions);
                 $mentions.text(mentions);
             }

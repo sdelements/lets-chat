@@ -109,10 +109,6 @@ UserSchema.virtual('local').get(function() {
     return this.provider === 'local';
 });
 
-UserSchema.virtual('screenName').get(function() {
-    return this.username;
-});
-
 UserSchema.virtual('avatar').get(function() {
     return md5(this.email);
 });
@@ -192,11 +188,10 @@ UserSchema.method('toJSON', function() {
         id: this._id,
         firstName: this.firstName,
         lastname: this.lastName,
-        screenName: this.screenName,
+        username: this.username,
         displayName: this.displayName,
         avatar: this.avatar,
         email: this.email,
-        username: this.username,
         local: this.local
     };
 });

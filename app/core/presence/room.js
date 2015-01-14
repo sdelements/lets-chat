@@ -12,7 +12,7 @@ function Room(roomId, roomSlug) {
     this.connections = new ConnectionCollection();
 
     this.getUserIds = this.getUserIds.bind(this);
-    this.getScreenNames = this.getScreenNames.bind(this);
+    this.getUsernames = this.getUsernames.bind(this);
     this.containsUser = this.containsUser.bind(this);
 
     this.emitUserJoin = this.emitUserJoin.bind(this);
@@ -27,8 +27,8 @@ Room.prototype.getUserIds = function() {
     return this.connections.getUserIds();
 };
 
-Room.prototype.getScreenNames = function() {
-    return this.connections.getScreenNames();
+Room.prototype.getUsernames = function() {
+    return this.connections.getUsernames();
 };
 
 Room.prototype.containsUser = function(userId) {
@@ -40,7 +40,7 @@ Room.prototype.emitUserJoin = function(data) {
         roomId: this.roomId,
         roomSlug: this.roomSlug,
         userId: data.userId,
-        screenName: data.screenName
+        username: data.username
     });
 };
 
@@ -49,21 +49,21 @@ Room.prototype.emitUserLeave = function(data) {
         roomId: this.roomId,
         roomSlug: this.roomSlug,
         userId: data.userId,
-        screenName: data.screenName
+        username: data.username
     });
 };
 
-Room.prototype.screenNameChanged = function(data) {
+Room.prototype.usernameChanged = function(data) {
     if (this.containsUser(data.userId)) {
         // User leaving room
         this.emitUserLeave({
             userId: data.userId,
-            screenName: data.oldScreenName
+            username: data.oldUsername
         });
-        // User rejoining room with new screenName
+        // User rejoining room with new username
         this.emitUserJoin({
             userId: data.userId,
-            screenName: data.screenName
+            username: data.username
         });
     }
 };
@@ -78,7 +78,7 @@ Room.prototype.addConnection = function(connection) {
         // User joining room
         this.emitUserJoin({
             userId: connection.userId,
-            screenName: connection.screenName
+            username: connection.username
         });
     }
     this.connections.add(connection);
@@ -95,7 +95,7 @@ Room.prototype.removeConnection = function(connection) {
             // Leaving room altogether
             this.emitUserLeave({
                 userId: connection.userId,
-                screenName: connection.screenName
+                username: connection.username
             });
         }
     }

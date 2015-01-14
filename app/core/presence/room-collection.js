@@ -43,9 +43,9 @@ RoomCollection.prototype.onLeave = function(data) {
     this.emit('user_leave', data);
 };
 
-RoomCollection.prototype.screenNameChanged = function(data) {
+RoomCollection.prototype.usernameChanged = function(data) {
     Object.keys(this.rooms).forEach(function(key) {
-        this.rooms[key].screenNameChanged(data);
+        this.rooms[key].usernameChanged(data);
     }, this);
 };
 

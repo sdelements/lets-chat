@@ -17,7 +17,7 @@ module.exports = EventListener.extend({
                 id: msg._id,
                 type: 'groupchat',
                 to: helper.getRoomJid(msg.room.slug),
-                from: helper.getRoomJid(msg.room.slug, msg.owner.screenName)
+                from: helper.getRoomJid(msg.room.slug, msg.owner.username)
             });
 
             stanza.c('active', {

@@ -27,12 +27,12 @@ ConnectionCollection.prototype.getUserIds = function() {
     return _.uniq(userIds);
 };
 
-ConnectionCollection.prototype.getScreenNames = function() {
-    var screenNames = Object.keys(this.connections).map(function(key) {
-        return this.connections[key].screenName;
+ConnectionCollection.prototype.getUsernames = function() {
+    var usernames = Object.keys(this.connections).map(function(key) {
+        return this.connections[key].username;
     }, this);
 
-    return _.uniq(screenNames);
+    return _.uniq(usernames);
 };
 
 ConnectionCollection.prototype.query = function(options) {

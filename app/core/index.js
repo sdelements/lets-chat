@@ -44,17 +44,17 @@ Core.prototype.onUsernameChanged = function(data) {
 
     var new_data = {
         userId: data.userId,
-        oldScreenName: connections[0].screenName,
-        screenName: data.username
+        oldUsername: connections[0].username,
+        username: data.username
     };
 
-    // Update connections with new screenName
+    // Update connections with new username
     connections.forEach(function(connection) {
-        connection.screenName = new_data.screenName;
+        connection.username = new_data.username;
     });
 
-    // Emit to all rooms, that this user has changed their screenName
-    this.presence.rooms.screenNameChanged(new_data);
+    // Emit to all rooms, that this user has changed their username
+    this.presence.rooms.usernameChanged(new_data);
 };
 
 module.exports = new Core();

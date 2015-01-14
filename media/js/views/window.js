@@ -95,8 +95,8 @@
 
             ++this.count;
 
-            var screenName = this.client.user.get('screenName');
-            var regex = new RegExp('\\B@(' + screenName + ')(?!@)\\b', 'i');
+            var username = this.client.user.get('username');
+            var regex = new RegExp('\\B@(' + username + ')(?!@)\\b', 'i');
             if (regex.test(message.text)) {
                 ++this.mentions;
             }
@@ -142,7 +142,7 @@
 
             var avatar = message.owner.avatar;
             var icon = 'https://www.gravatar.com/avatar/' + avatar + '?s=50';
-            var title = message.owner.screenName + ' in ' + message.room.name;
+            var title = message.owner.username + ' in ' + message.room.name;
             var mention = message.mentioned;
 
             var notification = notify.createNotification(title, {

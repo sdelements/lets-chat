@@ -13,8 +13,8 @@ module.exports = EventListener.extend({
 
         connections.forEach(function(connection) {
             var presence = new Stanza.Presence({
-                to: helper.getRoomJid(data.roomSlug, connection.screenName),
-                from: helper.getRoomJid(data.roomSlug, data.screenName)
+                to: helper.getRoomJid(data.roomSlug, connection.username),
+                from: helper.getRoomJid(data.roomSlug, data.username)
             });
 
             presence
@@ -22,7 +22,7 @@ module.exports = EventListener.extend({
                 xmlns:'http://jabber.org/protocol/muc#user'
             })
             .c('item', {
-                jid: helper.getRoomJid(data.roomSlug, data.screenName),
+                jid: helper.getRoomJid(data.roomSlug, data.username),
                 affiliation: 'none',
                 role: 'participant'
             });

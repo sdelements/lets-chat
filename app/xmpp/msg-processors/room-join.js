@@ -26,13 +26,13 @@ module.exports = MessageProcessor.extend({
 
             this.core.presence.join(this.client.conn, room._id, room.slug);
 
-            var screenNames = this.core.presence.rooms
-                                  .get(room._id).getScreenNames();
+            var usernames = this.core.presence.rooms
+                                  .get(room._id).getUsernames();
 
-            var presences = screenNames.map(function(screenName) {
+            var presences = usernames.map(function(username) {
 
                 var presence = this.Presence({
-                    from: helper.getRoomJid(room.slug, screenName)
+                    from: helper.getRoomJid(room.slug, username)
                 });
 
                 presence

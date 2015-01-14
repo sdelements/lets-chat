@@ -77,9 +77,9 @@
             this.$('.lcb-entry-input')
                 .atwho({
                     at: '@',
-                    search_key: 'screenName',
+                    search_key: 'username',
                     data: '/users',
-                    tpl: '<li data-value="@${screenName}"><img src="https://www.gravatar.com/avatar/${avatar}?s=50" height="24" width="24" alt="@${screenName}" /> ${screenName}</li>'
+                    tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=50" height="24" width="24" alt="@${username}" /> ${username}</li>'
                 }).atwho({
                     at: ':',
                     search_key: 'emote',
@@ -171,7 +171,7 @@
             // Mine? Mine? Mine? Mine?
             message.own = this.client.user.id === message.owner.id;
             // WHATS MY NAME
-            message.mentioned = new RegExp('\\B@(' + this.client.user.get('screenName') + ')(?!@)\\b', 'i').test(message.text)
+            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + ')(?!@)\\b', 'i').test(message.text)
             // Templatin' time
             var $html = $(this.messageTemplate(message).trim());
             var $text = $html.find('.lcb-message-text');
