@@ -54,11 +54,9 @@ migration.step(function(data, stepComplete) {
         });
     }
 
-    async.each(data.external_users, updateDoc, function(err) {
-        stepComplete();
-    });
+    var users = data.external_users.concat(data.local_users);
 
-    async.each(data.local_users, updateDoc, function(err) {
+    async.each(users, updateDoc, function(err) {
         stepComplete();
     });
 });
