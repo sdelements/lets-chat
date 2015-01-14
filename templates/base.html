@@ -2,16 +2,18 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Let's Chat</title>
+        <title>{% block title %}Let's Chat{% endblock %}</title>
         <meta name="description" content="" />
         <link rel="icon" type="image/png" href="media/favicon.ico" />
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0" />
         {% block css %}{% endblock %}
-        <link href="media/css/style.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="media/js/vendor/JVFloat/jvfloat.css" />
+        <link rel="stylesheet" type="text/css" href="media/js/vendor/sweetalert/sweet-alert.css" />
+        <link rel="stylesheet" type="text/css" href="media/js/vendor/at/jquery.atwho.css" />
+        <link rel="stylesheet" type="text/css" href="media/css/style.css" />
         <script type="text/javascript" src="media/js/vendor/jquery/jquery.js"></script>
-        <link href="media/js/vendor/at/jquery.atwho.css" rel="stylesheet">
-        <script src="media/js/vendor/at/jquery.caret.js"></script>
-        <script src="media/js/vendor/at/jquery.atwho.js"></script>
+        <script type="text/javascript" src="media/js/vendor/at/jquery.caret.js"></script>
+        <script type="text/javascript" src="media/js/vendor/at/jquery.atwho.js"></script>
         <script type="text/javascript" src="media/js/vendor/jquery-validate/jquery.validate.js"></script>
         <script type="text/javascript" src="media/js/vendor/underscore/underscore.js"></script>
         <script type="text/javascript" src="media/js/vendor/backbone/backbone.js"></script>
@@ -21,9 +23,7 @@
         <script type="text/javascript" src="media/js/vendor/store.js/store.js"></script>
         <script type="text/javascript" src="media/js/vendor/notifications/desktop-notifications.js"></script>
         <script type="text/javascript" src="media/js/common.js"></script>
-        <script src="media/js/vendor/sweetalert/sweet-alert.js"></script>
-        <link rel="stylesheet" type="text/css" href="media/js/vendor/sweetalert/sweet-alert.css">
-
+        <script type="text/javascript" src="media/js/vendor/sweetalert/sweet-alert.js"></script>
         {% block js %}{% endblock %}
     </head>
     <body class="{% block class %}{% endblock %}" {% block attributes %}{% endblock %}>
