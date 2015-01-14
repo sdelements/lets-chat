@@ -50,7 +50,7 @@ var UserSchema = new mongoose.Schema({
             return this.password;
         }
     },
-    apiKey: {
+    token: {
         type: String,
         required: false,
         unique: true,

@@ -76,8 +76,8 @@ function setup(app, session, core) {
     app.io.set('authorization', function (data, cb) {
         var User = mongoose.model('User');
 
-        if (data.query && data.query.apiKey) {
-            User.findOne({ apiKey: data.query.apiKey }, function(err, user) {
+        if (data.query && data.query.token) {
+            User.findOne({ token: data.query.token }, function(err, user) {
                 data['user'] = user;
                 data['user'].logged_in = true;
                 cb(err, user);
