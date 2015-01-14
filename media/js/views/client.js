@@ -35,17 +35,25 @@
                 rooms: this.client.rooms,
                 client: this.client
             });
-            this.notifications = new window.LCB.NotificationsView();
-
             this.status = new window.LCB.StatusView({
                 el: this.$el.find('.lcb-status-indicators'),
                 client: this.client
             });
+            this.profileModal = new window.LCB.ProfileModalView({
+                el: this.$el.find('#lcb-profile'),
+                model: this.client.user,
+                client: this.client
+            });
+
+            this.notifications = new window.LCB.NotificationsView();
+
             this.client.status.once('change:connected', _.bind(function(status, connected) {
                 this.$el.find('.lcb-client-loading').hide(connected);
             }, this));
+
             return this;
         }
     });
+
 
 }(window, $, _);
