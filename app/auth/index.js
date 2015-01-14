@@ -78,9 +78,13 @@ function setup(app, session, core) {
 
         if (data.query && data.query.token) {
             User.findOne({ token: data.query.token }, function(err, user) {
-                data['user'] = user;
-                data['user'].logged_in = true;
-                cb(err, user);
+                if (err || !user) {
+                    return cb(err, false);
+                }
+
+                data.user = user;
+                data.user.logged_in = true;
+                cb(null, true);
             });
         } else {
             psiAuth(data, cb);
@@ -135,7 +139,7 @@ function wrapAuthCallback(username, cb) {
 
 function authenticate(username, password, cb) {
     username = username.toLowerCase();
-    
+
     checkIfAccountLocked(username, function(locked) {
         if (settings.auth.login_throttling &&
             settings.auth.login_throttling.enable) {
