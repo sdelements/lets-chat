@@ -57,7 +57,7 @@ var session = {
 app.use(express.cookieParser());
 app.use(express.session(session));
 
-auth.setup(app, session);
+auth.setup(app, session, core);
 
 // Public
 app.use('/media', express.static(__dirname + '/media'));

@@ -16,7 +16,7 @@ var _ = require('underscore'),
     loginAttempts = {},
     enabledProviders = [];
 
-function getProviders() {
+function getProviders(core) {
     return settings.auth.providers.enable.map(function(key) {
         var Provider = _.find(available_providers, function (p) {
             return p.key === key;
@@ -24,7 +24,7 @@ function getProviders() {
 
         var provider_settings = settings.auth.providers[key];
 
-        return new Provider(provider_settings);
+        return new Provider(provider_settings, core);
     });
 }
 
@@ -42,9 +42,9 @@ function middleware(req, res, next) {
     next();
 }
 
-function setup(app, session) {
+function setup(app, session, core) {
 
-    enabledProviders = getProviders();
+    enabledProviders = getProviders(core);
 
     enabledProviders.forEach(function(provider) {
         provider.setup();

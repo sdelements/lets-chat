@@ -6,8 +6,9 @@ var fs = require('fs'),
     LDAPStrategy = require('passport-ldapauth').Strategy,
     KerberosStrategy = require('passport-kerberos').Strategy;
 
-function Ldap(options) {
+function Ldap(options, core) {
     this.options = options;
+    this.core = core;
     this.key = 'ldap';
 
     this.setup = this.setup.bind(this);
@@ -41,12 +42,12 @@ Ldap.prototype.getLdapStrategy = function() {
             passwordField: 'password'
         },
         function (user, done) {
-            return Ldap.findOrCreateFromLDAP(this.options, user, done);
+            return Ldap.findOrCreateFromLDAP(this.options, this.core, user, done);
         }.bind(this)
     );
 };
 
-Ldap.findOrCreateFromLDAP = function(options, ldapEntry, callback) {
+Ldap.findOrCreateFromLDAP = function(options, core, ldapEntry, callback) {
     var User = mongoose.model('User');
 
     User.findOne({ uid: ldapEntry.uid }, function (err, user) {
@@ -54,18 +55,17 @@ Ldap.findOrCreateFromLDAP = function(options, ldapEntry, callback) {
             return callback(err);
         }
         if (!user) {
-            Ldap.createLdapUser(options, ldapEntry, callback);
+            Ldap.createLdapUser(core, options, ldapEntry, callback);
         } else {
             return callback(null, user);
         }
     });
 };
 
-Ldap.createLdapUser = function(options, ldapEntry, callback) {
+Ldap.createLdapUser = function(core, options, ldapEntry, callback) {
     var User = mongoose.model('User');
     var field_mappings = options.field_mappings;
     var data = {
-        provider: options.kerberos ? 'kerberos' : 'ldap',
         uid: ldapEntry[field_mappings.uid],
         username: ldapEntry[field_mappings.uid],
         email: ldapEntry[field_mappings.email],
@@ -78,8 +78,9 @@ Ldap.createLdapUser = function(options, ldapEntry, callback) {
         data.displayName = data.firstName + ' ' + data.lastName;
     }
 
-    var user = new User(data);
-    user.save(function (err, user) {
+    core.account.create(options.kerberos ? 'kerberos' : 'ldap',
+                        data,
+                        function (err, user) {
         if (err) {
             console.error(err);
             return callback(err);
@@ -97,7 +98,7 @@ Ldap.sanitizeLDAP = function(ldapString) {
 };
 
 // LDAP Authorization for external providers (ie. Kerberos)
-Ldap.authorize = function(ldap_options, username, done) {
+Ldap.authorize = function(ldap_options, core, username, done) {
     try {
         var options = {
             url: ldap_options.connect_settings.url,
@@ -124,7 +125,7 @@ Ldap.authorize = function(ldap_options, username, done) {
 
             client.search(ldap_options.search.base,
                 clientOpts,
-                Ldap.getLdapSearchCallback(ldap_options, client, username, done));
+                Ldap.getLdapSearchCallback(ldap_options, client, core, username, done));
         });
     } catch (err) {
         console.error(err);
@@ -132,7 +133,7 @@ Ldap.authorize = function(ldap_options, username, done) {
     }
 };
 
-Ldap.getLdapSearchCallback = function(options, client, username, done) {
+Ldap.getLdapSearchCallback = function(options, client, core, username, done) {
     return function(err, res) {
         if (err) {
             console.error(err);
@@ -162,7 +163,7 @@ Ldap.getLdapSearchCallback = function(options, client, username, done) {
                 case 0:
                     return done();
                 case 1:
-                    Ldap.findOrCreateFromLDAP(options, foundUsers[0], done);
+                    Ldap.findOrCreateFromLDAP(options, core, foundUsers[0], done);
                     break;
                 default:
                     var error = new Error(format(

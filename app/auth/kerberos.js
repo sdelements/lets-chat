@@ -4,8 +4,9 @@ var _ = require('underscore'),
     KerberosStrategy = require('passport-kerberos').Strategy,
     ldap = require('./ldap');
 
-function Kerberos(options) {
+function Kerberos(options, core) {
     this.options = options;
+    this.core = core;
     this.key = 'kerberos';
 
     this.setup = this.setup.bind(this);
@@ -57,7 +58,7 @@ Kerberos.prototype.getKerberosCallback = function(done) {
 
             if (this.options.use_ldap_authorization) {
                 var opts = _.extend(this.options.ldap, {kerberos: true});
-                return ldap.authorize(opts, username, done);
+                return ldap.authorize(opts, this.core, username, done);
 
             } else {
                 // Not using LDAP
@@ -80,17 +81,14 @@ Kerberos.prototype.getKerberosCallback = function(done) {
 };
 
 Kerberos.prototype.createSimpleKerberosUser = function(username, realm, cb) {
-    var User = mongoose.model('User');
-    var user = new User({
-        provider: 'kerberos',
+    this.core.account.create('kerberos', {
         uid: username,
         username: username,
         displayName: username,
         firstName: username,
         lastName: username,
         email: username + '@' + realm
-    });
-    user.save(cb);
+    }, cb);
 };
 
 module.exports = Kerberos;

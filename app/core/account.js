@@ -7,6 +7,17 @@ function AccountManager(options) {
     this.core = options.core;
 }
 
+AccountManager.prototype.create = function(provider, options, cb) {
+    var User = mongoose.model('User');
+    var user = new User({ provider: provider });
+
+    Object.keys(options).forEach(function(key) {
+        user.set(key, options[key]);
+    });
+
+    user.save(cb);
+};
+
 AccountManager.prototype.update = function(id, options, cb) {
     var User = mongoose.model('User');
     var usernameChange = false;
