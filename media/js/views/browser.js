@@ -26,15 +26,11 @@
             this.rooms.on('change:joined', this.updateToggles, this);
             this.rooms.on('users:add', this.addUser, this);
             this.rooms.on('users:remove', this.removeUser, this);
+            this.rooms.on('add remove',  _.debounce(this.sort, 100), this);
             this.rooms.current.on('change:id', function(current, id) {
                 // We only sort when the list view is open
                 id === 'list' && this.sort();
             }, this);
-            this.render();
-        },
-        render: function() {
-            // Initial sort
-            this.sort();
         },
         updateToggles: function(room, joined) {
             this.$('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
