@@ -9023,6 +9023,29 @@ body {
   font-size: 14px;
   padding: 10px;
 }
+.form-group {
+  margin-bottom: 20px;
+}
+.jvFloat {
+  display: block;
+  margin: 0;
+}
+.jvFloat .placeHolder {
+  background-color: #eee;
+  height: 16px;
+  line-height: 16px;
+  color: #555;
+  font-weight: 300;
+  font-size: 11px;
+  padding: 0 8px;
+  border-bottom: none;
+  top: -5px;
+  right: 0;
+  left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 /*********************
  * Login
  *********************/
