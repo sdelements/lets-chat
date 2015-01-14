@@ -4,7 +4,14 @@ var User = require('./../app/models/user');
 var migration = new Migroose.Migration('1421183479874-users');
 
 migration.load({
-    users: 'users'
+    external_users: {
+        collection: 'users',
+        query: { uid: { $exists: true } }
+    },
+    local_users: {
+        collection: 'users',
+        query: { uid: { $exists: false } }
+    }
 });
 
 migration.step(function(data, stepComplete) {
@@ -47,7 +54,11 @@ migration.step(function(data, stepComplete) {
         });
     }
 
-    async.each(data.users, updateDoc, function(err) {
+    async.each(data.external_users, updateDoc, function(err) {
+        stepComplete();
+    });
+
+    async.each(data.local_users, updateDoc, function(err) {
         stepComplete();
     });
 });
