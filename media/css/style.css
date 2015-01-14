@@ -9865,10 +9865,12 @@ body {
   }
 }
 .lcb-entry-input {
+  max-height: 100%;
   padding: 15px;
   border: none;
   border-top: 1px #eee solid;
   border-radius: 0 0 0 2px;
+  resize: none;
   -moz-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
