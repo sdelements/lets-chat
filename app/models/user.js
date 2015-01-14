@@ -53,6 +53,7 @@ var UserSchema = new mongoose.Schema({
     apiKey: {
         type: String,
         required: false,
+        unique: true,
         trim: true
     },
     firstName: {
