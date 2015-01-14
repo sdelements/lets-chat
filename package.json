@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "install": "migroose",
+    "prestart": "migroose",
     "migrate": "migroose"
   },
   "engine": {
