@@ -68,8 +68,8 @@
             this.client.events.trigger('rooms:switch', this.rooms.last.get('id'));
         },
         toggleRoomSidebar: function(e) {
-            this.$('.lcb-room:visible').toggleClass('lcb-room-sidebar-opened');
-            store.set('sidebar', this.$('.lcb-room:visible').hasClass('lcb-room-sidebar-opened'));
+            var view = this.client.view.panes.views[this.rooms.current.get('id')];
+            view && view.toggleSidebar && view.toggleSidebar();
         },
         focusBlur: function(e) {
             this.focus = e.type === 'focus';
