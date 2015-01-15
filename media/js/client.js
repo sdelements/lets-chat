@@ -26,6 +26,12 @@
             that.user.set(user);
         });
     };
+    Client.prototype.updateProfile = function(profile) {
+        var that = this;
+        this.socket.emit('account:profile', profile, function(user) {
+            that.user.set(user);
+        });
+    }
 
     //
     // Rooms
@@ -227,11 +233,7 @@
             var target = room.users.findWhere({
                 id: user.id
             });
-            target && target.set({
-                displayName: user.displayName,
-                firstName: user.firstName,
-                lastName: user.lastName
-            });
+            target && target.set(user);
         }, this);
     }
     Client.prototype.getUsers = function(id, callback) {
@@ -343,7 +345,7 @@
         this.events.on('rooms:create', this.createRoom, this);
         this.events.on('rooms:switch', this.switchRoom, this);
         this.events.on('rooms:archive', this.archiveRoom, this);
-        this.events.on('users:update', this.updateUser, this);
+        this.events.on('profile:update', this.updateProfile, this);
     };
     //
     // Start
