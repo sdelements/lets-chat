@@ -19,13 +19,13 @@
                             <input class="required email form-control" name="email" type="text" value="{{ account.email }}" />
                         </div>
                     </div>
-                    {% if account.local %}
-                        <div class="form-group">
-                            <label class="control-label col-sm-6">Current Password</label>
-                            <div class="col-sm-11">
-                                <input class="form-control" name="current-password" type="password" minlength="4" maxlength="64" />
-                            </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-6">Current Password</label>
+                        <div class="col-sm-11">
+                            <input class="form-control" name="current-password" type="password" minlength="4" maxlength="64" />
                         </div>
+                    </div>
+                    {% if account.local %}
                         <div class="form-group">
                             <label class="control-label col-sm-6">New Password</label>
                             <div class="col-sm-11">
