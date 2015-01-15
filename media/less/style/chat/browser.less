@@ -12,7 +12,6 @@
     .flex-direction(column);
 }
 
-
 .lcb-rooms-browser-header {
     min-height: @roomBrowserHeader;
     max-height: @roomBrowserHeader;
@@ -31,6 +30,10 @@
     font-weight: 400;
     padding: 0;
     margin: 0;
+    margin-right: 10px;
+    @media (max-width: @screen-xs-max) {
+        display: none;
+    }
 }
 
 .lcb-rooms-browser-new {
@@ -93,15 +96,20 @@
 }
 
 .lcb-rooms-browser-filter {
-    height: @roomBrowserHeader;
     font-weight: 300;
     font-size: 22px;
     color: #aaa;
-    margin-left: 10px;
+    .flex-display;
+    .flex(1);
+}
+
+.lcb-rooms-browser-filter-label {
+    margin-right: 5px;
 }
 
 .lcb-rooms-browser-filter-input {
     border: none;
+    .flex(1);
     &:focus {
         outline: none;
     }

@@ -9740,6 +9740,12 @@ body {
   font-weight: 400;
   padding: 0;
   margin: 0;
+  margin-right: 10px;
+}
+@media (max-width: 767px) {
+  .lcb-rooms-browser-heading {
+    display: none;
+  }
 }
 .lcb-rooms-browser-new {
   position: absolute;
@@ -9795,14 +9801,32 @@ body {
   }
 }
 .lcb-rooms-browser-filter {
-  height: 50px;
   font-weight: 300;
   font-size: 22px;
   color: #aaa;
-  margin-left: 10px;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -moz-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.lcb-rooms-browser-filter-label {
+  margin-right: 5px;
 }
 .lcb-rooms-browser-filter-input {
   border: none;
+  -moz-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
 }
 .lcb-rooms-browser-filter-input:focus {
   outline: none;
