@@ -8,7 +8,9 @@ module.exports = function() {
 
     var app = this.app,
         core = this.core,
-        middlewares = this.middlewares;
+        middlewares = this.middlewares,
+        models = this.models,
+        Room = models.room;
 
     core.on('messages:new', function(message) {
         app.io.room(message.room.id)
@@ -26,6 +28,14 @@ module.exports = function() {
         req.io.route('messages:create');
     });
 
+    app.get('/rooms/:room/messages', middlewares.requireLogin, function(req, res) {
+        req.io.route('messages:listRoom');
+    });
+
+    app.post('/rooms/:room/messages', middlewares.requireLogin, function(req, res) {
+        req.io.route('messages:create');
+    });
+
     //
     // Sockets
     //
@@ -34,13 +44,13 @@ module.exports = function() {
             var data = req.data || req.body,
                 options = {
                     owner: req.user._id,
-                    room: data.room,
+                    room: data.room || req.param('room'),
                     text: data.text
                 };
+            
             core.messages.create(options, function(err, message) {
                 if (err) {
-                    req.io.respond(err, 400);
-                    return;
+                    return req.io.respond(err, 400);
                 }
                 req.io.respond(message, 201);
             });
@@ -48,16 +58,42 @@ module.exports = function() {
         list: function(req) {
             var data = req.data || req.query,
                 options = {
-                    room: data.room || null,
+                    room: data.room || req.param('room') || null,
                     from: data.from || null,
                     limit: data.limit || null,
                 };
             core.messages.list(options, function(err, messages) {
                 if (err) {
-                    req.io.respond(err, 400);
-                    return;
+                    return req.io.respond(err, 400);
                 }
                 req.io.respond(messages);
+            });
+        },
+        listRoom: function(req) {
+            var data = req.data || req.query,
+                options = {
+                    room: data.room || req.param('room') || null,
+                    from: data.from || null,
+                    limit: data.limit || null,
+                };
+
+            Room.findByIdOrSlug(options.room, function(err, room) {
+                if (err) {
+                    return req.io.respond(err, 400);
+                }
+
+                if (!room) {
+                    return req.io.respond(err, 404);
+                }
+
+                options.room = room._id;
+
+                core.messages.list(options, function(err, messages) {
+                    if (err) {
+                        return req.io.respond(err, 400);
+                    }
+                    req.io.respond(messages);
+                });
             });
         }
     });
