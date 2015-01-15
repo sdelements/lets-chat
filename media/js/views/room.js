@@ -69,7 +69,9 @@
             });
         },
         render: function() {
-            this.$el = $(this.template(this.model.toJSON()))
+            this.$el = $(this.template(_.extend(this.model.toJSON(), {
+                sidebar: store.get('sidebar')
+            })));
             this.$messages = this.$('.lcb-messages');
             // Scroll Locking
             this.scrollLocked = true;
@@ -202,7 +204,10 @@
         },
         toggleSidebar: function(e) {
             e && e.preventDefault && e.preventDefault();
-            this.$el.toggleClass('lcb-room-sidebar-opened');
+            // Target siblings too!
+            this.$el.siblings('.lcb-room').andSelf().toggleClass('lcb-room-sidebar-opened');
+            // Save to localstorage
+            store.set('sidebar', this.$el.hasClass('lcb-room-sidebar-opened'));
         },
         destroy: function() {
             this.undelegateEvents();

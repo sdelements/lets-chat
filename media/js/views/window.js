@@ -69,6 +69,7 @@
         },
         toggleRoomSidebar: function(e) {
             this.$('.lcb-room:visible').toggleClass('lcb-room-sidebar-opened');
+            store.set('sidebar', this.$('.lcb-room:visible').hasClass('lcb-room-sidebar-opened'));
         },
         focusBlur: function(e) {
             this.focus = e.type === 'focus';

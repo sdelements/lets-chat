@@ -28,13 +28,13 @@
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room">
-        <div class="lcb-room lcb-pane lcb-pane-{{id}}" data-id="{{id}}" style="display: none;">
+        <div class="lcb-room lcb-pane lcb-pane-{{id}} {{#if sidebar}}lcb-room-sidebar-opened{{/if}}" data-id="{{id}}" style="display: none;">
             <div class="lcb-room-chat ">
                 <div class="lcb-room-header">
                     <div class="lcb-room-meta">
                         <h2 class="lcb-room-heading show-edit-room" placeholder="Room Name...">{{name}}</h2>
                         <div class="lcb-room-description show-edit-room" placeholder="Description...">
-                            <p>{{ description }}</p>
+                            <p>{{description}}</p>
                         </div>
                     </div>
                     <div class="lcb-room-header-actions">
@@ -88,10 +88,9 @@
                             <div class="form-group">
                                 <label class=
                                 "control-label col-sm-4">Description</label>
-
                                 <div class="col-sm-7">
                                     <textarea class="form-control" name=
-                                    "description"> {{ description }}</textarea>
+                                    "description">{{ description }}</textarea>
                                 </div>
                             </div>
                             <p class="response" style="display: none;"></p>
