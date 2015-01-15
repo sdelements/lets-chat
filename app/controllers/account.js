@@ -65,6 +65,10 @@ module.exports = function() {
         req.io.route('account:generate_token');
     });
 
+    app.post('/account/token/revoke', function(req, res) {
+        req.io.route('account:revoke_token');
+    });
+
     //
     // Sockets
     //
@@ -141,6 +145,23 @@ module.exports = function() {
                     status: 'success',
                     message: 'Token generated.',
                     token: token
+                });
+            });
+        },
+        revoke_token: function(req) {
+            core.account.revokeToken(req.user._id, function (err) {
+                if (err) {
+                    req.io.respond({
+                        status: 'error',
+                        message: 'Unable to revoke token.',
+                        errors: err
+                    });
+                    return;
+                }
+
+                req.io.respond({
+                    status: 'success',
+                    message: 'Token revoked.'
                 });
             });
         },

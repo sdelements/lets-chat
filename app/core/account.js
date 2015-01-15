@@ -85,7 +85,6 @@ AccountManager.prototype.update = function(id, options, cb) {
 
 AccountManager.prototype.generateToken = function(id, cb) {
     var User = mongoose.model('User');
-    var usernameChange = false;
 
     User.findById(id, function (err, user) {
         if (err) {
@@ -106,6 +105,12 @@ AccountManager.prototype.generateToken = function(id, cb) {
             });
         });
     });
+};
+
+AccountManager.prototype.revokeToken = function(id, cb) {
+    var User = mongoose.model('User');
+
+    User.update({_id: id}, {$unset: {token: 1}}, cb);
 };
 
 module.exports = AccountManager;
