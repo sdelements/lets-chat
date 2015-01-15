@@ -42,7 +42,15 @@ module.exports = function() {
         req.io.route('rooms:create');
     });
 
-    app.delete('/rooms', middlewares.requireLogin, function(req, res) {
+    app.get('/rooms/:id', middlewares.requireLogin, function(req, res) {
+        req.io.route('rooms:get');
+    });
+
+    app.put('/rooms/:id', middlewares.requireLogin, function(req, res) {
+        req.io.route('rooms:update');
+    });
+
+    app.delete('/rooms/:id', middlewares.requireLogin, function(req, res) {
         req.io.route('rooms:archive');
     });
 
@@ -50,6 +58,31 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('rooms', {
+        list: function(req) {
+            core.rooms.list(null, function(err, rooms) {
+                if (err) {
+                    console.error(err);
+                    return req.io.respond(err, 400);
+                }
+                req.io.respond(rooms, 200);
+            });
+        },
+        get: function(req) {
+            var roomId = req.data && req.data.id || req.param('id');
+
+            core.rooms.get(roomId, function(err, room) {
+                if (err) {
+                    console.error(err);
+                    return req.io.respond(err, 400);
+                }
+
+                if (!room) {
+                    return req.io.respond(404);
+                }
+
+                req.io.respond(room, 200);
+            });
+        },
         create: function(req) {
             var data = req.data || req.body,
                 options = {
@@ -69,60 +102,62 @@ module.exports = function() {
                 app.io.broadcast('rooms:new', room);
             });
         },
-        archive: function(req) {
-            var data = req.data || req.body;
-            var roomId = data.room;
-            core.rooms.archive(roomId, function(err, room) {
-                if (err) {
-                    console.log(err);
-                    req.io.respond(err, 400);
-                    return;
-                }
-                req.io.respond(room);
-                app.io.broadcast('rooms:archive', room);
-            });
-        },
-        list: function(req) {
-            core.rooms.list(null, function(err, rooms) {
-                if (err) {
-                    console.error(err);
-                    req.io.respond(err, 400);
-                    return;
-                }
-                req.io.respond(rooms);
-            });
-        },
         update: function(req) {
-            var data = req.data || req.body;
-            var roomId = data.id,
-                options = {
+            var roomId = req.data && req.data.id || req.param('id'),
+                data = req.data || req.body;
+
+            var options = {
                     name: data.name,
                     slug: data.slug,
                     description: data.description
                 };
+
             core.rooms.update(roomId, options, function(err, room) {
-                if (err || !room) {
-                    req.io.respond(err, 400);
-                    return;
+                if (err) {
+                    console.error(err);
+                    return req.io.respond(err, 400);
                 }
+
+                if (!room) {
+                    return req.io.respond(404);
+                }
+
                 app.io.broadcast('rooms:update', room);
                 req.io.respond(room, 200);
+            });
+        },
+        archive: function(req) {
+            // TODO: Make consitent with update method?
+            var roomId = req.data && req.data.room ||
+                         req.data && req.data.id || req.param('id'),
+                data = req.data || req.body;
+
+            core.rooms.archive(roomId, function(err, room) {
+                if (err) {
+                    console.log(err);
+                    return req.io.respond(400);
+                }
+
+                if (!room) {
+                    return req.io.respond(404);
+                }
+
+                req.io.respond(room, 200);
+                app.io.broadcast('rooms:archive', room);
             });
         },
         join: function(req) {
             var roomId = req.data;
             core.rooms.get(roomId, function(err, room) {
                 if (err) {
-                    // Problem? TODO: Figure out how to recover?
                     console.error(err);
-                    return;
+                    return req.io.respond();
                 }
+
                 if (!room) {
-                    // No room, no effect
-                    console.error('No room!');
-                    req.io.respond();
-                    return;
+                    return req.io.respond();
                 }
+
                 var user = req.user.toJSON();
                 user.room = room._id;
 

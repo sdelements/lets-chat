@@ -86,25 +86,12 @@ RoomManager.prototype.archive = function(roomId, cb) {
 
 RoomManager.prototype.list = function(options, cb) {
     var Room = mongoose.model('Room');
-    Room
-    .find({ archived: { $ne: true }})
-    .exec(cb);
+    Room.find({ archived: { $ne: true }}, cb);
 };
 
-RoomManager.prototype.get = function(roomId, cb) {
+RoomManager.prototype.get = function(identifier, cb) {
     var Room = mongoose.model('Room');
-    Room.findOne({
-        _id: roomId,
-        archived: { $ne: true }
-    }, cb);
-};
-
-RoomManager.prototype.slug = function(slug, cb) {
-    var Room = mongoose.model('Room');
-    Room.findOne({
-        slug: slug,
-        archived: { $ne: true }
-    }, cb);
+    Room.findByIdOrSlug(identifier, cb);
 };
 
 module.exports = RoomManager;

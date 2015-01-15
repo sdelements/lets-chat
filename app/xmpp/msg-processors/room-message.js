@@ -23,7 +23,7 @@ module.exports = MessageProcessor.extend({
             return cb();
         }
 
-        this.core.rooms.slug(roomSlug, function(err, room) {
+        this.core.rooms.get(roomSlug, function(err, room) {
             if (!room) {
                 return cb();
             }

@@ -71,4 +71,18 @@ RoomSchema.method('toJSON', function() {
     };
  });
 
+ RoomSchema.statics.findByIdOrSlug = function(identifier, cb) {
+    var opts = {
+        archived: { $ne: true }
+    };
+
+    if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
+        opts.$or = [{_id: identifier}, {slug: identifier}];
+    } else {
+        opts.slug = identifier;
+    }
+
+    this.findOne(opts, cb);
+};
+
 module.exports = mongoose.model('Room', RoomSchema);
