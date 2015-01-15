@@ -45,6 +45,11 @@
                 client: this.client
             });
 
+            this.accountButton = new window.LCB.AccountButtonView({
+                el: this.$el.find('.lcb-account-button'),
+                model: this.client.user
+            });
+
             this.notifications = new window.LCB.NotificationsView();
 
             this.client.status.once('change:connected', _.bind(function(status, connected) {
@@ -53,6 +58,15 @@
 
             return this;
         }
+    });
+
+    window.LCB.AccountButtonView = Backbone.View.extend({
+        initialize: function() {
+            this.model.on('change', this.update, this);
+        },
+        update: function(user){
+            this.$('.lcb-account-button-name').text(user.get('displayName'));
+        },
     });
 
 

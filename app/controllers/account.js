@@ -77,14 +77,12 @@ module.exports = function() {
             req.io.respond(req.user);
         },
         profile: function(req) {
-            var form = req.body;
-
-            var data = {
-                displayName: form['display-name'],
-                firstName: form['first-name'],
-                lastName: form['last-name']
-            };
-
+            var form = req.body || req.data,
+                data = {
+                    displayName: form.displayName,
+                    firstName: form.firstName,
+                    lastName: form.lastName
+                };
             core.account.update(req.user._id, data, function (err, user) {
                 if (err) {
                     req.io.respond({
@@ -94,11 +92,13 @@ module.exports = function() {
                     });
                     return;
                 }
-
-                req.io.respond({
-                    status: 'success',
-                    message: 'Your profile has been saved.'
-                });
+                if (!user) {
+                    req.io.respond(404);
+                    console.log('no user');
+                    return;
+                }
+                req.io.respond(user);
+                app.io.broadcast('users:update', user);
             });
         },
         settings: function(req) {

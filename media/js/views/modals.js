@@ -22,7 +22,7 @@
         		firstName = this.$('[name="first-name"]').val(),
         		lastName = this.$('[name="last-name"]').val();
 
-        	this.client.events.trigger('users:update', {
+            this.client.events.trigger('profile:update', {
         		displayName: displayName,
         		firstName: firstName,
         		lastName: lastName,
