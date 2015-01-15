@@ -26,9 +26,14 @@
             this.rooms.on('change:joined', this.updateToggles, this);
             this.rooms.on('users:add', this.addUser, this);
             this.rooms.on('users:remove', this.removeUser, this);
+            this.rooms.on('add remove',  _.debounce(this.sort, 100), this);
+            this.rooms.current.on('change:id', function(current, id) {
+                // We only sort when the list view is open
+                id === 'list' && this.sort();
+            }, this);
         },
         updateToggles: function(room, joined) {
-            this.$el.find('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
+            this.$('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
         },
         toggle: function(e) {
             e.preventDefault();
@@ -43,14 +48,26 @@
                 (this.rooms.get(room.id).get('joined') && this.client.leaveRoom(room.id));
         },
         add: function(room) {
-            this.$el.find('.lcb-rooms-list').append(this.template(room.toJSON()));
+            this.$('.lcb-rooms-list').append(this.template(room.toJSON()));
         },
         remove: function(room) {
-            this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + ']').remove();
+            this.$('.lcb-rooms-list-item[data-id=' + room.id + ']').remove();
         },
         update: function(room) {
-            this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
-            this.$el.find('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
+            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+        },
+        sort: function() {
+            var that = this,
+                $items = this.$('.lcb-rooms-list-item');
+            $items.sort(function(a, b){
+                var an = that.rooms.get($(a).data('id')).users.length,
+                    bn = that.rooms.get($(b).data('id')).users.length;
+                if (an > bn) return -1;
+                if (an < bn) return 1;
+                return 0;
+            });
+            $items.detach().appendTo(this.$('.lcb-rooms-list'));
         },
         create: function(e) {
             e.preventDefault();
@@ -82,8 +99,7 @@
                 .find('.lcb-rooms-list-users').prepend(this.userTemplate(user.toJSON()));
         },
         removeUser: function(user, room) {
-            console.log(user);
-            this.$('[data-id="' + room.id + '"]')
+            this.$('.lcb-rooms-list-item[data-id="' + room.id + '"]')
                 .find('.lcb-rooms-list-user[data-id="' + user.id + '"]').remove();
         }
     });
