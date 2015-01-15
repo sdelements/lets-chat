@@ -106,17 +106,16 @@ module.exports = function() {
             });
         },
         settings: function(req) {
-            var form = req.body;
-
-            var data = {
-                username: form.username,
-                email: form.email
-            };
-
-            if (form['new-password'] &&
-                form['new-password'] === form['confirm-password']) {
-                    auth.authenticate(req.user.username, form['existing-password'],
-                                                 function(err, user, info) {
+            var form = req.body || req.data,
+                data = {
+                    username: form.username,
+                    email: form.email,
+                    currentPassword: form.password || form['current-password'] || form.currentPassword,
+                    newPassword: form['new-password'] || form.newPassword,
+                    confirmPassowrd: form['confirm-password'] || form.confirmPassword
+                };
+                auth.authenticate(req.user.username || req.user.email, data.currentPassword,
+                    function(err, user) {
                         if (err) {
                             req.io.respond({
                                 status: 'error',
@@ -128,30 +127,25 @@ module.exports = function() {
                         if (!user) {
                             req.io.respond({
                                 status: 'error',
-                                message: info && info.message ||
-                                         'Incorrect login credentials.'
+                                message: 'Incorrect login credentials.'
                             }, 401);
-                        return;
-                    }
+                            return;
+                        }
+                        core.account.update(req.user._id, data, function (err, user) {
+                            if (err || !user) {
+                                req.io.respond({
+                                    status: 'error',
+                                    message: 'Unable to update your account.',
+                                    errors: err
+                                }, 500);
+                                return;
+                            }
+                            req.io.respond({
+                                status: 'success',
+                                message: 'Your account has been saved.'
+                            });
+                        });
                     });
-                    data.password = form['new-password'];
-            }
-
-            core.account.update(req.user._id, data, function (err, user) {
-                if (err) {
-                    req.io.respond({
-                        status: 'error',
-                        message: 'Unable to update your account.',
-                        errors: err
-                    });
-                    return;
-                }
-
-                req.io.respond({
-                    status: 'success',
-                    message: 'Your account has been saved.'
-                });
-            });
         },
         generate_token: function(req) {
             core.account.generateToken(req.user._id, function (err, token) {

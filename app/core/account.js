@@ -57,8 +57,8 @@ AccountManager.prototype.update = function(id, options, cb) {
                 user.username = options.username;
             }
 
-            if (options.password) {
-                user.password = options.password;
+            if (options.password || options.newPassword) {
+                user.password = options.password || options.newPassword;
             }
 
         }
