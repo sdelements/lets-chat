@@ -53,19 +53,23 @@ module.exports = function() {
         req.io.route('account:register');
     });
 
-    app.post('/account/profile', function(req, res) {
+    app.get('/account', middlewares.requireLogin, function(req, res) {
+        req.io.route('account:whoami');
+    });
+
+    app.post('/account/profile', middlewares.requireLogin, function(req, res) {
         req.io.route('account:profile');
     });
 
-    app.post('/account/settings', function(req, res) {
+    app.post('/account/settings', middlewares.requireLogin, function(req, res) {
         req.io.route('account:settings');
     });
 
-    app.post('/account/token/generate', function(req, res) {
+    app.post('/account/token/generate', middlewares.requireLogin, function(req, res) {
         req.io.route('account:generate_token');
     });
 
-    app.post('/account/token/revoke', function(req, res) {
+    app.post('/account/token/revoke', middlewares.requireLogin, function(req, res) {
         req.io.route('account:revoke_token');
     });
 

@@ -3,7 +3,8 @@ var _ = require('underscore'),
     express = require('express.io'),
     mongoose = require('mongoose'),
     passport = require('passport'),
-    passportSocketIo = require("passport.socketio"),
+    passportSocketIo = require('passport.socketio'),
+    BearerStrategy = require('passport-http-bearer'),
     settings = require('./../config'),
     available_providers = [
         require('./local'),
@@ -50,6 +51,17 @@ function setup(app, session, core) {
         provider.setup();
         providerSettings[provider.key] = provider.options;
     });
+
+    passport.use(new BearerStrategy (
+        function(token, done) {
+            var User = mongoose.model('User');
+            User.findByToken(token, function(err, user) {
+                if (err) { return done(err); }
+                if (!user) { return done(null, false); }
+                return done(null, user);
+            });
+        }
+    ));
 
     passport.serializeUser(function(user, done) {
         done(null, user._id);

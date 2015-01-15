@@ -61,6 +61,7 @@
     "node_hash": "^0.2.0",
     "nunjucks": "~1.1.0",
     "passport": "^0.2.1",
+    "passport-http-bearer": "^1.0.1",
     "passport-kerberos": "0.0.1",
     "passport-ldapauth": "^0.2.3",
     "passport-local": "^1.0.0",
