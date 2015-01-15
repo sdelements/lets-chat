@@ -53,7 +53,9 @@
                                 case 201:
                                     swal('Success', res.responseJSON.message, 'success');
                                     if ($form.data('refresh')) {
-                                        window.location = '/';
+                                        setTimeout(function() {
+                                            window.location = '/';
+                                        }, 1000);
                                         return;
                                     }
                                     $form[0].reset();
