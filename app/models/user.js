@@ -54,7 +54,6 @@ var UserSchema = new mongoose.Schema({
     token: {
         type: String,
         required: false,
-        unique: true,
         trim: true
     },
     firstName: {
