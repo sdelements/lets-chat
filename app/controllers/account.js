@@ -227,20 +227,26 @@ module.exports = function() {
             auth.authenticate(req.body.username, req.body.password,
                                                  function(err, user, info) {
                 if (err) {
-                    req.io.respond({
+                    return req.io.respond({
                         status: 'error',
                         message: 'There were problems logging you in.',
                         errors: err
                     }, 400);
-                    return;
                 }
+
+                if (!user && info && info.locked) {
+                    return req.io.respond({
+                        status: 'error',
+                        message: info.message || 'Account is locked.'
+                    }, 403);
+                }
+
                 if (!user) {
-                    req.io.respond({
+                    return req.io.respond({
                         status: 'error',
                         message: info && info.message ||
                                  'Incorrect login credentials.'
                     }, 401);
-                    return;
                 }
                 req.login(user, function(err) {
                     if (err) {

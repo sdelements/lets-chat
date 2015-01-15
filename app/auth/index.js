@@ -135,6 +135,10 @@ function wrapAuthCallback(username, cb) {
             if (attempt.attempts >= NO_DELAY_AUTH_ATTEMPTS) {
                 var lock = Math.min(5000 * Math.pow(2,(attempt.attempts - NO_DELAY_AUTH_ATTEMPTS), MAX_AUTH_DELAY_TIME));
                 attempt.lockedUntil = Date.now() + lock;
+                return cb(err, user, {
+                    locked: true,
+                    message: 'Account is locked.'
+                });
             }
 
             return cb(err, user, info);
@@ -155,6 +159,7 @@ function authenticate(username, password, cb) {
     checkIfAccountLocked(username, function(locked) {
         if (locked) {
             return cb(null, null, {
+                locked: true,
                 message: 'Account is locked.'
             });
         }

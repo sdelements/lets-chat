@@ -64,6 +64,9 @@
                                 case 401:
                                     swal('Woops.', 'Your username or password is not correct', 'warning');
                                     break;
+                                case 403:
+                                    swal('Woops.', 'Your account is locked', 'warning');
+                                    break;
                                 default:
                                     swal('Woops.', 'A server error has occured', 'error');
                                     break;
