@@ -51,7 +51,8 @@ var sessionStore = new MongoStore({
 var session = {
     key: 'connect.sid',
     secret: settings.secrets.cookie,
-    store: sessionStore
+    store: sessionStore,
+    cookie: { secure: httpsEnabled }
 };
 
 app.use(express.cookieParser());
