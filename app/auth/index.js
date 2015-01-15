@@ -153,16 +153,15 @@ function authenticate(username, password, cb) {
     username = username.toLowerCase();
 
     checkIfAccountLocked(username, function(locked) {
-        if (settings.auth.login_throttling &&
-            settings.auth.login_throttling.enable) {
-            cb = wrapAuthCallback(username, cb);
-        }
-
-
         if (locked) {
             return cb(null, null, {
                 message: 'Account is locked.'
             });
+        }
+
+        if (settings.auth.login_throttling &&
+            settings.auth.login_throttling.enable) {
+            cb = wrapAuthCallback(username, cb);
         }
 
         var req = {
