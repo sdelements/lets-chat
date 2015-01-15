@@ -40,6 +40,7 @@ auth:
 
     local:
       enable_registration: true
+      password_regex: ^.{8,64}$
       salt: secretsauce # Required when upgrading from version < 0.3
 
     kerberos:
