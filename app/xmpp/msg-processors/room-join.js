@@ -16,7 +16,7 @@ module.exports = MessageProcessor.extend({
         var roomUrl = this.request.attrs.to.split('/')[0],
             roomSlug = roomUrl.split('@')[0];
 
-        this.core.rooms.get(roomSlug, function(err, room) {
+        this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
                 return cb(err);
             }

@@ -91,7 +91,18 @@ RoomManager.prototype.list = function(options, cb) {
 
 RoomManager.prototype.get = function(identifier, cb) {
     var Room = mongoose.model('Room');
-    Room.findByIdOrSlug(identifier, cb);
+    Room.findOne({
+        _id: identifier,
+        archived: { $ne: true }
+    }, cb);
+};
+
+RoomManager.prototype.slug = function(slug, cb) {
+    var Room = mongoose.model('Room');
+    Room.findOne({
+        slug: slug,
+        archived: { $ne: true }
+    }, cb);
 };
 
 module.exports = RoomManager;

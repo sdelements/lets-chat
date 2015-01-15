@@ -28,11 +28,11 @@ module.exports = function() {
         req.io.route('messages:create');
     });
 
-    app.get('/rooms/:room/messages', middlewares.requireLogin, function(req, res) {
-        req.io.route('messages:listRoom');
+    app.get('/rooms/:room/messages', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
+        req.io.route('messages:list');
     });
 
-    app.post('/rooms/:room/messages', middlewares.requireLogin, function(req, res) {
+    app.post('/rooms/:room/messages', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
         req.io.route('messages:create');
     });
 
@@ -44,10 +44,10 @@ module.exports = function() {
             var data = req.data || req.body,
                 options = {
                     owner: req.user._id,
-                    room: data.room || req.param('room'),
+                    room: data.room,
                     text: data.text
                 };
-            
+
             core.messages.create(options, function(err, message) {
                 if (err) {
                     return req.io.respond(err, 400);
@@ -58,7 +58,7 @@ module.exports = function() {
         list: function(req) {
             var data = req.data || req.query,
                 options = {
-                    room: data.room || req.param('room') || null,
+                    room: data.room || null,
                     from: data.from || null,
                     limit: data.limit || null,
                 };
@@ -67,33 +67,6 @@ module.exports = function() {
                     return req.io.respond(err, 400);
                 }
                 req.io.respond(messages);
-            });
-        },
-        listRoom: function(req) {
-            var data = req.data || req.query,
-                options = {
-                    room: data.room || req.param('room') || null,
-                    from: data.from || null,
-                    limit: data.limit || null,
-                };
-
-            Room.findByIdOrSlug(options.room, function(err, room) {
-                if (err) {
-                    return req.io.respond(err, 400);
-                }
-
-                if (!room) {
-                    return req.io.respond(err, 404);
-                }
-
-                options.room = room._id;
-
-                core.messages.list(options, function(err, messages) {
-                    if (err) {
-                        return req.io.respond(err, 400);
-                    }
-                    req.io.respond(messages);
-                });
             });
         }
     });

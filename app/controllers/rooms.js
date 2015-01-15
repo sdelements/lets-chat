@@ -42,19 +42,19 @@ module.exports = function() {
         req.io.route('rooms:create');
     });
 
-    app.get('/rooms/:id', middlewares.requireLogin, function(req, res) {
+    app.get('/rooms/:room', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
         req.io.route('rooms:get');
     });
 
-    app.put('/rooms/:id', middlewares.requireLogin, function(req, res) {
+    app.put('/rooms/:room', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
         req.io.route('rooms:update');
     });
 
-    app.delete('/rooms/:id', middlewares.requireLogin, function(req, res) {
+    app.delete('/rooms/:room', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
         req.io.route('rooms:archive');
     });
 
-    app.get('/rooms/:id/users', middlewares.requireLogin, function(req, res) {
+    app.get('/rooms/:room/users', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
         req.io.route('rooms:users');
     });
 
@@ -73,7 +73,7 @@ module.exports = function() {
             });
         },
         get: function(req) {
-            var roomId = req.data && req.data.id || req.param('id');
+            var roomId = req.data && req.data.id || req.param('room');
 
             core.rooms.get(roomId, function(err, room) {
                 if (err) {
@@ -108,7 +108,7 @@ module.exports = function() {
             });
         },
         update: function(req) {
-            var roomId = req.data && req.data.id || req.param('id'),
+            var roomId = req.data && req.data.id || req.param('room'),
                 data = req.data || req.body;
 
             var options = {
@@ -134,7 +134,7 @@ module.exports = function() {
         archive: function(req) {
             // TODO: Make consitent with update method?
             var roomId = req.data && req.data.room ||
-                         req.data && req.data.id || req.param('id'),
+                         req.data && req.data.id || req.param('room'),
                 data = req.data || req.body;
 
             core.rooms.archive(roomId, function(err, room) {

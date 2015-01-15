@@ -11,7 +11,7 @@ MessageManager.prototype.create = function(options, cb) {
         Room = mongoose.model('Room'),
         User = mongoose.model('User');
 
-    Room.findByIdOrSlug(options.room, function(err, room) {
+    Room.findById(options.room, function(err, room) {
         if (err) {
             console.error(err);
             return cb(err);
