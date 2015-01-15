@@ -25,12 +25,27 @@ $.validator.addMethod('alphanum', function(value, element) {
 $.fn.updateTimeStamp = function() {
     var $this = $(this);
     var time = $this.attr('title');
-    time = moment(time).fromNow();
+    time = moment(time).calendar();
     $this.text(time);
 };
 
-setInterval(function() {
-    $('time').each(function() {
-        $(this).updateTimeStamp();
-    });
-}, 60000);
+$(function() {
+
+    // Refresh timestamps just after midnight
+
+    var oneMinutePastMidnight = moment()
+                                .endOf('day')
+                                .add(1, 'minutes')
+                                .diff(moment());
+
+    var interval = moment.duration(24, 'hours').asMilliseconds();
+
+    setTimeout(function() {
+        setInterval(function() {
+            $('time').each(function() {
+                $(this).updateTimeStamp();
+            });
+        }, interval);
+    }, oneMinutePastMidnight);
+
+});
