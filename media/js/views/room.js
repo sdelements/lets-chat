@@ -82,7 +82,14 @@
                     search_key: 'username',
                     data: '/users',
                     tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=50" height="24" width="24" alt="@${username}" /> ${username}</li>'
-                }).atwho({
+                })
+                .atwho({
+                    at: '#',
+                    search_key: 'slug',
+                    data: '/rooms',
+                    tpl: '<li data-value="#${slug}">#${slug}</li>'
+                })
+                .atwho({
                     at: ':',
                     search_key: 'emote',
                     data: '/extras/emotes',
@@ -190,7 +197,7 @@
             this.scrollMessages();
         },
         formatMessage: function(text) {
-            return window.utils.message.format(text, this.client.extras || {});
+            return window.utils.message.format(text, this.client.extras || {}, this.client.rooms);
         },
         updateScrollLock: function() {
             this.scrollLocked = this.$messages[0].scrollHeight -

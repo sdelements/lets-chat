@@ -24,6 +24,23 @@ if (typeof exports !== 'undefined') {
         return text.replace(mentionPattern, '<strong>@$1</strong>');
     }
 
+    function roomLinks(text, extras, rooms) {
+        var slugPattern = /\B(\#[a-z0-9_]+)\b/g;
+
+        return text.replace(slugPattern, function(slug) {
+            var s = slug.substring(1);
+            var room = rooms.find(function(room) {
+                return room.attributes.slug === s;
+            });
+
+            if (!room) {
+                return slug;
+            }
+
+            return '<a href="#!/room/' + room.id + '">' + slug + '</a>';
+        });
+    }
+
     function links(text) {
         var imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
         linkPattern = /((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|])/ig;
@@ -71,17 +88,18 @@ if (typeof exports !== 'undefined') {
         return text;
     }
 
-    exports.format = function(text, extras) {
+    exports.format = function(text, extras, rooms) {
         var pipeline = [
             trim,
             mentions,
+            roomLinks,
             links,
             emotes,
             replacements
         ];
 
         _.each(pipeline, function(func) {
-            text = func(text, extras);
+            text = func(text, extras, rooms);
         });
 
         return text;
