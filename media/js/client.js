@@ -223,17 +223,16 @@
         room.users.remove(user.id);
     };
     Client.prototype.updateUser = function(user) {
-        var rooms = this.rooms;
-        _.each(this.rooms, function(room) {
-            var users = room.users;
-            var current = users.where({id: user.id});
-            console.log(current.length)
-            current.set({
+        this.rooms.each(function(room) {
+            var target = room.users.findWhere({
+                id: user.id
+            });
+            target && target.set({
                 displayName: user.displayName,
                 firstName: user.firstName,
                 lastName: user.lastName
             });
-        });
+        }, this);
     }
     Client.prototype.getUsers = function(id, callback) {
         var that = this;
