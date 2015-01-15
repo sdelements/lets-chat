@@ -51,16 +51,19 @@
                             switch(res.status) {
                                 case 200:
                                 case 201:
-                                    setMessage(res.responseJSON.message, 'success');
+                                    swal('Success', res.responseJSON.message, 'success');
                                     if ($form.data('refresh')) {
                                         window.location = '/';
+                                        return;
                                     }
+                                    $form[0].reset();
+                                    $('.lcb-show-box:visible').click();
                                     break;
                                 case 401:
-                                    setMessage(res.responseJSON.message || 'Your username or password is not correct', 'error');
+                                    swal('Woops.', 'Your username or password is not correct', 'warning');
                                     break;
                                 default:
-                                    setMessage(res.responseJSON.message || 'A server error has occured', 'error');
+                                    swal('Woops.', 'A server error has occured', 'error');
                                     break;
                             }
                             // $indicator.removeClass('loading');
