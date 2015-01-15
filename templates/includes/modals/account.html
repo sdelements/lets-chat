@@ -21,15 +21,21 @@
                     </div>
                     {% if account.local %}
                     <div class="form-group">
+                        <label class="control-label col-sm-4">Existing Password</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="account-modal-existing-password" name="existing-password" type="password" minlength="4" maxlength="64" data-clear="true" />
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-sm-4">New Password</label>
                         <div class="col-sm-7">
-                            <input class="form-control" id="account-modal-password" name="new-password" type="password" minlength="4" maxlength="24" data-clear="true" />
+                            <input class="form-control" id="account-modal-password" name="new-password" type="password" minlength="4" maxlength="64" data-clear="true" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-4">Confirm New Password</label>
                         <div class="col-sm-7">
-                            <input class="form-control" name="confirm-password" type="password" data-equal-to="#account-modal-password" data-clear="true" minlength="4" maxlength="24" />
+                            <input class="form-control" name="confirm-password" type="password" data-equal-to="#account-modal-password" data-clear="true" minlength="4" maxlength="64" />
                         </div>
                     </div>
                     {% endif %}

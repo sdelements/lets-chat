@@ -115,6 +115,25 @@ module.exports = function() {
 
             if (form['new-password'] &&
                 form['new-password'] === form['confirm-password']) {
+                    auth.authenticate(req.user.username, form['existing-password'],
+                                                 function(err, user, info) {
+                        if (err) {
+                            req.io.respond({
+                                status: 'error',
+                                message: 'There were problems authenticating you.',
+                                errors: err
+                            }, 400);
+                            return;
+                        }
+                        if (!user) {
+                            req.io.respond({
+                                status: 'error',
+                                message: info && info.message ||
+                                         'Incorrect login credentials.'
+                            }, 401);
+                        return;
+                    }
+                    });
                     data.password = form['new-password'];
             }
 
