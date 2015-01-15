@@ -54,6 +54,11 @@ module.exports = function() {
         req.io.route('rooms:archive');
     });
 
+    app.get('/rooms/:id/users', middlewares.requireLogin, function(req, res) {
+        req.io.route('rooms:users');
+    });
+
+
     //
     // Sockets
     //
@@ -174,6 +179,41 @@ module.exports = function() {
             core.presence.leave(req.socket.conn, roomId);
             req.io.leave(roomId);
             req.io.respond();
+        },
+        users: function(req, next) {
+            var data = req.data || req.query;
+
+            core.rooms.get(data.room, function(err, room) {
+                if (err) {
+                    console.error(err);
+                    return req.io.respond(400);
+                }
+
+                if (!room) {
+                    return req.io.respond(404);
+                }
+
+                var userIds = core.presence.rooms
+                        .getOrAdd(room._id, room.slug).getUserIds();
+
+                User.find({ _id: { $in: userIds } }, function(err, users) {
+                    if (err) {
+                        // Something bad happened
+                        console.error(err);
+                        return req.io.respond(400);
+                    }
+
+                    // The client needs user.room in
+                    // order to properly route users
+                    users = _.map(users, function(user) {
+                        user = user.toJSON();
+                        user.room = room.id;
+                        return user;
+                    });
+
+                    req.io.respond(users, 200);
+                });
+            });
         }
     });
 };

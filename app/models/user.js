@@ -134,6 +134,20 @@ UserSchema.pre('save', function(next) {
     });
 });
 
+UserSchema.statics.findByIdentifier = function(identifier, cb) {
+    var opts = {};
+
+    if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
+        opts.$or = [{_id: identifier}, {username: identifier}];
+    } else if (identifier.indexOf('@') === -1) {
+        opts.username = identifier;
+    } else {
+        opts.email = identifier;
+    }
+
+    this.findOne(opts, cb);
+};
+
 UserSchema.methods.generateToken = function(cb) {
     if (!this._id) {
         return cb('User needs to be saved.');
@@ -204,15 +218,7 @@ UserSchema.methods.comparePassword = function(password, cb) {
 };
 
 UserSchema.statics.authenticate = function(identifier, password, cb) {
-    var options = {};
-
-    if (identifier.indexOf('@') === -1) {
-        options.username = identifier;
-    } else {
-        options.email = identifier;
-    }
-
-    this.findOne(options, function(err, user) {
+    this.findByIdentifier(identifier, function(err, user) {
         if (err) {
             return cb(err);
         }

@@ -53,9 +53,7 @@
             // Get users for each room!
             // We do it here for the room browser
             _.each(rooms, function(room) {
-                that.getUsers({
-                    room: room.id
-                }, _.bind(that.setUsers, that));
+                that.getUsersInRoom(room.id, _.bind(that.setUsers, that));
             });
         });
     };
@@ -181,7 +179,9 @@
     };
     Client.prototype.addMessages = function(messages, historical) {
         _.each(messages, function(message) {
-            historical && (message.historical = true);
+            if (historical) {
+                message.historical = true;
+            }
             this.addMessage(message);
         }, this);
     };
@@ -189,7 +189,7 @@
         this.socket.emit('messages:create', message);
     };
     Client.prototype.getMessages = function(query, callback) {
-        this.socket.emit('messages:list', query, callback)
+        this.socket.emit('messages:list', query, callback);
     };
     //
     // Users
@@ -222,16 +222,17 @@
         }
         room.users.remove(user.id);
     };
-    Client.prototype.getUsers = function(id, callback) {
+    Client.prototype.getUsers = function(callback) {
         var that = this;
-        if (!id) {
-            this.socket.emit('users:list', function(users) {
-                that.users.set(users);
-                callback && callback(users);
-            });
-            return;
-        }
-        this.socket.emit('users:list', id, callback);
+        this.socket.emit('users:list', function(users) {
+            that.users.set(users);
+            if (callback) {
+                callback(users);
+            }
+        });
+    };
+    Client.prototype.getUsersInRoom = function(id, callback) {
+        this.socket.emit('rooms:users', { room: id }, callback);
     };
     //
     // Extras
@@ -240,14 +241,18 @@
         this.socket.emit('extras:emotes:list', _.bind(function(emotes) {
             this.extras = this.extras || {};
             this.extras.emotes = emotes;
-            callback && callback(emotes);
+            if (callback) {
+                callback(emotes);
+            }
         }, this));
     };
     Client.prototype.getReplacements = function(callback) {
         this.socket.emit('extras:replacements:list', _.bind(function(replacements) {
             this.extras = this.extras || {};
             this.extras.replacements = replacements;
-            callback && callback(replacements);
+            if (callback) {
+                callback(replacements);
+            }
         }, this));
     };
 

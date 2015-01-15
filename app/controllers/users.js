@@ -20,8 +20,9 @@ module.exports = function() {
     app.get('/users', middlewares.requireLogin, function(req, res) {
         req.io.route('users:list');
     });
-    app.get('/users/:email', middlewares.requireLogin, function(req, res) {
-        req.io.route('users:retrieve');
+
+    app.get('/users/:id', middlewares.requireLogin, function(req, res) {
+        req.io.route('users:get');
     });
 
     //
@@ -81,13 +82,19 @@ module.exports = function() {
             });
         },
         retrieve: function(req) {
-            User.find({ email: req.params.email }, function (err, user) {
+            var identifier = req.param('id');
+
+            User.findByIdentifier(identifier, function (err, user) {
                 if (err) {
                     console.error(err);
-                    req.io.respond(err, 400);
-                    return;
+                    return req.io.respond(err, 400);
                 }
-                req.io.respond(user);
+
+                if (!user) {
+                    return req.io.respond(404);
+                }
+
+                req.io.respond(user, 200);
             });
         }
     });
