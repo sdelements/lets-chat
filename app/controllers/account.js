@@ -106,33 +106,46 @@ module.exports = function() {
             });
         },
         settings: function(req) {
-            var form = req.body;
-
-            var data = {
-                username: form.username,
-                email: form.email
-            };
-
-            if (form['new-password'] &&
-                form['new-password'] === form['confirm-password']) {
-                    data.password = form['new-password'];
-            }
-
-            core.account.update(req.user._id, data, function (err, user) {
-                if (err) {
-                    req.io.respond({
-                        status: 'error',
-                        message: 'Unable to update your account.',
-                        errors: err
+            var form = req.body || req.data,
+                data = {
+                    username: form.username,
+                    email: form.email,
+                    currentPassword: form.password || form['current-password'] || form.currentPassword,
+                    newPassword: form['new-password'] || form.newPassword,
+                    confirmPassowrd: form['confirm-password'] || form.confirmPassword
+                };
+                auth.authenticate(req.user.username || req.user.email, data.currentPassword,
+                    function(err, user) {
+                        if (err) {
+                            req.io.respond({
+                                status: 'error',
+                                message: 'There were problems authenticating you.',
+                                errors: err
+                            }, 400);
+                            return;
+                        }
+                        if (!user) {
+                            req.io.respond({
+                                status: 'error',
+                                message: 'Incorrect login credentials.'
+                            }, 401);
+                            return;
+                        }
+                        core.account.update(req.user._id, data, function (err, user) {
+                            if (err || !user) {
+                                req.io.respond({
+                                    status: 'error',
+                                    message: 'Unable to update your account.',
+                                    errors: err
+                                }, 500);
+                                return;
+                            }
+                            req.io.respond({
+                                status: 'success',
+                                message: 'Your account has been saved.'
+                            });
+                        });
                     });
-                    return;
-                }
-
-                req.io.respond({
-                    status: 'success',
-                    message: 'Your account has been saved.'
-                });
-            });
         },
         generate_token: function(req) {
             core.account.generateToken(req.user._id, function (err, token) {
