@@ -89,6 +89,9 @@
         }
         room.set(resRoom);
     };
+    Client.prototype.addRoom = function(room) {
+        this.rooms.add(room);
+    };
     Client.prototype.archiveRoom = function(id) {
         this.socket.emit('rooms:archive', id, function(room) {
             if (!room.id) {
@@ -306,8 +309,8 @@
         this.socket.on('messages:new', function(message) {
             that.addMessage(message);
         });
-        this.socket.on('rooms:create', function(data) {
-            that.createRoom(data);
+        this.socket.on('rooms:new', function(data) {
+            that.addRoom(data);
         });
         this.socket.on('rooms:update', function(room) {
             that.roomUpdate(room);
