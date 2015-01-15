@@ -2,6 +2,8 @@
  * Rooms Browser
  *********************/
 
+@roomBrowserHeader: 50px;
+
 .lcb-rooms-browser {
     background: #fff;
     overflow-y: auto;
@@ -12,11 +14,14 @@
 
 
 .lcb-rooms-browser-header {
-    min-height: 50px;
+    min-height: @roomBrowserHeader;
+    max-height: @roomBrowserHeader;
     padding: 8px 12px;
     border-bottom: 1px #ddd solid;
     position: relative;
     box-shadow: 0 4px 5px -5px rgba(0, 0, 0, .1);
+    .flex-display;
+    .flex-direction(row);
 }
 
 
@@ -84,5 +89,20 @@
     top: 12px;
     @media (min-width: @screen-sm-max) {
         font-size: 8px;
+    }
+}
+
+.lcb-rooms-browser-filter {
+    height: @roomBrowserHeader;
+    font-weight: 300;
+    font-size: 22px;
+    color: #aaa;
+    margin-left: 10px;
+}
+
+.lcb-rooms-browser-filter-input {
+    border: none;
+    &:focus {
+        outline: none;
     }
 }

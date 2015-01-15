@@ -9038,7 +9038,6 @@ body {
   font-weight: 300;
   font-size: 11px;
   padding: 0 8px;
-  border-bottom: none;
   top: -5px;
   right: 0;
   left: auto;
@@ -9716,10 +9715,24 @@ body {
 }
 .lcb-rooms-browser-header {
   min-height: 50px;
+  max-height: 50px;
   padding: 8px 12px;
   border-bottom: 1px #ddd solid;
   position: relative;
   box-shadow: 0 4px 5px -5px rgba(0, 0, 0, 0.1);
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -moz-flex-direction: row;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 .lcb-rooms-browser-heading {
   color: #777;
@@ -9780,6 +9793,19 @@ body {
   .lcb-rooms-list-item-switch {
     font-size: 8px;
   }
+}
+.lcb-rooms-browser-filter {
+  height: 50px;
+  font-weight: 300;
+  font-size: 22px;
+  color: #aaa;
+  margin-left: 10px;
+}
+.lcb-rooms-browser-filter-input {
+  border: none;
+}
+.lcb-rooms-browser-filter-input:focus {
+  outline: none;
 }
 /*********************
  * Rooms
