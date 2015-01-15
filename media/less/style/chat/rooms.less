@@ -95,6 +95,10 @@
 .lcb-room-toggle-sidebar {
     font-size: 30px;
     display: block;
+    .transition(all .5s ease-in);
+    .lcb-room-sidebar-opened & {
+        .rotateY(180deg);
+    }
 }
 
 .lcb-room-sidebar {

@@ -9968,6 +9968,18 @@ body {
 .lcb-room-toggle-sidebar {
   font-size: 30px;
   display: block;
+  -ms-transition: all 0.5s ease-in;
+  -webkit-transition: all 0.5s ease-in;
+  -moz-transition: all 0.5s ease-in;
+  -o-transition: all 0.5s ease-in;
+  transition: all 0.5s ease-in;
+}
+.lcb-room-sidebar-opened .lcb-room-toggle-sidebar {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 .lcb-room-sidebar {
   background: #222;
