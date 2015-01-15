@@ -12,6 +12,7 @@
     window.LCB.BrowserView = Backbone.View.extend({
         events: {
             'submit .lcb-rooms-add': 'create',
+            'keyup .lcb-rooms-browser-filter-input': 'filter',
             'change .lcb-rooms-switch': 'toggle',
             'click .lcb-rooms-switch-label': 'toggle'
         },
@@ -28,8 +29,9 @@
             this.rooms.on('users:remove', this.removeUser, this);
             this.rooms.on('add remove',  _.debounce(this.sort, 100), this);
             this.rooms.current.on('change:id', function(current, id) {
-                // We only sort when the list view is open
-                id === 'list' && this.sort();
+                // We only care about the list pane
+                if (id !== 'list') return;
+                this.sort();
             }, this);
         },
         updateToggles: function(room, joined) {
@@ -68,6 +70,15 @@
                 return 0;
             });
             $items.detach().appendTo(this.$('.lcb-rooms-list'));
+        },
+        filter: function(e) {
+            e.preventDefault();
+            var $input = $(e.currentTarget),
+                needle = $input.val().toLowerCase();
+            this.$('.lcb-rooms-list-item').each(function () {
+                var haystack = $(this).find('.lcb-rooms-list-item-name').text().toLowerCase();
+                $(this).toggle(haystack.indexOf(needle) >= 0);
+            });
         },
         create: function(e) {
             e.preventDefault();
