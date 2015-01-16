@@ -27,7 +27,7 @@
             this.rooms.on('change:joined', this.updateToggles, this);
             this.rooms.on('users:add', this.addUser, this);
             this.rooms.on('users:remove', this.removeUser, this);
-            this.rooms.on('add remove',  _.debounce(this.sort, 100), this);
+            this.rooms.on('users:add users:remove add remove', this.sort, this);
             this.rooms.current.on('change:id', function(current, id) {
                 // We only care about the list pane
                 if (id !== 'list') return;
@@ -59,14 +59,25 @@
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
         },
-        sort: function() {
+        sort: function(model) {
             var that = this,
                 $items = this.$('.lcb-rooms-list-item');
+            // We only care about other users
+            if (this.$el.is(':visible') && model && model.id === this.client.user.id)
+                return;
             $items.sort(function(a, b){
-                var an = that.rooms.get($(a).data('id')).users.length,
-                    bn = that.rooms.get($(b).data('id')).users.length;
-                if (an > bn) return -1;
-                if (an < bn) return 1;
+                var ar = that.rooms.get($(a).data('id')),
+                    br = that.rooms.get($(b).data('id')),
+                    au = ar.users.length,
+                    bu = br.users.length,
+                    aj = ar.get('joined'),
+                    bj = br.get('joined')
+                if ((aj && bj) || (!aj && !bj)) {
+                    if (au > bu) return -1;
+                    if (au < bu) return 1;
+                }
+                if (aj) return -1;
+                if (bj) return 1;
                 return 0;
             });
             $items.detach().appendTo(this.$('.lcb-rooms-list'));
