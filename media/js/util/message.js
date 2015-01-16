@@ -47,7 +47,7 @@ if (typeof exports !== 'undefined') {
 
     function links(text) {
         var imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
-        linkPattern = /((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        linkPattern = /((https?|ftp):\/\/[-A-Z0-9+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|])/ig;
 
         if (imagePattern.test(text)) {
             return text.replace(imagePattern, function(url) {
