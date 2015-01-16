@@ -3,7 +3,6 @@
 //
 
 (function(window, $, _) {
-
     //
     // Base
     //
@@ -16,7 +15,6 @@
         this.events = _.extend({}, Backbone.Events);
         return this;
     };
-
     //
     // Account
     //
@@ -26,7 +24,6 @@
             that.user.set(user);
         });
     };
-
     //
     // Rooms
     //
@@ -53,7 +50,7 @@
             // Get users for each room!
             // We do it here for the room browser
             _.each(rooms, function(room) {
-                that.getUsersInRoom(room.id, _.bind(that.setUsers, that));
+                that.getRoomUsers(room.id, _.bind(that.setUsers, that));
             });
         });
     };
@@ -168,6 +165,11 @@
         // Remove room id from localstorage
         store.set('openrooms', _.without(store.get('openrooms'), id));
     };
+    Client.prototype.getRoomUsers = function(id, callback) {
+        this.socket.emit('rooms:users', {
+            room: id
+        }, callback);
+    };
     //
     // Messages
     //
@@ -233,9 +235,6 @@
                 callback(users);
             }
         });
-    };
-    Client.prototype.getUsersInRoom = function(id, callback) {
-        this.socket.emit('rooms:users', { room: id }, callback);
     };
     //
     // Extras
