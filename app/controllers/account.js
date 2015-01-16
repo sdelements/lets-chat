@@ -94,7 +94,6 @@ module.exports = function() {
                 }
                 if (!user) {
                     req.io.respond(404);
-                    console.log('no user');
                     return;
                 }
                 req.io.respond(user);
