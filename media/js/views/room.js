@@ -240,12 +240,19 @@
         addMessage: function(message) {
             // Smells like pasta
             message.paste = /\n/i.test(message.text);
+
+            var posted = moment(message.posted);
+
             // Fragment or new message?
-            message.fragment = this.lastMessageOwner === message.owner.id;
+            message.fragment = this.lastMessageOwner === message.owner.id &&
+                            posted.diff(this.lastMessagePosted, 'minutes') < 5;
+
             // Mine? Mine? Mine? Mine?
             message.own = this.client.user.id === message.owner.id;
+
             // WHATS MY NAME
-            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + ')(?!@)\\b', 'i').test(message.text)
+            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + ')(?!@)\\b', 'i').test(message.text);
+
             // Templatin' time
             var $html = $(this.messageTemplate(message).trim());
             var $text = $html.find('.lcb-message-text');
@@ -259,6 +266,7 @@
             $html.find('time').updateTimeStamp();
             this.$messages.append($html);
             this.lastMessageOwner = message.owner.id;
+            this.lastMessagePosted = posted;
             this.scrollMessages();
         },
         formatMessage: function(text) {
