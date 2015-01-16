@@ -234,7 +234,6 @@
                 id: user.id
             });
             target && target.set(user);
-            
         }, this);
     }
     Client.prototype.getUsers = function(id, callback) {
