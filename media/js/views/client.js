@@ -39,18 +39,18 @@
                 el: this.$el.find('.lcb-status-indicators'),
                 client: this.client
             });
-            this.profileModal = new window.LCB.ProfileModalView({
-                el: this.$el.find('#lcb-profile'),
-                model: this.client.user,
-                client: this.client
-            });
-
             this.accountButton = new window.LCB.AccountButtonView({
                 el: this.$el.find('.lcb-account-button'),
                 model: this.client.user
             });
-
             this.notifications = new window.LCB.NotificationsView();
+            //
+            // Modals
+            //
+            this.profileModal = new window.LCB.ProfileModalView({
+                el: this.$el.find('#lcb-profile'),
+                model: this.client.user
+            });
 
             this.client.status.once('change:connected', _.bind(function(status, connected) {
                 this.$el.find('.lcb-client-loading').hide(connected);

@@ -13,23 +13,33 @@
         	'submit form': 'submit'
         },
         initialize: function(options) {
-        	this.client = options.client
-        	this.user = options.client
+            this.render();
+        },
+        render: function() {
+            this.$('form.validate').validate();
+            this.$el.on('shown.bs.modal hidden.bs.modal', _.bind(this.refresh, this));
+        },
+        refresh: function() {
+            this.$('[name="display-name"]').val(this.model.get('displayName'));
+            this.$('[name="first-name"]').val(this.model.get('firstName'));
+            this.$('[name="last-name"]').val(this.model.get('lastName'));
         },
         submit: function(e) {
         	e && e.preventDefault();
-        	var displayName = this.$('[name="display-name"]').val(),
-        		firstName = this.$('[name="first-name"]').val(),
-        		lastName = this.$('[name="last-name"]').val();
-
-            this.client.events.trigger('profile:update', {
-        		displayName: displayName,
-        		firstName: firstName,
-        		lastName: lastName,
-        		id: this.client.user.id
-        	});
-
-        	this.$el.modal('hide');
+            var $form = this.$('form[action]');
+            $.ajax({
+                type: $form.attr('method') || 'POST',
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                success: _.bind(function(res) {
+                    swal('Profile Updated!', 'Your profile has been updated.', 'success');
+                    this.$el.modal('hide');
+                }, this),
+                error: function(res) {
+                    swal('Woops!', 'Your profile was not updated.', 'error');
+                }
+            });
         }
     });
 

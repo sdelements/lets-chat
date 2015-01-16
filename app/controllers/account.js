@@ -79,9 +79,9 @@ module.exports = function() {
         profile: function(req) {
             var form = req.body || req.data,
                 data = {
-                    displayName: form.displayName,
-                    firstName: form.firstName,
-                    lastName: form.lastName
+                    displayName: form.displayName || form['display-name'],
+                    firstName: form.firstName || form['first-name'],
+                    lastName: form.lastName || form['last-name']
                 };
             core.account.update(req.user._id, data, function (err, user) {
                 if (err) {

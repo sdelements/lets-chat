@@ -229,6 +229,11 @@
         room.users.remove(user.id);
     };
     Client.prototype.updateUser = function(user) {
+        // Update if current user
+        if (user.id == this.user.id) {
+            this.user.set(user);
+        }
+        // Update all rooms
         this.rooms.each(function(room) {
             var target = room.users.findWhere({
                 id: user.id
