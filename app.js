@@ -9,6 +9,7 @@ var _ = require('lodash'),
     colors = require('colors'),
     express = require('express.io'),
     expressMiddleware = require('express.io-middleware'),
+    helmet = require('helmet'),
     http = require('http'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
@@ -72,6 +73,17 @@ nunjucks.configure('templates', {
 // HTTP Middlewares
 app.use(express.json());
 app.use(express.urlencoded());
+
+// Security protections
+app.use(helmet.frameguard('sameorigin'));
+app.use(helmet.hidePoweredBy());
+app.use(helmet.hsts({
+    maxAge: 31536000,  
+    includeSubdomains: true, 
+    force: httpsEnabled,
+    preload: true
+}));
+app.use(helmet.noSniff());
 
 //
 // Controllers
