@@ -25,6 +25,10 @@ if (typeof exports !== 'undefined') {
     }
 
     function roomLinks(text, extras, rooms) {
+        if (!rooms) {
+            return text;
+        }
+        
         var slugPattern = /\B(\#[a-z0-9_]+)\b/g;
 
         return text.replace(slugPattern, function(slug) {
