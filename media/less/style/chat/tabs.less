@@ -16,8 +16,8 @@
 }
 
 .lcb-tab {
-    height: 44px;
-    line-height: 44px;
+    height: 36px;
+    line-height: 36px;
     font-size: 14px;
     border: 1px #111 solid;
     border-top-color: #333;
@@ -51,6 +51,14 @@
         a {
             color: #bbb;
         }
+
+        .lcb-tab-title {
+            display: none;
+        }
+
+        .lcb-tab-slug {
+            display: block;
+        }
     }
     &.selected {
         background: #222;
@@ -67,21 +75,14 @@
     }
 }
 
-.lcb-tab-title {
-    line-height: 18px;
-    font-size: 18px;
-    padding-top: 5px;
+.lcb-tab-title, .lcb-tab-slug {
     padding-right: 22px;
     display: block;
     .text-overflow;
 }
 
 .lcb-tab-slug {
-    line-height: 15px;
-    font-size: 12px;
-    padding-right: 22px;
-    display: block;
-    .text-overflow;
+    display: none;
 }
 
 .lcb-tab-alerts {
@@ -92,7 +93,7 @@
     line-height: 100%;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     position: absolute;
-    top: 14px;
+    top: 10px;
     right: 24px;
     border-radius: 3px;
 }
