@@ -1,5 +1,6 @@
 'use strict';
 
+var moment = require('moment');
 var mongoose = require('mongoose');
 
 function MessageManager(options) {
@@ -58,6 +59,37 @@ MessageManager.prototype.list = function(options, cb) {
     find
         .populate('owner', 'id username displayName email avatar')
         .limit(options.limit || 500)
+        .sort({ 'posted': -1 })
+        .exec(function(err, messages) {
+            if (err) {
+                console.error(err);
+                return cb(err);
+            }
+            cb(null, messages.reverse());
+        });
+};
+
+MessageManager.prototype.transcript = function(options, cb) {
+    var Message = mongoose.model('Message'),
+        User = mongoose.model('User');
+
+    var fromDate = options.fromDate,
+        toDate = new Date(moment(options.toDate).add(1, 'd'));
+
+    var find = Message.find({
+        room: options.room || null
+    })
+
+    if (options.mentions) {
+        var pattern = new RegExp("@" + options.mentions, "i")
+        find.where('text').regex(pattern);
+    }
+
+    find
+        .where('posted')
+            .gt(fromDate)
+            .lt(toDate)
+        .populate('owner', 'id username displayName email avatar')
         .sort({ 'posted': -1 })
         .exec(function(err, messages) {
             if (err) {
