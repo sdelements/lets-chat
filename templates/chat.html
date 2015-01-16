@@ -52,9 +52,28 @@
                     <i class="lcb-account-button-chevron fa fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a data-toggle="modal" href="#lcb-profile"><i class="fa fa-edit"></i> Edit Profile</a></li>
-                    <li><a data-toggle="modal" href="#lcb-account"><i class="fa fa-cogs"></i> Account Settings</a></li>
-                    <li><a data-toggle="modal" href="#lcb-notifications"><i class="fa fa-bell"></i> Notifications</a></li>
+                    <li>
+                        <a data-toggle="modal" href="#lcb-profile">
+                            <i class="fa fa-edit"></i> Edit Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#lcb-account">
+                            <i class="fa fa-cogs"></i> Account Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#lcb-notifications">
+                            <i class="fa fa-bell"></i> Notifications
+                        </a>
+                    </li>
+                    {% if settings.xmpp.enable %}
+                    <li>
+                        <a data-toggle="modal" href="#lcb-xmpp">
+                            <i class="fa fa-comments"></i> XMPP/Jabber
+                        </a>
+                    </li>
+                    {% endif %}
                     <li class="divider"></li>
                     <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
@@ -104,5 +123,6 @@
         {% include 'includes/modals/notifications.html' %}
         {% include 'includes/modals/profile.html' %}
         {% include 'includes/modals/account.html' %}
+        {% include 'includes/modals/xmpp.html' %}
     </div><!-- lcb-client end -->
 {% endblock %}
