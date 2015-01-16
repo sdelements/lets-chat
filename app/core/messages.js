@@ -80,7 +80,10 @@ MessageManager.prototype.transcript = function(options, cb) {
         room: options.room || null
     })
 
-    // TODO: Add support for mentions filtering
+    if (options.mentions) {
+        var pattern = new RegExp("@" + options.mentions, "i")
+        find.where('text').regex(pattern);
+    }
 
     find
         .where('posted')

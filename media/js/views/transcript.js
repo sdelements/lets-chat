@@ -8,7 +8,9 @@
         el: '#transcript',
 
         events: {
-            'click .load-transcript': 'loadTranscript',
+            'click #mentions': 'loadTranscript',
+            'change #from-date': 'loadTranscript',
+            'change #to-date': 'loadTranscript'
         },
 
         initialize: function(options) {
@@ -40,6 +42,8 @@
 
         loadTranscript: function() {
             var self = this;
+            var mentions = this.$("#mentions").prop("checked")
+
             this.$messages.html("")
 
             // Query for relevant messages and add them
@@ -47,6 +51,7 @@
                 room: this.room.id,
                 fromDate: this.$fromDate.datepicker("getDate"),
                 toDate: this.$toDate.datepicker("getDate"),
+                mentions:  mentions ? this.client.user.get('username') : null
             }, function(messages) {
                 _.each(messages, function(message) {
                     self.addMessage(message);

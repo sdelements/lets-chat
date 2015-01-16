@@ -38,7 +38,8 @@ module.exports = function() {
                 options = {
                     room: data.room || null,
                     fromDate: data.fromDate || null,
-                    toDate: data.toDate || null
+                    toDate: data.toDate || null,
+                    mentions: data.mentions || null
                 };
 
             core.messages.transcript(options, function(err, messages) {
