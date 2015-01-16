@@ -17,7 +17,8 @@
         },
         render: function() {
             this.$('form.validate').validate();
-            this.$el.on('shown.bs.modal hidden.bs.modal', _.bind(this.refresh, this));
+            this.$el.on('shown.bs.modal hidden.bs.modal',
+                        _.bind(this.refresh, this));
         },
         refresh: function() {
             var that = this;
@@ -49,7 +50,8 @@
 
     window.LCB.ProfileModalView = window.LCB.ModalView.extend({
         success: function() {
-            swal('Profile Updated!', 'Your profile has been updated.', 'success');
+            swal('Profile Updated!', 'Your profile has been updated.',
+                 'success');
             this.$el.modal('hide');
         },
         error: function() {
@@ -68,6 +70,60 @@
         },
         complete: function() {
             this.$('[name="current-password"]').val('');
+        }
+    });
+
+    window.LCB.AuthTokensModalView = Backbone.View.extend({
+        events: {
+            'click .generate-token': 'generateToken',
+            'click .revoke-token': 'revokeToken'
+        },
+        initialize: function(options) {
+            this.render();
+        },
+        render: function() {
+            this.$el.on('shown.bs.modal hidden.bs.modal',
+                        _.bind(this.refresh, this));
+        },
+        refresh: function() {
+            this.$('.token').val('');
+            this.$('.generated-token').hide();
+        },
+        getToken: function() {
+            var that = this;
+            $.post('/account/token/generate', function(data) {
+                if (data.token) {
+                    that.$('.token').val(data.token);
+                    that.$('.generated-token').show();
+                }
+            });
+        },
+        removeToken: function() {
+            var that = this;
+            $.post('/account/token/revoke', function(data) {
+                that.refresh();
+                swal('Success', 'Authentication token revoked!', 'success');
+            });
+        },
+        generateToken: function() {
+            swal({
+                title: 'Are you sure?',
+                text: 'This will overwrite any existing authentication token you may have.',   type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                closeOnConfirm: true },
+                _.bind(this.getToken, this)
+            );
+        },
+        revokeToken: function() {
+            swal({
+                title: 'Are you sure?',
+                text: 'This will revoke access from any process using your current authentication token.',   type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                closeOnConfirm: false },
+                _.bind(this.removeToken, this)
+            );
         }
     });
 

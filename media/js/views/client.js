@@ -53,6 +53,9 @@
             });
             this.accountModal = new window.LCB.AccountModalView({
                 el: this.$el.find('#lcb-account')
+			});
+            this.tokenModal = new window.LCB.AuthTokensModalView({
+                el: this.$el.find('#lcb-tokens')
             });
             //
             // Misc

@@ -73,6 +73,11 @@
                             <i class="fa fa-comments"></i> XMPP/Jabber
                         </a>
                     </li>
+                    <li>
+                        <a data-toggle="modal" href="#lcb-tokens">
+                            <i class="fa fa-lock"></i> Auth tokens
+                        </a>
+                    </li>
                     {% endif %}
                     <li class="divider"></li>
                     <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
@@ -124,5 +129,6 @@
         {% include 'includes/modals/profile.html' %}
         {% include 'includes/modals/account.html' %}
         {% include 'includes/modals/xmpp.html' %}
+        {% include 'includes/modals/tokens.html' %}
     </div><!-- lcb-client end -->
 {% endblock %}
