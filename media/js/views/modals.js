@@ -41,7 +41,8 @@
                 data: $form.serialize(),
                 dataType: 'json',
                 success: _.bind(this.success, this),
-                error: _.bind(this.error, this)
+                error: _.bind(this.error, this),
+                complete: _.bind(this.complete, this)
             });
         }
     });
@@ -53,6 +54,20 @@
         },
         error: function() {
             swal('Woops!', 'Your profile was not updated.', 'error');
+        }
+    });
+
+    window.LCB.AccountModalView = window.LCB.ModalView.extend({
+        success: function() {
+            swal('Account Updated!', 'Your account has been updated.', 'success');
+            this.$el.modal('hide');
+            this.$('[type="password"]').val('');
+        },
+        error: function() {
+            swal('Woops!', 'Your account was not updated.', 'error');
+        },
+        complete: function() {
+            this.$('[name="current-password"]').val('');
         }
     });
 

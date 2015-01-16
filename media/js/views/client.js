@@ -51,11 +51,15 @@
                 el: this.$el.find('#lcb-profile'),
                 model: this.client.user
             });
-
+            this.accountModal = new window.LCB.AccountModalView({
+                el: this.$el.find('#lcb-account')
+            });
+            //
+            // Misc
+            //
             this.client.status.once('change:connected', _.bind(function(status, connected) {
                 this.$el.find('.lcb-client-loading').hide(connected);
             }, this));
-
             return this;
         }
     });
@@ -66,7 +70,7 @@
         },
         update: function(user){
             this.$('.lcb-account-button-name').text(user.get('displayName'));
-        },
+        }
     });
 
 

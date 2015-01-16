@@ -10,19 +10,13 @@
                     <div class="form-group">
                         <label class="control-label col-sm-6">Username</label>
                         <div class="col-sm-11">
-                            <input class="form-control" name="username" type="text" value="{{ account.username }}" {{ "" if account.local else "readonly" }} />
+                            <input class="form-control" name="username" type="text" value="{{ account.username }}" {{ "" if account.local else "readonly" }} required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-6">Email</label>
                         <div class="col-sm-11">
-                            <input class="required email form-control" name="email" type="text" value="{{ account.email }}" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-6">Current Password</label>
-                        <div class="col-sm-11">
-                            <input class="form-control" name="current-password" type="password" minlength="4" maxlength="64" />
+                            <input class="required email form-control" name="email" type="text" value="{{ account.email }}" required />
                         </div>
                     </div>
                     {% if account.local %}
@@ -39,6 +33,12 @@
                             </div>
                         </div>
                     {% endif %}
+                    <div class="form-group">
+                        <label class="control-label col-sm-6">Current Password <small>Required</small></label>
+                        <div class="col-sm-11">
+                            <input class="form-control" name="current-password" type="password" minlength="4" maxlength="64" required />
+                        </div>
+                    </div>
                     <p class="alert response" style="display: none;"></p>
                 </div>
                 <div class="modal-footer">
