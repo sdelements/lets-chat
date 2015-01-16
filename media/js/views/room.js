@@ -77,28 +77,62 @@
             // Scroll Locking
             this.scrollLocked = true;
             this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));
-            this.$('.lcb-entry-input')
-                .atwho({
-                    at: '@',
-                    search_key: 'username',
-                    data: '/users',
-                    tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=50" height="24" width="24" alt="@${username}" /> ${username}</li>'
-                })
-                .atwho({
-                    at: ':',
-                    search_key: 'emote',
-                    data: '/extras/emotes',
-                    tpl: '<li data-value=":${emote}:"><img src="${image}" height="32" width="32" alt=":${emote}:" /> :${emote}:</li>'
-                });
-            this.atwhoRoom();
+            this.atwhoMentions();
+            this.atwhoRooms();
+            this.atwhoEmotes();
         },
-        atwhoRoom: function() {
-            var that = this;
+        atwhoMentions: function () {
+            function filter(query, data, searchKey) {
+                var q = query.toLowerCase();
+                var results = _.filter(data, function(user) {
+
+                    if (!user.safeName) {
+                        user.safeName = user.displayName.replace(/\W/g, '');
+                    }
+
+                    var val1 = user.username.toLowerCase();
+                    var val1i = val1.indexOf(q);
+                    if (val1i > -1) {
+                        user.atwho_order = val1i;
+                        return true;
+                    }
+
+                    var val2 = user.safeName.toLowerCase();
+                    var val2i = val2.indexOf(q);
+                    if (val2i > -1) {
+                        user.atwho_order = val2i + user.username.length;
+                        return true;
+                    }
+
+                    return false;
+                });
+                return results;
+            }
+
+            function sorter(query, items, search_key) {
+                return items.sort(function(a, b) {
+                    return a.atwho_order - b.atwho_order;
+                });
+            }
+
+            this.$('.lcb-entry-input')
+            .atwho({
+                at: '@',
+                data: '/users',
+                tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
+                callbacks: {
+                    filter: filter,
+                    sorter: sorter
+                }
+            });
+        },
+        atwhoRooms: function() {
+            var rooms = this.client.rooms;
 
             function filter(query, data, searchKey) {
                 var q = query.toLowerCase();
-                var results = that.client.rooms.filter(function(room) {
-                    var val = room.attributes[searchKey].toLowerCase();
+                var results = rooms.filter(function(room) {
+                    var val = room.attributes.slug.toLowerCase();
                     return val.indexOf(q) > -1;
                 });
 
@@ -114,8 +148,17 @@
                     callbacks: {
                         filter: filter
                     },
-                    tpl: '<li data-value="#${slug}">#${slug}</li>'
+                    tpl: '<li data-value="#${slug}">#${slug} <small>${name}</small></li>'
                 });
+        },
+        atwhoEmotes: function() {
+            this.$('.lcb-entry-input')
+            .atwho({
+                at: ':',
+                search_key: 'emote',
+                data: '/extras/emotes',
+                tpl: '<li data-value=":${emote}:"><img src="${image}" height="32" width="32" alt=":${emote}:" /> :${emote}:</li>'
+            });
         },
         goodbye: function() {
             swal('Archived!', '"' + this.model.get('name') + '" has been archived.', 'warning');
