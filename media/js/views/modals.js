@@ -8,7 +8,7 @@
 
     window.LCB = window.LCB || {};
 
-    window.LCB.ProfileModalView = Backbone.View.extend({
+    window.LCB.ModalView = Backbone.View.extend({
         events: {
         	'submit form': 'submit'
         },
@@ -20,9 +20,17 @@
             this.$el.on('shown.bs.modal hidden.bs.modal', _.bind(this.refresh, this));
         },
         refresh: function() {
-            this.$('[name="display-name"]').val(this.model.get('displayName'));
-            this.$('[name="first-name"]').val(this.model.get('firstName'));
-            this.$('[name="last-name"]').val(this.model.get('lastName'));
+            var that = this;
+            this.$('[data-model]').each(function() {
+                $(this).val && $(this).val(that.model.get($(this).data('model')));
+            });
+        },
+        success: function() {
+            swal('Updated!', '', 'success');
+            this.$el.modal('hide');
+        },
+        error: function() {
+            swal('Woops!', '', 'error');
         },
         submit: function(e) {
         	e && e.preventDefault();
@@ -32,14 +40,19 @@
                 url: $form.attr('action'),
                 data: $form.serialize(),
                 dataType: 'json',
-                success: _.bind(function(res) {
-                    swal('Profile Updated!', 'Your profile has been updated.', 'success');
-                    this.$el.modal('hide');
-                }, this),
-                error: function(res) {
-                    swal('Woops!', 'Your profile was not updated.', 'error');
-                }
+                success: _.bind(this.success, this),
+                error: _.bind(this.error, this)
             });
+        }
+    });
+
+    window.LCB.ProfileModalView = window.LCB.ModalView.extend({
+        success: function() {
+            swal('Profile Updated!', 'Your profile has been updated.', 'success');
+            this.$el.modal('hide');
+        },
+        error: function() {
+            swal('Woops!', 'Your profile was not updated.', 'error');
         }
     });
 
