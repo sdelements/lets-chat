@@ -16,8 +16,8 @@
 }
 
 .lcb-tab {
-    height: 36px;
-    line-height: 36px;
+    height: 44px;
+    line-height: 44px;
     font-size: 14px;
     border: 1px #111 solid;
     border-top-color: #333;
@@ -68,6 +68,17 @@
 }
 
 .lcb-tab-title {
+    line-height: 18px;
+    font-size: 18px;
+    padding-top: 5px;
+    padding-right: 22px;
+    display: block;
+    .text-overflow;
+}
+
+.lcb-tab-slug {
+    line-height: 15px;
+    font-size: 12px;
     padding-right: 22px;
     display: block;
     .text-overflow;
@@ -81,7 +92,7 @@
     line-height: 100%;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     position: absolute;
-    top: -7px;
+    top: 14px;
     right: 24px;
     border-radius: 3px;
 }
@@ -102,18 +113,10 @@
 
 .lcb-tab-alerts-total {
     background: #b94a48;
-    &:after {
-        top: 100%;
-        left: 50%;
-        content: '';
-        border: 4px solid transparent;
-        border-top-color: #b94a48;
-        margin-left: -4px;
-        position: absolute;
-    }
 }
 
 .lcb-tab-close {
+    line-height: 40px;
     font-size: 20px;
     color: #ccc;
     position: absolute;
