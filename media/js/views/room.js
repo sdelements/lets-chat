@@ -85,16 +85,36 @@
                     tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=50" height="24" width="24" alt="@${username}" /> ${username}</li>'
                 })
                 .atwho({
-                    at: '#',
-                    search_key: 'slug',
-                    data: '/rooms',
-                    tpl: '<li data-value="#${slug}">#${slug}</li>'
-                })
-                .atwho({
                     at: ':',
                     search_key: 'emote',
                     data: '/extras/emotes',
                     tpl: '<li data-value=":${emote}:"><img src="${image}" height="32" width="32" alt=":${emote}:" /> :${emote}:</li>'
+                });
+            this.atwhoRoom();
+        },
+        atwhoRoom: function() {
+            var that = this;
+
+            function filter(query, data, searchKey) {
+                var q = query.toLowerCase();
+                var results = that.client.rooms.filter(function(room) {
+                    var val = room.attributes[searchKey].toLowerCase();
+                    return val.indexOf(q) > -1;
+                });
+
+                return results.map(function(room) {
+                    return room.attributes;
+                });
+            }
+
+            this.$('.lcb-entry-input')
+                .atwho({
+                    at: '#',
+                    search_key: 'slug',
+                    callbacks: {
+                        filter: filter
+                    },
+                    tpl: '<li data-value="#${slug}">#${slug}</li>'
                 });
         },
         goodbye: function() {
