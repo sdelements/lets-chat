@@ -47,6 +47,7 @@
     "connect-mongo": "~0.4.1",
     "express.io": "~1.1.13",
     "express.io-middleware": "~0.9.4",
+    "helmet": "^0.5.4",
     "js-yaml": "~3.2.3",
     "ldapjs": "^0.7.1",
     "lodash": "~2.4.1",
