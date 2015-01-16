@@ -18,6 +18,9 @@
             this.collection.on('add', function(user) {
                 this.add(user.toJSON());
             }, this);
+            this.collection.on('change', function(user) {
+                this.update(user.toJSON());
+            }, this);
             this.collection.on('remove', function(user) {
                 this.remove(user.id);
             }, this);
@@ -37,6 +40,10 @@
         },
         count: function(users) {
             this.$('.lcb-room-sidebar-users-count').text(this.collection.length);
+        },
+        update: function(user){
+            this.$('.lcb-room-sidebar-user[data-id=' + user.id + ']')
+                .replaceWith(this.template(user));
         }
     });
 

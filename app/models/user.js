@@ -251,7 +251,7 @@ UserSchema.method('toJSON', function() {
     return {
         id: this._id,
         firstName: this.firstName,
-        lastname: this.lastName,
+        lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
         avatar: this.avatar,

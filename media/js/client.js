@@ -24,6 +24,13 @@
             that.user.set(user);
         });
     };
+    Client.prototype.updateProfile = function(profile) {
+        var that = this;
+        this.socket.emit('account:profile', profile, function(user) {
+            that.user.set(user);
+        });
+    }
+
     //
     // Rooms
     //
@@ -227,7 +234,20 @@
         }
         room.users.remove(user.id);
     };
-    Client.prototype.getUsers = function(callback) {
+    Client.prototype.updateUser = function(user) {
+        // Update if current user
+        if (user.id == this.user.id) {
+            this.user.set(user);
+        }
+        // Update all rooms
+        this.rooms.each(function(room) {
+            var target = room.users.findWhere({
+                id: user.id
+            });
+            target && target.set(user);
+        }, this);
+    }
+    Client.prototype.getUsers = function(id, callback) {
         var that = this;
         this.socket.emit('users:list', function(users) {
             that.users.set(users);
@@ -323,6 +343,9 @@
         this.socket.on('users:leave', function(user) {
             that.removeUser(user);
         });
+        this.socket.on('users:update', function(user) {
+            that.updateUser(user);
+        });
         this.socket.on('disconnect', function() {
             that.status.set('connected', false);
         });
@@ -335,6 +358,7 @@
         this.events.on('rooms:create', this.createRoom, this);
         this.events.on('rooms:switch', this.switchRoom, this);
         this.events.on('rooms:archive', this.archiveRoom, this);
+        this.events.on('profile:update', this.updateProfile, this);
     };
     //
     // Start

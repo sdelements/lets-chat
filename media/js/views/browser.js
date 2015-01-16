@@ -124,6 +124,7 @@
             this.$('.lcb-rooms-list-item[data-id="' + room.id + '"]')
                 .find('.lcb-rooms-list-user[data-id="' + user.id + '"]').remove();
         }
+
     });
 
 }(window, $, _);
