@@ -164,7 +164,8 @@
             swal('Archived!', '"' + this.model.get('name') + '" has been archived.', 'warning');
         },
         updateMeta: function() {
-            this.$('.lcb-room-heading').text(this.model.get('name'));
+            this.$('.lcb-room-heading .name').text(this.model.get('name'));
+            this.$('.lcb-room-heading .slug').text('#' + this.model.get('slug'));
             this.$('.lcb-room-description').text(this.model.get('description'));
         },
         sendMeta: function(e) {
