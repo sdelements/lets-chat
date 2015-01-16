@@ -83,7 +83,6 @@ app.use(helmet.hsts({
   force: httpsEnabled,
   preload: true
 }));
-app.use(helmet.noCache());
 app.use(helmet.noSniff());
 
 //
