@@ -19,7 +19,7 @@ module.exports = EventListener.extend({
                 type: 'groupchat'
             });
 
-            message.c('subject').t(room.name);
+            message.c('subject').t(room.name + ' | ' + room.description);
 
             this.send(connection, message);
 

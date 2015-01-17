@@ -24,10 +24,20 @@ module.exports = MessageProcessor.extend({
                 return cb(null);
             }
 
+            var connection = this.client.conn,
+                username = connection.username;
+
             this.core.presence.join(this.client.conn, room._id, room.slug);
 
             var usernames = this.core.presence.rooms
                                   .get(room._id).getUsernames();
+
+            // User's own presence must be last
+            var i = usernames.indexOf(username);
+            if (i > -1) {
+                usernames.splice(i, 1);
+            }
+            usernames.push(username);
 
             var presences = usernames.map(function(username) {
 
@@ -52,7 +62,7 @@ module.exports = MessageProcessor.extend({
                 type: 'groupchat'
             });
 
-            message.c('subject').t(room.name);
+            message.c('subject').t(room.name + ' | ' + room.description);
 
             cb(null, presences, message);
 
