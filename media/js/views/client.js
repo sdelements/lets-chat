@@ -11,6 +11,10 @@
 
     window.LCB.ClientView = Backbone.View.extend({
         el: '#lcb-client',
+        events: {
+            'click .lcb-tab': 'toggleSideBar',
+            'click .lcb-header-toggle': 'toggleSideBar'
+        },
         initialize: function(options) {
             this.client = options.client;
             //
@@ -64,6 +68,9 @@
                 this.$el.find('.lcb-client-loading').hide(connected);
             }, this));
             return this;
+        },
+        toggleSideBar: function(e) {
+            this.$el.toggleClass('lcb-sidebar-opened');
         }
     });
 
