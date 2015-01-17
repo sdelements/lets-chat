@@ -88,6 +88,22 @@
             this.atwhoRooms();
             this.atwhoEmotes();
         },
+        atwhoTplEval: function(tpl, map) {
+            var error;
+            try {
+                return tpl.replace(/\$\{([^\}]*)\}/g, function(tag, key, pos) {
+                    return (map[key] || '')
+                        .replace(/&/g, '&amp;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&apos;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                });
+            } catch (_error) {
+                error = _error;
+                return "";
+            }
+        },
         atwhoMentions: function () {
             function filter(query, data, searchKey) {
                 var q = query.toLowerCase();
@@ -129,7 +145,8 @@
                 tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
                     filter: filter,
-                    sorter: sorter
+                    sorter: sorter,
+                    tpl_eval: this.atwhoTplEval
                 }
             });
         },
@@ -153,7 +170,8 @@
                     at: '#',
                     search_key: 'slug',
                     callbacks: {
-                        filter: filter
+                        filter: filter,
+                        tpl_eval: this.atwhoTplEval
                     },
                     tpl: '<li data-value="#${slug}">#${slug} <small>${name}</small></li>'
                 });
