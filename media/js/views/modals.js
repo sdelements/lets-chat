@@ -35,16 +35,26 @@
         },
         submit: function(e) {
         	e && e.preventDefault();
+
             var $form = this.$('form[action]');
-            $.ajax({
+            var opts = {
                 type: $form.attr('method') || 'POST',
                 url: $form.attr('action'),
                 data: $form.serialize(),
-                dataType: 'json',
-                success: _.bind(this.success, this),
-                error: _.bind(this.error, this),
-                complete: _.bind(this.complete, this)
-            });
+                dataType: 'json'
+            };
+
+            if (this.success) {
+                opts.success = _.bind(this.success, this);
+            }
+            if (this.error) {
+                opts.error = _.bind(this.error, this);
+            }
+            if (this.complete) {
+                opts.complete = _.bind(this.complete, this);
+            }
+
+            $.ajax(opts);
         }
     });
 
