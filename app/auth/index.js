@@ -96,6 +96,7 @@ function setup(app, session, core) {
 
                 data.user = user;
                 data.user.logged_in = true;
+                data.user.using_token = true;
                 cb(null, true);
             });
         } else {

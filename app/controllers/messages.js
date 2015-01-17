@@ -62,6 +62,7 @@ module.exports = function() {
                     from: data.from || null,
                     limit: data.limit || null,
                 };
+            
             core.messages.list(options, function(err, messages) {
                 if (err) {
                     return req.io.respond(err, 400);

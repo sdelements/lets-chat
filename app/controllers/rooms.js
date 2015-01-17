@@ -100,8 +100,7 @@ module.exports = function() {
             core.rooms.create(options, function(err, room) {
                 if (err) {
                     console.error(err);
-                    req.io.respond(err, 400);
-                    return;
+                    return req.io.respond(err, 400);
                 }
                 req.io.respond(room, 201);
                 app.io.broadcast('rooms:new', room);
@@ -180,7 +179,7 @@ module.exports = function() {
             req.io.leave(roomId);
             req.io.respond();
         },
-        users: function(req, next) {
+        users: function(req) {
             var data = req.data || req.query;
 
             core.rooms.get(data.room, function(err, room) {

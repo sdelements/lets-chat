@@ -88,74 +88,93 @@ module.exports = function() {
                     firstName: form.firstName || form['first-name'],
                     lastName: form.lastName || form['last-name']
                 };
+
             core.account.update(req.user._id, data, function (err, user) {
                 if (err) {
-                    req.io.respond({
+                    return req.io.respond({
                         status: 'error',
                         message: 'Unable to update your profile.',
                         errors: err
                     });
-                    return;
                 }
+
                 if (!user) {
-                    req.io.respond(404);
-                    return;
+                    return req.io.respond(404);
                 }
+
                 req.io.respond(user);
                 app.io.broadcast('users:update', user);
             });
         },
         settings: function(req) {
+            if (req.user.using_token) {
+                return req.io.respond({
+                    status: 'error',
+                    message: 'Cannot change account settings ' +
+                             'when using token authentication.'
+                }, 403);
+            }
+
             var form = req.body || req.data,
                 data = {
                     username: form.username,
                     email: form.email,
-                    currentPassword: form.password || form['current-password'] || form.currentPassword,
+                    currentPassword: form.password ||
+                        form['current-password'] || form.currentPassword,
                     newPassword: form['new-password'] || form.newPassword,
-                    confirmPassowrd: form['confirm-password'] || form.confirmPassword
+                    confirmPassowrd: form['confirm-password'] ||
+                        form.confirmPassword
                 };
-                auth.authenticate(req.user.username || req.user.email, data.currentPassword,
-                    function(err, user) {
-                        if (err) {
-                            req.io.respond({
-                                status: 'error',
-                                message: 'There were problems authenticating you.',
-                                errors: err
-                            }, 400);
-                            return;
-                        }
-                        if (!user) {
-                            req.io.respond({
-                                status: 'error',
-                                message: 'Incorrect login credentials.'
-                            }, 401);
-                            return;
-                        }
-                        core.account.update(req.user._id, data, function (err, user) {
-                            if (err || !user) {
-                                req.io.respond({
-                                    status: 'error',
-                                    message: 'Unable to update your account.',
-                                    errors: err
-                                }, 500);
-                                return;
-                            }
-                            req.io.respond({
-                                status: 'success',
-                                message: 'Your account has been saved.'
-                            });
-                        });
+
+            auth.authenticate(req.user.username || req.user.email,
+                              data.currentPassword, function(err, user) {
+                if (err) {
+                    return req.io.respond({
+                        status: 'error',
+                        message: 'There were problems authenticating you.',
+                        errors: err
+                    }, 400);
+                }
+
+                if (!user) {
+                    return req.io.respond({
+                        status: 'error',
+                        message: 'Incorrect login credentials.'
+                    }, 401);
+                }
+
+                core.account.update(req.user._id, data, function (err, user) {
+                    if (err || !user) {
+                        return req.io.respond({
+                            status: 'error',
+                            message: 'Unable to update your account.',
+                            errors: err
+                        }, 500);
+                    }
+
+                    req.io.respond({
+                        status: 'success',
+                        message: 'Your account has been saved.'
                     });
+                });
+            });
         },
         generate_token: function(req) {
+            if (req.user.using_token) {
+                return req.io.respond({
+                    status: 'error',
+                    message: 'Cannot generate a new token ' +
+                             'when using token authentication.'
+                }, 403);
+            }
+
             core.account.generateToken(req.user._id, function (err, token) {
                 if (err) {
-                    req.io.respond({
+                    return req.io.respond({
                         status: 'error',
                         message: 'Unable to generate a token.',
                         errors: err
                     });
-                    return;
                 }
 
                 req.io.respond({
@@ -166,14 +185,21 @@ module.exports = function() {
             });
         },
         revoke_token: function(req) {
+            if (req.user.using_token) {
+                return req.io.respond({
+                    status: 'error',
+                    message: 'Cannot revoke token ' +
+                             'when using token authentication.'
+                }, 403);
+            }
+
             core.account.revokeToken(req.user._id, function (err) {
                 if (err) {
-                    req.io.respond({
+                    return req.io.respond({
                         status: 'error',
                         message: 'Unable to revoke token.',
                         errors: err
                     });
-                    return;
                 }
 
                 req.io.respond({
@@ -184,13 +210,14 @@ module.exports = function() {
         },
         register: function(req) {
 
-            if (!auth.providers.local ||
+            if (req.user ||
+                !auth.providers.local ||
                 !auth.providers.local.enable_registration) {
-                req.io.respond({
+
+                return req.io.respond({
                     status: 'error',
                     message: 'Permission denied'
                 }, 403);
-                return;
             }
 
             var fields = req.body || req.data;
@@ -206,7 +233,6 @@ module.exports = function() {
             };
 
             core.account.create('local', data, function(err, user) {
-                // Did we get error?
                 if (err) {
                     var message = 'Sorry, we could not process your request';
                     // User already exists
@@ -223,16 +249,16 @@ module.exports = function() {
                         console.error(err);
                     }
                     // Notify
-                    req.io.respond({
+                    return req.io.respond({
                         status: 'error',
                         message: message
                     }, 400);
-                    return;
                 }
-                // AWWW YISSSSS!
+
                 req.io.respond({
                     status: 'success',
-                    message: 'You\'ve been registered, please try logging in now!'
+                    message: 'You\'ve been registered, ' +
+                             'please try logging in now!'
                 }, 201);
             });
         },
@@ -263,11 +289,10 @@ module.exports = function() {
                 }
                 req.login(user, function(err) {
                     if (err) {
-                        req.io.respond({
+                        return req.io.respond({
                             status: 'error',
                             message: 'There were problems logging you in.'
                         }, 400);
-                        return;
                     }
                     req.io.respond({
                         status: 'success',

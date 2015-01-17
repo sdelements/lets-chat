@@ -29,14 +29,14 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('users', {
-        list: function(req, next) {
+        list: function(req) {
             var data = req.data || req.query;
 
             if (!data || !data.room) {
                 User.find(function(err, users) {
                     if (err) {
                         console.log(err);
-                        next(err);
+                        return req.io.respond(err, 400);
                     }
 
                     req.io.respond(users);
@@ -47,16 +47,13 @@ module.exports = function() {
 
             models.room.findById(data.room || null, function(err, room) {
                 if (err) {
-                   // TODO: can you create a default error handler?
-                   // We have code like this all over the place.
                     console.error(err);
-                    return;
+                    return req.io.respond(err, 400);
                 }
 
                 if (!room) {
                     // Invalid room!
-                    req.io.respond('This room does not exist', 404);
-                    return;
+                    return req.io.respond('This room does not exist', 404);
                 }
 
                 var userIds = core.presence.rooms
@@ -66,8 +63,7 @@ module.exports = function() {
                     if (err) {
                         // Something bad happened
                         console.error(err);
-                        req.io.respond(err, 400);
-                        return;
+                        return req.io.respond(err, 400);
                     }
                     // The client needs user.room in
                     // order to properly route users
