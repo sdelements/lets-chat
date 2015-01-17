@@ -22,7 +22,7 @@ module.exports = EventListener.extend({
                 xmlns:'http://jabber.org/protocol/muc#user'
             })
             .c('item', {
-                jid: helper.getRoomJid(data.roomSlug, data.username),
+                jid: helper.getUserJid(data.username),
                 affiliation: 'none',
                 role: 'participant'
             });

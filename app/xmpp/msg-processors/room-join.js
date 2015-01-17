@@ -50,6 +50,7 @@ module.exports = MessageProcessor.extend({
                         xmlns:'http://jabber.org/protocol/muc#user'
                     })
                     .c('item', {
+                        jid: helper.getUserJid(username),
                         affiliation: 'none',
                         role: 'participant'
                     });
