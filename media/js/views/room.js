@@ -303,8 +303,9 @@
             return this.scrollLocked;
         },
         scrollMessages: function(force) {
-            if (!force && !this.scrollLocked)
+            if (!force && !this.scrollLocked) {
                 return;
+            }
             this.$messages[0].scrollTop = this.$messages[0].scrollHeight;
         },
         toggleSidebar: function(e) {
@@ -312,7 +313,10 @@
             // Target siblings too!
             this.$el.siblings('.lcb-room').andSelf().toggleClass('lcb-room-sidebar-opened');
             // Save to localstorage
-            store.set('sidebar', this.$el.hasClass('lcb-room-sidebar-opened'));
+            if ($(window).width() > 767) {
+                store.set('sidebar',
+                          this.$el.hasClass('lcb-room-sidebar-opened'));
+            }
         },
         destroy: function() {
             this.undelegateEvents();
