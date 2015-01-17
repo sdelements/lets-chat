@@ -51,6 +51,9 @@ var settings = _.merge(
     getEnvSettings()
 );
 
+if (settings.xmpp.host) {
+    settings.xmpp.confhost = 'conference.' + settings.xmpp.host;
+}
 
 // Override database URI - if using a Heroku add-on
 settings.database.uri = settings.MONGOHQ && settings.MONGOHQ.URL ||
