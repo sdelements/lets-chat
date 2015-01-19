@@ -78,12 +78,20 @@ app.use(express.urlencoded());
 app.use(helmet.frameguard('sameorigin'));
 app.use(helmet.hidePoweredBy());
 app.use(helmet.hsts({
-    maxAge: 31536000,  
-    includeSubdomains: true, 
+    maxAge: 31536000,
+    includeSubdomains: true,
     force: httpsEnabled,
     preload: true
 }));
 app.use(helmet.noSniff());
+
+app.io.use(function(req, next) {
+    if (!req.param) {
+        req.param = function() {};
+    }
+
+    next();
+});
 
 //
 // Controllers
