@@ -56,8 +56,9 @@
                 model: this.client.user
             });
             this.accountModal = new window.LCB.AccountModalView({
-                el: this.$el.find('#lcb-account')
-			});
+                el: this.$el.find('#lcb-account'),
+                model: this.client.user
+            });
             this.tokenModal = new window.LCB.AuthTokensModalView({
                 el: this.$el.find('#lcb-tokens')
             });
@@ -79,6 +80,7 @@
             this.model.on('change', this.update, this);
         },
         update: function(user){
+            this.$('.lcb-account-button-username').text('@' + user.get('username'));
             this.$('.lcb-account-button-name').text(user.get('displayName'));
         }
     });
