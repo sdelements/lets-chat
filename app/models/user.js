@@ -206,7 +206,8 @@ UserSchema.methods.comparePassword = function(password, cb) {
             return cb(null, true);
         }
 
-        var salt = settings.auth.local && settings.auth.local.salt;
+        var local = settings.auth.providers.local;
+        var salt = local && local.salt;
         if (salt) {
             var legacyPassowrd = hash.sha256(password, salt);
             isMatch = legacyPassowrd === this.password;
