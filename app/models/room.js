@@ -71,7 +71,7 @@ RoomSchema.method('toJSON', function() {
     };
  });
 
- RoomSchema.statics.findByIdOrSlug = function(identifier, cb) {
+RoomSchema.statics.findByIdOrSlug = function(identifier, cb) {
     var opts = {
         archived: { $ne: true }
     };

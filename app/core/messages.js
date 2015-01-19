@@ -16,17 +16,17 @@ MessageManager.prototype.create = function(options, cb) {
             console.error(err);
             return cb(err);
         }
-
         if (room.archived) {
             return cb('Room is archived.');
         }
-
         Message.create(options, function(err, message) {
             if (err) {
                 console.error(err);
                 return cb(err);
             }
-
+            // Touch Room's lastActive
+            room.lastActive = message.posted;
+            room.save();
             // Temporary workaround for _id until populate can do aliasing
             User.findOne(message.owner, function(err, user) {
                 if (err) {

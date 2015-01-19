@@ -23,7 +23,8 @@
             this.rooms = options.rooms;
             this.rooms.on('add', this.add, this);
             this.rooms.on('remove', this.remove, this);
-            this.rooms.on('change:name change:description', this.update, this);
+            this.rooms.on('change:description change:name', this.update, this);
+            this.rooms.on('change:lastActive', _.debounce(this.updateLastActive, 200), this);
             this.rooms.on('change:joined', this.updateToggles, this);
             this.rooms.on('users:add', this.addUser, this);
             this.rooms.on('users:remove', this.removeUser, this);
@@ -50,7 +51,11 @@
                 (this.rooms.get(room.id).get('joined') && this.client.leaveRoom(room.id));
         },
         add: function(room) {
-            this.$('.lcb-rooms-list').append(this.template(room.toJSON()));
+            var room = room.toJSON ? room.toJSON() : room,
+                context = _.extend(room, {
+                    lastActive: moment(room.lastActive).calendar()
+                });
+            this.$('.lcb-rooms-list').append(this.template(context));
         },
         remove: function(room) {
             this.$('.lcb-rooms-list-item[data-id=' + room.id + ']').remove();
@@ -58,6 +63,9 @@
         update: function(room) {
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+        },
+        updateLastActive: function(room) {
+            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).calendar());
         },
         sort: function(model) {
             var that = this,

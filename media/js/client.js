@@ -186,6 +186,7 @@
             // Unknown room, nothing to do!
             return;
         }
+        room.set('lastActive', message.posted)
         room.lastMessage.set(message);
         room.trigger('messages:new', message);
     };
