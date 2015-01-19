@@ -88,6 +88,18 @@
             this.atwhoRooms();
             this.atwhoEmotes();
         },
+        getEmotes: function(cb) {
+            if (!window.LCB.RoomView.emotes) {
+                window.LCB.RoomView.emotes = $.get('/extras/emotes');
+            }
+            window.LCB.RoomView.emotes.success(cb);
+        },
+        getUsers: function(cb) {
+            if (!window.LCB.RoomView.users) {
+                window.LCB.RoomView.users = $.get('/users');
+            }
+            window.LCB.RoomView.users.success(cb);
+        },
         atwhoTplEval: function(tpl, map) {
             var error;
             try {
@@ -138,16 +150,19 @@
                 });
             }
 
-            this.$('.lcb-entry-input')
-            .atwho({
-                at: '@',
-                data: '/users',
-                tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
-                callbacks: {
-                    filter: filter,
-                    sorter: sorter,
-                    tpl_eval: this.atwhoTplEval
-                }
+            var that = this;
+            this.getUsers(function(users) {
+                that.$('.lcb-entry-input')
+                .atwho({
+                    at: '@',
+                    data: users,
+                    tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
+                    callbacks: {
+                        filter: filter,
+                        sorter: sorter,
+                        tpl_eval: that.atwhoTplEval
+                    }
+                });
             });
         },
         atwhoRooms: function() {
@@ -177,12 +192,15 @@
                 });
         },
         atwhoEmotes: function() {
-            this.$('.lcb-entry-input')
-            .atwho({
-                at: ':',
-                search_key: 'emote',
-                data: '/extras/emotes',
-                tpl: '<li data-value=":${emote}:"><img src="${image}" height="32" width="32" alt=":${emote}:" /> :${emote}:</li>'
+            var that = this;
+            this.getEmotes(function(emotes) {
+                that.$('.lcb-entry-input')
+                .atwho({
+                    at: ':',
+                    search_key: 'emote',
+                    data: emotes,
+                    tpl: '<li data-value=":${emote}:"><img src="${image}" height="32" width="32" alt=":${emote}:" /> :${emote}:</li>'
+                });
             });
         },
         goodbye: function() {
