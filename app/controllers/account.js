@@ -151,11 +151,8 @@ module.exports = function() {
                             errors: err
                         }, 500);
                     }
-
-                    req.io.respond({
-                        status: 'success',
-                        message: 'Your account has been saved.'
-                    });
+                    req.io.respond(user);
+                    app.io.broadcast('users:update', user);
                 });
             });
         },
