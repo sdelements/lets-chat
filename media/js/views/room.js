@@ -61,6 +61,12 @@
             'dblclick .lcb-avatar': 'poke'
         },
         initialize: function(options) {
+
+            // Throttle message scrolling
+            this.scrollMessages = _.throttle(
+                _.bind(this.scrollMessages, this), 100
+            );
+
             this.client = options.client;
             this.template = options.template;
             this.messageTemplate = Handlebars.compile($('#template-message').html());
