@@ -9,6 +9,9 @@
                 <input type="checkbox" class="switch lcb-rooms-switch" id="room-switch-{{id}}" data-id="{{id}}" />
                 <label class="switch lcb-rooms-switch-label" for="room-switch-{{id}}"></label>
             </div>
+            <div class="lcb-rooms-list-item-last-active">
+                <i class="fa fa-clock-o"></i> <span class="value">{{lastActive}}</span>
+            </div>
         </li>
     </script>
     <script type="text/x-handlebars-template" id="template-room-browser-item-user">

@@ -54,6 +54,7 @@
     position: relative;
     padding: 10px 15px;
     border-bottom: 1px #f2f2f2 solid;
+    overflow: hidden;
     &:hover {
         background: #f2f2f2;
     }
@@ -68,6 +69,21 @@
     font-weight: 300;
     color: #aaa;
 }
+
+.lcb-rooms-list-item-last-active {
+    font-size: 12px;
+    font-weight: 300;
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+    @media (max-width: @screen-sm-max) {
+        position: relative;
+        float: right;
+        right: 0;
+        bottom: 0;
+    }
+}
+
 
 .lcb-rooms-list-users,
 .lcb-rooms-list-user {
