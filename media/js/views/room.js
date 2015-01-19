@@ -293,6 +293,10 @@
             this.lastMessageOwner = message.owner.id;
             this.lastMessagePosted = posted;
             this.scrollMessages();
+
+            if (!message.historical) {
+                window.utils.eggs.message(message.text);
+            }
         },
         formatMessage: function(text) {
             return window.utils.message.format(text, this.client.extras || {}, this.client.rooms);
