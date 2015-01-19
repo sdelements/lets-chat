@@ -130,7 +130,7 @@
             // Get room history
             that.getMessages({
                 room: room.id,
-                limit: 480,
+                limit: 200,
                 from: room.lastMessage.get('id')
             }, function(messages) {
                 that.addMessages(messages, !room.get('loaded'));
