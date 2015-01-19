@@ -13,8 +13,7 @@
         el: 'html',
         keys: {
             'up+shift+alt down+shift+alt': 'nextRoom',
-            'space+shift+alt': 'recallRoom',
-            'left+shift+alt right+shift+alt': 'toggleRoomSidebar'
+            'space+shift+alt': 'recallRoom'
         },
         initialize: function(options) {
             this.client = options.client;
