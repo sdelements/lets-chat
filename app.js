@@ -86,6 +86,8 @@ app.use(helmet.hsts({
 app.use(helmet.noSniff());
 
 app.io.use(function(req, next) {
+    // Stub methods that are not available in socket.io
+
     if (!req.param) {
         req.param = function() {};
     }

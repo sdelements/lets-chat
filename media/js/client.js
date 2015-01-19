@@ -130,7 +130,7 @@
             // Get room history
             that.getMessages({
                 room: room.id,
-                limit: 100,
+                limit: 200,
                 from: room.lastMessage.get('id')
             }, function(messages) {
                 that.addMessages(messages, !room.get('loaded'));
@@ -202,7 +202,7 @@
         this.socket.emit('messages:create', message);
     };
     Client.prototype.getMessages = function(query, callback) {
-        this.socket.emit('messages:list', query, callback);
+        $.get('/messages', query, callback);
     };
     //
     // Users

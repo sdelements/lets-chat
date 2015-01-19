@@ -50,7 +50,7 @@ module.exports = function() {
 
             core.messages.create(options, function(err, message) {
                 if (err) {
-                    return req.io.respond(err, 400);
+                    return req.io.respond(400);
                 }
                 req.io.respond(message, 201);
             });
@@ -62,12 +62,12 @@ module.exports = function() {
                     from: data.from || null,
                     limit: data.limit || null,
                 };
-            
+
             core.messages.list(options, function(err, messages) {
                 if (err) {
-                    return req.io.respond(err, 400);
+                    return req.io.respond(400);
                 }
-                req.io.respond(messages);
+                req.io.respond(messages, 200);
             });
         }
     });
