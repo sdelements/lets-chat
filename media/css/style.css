@@ -9684,7 +9684,6 @@ body {
  *********************/
 .lcb-rooms-browser {
   background: #fff;
-  overflow-y: auto;
   -moz-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
@@ -9751,6 +9750,7 @@ body {
   margin: 0;
 }
 .lcb-rooms-list {
+  overflow-y: auto;
   -webkit-transform: translate3d(0, 0, 0);
   -moz-transform: translate3d(0, 0, 0);
   -ms-transform: translate3d(0, 0, 0);
