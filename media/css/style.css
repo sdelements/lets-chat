@@ -10040,7 +10040,11 @@ body {
     display: none;
   }
   .lcb-room-sidebar-opened .lcb-room-sidebar {
-    display: block;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: -ms-flex;
+    display: flex;
   }
 }
 .lcb-room-sidebar-group {
