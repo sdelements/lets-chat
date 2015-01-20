@@ -318,6 +318,7 @@
             this.$el.siblings('.lcb-room').andSelf().toggleClass('lcb-room-sidebar-opened');
             // Save to localstorage
             if ($(window).width() > 767) {
+                this.scrollMessages();
                 store.set('sidebar',
                           this.$el.hasClass('lcb-room-sidebar-opened'));
             }
