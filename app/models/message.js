@@ -25,7 +25,8 @@ var MessageSchema = new mongoose.Schema({
     },
     posted: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        index: true
     }
 });
 
