@@ -13,6 +13,7 @@
         el: 'html',
         keys: {
             'up+shift+alt down+shift+alt': 'nextRoom',
+            's+shift+alt': 'toggleRoomSidebar',
             'space+shift+alt': 'recallRoom'
         },
         initialize: function(options) {
