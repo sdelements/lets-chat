@@ -68,6 +68,7 @@
             this.client.events.trigger('rooms:switch', this.rooms.last.get('id'));
         },
         toggleRoomSidebar: function(e) {
+            e.preventDefault();
             var view = this.client.view.panes.views[this.rooms.current.get('id')];
             view && view.toggleSidebar && view.toggleSidebar();
         },
