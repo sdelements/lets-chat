@@ -58,7 +58,8 @@
             'click .hide-edit-room': 'hideEditRoom',
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
-            'dblclick .lcb-avatar': 'poke'
+            'dblclick .lcb-avatar': 'poke',
+            'touchend .lcb-avatar': 'poke'
         },
         initialize: function(options) {
 
