@@ -4,6 +4,8 @@ var Stanza = require('node-xmpp-core').Stanza,
     helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
+var mentionPattern = /\B@(\w+)(?!@)\b/g;
+
 module.exports = EventListener.extend({
 
     on: 'messages:new',
@@ -12,6 +14,13 @@ module.exports = EventListener.extend({
         var connections = this.getConnectionsForRoom(msg.room.id);
 
         connections.forEach(function(connection) {
+            var text = msg.text;
+
+            var mentions = msg.text.match(mentionPattern);
+
+            if (mentions && mentions.indexOf(connection.username) > -1) {
+                text = connection.username + ': ';
+            }
 
             var stanza = new Stanza.Message({
                 id: msg._id,
@@ -24,7 +33,7 @@ module.exports = EventListener.extend({
                 xmlns: 'http://jabber.org/protocol/chatstates'
             });
 
-            stanza.c('body').t(msg.text);
+            stanza.c('body').t(text);
 
             this.send(connection, stanza);
 

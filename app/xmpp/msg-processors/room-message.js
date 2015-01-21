@@ -4,6 +4,8 @@ var _ = require('underscore'),
     MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config');
 
+var mentionPattern = /^([a-z0-9_]+\:)\B/;
+
 module.exports = MessageProcessor.extend({
 
     if: function() {
@@ -28,10 +30,26 @@ module.exports = MessageProcessor.extend({
                 return cb();
             }
 
+            var text = body.text().replace(mentionPattern, function(group) {
+
+                var usernames = this.core.presence.rooms
+                                    .get(room._id).getUsernames();
+
+                var username = group.substring(0, group.length - 1);
+
+                if (usernames.indexOf(username) > -1) {
+                    return '@' + username;
+                }
+
+                return group;
+
+            }.bind(this));
+
+
             var options = {
                 owner: this.client.user._id,
                 room: room._id,
-                text: body.text()
+                text: text
             };
 
             this.core.messages.create(options, function(err, message) {
