@@ -51,14 +51,12 @@ if (typeof exports !== 'undefined') {
 
         if (imagePattern.test(text)) {
             return text.replace(imagePattern, function(url) {
-                url = _.escape(url);
                 return '<a class="thumbnail" href="' + url +
                        '" target="_blank"><img src="' + url +
                        '" alt="Pasted Image" /></a>';
             });
         } else {
             return text.replace(linkPattern, function(url) {
-                url = _.escape(url);
                 return '<a href="' + url + '" target="_blank">' + url + '</a>';
             });
         }
