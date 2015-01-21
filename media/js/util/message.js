@@ -28,7 +28,7 @@ if (typeof exports !== 'undefined') {
         if (!rooms) {
             return text;
         }
-        
+
         var slugPattern = /\B(\#[a-z0-9_]+)\b/g;
 
         return text.replace(slugPattern, function(slug) {
@@ -51,13 +51,15 @@ if (typeof exports !== 'undefined') {
 
         if (imagePattern.test(text)) {
             return text.replace(imagePattern, function(url) {
-                return '<a class="thumbnail" href="' + url +
-                       '" target="_blank"><img src="' + url +
+                var uri = encodeURI(_.unescape(url));
+                return '<a class="thumbnail" href="' + uri +
+                       '" target="_blank"><img src="' + uri +
                        '" alt="Pasted Image" /></a>';
             });
         } else {
             return text.replace(linkPattern, function(url) {
-                return '<a href="' + url + '" target="_blank">' + url + '</a>';
+                var uri = encodeURI(_.unescape(url));
+                return '<a href="' + uri + '" target="_blank">' + url + '</a>';
             });
         }
     }
