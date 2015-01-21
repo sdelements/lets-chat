@@ -9751,6 +9751,7 @@ body {
 }
 .lcb-rooms-list {
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   -webkit-transform: translate3d(0, 0, 0);
   -moz-transform: translate3d(0, 0, 0);
   -ms-transform: translate3d(0, 0, 0);
@@ -10101,9 +10102,10 @@ body {
   margin: 0;
 }
 .lcb-room-sidebar-list {
-  overflow: hidden;
   border-radius: 3px;
+  overflow: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .lcb-room-sidebar-item {
   background: #e9e9e9;
@@ -10158,6 +10160,7 @@ body {
   padding: 0;
   margin: 0;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   -moz-flex: 1;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
