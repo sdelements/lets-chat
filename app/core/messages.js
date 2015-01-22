@@ -57,6 +57,7 @@ MessageManager.prototype.list = function(options, cb) {
 
     find
         .populate('owner', 'id username displayName email avatar')
+        .populate('room', 'id name')
         .limit(options.limit || 500)
         .sort({ 'posted': -1 })
         .exec(function(err, messages) {
