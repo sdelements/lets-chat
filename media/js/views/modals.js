@@ -75,8 +75,11 @@
             this.$el.modal('hide');
             this.$('[type="password"]').val('');
         },
-        error: function() {
-            swal('Woops!', 'Your account was not updated.', 'error');
+        error: function(req) {
+            var message = req.responseJSON && req.responseJSON.reason ||
+                          'Your account was not updated.';
+
+            swal('Woops!', message, 'error');
         },
         complete: function() {
             this.$('[name="current-password"]').val('');

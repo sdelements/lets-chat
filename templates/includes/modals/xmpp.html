@@ -14,7 +14,12 @@
 
                         <dl class="">
                             <dt>Username</dt>
-                            <dd>{{ account.username }}@{{ settings.xmpp.host }}</dd>
+                            <dd>
+                                {% if account.local %}
+                                    {{ account.username }}@{{ settings.xmpp.host }}
+                                {% else %}
+                                    {{ account.uid }}@{{ settings.xmpp.host }}
+                                {% endif %}</dd>
                             {% if settings.xmpp.port != 5222 %}
                             <dt>Port</dt>
                             <dd>{{ settings.xmpp.port }}</dd>

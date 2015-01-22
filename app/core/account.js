@@ -40,22 +40,22 @@ AccountManager.prototype.update = function(id, options, cb) {
             user.email = options.email;
         }
 
-        if (user.local) {
+        if (options.username && options.username !== user.username) {
+            var xmppConns = this.core.presence.connections.query({
+                userId: user._id,
+                type: 'xmpp'
+            });
 
-            if (options.username && options.username !== user.username) {
-                var xmppConns = this.core.presence.connections.query({
-                    userId: user._id,
-                    type: 'xmpp'
-                });
-
-                if (xmppConns.length) {
-                    return cb('You can not change your username ' +
-                    'with active XMPP sessions.');
-                }
-
-                usernameChange = true;
-                user.username = options.username;
+            if (xmppConns.length) {
+                return cb(null, null, 'You can not change your username ' +
+                          'with active XMPP sessions.');
             }
+
+            usernameChange = true;
+            user.username = options.username;
+        }
+
+        if (user.local) {
 
             if (options.password || options.newPassword) {
                 user.password = options.password || options.newPassword;

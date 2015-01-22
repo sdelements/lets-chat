@@ -126,7 +126,7 @@ module.exports = function() {
                         form.confirmPassword
                 };
 
-            auth.authenticate(req.user.username || req.user.email,
+            auth.authenticate(req.user.uid || req.user.username,
                               data.currentPassword, function(err, user) {
                 if (err) {
                     return req.io.respond({
@@ -143,13 +143,14 @@ module.exports = function() {
                     }, 401);
                 }
 
-                core.account.update(req.user._id, data, function (err, user) {
+                core.account.update(req.user._id, data, function (err, user, reason) {
                     if (err || !user) {
                         return req.io.respond({
                             status: 'error',
                             message: 'Unable to update your account.',
+                            reason: reason,
                             errors: err
-                        }, 500);
+                        }, 400);
                     }
                     req.io.respond(user);
                     app.io.broadcast('users:update', user);

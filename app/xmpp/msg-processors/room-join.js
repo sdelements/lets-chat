@@ -13,8 +13,14 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
-        var roomUrl = this.request.attrs.to.split('/')[0],
-            roomSlug = roomUrl.split('@')[0];
+        var toParts = this.request.attrs.to.split('/'),
+            roomUrl = toParts[0],
+            nickname = toParts[1],
+            roomSlug = roomUrl.split('@')[0],
+            connection = this.client.conn;
+
+        // TODO: Do we need to track nickname for each individual room?
+        connection.nickname = nickname;
 
         this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
@@ -24,20 +30,19 @@ module.exports = MessageProcessor.extend({
                 return cb(null);
             }
 
-            var connection = this.client.conn,
-                username = connection.username;
+            var username = connection.username;
 
-            this.core.presence.join(this.client.conn, room._id, room.slug);
+            this.core.presence.join(connection, room._id, room.slug);
 
             var usernames = this.core.presence.rooms
                                   .get(room._id).getUsernames();
 
-            // User's own presence must be last
+            // User's own presence must be last - and be their nickname
             var i = usernames.indexOf(username);
             if (i > -1) {
                 usernames.splice(i, 1);
             }
-            usernames.push(username);
+            usernames.push(nickname);
 
             var presences = usernames.map(function(username) {
 

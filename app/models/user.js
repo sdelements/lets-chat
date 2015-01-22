@@ -72,14 +72,7 @@ var UserSchema = new mongoose.Schema({
         trim: true,
         lowercase: true,
         unique: true,
-        match: /^[a-z0-9_]+$/i,
-        set: function(value) {
-            // User can only change their username if it's a local account
-            if (this.local || !this.username) {
-                return value.toLowerCase();
-            }
-            return this.username;
-        }
+        match: /^[a-z0-9_]+$/i
     },
     displayName: {
         type: String,
@@ -256,6 +249,7 @@ UserSchema.method('toJSON', function() {
         username: this.username,
         displayName: this.displayName,
         avatar: this.avatar,
+        uid: this.uid,
         email: this.email,
         local: this.local
     };
