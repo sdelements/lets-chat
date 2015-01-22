@@ -220,6 +220,11 @@ UserSchema.statics.authenticate = function(identifier, password, cb) {
         if (!user) {
             return cb(null, null, 0);
         }
+        // Is this a local user?
+        if (user.provider !== 'local') {
+            return cb(null, null, 0);
+        }
+        
         // Is password okay?
         user.comparePassword(password, function(err, isMatch) {
             if (err) {
