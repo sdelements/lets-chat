@@ -85,6 +85,7 @@
             this.scrollLocked = true;
             this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));
             this.atwhoMentions();
+            this.atwhoAllMentions();
             this.atwhoRooms();
             this.atwhoEmotes();
         },
@@ -117,6 +118,57 @@
             }
         },
         atwhoMentions: function () {
+            var users = this.model.users;
+
+            function filter(query, data, searchKey) {
+                var q = query.toLowerCase();
+                var results = users.filter(function(user) {
+                    var attr = user.attributes;
+
+                    if (!attr.safeName) {
+                        attr.safeName = attr.displayName.replace(/\W/g, '');
+                    }
+
+                    var val1 = attr.username.toLowerCase();
+                    var val1i = val1.indexOf(q);
+                    if (val1i > -1) {
+                        attr.atwho_order = val1i;
+                        return true;
+                    }
+
+                    var val2 = attr.safeName.toLowerCase();
+                    var val2i = val2.indexOf(q);
+                    if (val2i > -1) {
+                        attr.atwho_order = val2i + attr.username.length;
+                        return true;
+                    }
+
+                    return false;
+                });
+
+                return results.map(function(user) {
+                    return user.attributes;
+                });
+            }
+
+            function sorter(query, items, search_key) {
+                return items.sort(function(a, b) {
+                    return a.atwho_order - b.atwho_order;
+                });
+            }
+
+            this.$('.lcb-entry-input')
+            .atwho({
+                at: '@',
+                tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
+                callbacks: {
+                    filter: filter,
+                    sorter: sorter,
+                    tpl_eval: this.atwhoTplEval
+                }
+            });
+        },
+        atwhoAllMentions: function () {
             function filter(query, data, searchKey) {
                 var q = query.toLowerCase();
                 var results = _.filter(data, function(user) {
@@ -154,7 +206,7 @@
             this.getUsers(function(users) {
                 that.$('.lcb-entry-input')
                 .atwho({
-                    at: '@',
+                    at: '!',
                     data: users,
                     tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                     callbacks: {
