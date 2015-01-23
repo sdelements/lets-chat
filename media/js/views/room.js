@@ -351,13 +351,7 @@
             // Templatin' time
             var $html = $(this.messageTemplate(message).trim());
             var $text = $html.find('.lcb-message-text');
-            if (message.paste) {
-                $html.find('pre').each(function(i) {
-                    hljs.highlightBlock(this);
-                });
-            } else {
-                $text.html(this.formatMessage($text.html()));
-            }
+            $text.html(this.formatMessage($text.html()));
             $html.find('time').updateTimeStamp();
             this.$messages.append($html);
             this.lastMessageOwner = message.owner.id;
