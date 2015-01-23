@@ -9780,17 +9780,8 @@ body {
 .lcb-rooms-list-item-last-active {
   font-size: 12px;
   font-weight: 300;
-  position: absolute;
-  right: 15px;
-  bottom: 10px;
-}
-@media (max-width: 991px) {
-  .lcb-rooms-list-item-last-active {
-    position: relative;
-    float: right;
-    right: 0;
-    bottom: 0;
-  }
+  position: relative;
+  float: right;
 }
 .lcb-rooms-list-users,
 .lcb-rooms-list-user {
