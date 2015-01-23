@@ -4,6 +4,8 @@
 # See defaults.yml for all available options
 #
 
+env: development # development / production
+
 http:
   enable: true
   port: 5000
