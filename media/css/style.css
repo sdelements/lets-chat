@@ -9775,7 +9775,7 @@ body {
   right: 15px;
   bottom: 10px;
 }
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .lcb-rooms-list-item-last-active {
     position: relative;
     float: right;
@@ -10138,6 +10138,9 @@ body {
   position: absolute;
   top: 5px;
   left: 5px;
+}
+.lcb-room-poke:hover {
+  cursor: pointer;
 }
 /*********************
  * Messages
