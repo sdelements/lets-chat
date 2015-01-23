@@ -202,7 +202,7 @@
         this.socket.emit('messages:create', message);
     };
     Client.prototype.getMessages = function(query, callback) {
-        $.get('/messages', query, callback);
+        this.socket.emit('messages:list', query, callback);
     };
     //
     // Users
