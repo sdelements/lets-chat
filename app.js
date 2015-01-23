@@ -40,6 +40,13 @@ if (httpsEnabled) {
 } else {
     app = express().http().io();
 }
+
+if (settings.env === 'production') {
+    app.set('env', settings.env);
+    app.set('json spaces', 0);
+    app.enable('view cache');
+}
+
 expressMiddleware(app);
 
 // Session

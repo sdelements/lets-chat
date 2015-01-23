@@ -6,6 +6,10 @@
         "mongolab"
     ],
     "env": {
+        "NODE_ENV": {
+            "description": "Configures Express for production",
+            "value": "production"
+        },
         "secrets_cookie": {
             "description": "Session cookies are signed with this secret to prevent tampering",
             "generator": "secret"

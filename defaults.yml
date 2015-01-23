@@ -2,6 +2,8 @@
 # Let's Chat Built-in Defaults
 #
 
+env: development # development / production
+
 http:
   enable: true
   port: 5000

@@ -55,6 +55,11 @@ if (settings.xmpp.host) {
     settings.xmpp.confhost = 'conference.' + settings.xmpp.host;
 }
 
+// Override env variable
+if (process.env.NODE_ENV) {
+    settings.env = process.env.NODE_ENV;
+}
+
 // Override database URI - if using a Heroku add-on
 settings.database.uri = settings.MONGOHQ && settings.MONGOHQ.URL ||
                         settings.MONGOLAB && settings.MONGOLAB.URI ||
