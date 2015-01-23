@@ -1,0 +1,55 @@
+vendor_css:
+  dest: media/dist/vendor.css
+  src:
+    - media/js/vendor/JVFloat/jvfloat.css
+    - media/js/vendor/sweetalert/sweet-alert.css
+    - media/js/vendor/at/jquery.atwho.css
+    - media/css/vendor.css
+
+base_css:
+  dest: media/dist/base.css
+  src:
+    - media/css/style.css
+
+vendor_js:
+  dest: media/dist/vendor.js
+  src:
+    - media/js/vendor/jquery/jquery.js
+    - media/js/vendor/jquery-validate/jquery.validate.js
+    - media/js/vendor/lodash/lodash.js
+    - media/js/vendor/backbone/backbone.js
+    - media/js/vendor/moment/moment.js
+    - media/js/vendor/handlebars/handlebars.js
+    - media/js/vendor/bootstrap/bootstrap.js
+    - media/js/vendor/store.js/store.js
+    - media/js/vendor/JVFloat/jvfloat.js
+    - media/js/vendor/sweetalert/sweet-alert.js
+    - media/js/vendor/notifications/desktop-notifications.js
+    - media/js/vendor/at/jquery.caret.js
+    - media/js/vendor/at/jquery.atwho.js
+    - media/js/vendor/backbone.keys/backbone.keys.js
+    - media/js/vendor/raptorize/jquery.raptorize.js
+    - media/js/common.js
+
+login_js:
+  dest: media/dist/login.js
+  src:
+    - media/js/vendor/md5/md5.js
+    - media/js/login.js
+
+chat_js:
+  dest: media/dist/chat.js
+  src:
+    - media/js/util/eggs.js
+    - media/js/util/message.js
+    - media/js/models.js
+    - media/js/views/notifications.js
+    - media/js/views/browser.js
+    - media/js/views/room.js
+    - media/js/views/status.js
+    - media/js/views/window.js
+    - media/js/views/panes.js
+    - media/js/views/modals.js
+    - media/js/views/client.js
+    - media/js/client.js
+    - media/js/chat.js
