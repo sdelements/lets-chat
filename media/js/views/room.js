@@ -58,7 +58,7 @@
             'click .hide-edit-room': 'hideEditRoom',
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
-            'dblclick .lcb-avatar': 'poke'
+            'click .lcb-room-poke': 'poke'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -395,8 +395,10 @@
         },
         poke: function(e) {
             var $target = $(e.currentTarget),
+                $root = $target.closest('[data-id],[data-owner]'),
+                id = $root.data('owner') || $root.data('id'),
                 user = this.model.users.findWhere({
-                    id: $target.data('id')
+                    id: id
                 });
             if (!user) return;
             var $input = this.$('.lcb-entry-input'),

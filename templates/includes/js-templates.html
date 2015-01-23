@@ -114,13 +114,13 @@
         </div><!-- lcb-room end -->
     </script>
     <script type="text/x-handlebars-template" id="template-message">
-        <li class="lcb-message {{#if mentioned}}lcb-message-mentioned{{/if}} {{#if fragment}}lcb-message-fragment{{/if}} {{#if own}}lcb-message-own{{/if}} {{#if fragment}}lcb-message-paste{{/if}}">
+        <li class="lcb-message {{#if mentioned}}lcb-message-mentioned{{/if}} {{#if fragment}}lcb-message-fragment{{/if}} {{#if own}}lcb-message-own{{/if}} {{#if fragment}}lcb-message-paste{{/if}}" data-owner="{{owner.id}}">
             {{#unless fragment}}
-                <img class="lcb-message-avatar lcb-avatar" src="https://www.gravatar.com/avatar/{{owner.avatar}}?s=30" data-id="{{owner.id}}" />
+                <img class="lcb-message-avatar lcb-avatar lcb-room-poke" src="https://www.gravatar.com/avatar/{{owner.avatar}}?s=30" />
             {{/unless}}
             <div class="lcb-message-meta">
                 {{#unless fragment}}
-                    <span class="lcb-message-name">
+                    <span class="lcb-message-name lcb-room-poke">
                         {{owner.displayName}}
                         <span class="lcb-message-username">
                             @{{owner.username}}
@@ -140,8 +140,8 @@
     </script>
     <script type="text/x-handlebars-template" id="template-user">
         <li class="lcb-room-sidebar-item lcb-room-sidebar-user" data-id="{{id}}">
-            <img class="lcb-avatar lcb-room-sidebar-user-avatar" src="https://www.gravatar.com/avatar/{{avatar}}?s=30" data-id="{{id}}" />
-            <div class="lcb-room-sidebar-user-meta">
+            <img class="lcb-avatar lcb-room-sidebar-user-avatar lcb-room-poke" src="https://www.gravatar.com/avatar/{{avatar}}?s=30" />
+            <div class="lcb-room-sidebar-user-meta lcb-room-poke">
                 <span class="lcb-room-sidebar-user-name">
                     {{displayName}}
                 </span>
