@@ -120,7 +120,7 @@
             {{/unless}}
             <div class="lcb-message-meta">
                 {{#unless fragment}}
-                    <span class="lcb-message-name">
+                    <span class="lcb-message-name" data-id="{{owner.id}}">
                         {{owner.displayName}}
                         <span class="lcb-message-username">
                             @{{owner.username}}
@@ -142,10 +142,10 @@
         <li class="lcb-room-sidebar-item lcb-room-sidebar-user" data-id="{{id}}">
             <img class="lcb-avatar lcb-room-sidebar-user-avatar" src="https://www.gravatar.com/avatar/{{avatar}}?s=30" data-id="{{id}}" />
             <div class="lcb-room-sidebar-user-meta">
-                <span class="lcb-room-sidebar-user-name">
+                <span class="lcb-room-sidebar-user-name" data-id="{{id}}">
                     {{displayName}}
                 </span>
-                <span class="lcb-room-sidebar-user-username">
+                <span class="lcb-room-sidebar-user-username" data-id="{{id}}">
                     @{{username}}
                 </span>
             </div>

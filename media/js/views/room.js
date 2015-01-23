@@ -58,8 +58,8 @@
             'click .hide-edit-room': 'hideEditRoom',
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
-            'dblclick .lcb-avatar': 'poke',
-            'touchend .lcb-avatar': 'poke'
+            'dblclick .lcb-avatar, .lcb-message-name, .lcb-room-sidebar-user-name, .lcb-room-sidebar-user-username': 'poke',
+            'touchend .lcb-avatar, .lcb-message-name, .lcb-room-sidebar-user-name, .lcb-room-sidebar-user-username': 'poke',
         },
         initialize: function(options) {
 
