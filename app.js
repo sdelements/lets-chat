@@ -18,7 +18,8 @@ var _ = require('lodash'),
     all = require('require-tree');
 
 var psjon = require('./package.json'),
-    settings = require('./app/config.js'),
+    settings = require('./app/config'),
+    bundles = require('./app/bundles'),
     httpEnabled = settings.http && settings.http.enable,
     httpsEnabled = settings.https && settings.https.enable;
 
@@ -73,9 +74,10 @@ app.use('/media', express.static(__dirname + '/media'));
 
 // Templates
 nunjucks.configure('templates', {
-    autoescape: true,
-    express: app
-});
+        autoescape: true,
+        express: app
+    })
+    .addGlobal('bundles', bundles);
 
 // HTTP Middlewares
 app.use(express.json());

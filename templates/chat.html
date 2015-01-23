@@ -1,34 +1,10 @@
 {% extends 'base.html' %}
 
-{% block css %}
-    <link rel="stylesheet" type="text/css" href="media/js/vendor/at/jquery.atwho.css" />
-{% endblock %}
+{% block css %}{% endblock %}
 
 {% block js %}
     <script type="text/javascript" src="socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="media/js/vendor/notifications/desktop-notifications.js"></script>
-    <script type="text/javascript" src="media/js/vendor/at/jquery.caret.js"></script>
-    <script type="text/javascript" src="media/js/vendor/at/jquery.atwho.js"></script>
-    <script type="text/javascript" src="media/js/vendor/backbone.keys/backbone.keys.js"></script>
-    <script type="text/javascript" src="media/js/vendor/raptorize/jquery.raptorize.js"></script>
-    <script type="text/javascript" src="media/js/util/eggs.js"></script>
-    <script type="text/javascript" src="media/js/util/message.js"></script>
-    <script type="text/javascript" src="media/js/models.js"></script>
-    <script type="text/javascript" src="media/js/views/notifications.js"></script>
-    <script type="text/javascript" src="media/js/views/browser.js"></script>
-    <script type="text/javascript" src="media/js/views/room.js"></script>
-    <script type="text/javascript" src="media/js/views/status.js"></script>
-    <script type="text/javascript" src="media/js/views/window.js"></script>
-    <script type="text/javascript" src="media/js/views/panes.js"></script>
-    <script type="text/javascript" src="media/js/views/modals.js"></script>
-    <script type="text/javascript" src="media/js/views/client.js"></script>
-    <script type="text/javascript" src="media/js/client.js"></script>
-    <script type="text/javascript">
-        window.client = new window.LCB.Client();
-        $(function() {
-           window.client.start();
-        });
-    </script>
+    {{ bundles.chat_js | safe }}
 {% endblock %}
 
 {% block templates %}

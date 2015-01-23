@@ -9,8 +9,7 @@
 {% endblock %}
 
 {% block js %}
-    <script type="text/javascript" src="media/js/vendor/md5/md5.js"></script>
-    <script type="text/javascript" src="media/js/login.js"></script>
+    {{ bundles.login_js | safe }}
 {% endblock %}
 
 {% block body %}
