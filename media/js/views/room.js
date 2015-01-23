@@ -58,8 +58,7 @@
             'click .hide-edit-room': 'hideEditRoom',
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
-            'click .lcb-room-poke': 'poke',
-            'touchend .lcb-room-poke': 'poke'
+            'click .lcb-room-poke': 'poke'
         },
         initialize: function(options) {
 
