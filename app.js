@@ -98,10 +98,10 @@ app.use(helmet.hsts({
 }));
 app.use(helmet.contentSecurityPolicy({
     defaultSrc: ['\'none\''],
-    connectSrc: ['\'self\''],
-    scriptSrc: ['\'self\''],
-    styleSrc: ['\'self\''],
-    fontSrc: ['\'self\''],
+    connectSrc: ['*'],
+    scriptSrc: ['\'self\'', '\'unsafe-eval\''],
+    styleSrc: ['\'self\'', 'fonts.googleapis.com', '\'unsafe-inline\''],
+    fontSrc: ['\'self\'', 'fonts.gstatic.com'],
     mediaSrc: ['\'self\''],
     imgSrc: ['*']
 }));
