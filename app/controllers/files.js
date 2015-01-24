@@ -57,7 +57,7 @@ module.exports = function() {
                 }
 
                 res.contentType(file.type);
-                res.sendfile(settings.local.uploads_dir + '/' + file._id);
+                res.sendfile(settings.local.upload_dir + '/' + file._id);
             });
         });
     }
