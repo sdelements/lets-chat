@@ -84,7 +84,18 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 // Security protections
-app.use(helmet());
+app.use(helmet.crossdomain());
+app.use(helmet.frameguard());
+app.use(helmet.hidePoweredBy());
+app.use(helmet.ieNoOpen());
+app.use(helmet.noSniff());
+app.use(helmet.xssFilter());
+app.use(helmet.hsts({
+    maxAge: 31536000,
+    includeSubdomains: true,
+    force: httpsEnabled,
+    preload: true
+}));
 app.use(helmet.contentSecurityPolicy({
     defaultSrc: ['\'none\''],
     connectSrc: ['\'self\''],
