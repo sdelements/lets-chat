@@ -44,9 +44,11 @@ MessageManager.prototype.list = function(options, cb) {
     var Message = mongoose.model('Message'),
         User = mongoose.model('User');
 
-    var find = Message.find({
-        room: options.room || null
-    });
+    var find = Message.find();
+
+    if (options.room) {
+        find.where('room', options.room);
+    }
 
     if (options.from) {
         find.where('_id').gt(options.from);
