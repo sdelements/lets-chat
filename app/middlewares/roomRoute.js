@@ -10,18 +10,18 @@ module.exports = function(req, res, next) {
     var room = req.params.room;
 
     if (!room) {
-        return req.io.respond(404);
+        return res.respond(404);
     }
 
     var Room = mongoose.model('Room');
 
     Room.findByIdOrSlug(room, function(err, room) {
         if (err) {
-            return req.io.respond(err, 400);
+            return res.send(400);
         }
 
         if (!room) {
-            return req.io.respond(404);
+            return res.send(404);
         }
 
         var roomId = room._id.toString();
