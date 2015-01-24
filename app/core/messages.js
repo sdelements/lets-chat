@@ -33,11 +33,8 @@ MessageManager.prototype.create = function(options, cb) {
                     console.error(err);
                     return cb(err);
                 }
-                message = message.toJSON();
-                message.owner = user.toJSON();
-                message.room = room.toJSON();
-                cb(null, message);
-                this.core.emit('messages:new', message);
+                cb(null, message, room, user);
+                this.core.emit('messages:new', message, room, user);
             }.bind(this));
         }.bind(this));
     }.bind(this));

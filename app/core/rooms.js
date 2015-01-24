@@ -15,7 +15,7 @@ RoomManager.prototype.create = function(options, cb) {
         }
 
         if (cb) {
-            room = room.toJSON();
+            room = room;
             cb(null, room);
             this.core.emit('rooms:new', room);
         }
@@ -47,7 +47,7 @@ RoomManager.prototype.update = function(roomId, options, cb) {
                 console.error(err);
                 return cb(err);
             }
-            room = room.toJSON();
+            room = room;
             cb(null, room);
             this.core.emit('rooms:update', room);
 

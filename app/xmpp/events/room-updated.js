@@ -9,7 +9,7 @@ module.exports = EventListener.extend({
     on: 'rooms:update',
 
     then: function(room) {
-        var connections = this.getConnectionsForRoom(room.id);
+        var connections = this.getConnectionsForRoom(room._id);
 
         connections.forEach(function(connection) {
 

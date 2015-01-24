@@ -24,7 +24,7 @@ module.exports = function() {
     //
     app.get('/', middlewares.requireLogin, function(req, res) {
         res.render('chat.html', {
-            account: req.user.toJSON(),
+            account: req.user,
             settings: settings
         });
     });

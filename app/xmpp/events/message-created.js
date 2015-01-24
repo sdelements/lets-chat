@@ -10,8 +10,8 @@ module.exports = EventListener.extend({
 
     on: 'messages:new',
 
-    then: function(msg) {
-        var connections = this.getConnectionsForRoom(msg.room.id);
+    then: function(msg, room, user) {
+        var connections = this.getConnectionsForRoom(room._id);
 
         connections.forEach(function(connection) {
             var text = msg.text;
@@ -25,8 +25,8 @@ module.exports = EventListener.extend({
             var stanza = new Stanza.Message({
                 id: msg._id,
                 type: 'groupchat',
-                to: helper.getRoomJid(msg.room.slug),
-                from: helper.getRoomJid(msg.room.slug, msg.owner.username)
+                to: helper.getRoomJid(room.slug),
+                from: helper.getRoomJid(room.slug, user.username)
             });
 
             stanza.c('active', {

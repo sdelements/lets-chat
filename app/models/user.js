@@ -253,10 +253,7 @@ UserSchema.method('toJSON', function() {
         lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
-        avatar: this.avatar,
-        uid: this.uid,
-        email: this.email,
-        local: this.local
+        avatar: this.avatar
     };
 });
 

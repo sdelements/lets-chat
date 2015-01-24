@@ -12,9 +12,13 @@ module.exports = function() {
         models = this.models,
         Room = models.room;
 
-    core.on('messages:new', function(message) {
-        app.io.room(message.room.id)
-              .broadcast('messages:new', message);
+    core.on('messages:new', function(message, room, user) {
+        var msg = message.toJSON();
+        msg.owner = user;
+        msg.room = room;
+
+        app.io.room(room._id)
+              .broadcast('messages:new', msg);
     });
 
     //
