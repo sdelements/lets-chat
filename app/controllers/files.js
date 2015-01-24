@@ -96,7 +96,7 @@ module.exports = function() {
                 if (err) {
                     return req.io.respond(400);
                 }
-                req.io.respond(files, 200);
+                req.io.respond(files.reverse(), 200);
             });
         }
     });

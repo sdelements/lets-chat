@@ -30,6 +30,10 @@ secrets:
 files:
   enable: true
   provider: local
+  allowed_file_types:
+    - 'image/jpeg'
+    - 'image/png'
+    - 'image/gif'
 
   local:
     upload_dir: uploads
