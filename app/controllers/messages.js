@@ -71,7 +71,7 @@ module.exports = function() {
                 if (err) {
                     return req.io.respond(400);
                 }
-                req.io.respond(messages, 200);
+                req.io.respond(messages.reverse(), 200);
             });
         }
     });

@@ -31,6 +31,19 @@ database:
 secrets:
   cookie: secretsauce
 
+files:
+  enable: false
+  provider: local
+
+  local:
+    upload_dir: uploads
+
+  s3:
+    accessKeyId:
+    secretAccessKey:
+    bucket:
+    region:
+
 auth:
   login_throttling:
     enable: true

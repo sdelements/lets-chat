@@ -64,6 +64,7 @@ var session = {
     cookie: { secure: httpsEnabled }
 };
 
+app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session(session));
 
