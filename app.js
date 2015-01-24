@@ -44,7 +44,7 @@ if (httpsEnabled) {
 
 if (settings.env === 'production') {
     app.set('env', settings.env);
-    app.set('json spaces', 0);
+    app.set('json spaces', undefined);
     app.enable('view cache');
 }
 
@@ -84,15 +84,16 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 // Security protections
-app.use(helmet.frameguard('sameorigin'));
-app.use(helmet.hidePoweredBy());
-app.use(helmet.hsts({
-    maxAge: 31536000,
-    includeSubdomains: true,
-    force: httpsEnabled,
-    preload: true
+app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+    defaultSrc: ['\'none\''],
+    connectSrc: ['\'self\''],
+    scriptSrc: ['\'self\''],
+    styleSrc: ['\'self\''],
+    fontSrc: ['\'self\''],
+    mediaSrc: ['\'self\''],
+    imgSrc: ['*']
 }));
-app.use(helmet.noSniff());
 
 app.io.use(function(req, next) {
     // Stub methods that are not available in socket.io
