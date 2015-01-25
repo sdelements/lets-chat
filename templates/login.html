@@ -39,7 +39,7 @@
             </form>
             {% if auth.local %}
             {% if auth.local.enable_registration %}
-            <form class="lcb-login-box lcb-login-box-registration validate" action="/account/register" method="post" style="display: none;">
+            <form class="lcb-login-box lcb-login-box-registration validate" action="/account/register" method="post" style="display: none;" data-refresh="true">
                 <h2 class="lcb-login-box-heading">Register</h2>
                 <div class="form-group">
                     <input class="required form-control" name="username" type="text" placeholder="Username" maxlength="24" />
