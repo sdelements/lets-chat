@@ -73,6 +73,7 @@
     "mongoose": "~3.8.19",
     "mongoose-unique-validator": "~0.4.1",
     "mongoose-validate": "0.0.5",
+    "multer": "^0.1.7",
     "node-uuid": "^1.4.2",
     "node-xmpp-core": "^1.0.0-alpha12",
     "node-xmpp-server": "^1.0.0-alpha11",

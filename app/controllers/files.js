@@ -4,7 +4,8 @@
 
 'use strict';
 
-var settings = require('./../config').files;
+var multer = require('multer'),
+    settings = require('./../config').files;
 
 module.exports = function() {
 
@@ -27,6 +28,12 @@ module.exports = function() {
               .broadcast('files:new', fil);
     });
 
+    var fileUpload = multer({
+        limits: {
+            files: 1
+        }
+    });
+
     //
     // Routes
     //
@@ -34,7 +41,7 @@ module.exports = function() {
         req.io.route('files:list');
     });
 
-    app.post('/files', middlewares.requireLogin, function(req, res) {
+    app.post('/files', middlewares.requireLogin, fileUpload, function(req, res) {
         req.io.route('files:create');
     });
 
@@ -42,7 +49,7 @@ module.exports = function() {
         req.io.route('files:list');
     });
 
-    app.post('/rooms/:room/files', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
+    app.post('/rooms/:room/files', middlewares.requireLogin, middlewares.roomRoute, fileUpload, function(req, res) {
         req.io.route('files:create');
     });
 

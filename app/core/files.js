@@ -25,8 +25,9 @@ FileManager.prototype.create = function(options, cb) {
 
     if (settings.allowed_file_types &&
         settings.allowed_file_types.length &&
-        !_.include(settings.allowed_file_types, options.file.type)) {
-            return cb('The MIME type ' + options.file.type + ' is not allowed');
+        !_.include(settings.allowed_file_types, options.file.mimetype)) {
+            return cb('The MIME type ' + options.file.mimetype +
+                      ' is not allowed');
     }
 
     Room.findById(options.room, function(err, room) {
@@ -37,11 +38,11 @@ FileManager.prototype.create = function(options, cb) {
         if (room.archived) {
             return cb('Room is archived.');
         }
-
+        
         new File({
             owner: options.owner,
-            name: options.file.name,
-            type: options.file.type,
+            name: options.file.originalname,
+            type: options.file.mimetype,
             size: options.file.size,
             room: options.room
         }).save(function(err, savedFile) {
