@@ -33,14 +33,11 @@
             switch(res.status) {
                 case 200:
                 case 201:
-                    var removeButtonCss = '<style>' +
-                        '.sweet-alert .confirm{display: none;}' +
-                        '.sweet-alert p{margin-bottom:20px;}</style>';
-
-                    $('body').append(removeButtonCss);
-
                     swal('Success', res.responseJSON.message, 'success');
-
+                    $form.hasClass('lcb-login-box-login') && $('.sweet-alert').each(function() {
+                        $(this).find('.confirm').hide();
+                        $(this).find('p').css('margin-bottom', '20px');
+                    });
                     if ($form.data('refresh')) {
                         setTimeout(function() {
                             window.location = '/';
@@ -50,19 +47,16 @@
                     $form[0].reset();
                     $('.lcb-show-box:visible').click();
                     break;
-
                 case 401:
                     swal('Woops.',
                          'Your username or password is not correct',
                          'warning');
                     break;
-
                 case 403:
                     swal('Woops.',
                          'Your account is locked',
                          'warning');
                     break;
-
                 default:
                     swal('Woops.',
                          'A server error has occured',
