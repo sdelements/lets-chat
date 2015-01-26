@@ -27,9 +27,11 @@ $(document).ready(function() {
             var _this = $(this);
             var audioSupported = false;
 
-            if ($.browser.mozilla || $.browser.webkit) {
-                audioSupported = true;
-            }
+            // DISABLED AUDIO SUPPORT
+
+            // if ($.browser.mozilla || $.browser.webkit) {
+            //     audioSupported = true;
+            // }
 
             //Raptor Vars (Modify the 'src' to your prefrence)
             var raptorImageMarkup = '<img id="elRaptor" style="display: none" src="/media/js/vendor/raptorize/raptor.png" />'
