@@ -75,7 +75,7 @@ module.exports = function() {
     app.io.route('files', {
         create: function(req) {
             if (!req.files || !req.files.file) {
-                return req.io.respond(400);
+                return req.io.sendStatus(400);
             }
 
             var data = req.data || req.body,
@@ -87,10 +87,10 @@ module.exports = function() {
 
             core.files.create(options, function(err, file) {
                 if (err) {
-                    console.log(err)
-                    return req.io.respond(400);
+                    console.log(err);
+                    return req.io.sendStatus(400);
                 }
-                req.io.respond(file, 201);
+                req.io.status(201).respond(file);
             });
         },
         list: function(req) {
@@ -101,9 +101,9 @@ module.exports = function() {
 
             core.files.list(options, function(err, files) {
                 if (err) {
-                    return req.io.respond(400);
+                    return req.io.sendStatus(400);
                 }
-                req.io.respond(files.reverse(), 200);
+                req.io.respond(files.reverse());
             });
         }
     });

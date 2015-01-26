@@ -54,9 +54,9 @@ module.exports = function() {
 
             core.messages.create(options, function(err, message) {
                 if (err) {
-                    return req.io.respond(400);
+                    return req.io.sendStatus(400);
                 }
-                req.io.respond(message, 201);
+                req.io.status(201).respond(message);
             });
         },
         list: function(req) {
@@ -69,9 +69,9 @@ module.exports = function() {
 
             core.messages.list(options, function(err, messages) {
                 if (err) {
-                    return req.io.respond(400);
+                    return req.io.sendStatus(400);
                 }
-                req.io.respond(messages.reverse(), 200);
+                req.io.respond(messages.reverse());
             });
         }
     });

@@ -67,9 +67,9 @@ module.exports = function() {
             core.rooms.list(null, function(err, rooms) {
                 if (err) {
                     console.error(err);
-                    return req.io.respond(err, 400);
+                    return req.io.status(400).respond(err);
                 }
-                req.io.respond(rooms, 200);
+                req.io.respond(rooms);
             });
         },
         get: function(req) {
@@ -78,14 +78,14 @@ module.exports = function() {
             core.rooms.get(roomId, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.respond(err, 400);
+                    return req.io.status(400).respond(err);
                 }
 
                 if (!room) {
-                    return req.io.respond(404);
+                    return req.io.sendStatus(404);
                 }
 
-                req.io.respond(room, 200);
+                req.io.respond(room);
             });
         },
         create: function(req) {
@@ -100,9 +100,9 @@ module.exports = function() {
             core.rooms.create(options, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.respond(err, 400);
+                    return req.io.status(400).respond(err);
                 }
-                req.io.respond(room, 201);
+                req.io.status(201).respond(room);
                 app.io.broadcast('rooms:new', room);
             });
         },
@@ -119,15 +119,15 @@ module.exports = function() {
             core.rooms.update(roomId, options, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.respond(err, 400);
+                    return req.io.status(400).respond(err);
                 }
 
                 if (!room) {
-                    return req.io.respond(404);
+                    return req.io.sendStatus(404);
                 }
 
                 app.io.broadcast('rooms:update', room);
-                req.io.respond(room, 200);
+                req.io.respond(room);
             });
         },
         archive: function(req) {
@@ -139,14 +139,14 @@ module.exports = function() {
             core.rooms.archive(roomId, function(err, room) {
                 if (err) {
                     console.log(err);
-                    return req.io.respond(400);
+                    return req.io.sendStatus(400);
                 }
 
                 if (!room) {
-                    return req.io.respond(404);
+                    return req.io.sendStatus(404);
                 }
 
-                req.io.respond(room, 200);
+                req.io.respond(room);
                 app.io.broadcast('rooms:archive', room);
             });
         },
@@ -155,11 +155,11 @@ module.exports = function() {
             core.rooms.get(roomId, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.respond();
+                    return req.io.sendStatus(400);
                 }
 
                 if (!room) {
-                    return req.io.respond();
+                    return req.io.sendStatus(400);
                 }
 
                 var user = req.user.toJSON();
@@ -185,11 +185,11 @@ module.exports = function() {
             core.rooms.get(data.room, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.respond(400);
+                    return req.io.sendStatus(400);
                 }
 
                 if (!room) {
-                    return req.io.respond(404);
+                    return req.io.sendStatus(404);
                 }
 
                 var userIds = core.presence.rooms
@@ -199,7 +199,7 @@ module.exports = function() {
                     if (err) {
                         // Something bad happened
                         console.error(err);
-                        return req.io.respond(400);
+                        return req.io.sendStatus(400);
                     }
 
                     // The client needs user.room in
@@ -210,7 +210,7 @@ module.exports = function() {
                         return user;
                     });
 
-                    req.io.respond(users, 200);
+                    req.io.respond(users);
                 });
             });
         }
