@@ -73,9 +73,8 @@ function setup(app, session, core) {
 
     app.io.use(function (socket, next) {
         var User = mongoose.model('User');
-
-        if (socket.request.query && socket.request.query.token) {
-            User.findByToken(socket.request.query.token, function(err, user) {
+        if (socket.request._query && socket.request._query.token) {
+            User.findByToken(socket.request._query.token, function(err, user) {
                 if (err || !user) {
                     return next('Fail');
                 }
