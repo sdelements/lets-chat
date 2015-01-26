@@ -6,19 +6,6 @@
 
     function onSubmit(form, callbacks) {
         var $form = $(form);
-        var setMessage = function(text, type, delay) {
-            $form.find('.response').each(function () {
-                var isError = type === 'error' ? true : false;
-                $(this).text(text);
-                $(this).toggleClass('alert-danger', isError)
-                .toggleClass('alert-success', !isError)
-                .stop(true, true)
-                .fadeIn(100);
-                if (delay) {
-                    $(this).delay(delay).fadeOut(200);
-                }
-            });
-        };
         $.ajax({
             type: 'POST',
             url: $form.attr('action'),
@@ -29,7 +16,7 @@
     }
 
     function getLoginCallback($form) {
-        return function(res) {
+        return function(res, text) {
             switch(res.status) {
                 case 200:
                 case 201:
@@ -46,6 +33,11 @@
                     }
                     $form[0].reset();
                     $('.lcb-show-box:visible').click();
+                    break;
+                case 400:
+                    swal('Woops',
+                         res.responseJSON && res.responseJSON.message,
+                         'error');
                     break;
                 case 401:
                     swal('Woops.',
@@ -85,7 +77,9 @@
             var email = $(this).val();
             var valid = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(email);
             if (valid) {
-                $('.lcb-login-avatar').attr('src', 'https://www.gravatar.com/avatar/' + md5(email) + '?s=100?d=mm').addClass('show');
+                $('.lcb-login-avatar')
+                    .attr('src', 'https://www.gravatar.com/avatar/' + md5(email) + '?s=100?d=mm')
+                    .addClass('show');
             } else {
                 $('.lcb-login-avatar').removeClass('show');
             }

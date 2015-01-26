@@ -289,7 +289,8 @@ module.exports = function() {
                     if (err) {
                         return req.io.respond({
                             status: 'error',
-                            message: 'There were problems logging you in.'
+                            message: 'There were problems logging you in.',
+                            errors: err
                         }, 400);
                     }
                     req.io.respond({
