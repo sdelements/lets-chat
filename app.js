@@ -58,7 +58,7 @@ var sessionStore = new MongoStore({
 
 // Session
 var session = {
-    key: 'express.sid',
+    key: 'connect.sid',
     secret: settings.secrets.cookie,
     store: sessionStore,
     cookie: { secure: httpsEnabled },
