@@ -6,6 +6,7 @@ var _ = require('lodash'),
     passport = require('passport'),
     passportSocketIo = require('passport.socketio'),
     BearerStrategy = require('passport-http-bearer'),
+    BasicStrategy = require('passport-http').BasicStrategy,
     settings = require('./../config'),
     available_providers = [
         require('./local'),
@@ -39,16 +40,21 @@ function setup(app, session, core) {
         providerSettings[provider.key] = provider.options;
     });
 
-    passport.use(new BearerStrategy (
-        function(token, done) {
-            var User = mongoose.model('User');
-            User.findByToken(token, function(err, user) {
-                if (err) { return done(err); }
-                if (!user) { return done(null, false); }
-                return done(null, user);
-            });
+    function tokenAuth(username, password, done) {
+        if (!done) {
+            done = password;
         }
-    ));
+
+        var User = mongoose.model('User');
+        User.findByToken(username, function(err, user) {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            return done(null, user);
+        });
+    }
+
+    passport.use(new BearerStrategy(tokenAuth));
+    passport.use(new BasicStrategy(tokenAuth));
 
     passport.serializeUser(function(user, done) {
         done(null, user._id);

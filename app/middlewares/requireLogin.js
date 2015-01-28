@@ -11,15 +11,21 @@ module.exports = function(req, res, next) {
         next();
         return;
     }
-    
+
     if (req.headers && req.headers.authorization) {
         var parts = req.headers.authorization.split(' ');
         if (parts.length === 2) {
             var scheme = parts[0],
-                credentials = parts[1];
+                credentials = parts[1],
+                auth;
 
             if (/^Bearer$/i.test(scheme)) {
-                var auth = passport.authenticate('bearer', { session: false });
+                auth = passport.authenticate('bearer', { session: false });
+                return auth(req, res, next);
+            }
+
+            if (/^Basic$/i.test(scheme)) {
+                auth = passport.authenticate('basic', { session: false });
                 return auth(req, res, next);
             }
         }
