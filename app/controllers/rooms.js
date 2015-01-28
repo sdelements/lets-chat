@@ -66,11 +66,11 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('rooms', {
-        list: function(req) {
+        list: function(req, res) {
             core.rooms.list(null, function(err, rooms) {
                 if (err) {
                     console.error(err);
-                    return req.io.status(400).respond(err);
+                    return res.status(400).json(err);
                 }
 
                 if (req.data && req.data.userCounts) {
@@ -82,26 +82,26 @@ module.exports = function() {
                     });
                 }
 
-                req.io.respond(rooms);
+                res.json(rooms);
             });
         },
-        get: function(req) {
+        get: function(req, res) {
             var roomId = req.data && req.data.id || req.param('room');
 
             core.rooms.get(roomId, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.status(400).respond(err);
+                    return res.status(400).json(err);
                 }
 
                 if (!room) {
-                    return req.io.sendStatus(404);
+                    return res.sendStatus(404);
                 }
 
-                req.io.respond(room);
+                res.json(room);
             });
         },
-        create: function(req) {
+        create: function(req, res) {
             var data = req.data || req.body,
                 options = {
                     owner: req.user._id,
@@ -113,13 +113,13 @@ module.exports = function() {
             core.rooms.create(options, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.status(400).respond(err);
+                    return res.status(400).json(err);
                 }
-                req.io.status(201).respond(room);
+                res.status(201).json(room);
                 app.io.broadcast('rooms:new', room);
             });
         },
-        update: function(req) {
+        update: function(req, res) {
             var roomId = req.data && req.data.id || req.param('room'),
                 data = req.data || req.body;
 
@@ -132,18 +132,18 @@ module.exports = function() {
             core.rooms.update(roomId, options, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.status(400).respond(err);
+                    return res.status(400).json(err);
                 }
 
                 if (!room) {
-                    return req.io.sendStatus(404);
+                    return res.sendStatus(404);
                 }
 
                 app.io.broadcast('rooms:update', room);
-                req.io.respond(room);
+                res.json(room);
             });
         },
-        archive: function(req) {
+        archive: function(req, res) {
             // TODO: Make consitent with update method?
             var roomId = req.data && req.data.room ||
                          req.data && req.data.id || req.param('room'),
@@ -152,71 +152,71 @@ module.exports = function() {
             core.rooms.archive(roomId, function(err, room) {
                 if (err) {
                     console.log(err);
-                    return req.io.sendStatus(400);
+                    return res.sendStatus(400);
                 }
 
                 if (!room) {
-                    return req.io.sendStatus(404);
+                    return res.sendStatus(404);
                 }
 
-                req.io.respond(room);
+                res.json(room);
                 app.io.broadcast('rooms:archive', room);
             });
         },
-        join: function(req) {
+        join: function(req, res) {
             var roomId = req.data;
             core.rooms.get(roomId, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.sendStatus(400);
+                    return res.sendStatus(400);
                 }
 
                 if (!room) {
-                    return req.io.sendStatus(400);
+                    return res.sendStatus(400);
                 }
 
                 var user = req.user.toJSON();
                 user.room = room._id;
 
                 core.presence.join(req.socket.conn, room._id, room.slug);
-                req.io.join(room._id);
-                req.io.respond(room.toJSON());
+                req.socket.join(room._id);
+                res.json(room.toJSON());
             });
         },
-        leave: function(req) {
+        leave: function(req, res) {
             var roomId = req.data;
             var user = req.user.toJSON();
             user.room = roomId;
 
             core.presence.leave(req.socket.conn, roomId);
-            req.io.leave(roomId);
-            req.io.respond();
+            req.socket.leave(roomId);
+            res.json();
         },
-        users: function(req) {
+        users: function(req, res) {
             var data = req.data || req.query;
 
             core.rooms.get(data.room, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.sendStatus(400);
+                    return res.sendStatus(400);
                 }
 
                 if (!room) {
-                    return req.io.sendStatus(404);
+                    return res.sendStatus(404);
                 }
 
                 var userIds = core.presence.rooms
                         .getOrAdd(room._id, room.slug).getUserIds();
 
                 if (!userIds.length) {
-                    return req.io.respond([]);
+                    return res.json([]);
                 }
 
                 User.find({ _id: { $in: userIds } }, function(err, users) {
                     if (err) {
                         // Something bad happened
                         console.error(err);
-                        return req.io.sendStatus(400);
+                        return res.sendStatus(400);
                     }
 
                     // The client needs user.room in
@@ -227,7 +227,7 @@ module.exports = function() {
                         return user;
                     });
 
-                    req.io.respond(users);
+                    res.json(users);
                 });
             });
         }

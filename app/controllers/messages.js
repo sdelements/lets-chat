@@ -46,7 +46,7 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('messages', {
-        create: function(req) {
+        create: function(req, res) {
             var data = req.data || req.body,
                 options = {
                     owner: req.user._id,
@@ -56,12 +56,12 @@ module.exports = function() {
 
             core.messages.create(options, function(err, message) {
                 if (err) {
-                    return req.io.sendStatus(400);
+                    return res.sendStatus(400);
                 }
-                req.io.status(201).respond(message);
+                res.status(201).json(message);
             });
         },
-        list: function(req) {
+        list: function(req, res) {
             var data = req.data || req.query,
                 options = {
                     room: data.room || null,
@@ -71,9 +71,9 @@ module.exports = function() {
 
             core.messages.list(options, function(err, messages) {
                 if (err) {
-                    return req.io.sendStatus(400);
+                    return res.sendStatus(400);
                 }
-                req.io.respond(messages.reverse());
+                res.json(messages.reverse());
             });
         }
     });

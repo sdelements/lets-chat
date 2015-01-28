@@ -29,17 +29,17 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('users', {
-        list: function(req) {
+        list: function(req, res) {
             var data = req.data || req.query;
 
             if (!data || !data.room) {
                 User.find(function(err, users) {
                     if (err) {
                         console.log(err);
-                        return req.io.status(400).respond(err);
+                        return res.status(400).json(err);
                     }
 
-                    req.io.respond(users);
+                    res.json(users);
                 });
 
                 return;
@@ -48,13 +48,12 @@ module.exports = function() {
             models.room.findById(data.room || null, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.status(400).respond(err);
+                    return res.status(400).json(err);
                 }
 
                 if (!room) {
                     // Invalid room!
-                    return req.io.status(404)
-                                 .respond('This room does not exist');
+                    return res.status(404).json('This room does not exist');
                 }
 
                 var userIds = core.presence.rooms
@@ -64,7 +63,7 @@ module.exports = function() {
                     if (err) {
                         // Something bad happened
                         console.error(err);
-                        return req.io.status(400).respond(err);
+                        return res.status(400).json(err);
                     }
                     // The client needs user.room in
                     // order to properly route users
@@ -74,24 +73,24 @@ module.exports = function() {
                         return user;
                     });
 
-                    req.io.respond(users);
+                    res.json(users);
                 });
             });
         },
-        retrieve: function(req) {
+        retrieve: function(req, res) {
             var identifier = req.param('id');
 
             User.findByIdentifier(identifier, function (err, user) {
                 if (err) {
                     console.error(err);
-                    return req.io.status(400).respond(err);
+                    return res.status(400).json(err);
                 }
 
                 if (!user) {
-                    return req.io.sendStatus(404);
+                    return res.sendStatus(404);
                 }
 
-                req.io.respond(user);
+                res.json(user);
             });
         }
     });

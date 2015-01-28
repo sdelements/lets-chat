@@ -76,9 +76,9 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('files', {
-        create: function(req) {
+        create: function(req, res) {
             if (!req.files || !req.files.file) {
-                return req.io.sendStatus(400);
+                return res.sendStatus(400);
             }
 
             var data = req.data || req.body,
@@ -91,12 +91,12 @@ module.exports = function() {
             core.files.create(options, function(err, file) {
                 if (err) {
                     console.log(err);
-                    return req.io.sendStatus(400);
+                    return res.sendStatus(400);
                 }
-                req.io.status(201).respond(file);
+                res.status(201).json(file);
             });
         },
-        list: function(req) {
+        list: function(req, res) {
             var data = req.data || req.query,
                 options = {
                     room: data.room || null
@@ -104,9 +104,9 @@ module.exports = function() {
 
             core.files.list(options, function(err, files) {
                 if (err) {
-                    return req.io.sendStatus(400);
+                    return res.sendStatus(400);
                 }
-                req.io.respond(files.reverse());
+                res.json(files.reverse());
             });
         }
     });

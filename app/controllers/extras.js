@@ -32,7 +32,7 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('extras', {
-        'emotes:list': function(req, next) {
+        'emotes:list': function(req, res) {
             var emotes = [];
 
             var dir = path.join(process.cwd(), 'extras/emotes');
@@ -61,10 +61,10 @@ module.exports = function() {
                     });
                 });
 
-                req.io.respond(emotes);
+                res.json(emotes);
             });
         },
-        'replacements:list': function(req, next) {
+        'replacements:list': function(req, res) {
             var replacements = [];
             ['default.yml', 'local.yml'].forEach(function(filename) {
                 var fullpath = path.join(process.cwd(), 'extras/replacements/' + filename);
@@ -72,7 +72,7 @@ module.exports = function() {
                     replacements = _.merge(replacements, yaml.safeLoad(fs.readFileSync(fullpath, 'utf8')));
                 }
             });
-            req.io.respond(replacements);
+            res.json(replacements);
         }
     });
 

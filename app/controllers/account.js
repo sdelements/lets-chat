@@ -78,10 +78,10 @@ module.exports = function() {
     // Sockets
     //
     app.io.route('account', {
-        whoami: function(req) {
-            req.io.respond(req.user);
+        whoami: function(req, res) {
+            res.json(req.user);
         },
-        profile: function(req) {
+        profile: function(req, res) {
             var form = req.body || req.data,
                 data = {
                     displayName: form.displayName || form['display-name'],
@@ -91,7 +91,7 @@ module.exports = function() {
 
             core.account.update(req.user._id, data, function (err, user) {
                 if (err) {
-                    return req.io.respond({
+                    return res.json({
                         status: 'error',
                         message: 'Unable to update your profile.',
                         errors: err
@@ -99,16 +99,16 @@ module.exports = function() {
                 }
 
                 if (!user) {
-                    return req.io.sendStatus(404);
+                    return res.sendStatus(404);
                 }
 
-                req.io.respond(user);
+                res.json(user);
                 app.io.broadcast('users:update', user);
             });
         },
-        settings: function(req) {
+        settings: function(req, res) {
             if (req.user.using_token) {
-                return req.io.status(403).respond({
+                return res.status(403).json({
                     status: 'error',
                     message: 'Cannot change account settings ' +
                              'when using token authentication.'
@@ -129,7 +129,7 @@ module.exports = function() {
             auth.authenticate(req.user.uid || req.user.username,
                               data.currentPassword, function(err, user) {
                 if (err) {
-                    return req.io.status(400).respond({
+                    return res.status(400).json({
                         status: 'error',
                         message: 'There were problems authenticating you.',
                         errors: err
@@ -137,7 +137,7 @@ module.exports = function() {
                 }
 
                 if (!user) {
-                    return req.io.status(401).respond({
+                    return res.status(401).json({
                         status: 'error',
                         message: 'Incorrect login credentials.'
                     });
@@ -145,21 +145,21 @@ module.exports = function() {
 
                 core.account.update(req.user._id, data, function (err, user, reason) {
                     if (err || !user) {
-                        return req.io.status(400).respond({
+                        return res.status(400).json({
                             status: 'error',
                             message: 'Unable to update your account.',
                             reason: reason,
                             errors: err
                         });
                     }
-                    req.io.respond(user);
+                    res.json(user);
                     app.io.broadcast('users:update', user);
                 });
             });
         },
-        generate_token: function(req) {
+        generate_token: function(req, res) {
             if (req.user.using_token) {
-                return req.io.status(403).respond({
+                return res.status(403).json({
                     status: 'error',
                     message: 'Cannot generate a new token ' +
                              'when using token authentication.'
@@ -168,23 +168,23 @@ module.exports = function() {
 
             core.account.generateToken(req.user._id, function (err, token) {
                 if (err) {
-                    return req.io.respond({
+                    return res.json({
                         status: 'error',
                         message: 'Unable to generate a token.',
                         errors: err
                     });
                 }
 
-                req.io.respond({
+                res.json({
                     status: 'success',
                     message: 'Token generated.',
                     token: token
                 });
             });
         },
-        revoke_token: function(req) {
+        revoke_token: function(req, res) {
             if (req.user.using_token) {
-                return req.io.status(403).respond({
+                return res.status(403).json({
                     status: 'error',
                     message: 'Cannot revoke token ' +
                              'when using token authentication.'
@@ -193,26 +193,26 @@ module.exports = function() {
 
             core.account.revokeToken(req.user._id, function (err) {
                 if (err) {
-                    return req.io.respond({
+                    return res.json({
                         status: 'error',
                         message: 'Unable to revoke token.',
                         errors: err
                     });
                 }
 
-                req.io.respond({
+                res.json({
                     status: 'success',
                     message: 'Token revoked.'
                 });
             });
         },
-        register: function(req) {
+        register: function(req, res) {
 
             if (req.user ||
                 !auth.providers.local ||
                 !auth.providers.local.enable_registration) {
 
-                return req.io.status(403).respond({
+                return res.status(403).json({
                     status: 'error',
                     message: 'Permission denied'
                 });
@@ -247,24 +247,24 @@ module.exports = function() {
                         console.error(err);
                     }
                     // Notify
-                    return req.io.status(400).respond({
+                    return res.status(400).json({
                         status: 'error',
                         message: message
                     });
                 }
 
-                req.io.status(201).respond({
+                res.status(201).json({
                     status: 'success',
                     message: 'You\'ve been registered, ' +
                              'please try logging in now!'
                 });
             });
         },
-        login: function(req) {
+        login: function(req, res) {
             auth.authenticate(req.body.username, req.body.password,
                                                  function(err, user, info) {
                 if (err) {
-                    return req.io.status(400).respond({
+                    return res.status(400).json({
                         status: 'error',
                         message: 'There were problems logging you in.',
                         errors: err
@@ -272,29 +272,29 @@ module.exports = function() {
                 }
 
                 if (!user && info && info.locked) {
-                    return req.io.status(403).respond({
+                    return res.status(403).json({
                         status: 'error',
                         message: info.message || 'Account is locked.'
                     });
                 }
 
                 if (!user) {
-                    return req.io.status(401).respond({
+                    return res.status(401).json({
                         status: 'error',
                         message: info && info.message ||
                                  'Incorrect login credentials.'
                     });
                 }
-                
+
                 req.login(user, function(err) {
                     if (err) {
-                        return req.io.status(400).respond({
+                        return res.status(400).json({
                             status: 'error',
                             message: 'There were problems logging you in.',
                             errors: err
                         });
                     }
-                    req.io.respond({
+                    res.json({
                         status: 'success',
                         message: 'Logging you in...'
                     });
