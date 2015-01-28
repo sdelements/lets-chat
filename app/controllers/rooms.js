@@ -195,6 +195,10 @@ module.exports = function() {
                 var userIds = core.presence.rooms
                         .getOrAdd(room._id, room.slug).getUserIds();
 
+                if (!userIds.length) {
+                    return req.io.respond([]);
+                }
+
                 User.find({ _id: { $in: userIds } }, function(err, users) {
                     if (err) {
                         // Something bad happened
