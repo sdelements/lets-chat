@@ -6,7 +6,7 @@
 
 module.exports = function() {
 
-    var _ = require('underscore');
+    var _ = require('lodash');
 
     var app = this.app,
         core = this.core,

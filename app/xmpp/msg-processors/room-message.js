@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('underscore'),
+var _ = require('lodash'),
     MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config');
 

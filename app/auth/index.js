@@ -1,4 +1,4 @@
-var _ = require('underscore'),
+var _ = require('lodash'),
     async = require('async'),
     express = require('express.io'),
     cookieParser = require('cookie-parser'),

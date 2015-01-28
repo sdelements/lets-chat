@@ -4,7 +4,7 @@ var xmpp = require('node-xmpp-server'),
     Stanza = require('node-xmpp-core').Stanza,
     mongoose = require('mongoose'),
     settings = require('./../config'),
-    _ = require('underscore'),
+    _ = require('lodash'),
     util = require('util');
 
 

@@ -1,4 +1,4 @@
-var _ = require('underscore'),
+var _ = require('lodash'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     KerberosStrategy = require('passport-kerberos').Strategy,

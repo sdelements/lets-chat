@@ -4,7 +4,7 @@
 
 'use strict';
 
-var _ = require('underscore'),
+var _ = require('lodash'),
     fs = require('fs'),
     passport = require('passport'),
     auth = require('./../auth/index'),

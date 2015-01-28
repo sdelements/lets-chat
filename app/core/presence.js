@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('underscore'),
+var _ = require('lodash'),
     Connection = require('./presence/connection'),
     ConnectionCollection = require('./presence/connection-collection'),
     RoomCollection = require('./presence/room-collection');

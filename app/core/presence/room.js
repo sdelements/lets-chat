@@ -2,7 +2,7 @@
 
 var EventEmitter = require('events').EventEmitter,
     util = require('util'),
-    _ = require('underscore'),
+    _ = require('lodash'),
     ConnectionCollection = require('./connection-collection');
 
 function Room(roomId, roomSlug) {

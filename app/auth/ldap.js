@@ -1,5 +1,5 @@
 var fs = require('fs'),
-    _ = require('underscore'),
+    _ = require('lodash'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     ldap = require('ldapjs'),
