@@ -24,21 +24,23 @@ module.exports = function() {
     //
     // Routes
     //
-    app.get('/messages', middlewares.requireLogin, function(req, res) {
-        req.io.route('messages:list');
-    });
+    app.route('/messages')
+        .all(middlewares.requireLogin)
+        .get(function(req, res) {
+            req.io.route('messages:list');
+        })
+        .post(function(req, res) {
+            req.io.route('messages:create');
+        });
 
-    app.post('/messages', middlewares.requireLogin, function(req, res) {
-        req.io.route('messages:create');
-    });
-
-    app.get('/rooms/:room/messages', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
-        req.io.route('messages:list');
-    });
-
-    app.post('/rooms/:room/messages', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
-        req.io.route('messages:create');
-    });
+    app.route('/rooms/:room/messages')
+        .all(middlewares.requireLogin, middlewares.roomRoute)
+        .get(function(req, res) {
+            req.io.route('messages:list');
+        })
+        .post(function(req, res) {
+            req.io.route('messages:create');
+        });
 
     //
     // Sockets

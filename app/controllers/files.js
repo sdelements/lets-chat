@@ -37,36 +37,39 @@ module.exports = function() {
     //
     // Routes
     //
-    app.get('/files', middlewares.requireLogin, function(req, res) {
-        req.io.route('files:list');
-    });
+    app.route('/files')
+        .all(middlewares.requireLogin)
+        .get(function(req, res) {
+            req.io.route('files:list');
+        })
+        .post(fileUpload, function(req, res) {
+            req.io.route('files:create');
+        });
 
-    app.post('/files', middlewares.requireLogin, fileUpload, function(req, res) {
-        req.io.route('files:create');
-    });
-
-    app.get('/rooms/:room/files', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
-        req.io.route('files:list');
-    });
-
-    app.post('/rooms/:room/files', middlewares.requireLogin, middlewares.roomRoute, fileUpload, function(req, res) {
-        req.io.route('files:create');
-    });
+    app.route('/rooms/:room/files')
+        .all(middlewares.requireLogin, middlewares.roomRoute)
+        .get(function(req, res) {
+            req.io.route('files:list');
+        })
+        .post(fileUpload, function(req, res) {
+            req.io.route('files:create');
+        });
 
     if (settings.provider === 'local') {
-        app.get('/files/:id/:name',
-                middlewares.requireLogin, function(req, res) {
 
-            models.file.findById(req.params.id, function(err, file) {
-                if (err) {
-                    // Error
-                    return res.send(400);
-                }
+        app.route('/files/:id/:name')
+            .all(middlewares.requireLogin)
+            .get(function(req, res) {
+                models.file.findById(req.params.id, function(err, file) {
+                    if (err) {
+                        // Error
+                        return res.send(400);
+                    }
 
-                res.contentType(file.type);
-                res.sendfile(settings.local.upload_dir + '/' + file._id);
+                    res.contentType(file.type);
+                    res.sendfile(settings.local.upload_dir + '/' + file._id);
+                });
             });
-        });
     }
 
     //

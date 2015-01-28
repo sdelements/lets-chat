@@ -34,29 +34,32 @@ module.exports = function() {
     //
     // Routes
     //
-    app.get('/rooms', middlewares.requireLogin, function(req, res) {
-        req.io.route('rooms:list');
-    });
+    app.route('/rooms')
+        .all(middlewares.requireLogin)
+        .get(function(req, res) {
+            req.io.route('rooms:list');
+        })
+        .post(function(req, res) {
+            req.io.route('rooms:create');
+        });
 
-    app.post('/rooms', middlewares.requireLogin, function(req, res) {
-        req.io.route('rooms:create');
-    });
+    app.route('/rooms/:room')
+        .all(middlewares.requireLogin, middlewares.roomRoute)
+        .get(function(req, res) {
+            req.io.route('rooms:get');
+        })
+        .put(function(req, res) {
+            req.io.route('rooms:update');
+        })
+        .delete(function(req, res) {
+            req.io.route('rooms:archive');
+        });
 
-    app.get('/rooms/:room', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
-        req.io.route('rooms:get');
-    });
-
-    app.put('/rooms/:room', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
-        req.io.route('rooms:update');
-    });
-
-    app.delete('/rooms/:room', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
-        req.io.route('rooms:archive');
-    });
-
-    app.get('/rooms/:room/users', middlewares.requireLogin, middlewares.roomRoute, function(req, res) {
-        req.io.route('rooms:users');
-    });
+    app.route('/rooms/:room/users')
+        .all(middlewares.requireLogin, middlewares.roomRoute)
+        .get(function(req, res) {
+            req.io.route('rooms:users');
+        });
 
 
     //
