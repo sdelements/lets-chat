@@ -60,8 +60,8 @@ module.exports = function() {
                         emotes.push(emote);
                     });
                 });
-                
-                req.io.respond(emotes, 200);
+
+                req.io.respond(emotes);
             });
         },
         'replacements:list': function(req, next) {
@@ -72,7 +72,7 @@ module.exports = function() {
                     replacements = _.merge(replacements, yaml.safeLoad(fs.readFileSync(fullpath, 'utf8')));
                 }
             });
-            req.io.respond(replacements, 200);
+            req.io.respond(replacements);
         }
     });
 

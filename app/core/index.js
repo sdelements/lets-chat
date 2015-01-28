@@ -3,6 +3,7 @@
 var EventEmitter = require('events').EventEmitter,
     util = require('util'),
     AccountManager = require('./account'),
+    FileManager = require('./files'),
     MessageManager = require('./messages'),
     PresenceManager = require('./presence'),
     RoomManager = require('./rooms');
@@ -11,6 +12,10 @@ function Core() {
     EventEmitter.call(this);
 
     this.account = new AccountManager({
+        core: this
+    });
+
+    this.files = new FileManager({
         core: this
     });
 

@@ -8,13 +8,15 @@ var _ = require('lodash'),
     fs = require('fs'),
     colors = require('colors'),
     express = require('express.io'),
-    expressMiddleware = require('express.io-middleware'),
+    session = require('express-session'),
+    bodyParser = require('body-parser'),
+    cookieParser = require('cookie-parser'),
     helmet = require('helmet'),
     http = require('http'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
     migroose = require('./migroose'),
-    MongoStore = require('connect-mongo')(express),
+    MongoStore = require('connect-mongo')(session),
     all = require('require-tree');
 
 var psjon = require('./package.json'),
@@ -48,12 +50,10 @@ if (settings.env === 'production') {
     app.enable('view cache');
 }
 
-expressMiddleware(app);
-
 // Session
 var sessionStore = new MongoStore({
     url: settings.database.uri,
-    auto_reconnect: true
+    autoReconnect: true
 });
 
 // Session
@@ -61,11 +61,13 @@ var session = {
     key: 'connect.sid',
     secret: settings.secrets.cookie,
     store: sessionStore,
-    cookie: { secure: httpsEnabled }
+    cookie: { secure: httpsEnabled },
+    resave: false,
+    saveUninitialized: true
 };
 
-app.use(express.cookieParser());
-app.use(express.session(session));
+app.use(cookieParser());
+app.io.session(session);
 
 auth.setup(app, session, core);
 
@@ -80,8 +82,10 @@ nunjucks.configure('templates', {
     .addGlobal('bundles', bundles);
 
 // HTTP Middlewares
-app.use(express.json());
-app.use(express.urlencoded());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 // Security protections
 app.use(helmet.crossdomain());
@@ -105,16 +109,6 @@ app.use(helmet.contentSecurityPolicy({
     mediaSrc: ['\'self\''],
     imgSrc: ['*']
 }));
-
-app.io.use(function(req, next) {
-    // Stub methods that are not available in socket.io
-
-    if (!req.param) {
-        req.param = function() {};
-    }
-
-    next();
-});
 
 //
 // Controllers
@@ -156,7 +150,7 @@ function startApp() {
         var redirectServer = express();
         redirectServer.get('*', function(req, res) {
             var urlPort = port === 80 ? '' : ':' + port;
-            res.redirect('https://' + req.host + urlPort + req.path);
+            res.redirect('https://' + req.hostname + urlPort + req.path);
         });
         http.createServer(redirectServer).listen(settings.http.port || 5000);
     }

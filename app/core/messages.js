@@ -64,7 +64,7 @@ MessageManager.prototype.list = function(options, cb) {
                 console.error(err);
                 return cb(err);
             }
-            cb(null, messages.reverse());
+            cb(null, messages);
         });
 };
 

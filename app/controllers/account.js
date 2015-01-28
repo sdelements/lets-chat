@@ -99,7 +99,7 @@ module.exports = function() {
                 }
 
                 if (!user) {
-                    return req.io.respond(404);
+                    return req.io.sendStatus(404);
                 }
 
                 req.io.respond(user);
@@ -108,11 +108,11 @@ module.exports = function() {
         },
         settings: function(req) {
             if (req.user.using_token) {
-                return req.io.respond({
+                return req.io.status(403).respond({
                     status: 'error',
                     message: 'Cannot change account settings ' +
                              'when using token authentication.'
-                }, 403);
+                });
             }
 
             var form = req.body || req.data,
@@ -129,28 +129,28 @@ module.exports = function() {
             auth.authenticate(req.user.uid || req.user.username,
                               data.currentPassword, function(err, user) {
                 if (err) {
-                    return req.io.respond({
+                    return req.io.status(400).respond({
                         status: 'error',
                         message: 'There were problems authenticating you.',
                         errors: err
-                    }, 400);
+                    });
                 }
 
                 if (!user) {
-                    return req.io.respond({
+                    return req.io.status(401).respond({
                         status: 'error',
                         message: 'Incorrect login credentials.'
-                    }, 401);
+                    });
                 }
 
                 core.account.update(req.user._id, data, function (err, user, reason) {
                     if (err || !user) {
-                        return req.io.respond({
+                        return req.io.status(400).respond({
                             status: 'error',
                             message: 'Unable to update your account.',
                             reason: reason,
                             errors: err
-                        }, 400);
+                        });
                     }
                     req.io.respond(user);
                     app.io.broadcast('users:update', user);
@@ -159,11 +159,11 @@ module.exports = function() {
         },
         generate_token: function(req) {
             if (req.user.using_token) {
-                return req.io.respond({
+                return req.io.status(403).respond({
                     status: 'error',
                     message: 'Cannot generate a new token ' +
                              'when using token authentication.'
-                }, 403);
+                });
             }
 
             core.account.generateToken(req.user._id, function (err, token) {
@@ -184,11 +184,11 @@ module.exports = function() {
         },
         revoke_token: function(req) {
             if (req.user.using_token) {
-                return req.io.respond({
+                return req.io.status(403).respond({
                     status: 'error',
                     message: 'Cannot revoke token ' +
                              'when using token authentication.'
-                }, 403);
+                });
             }
 
             core.account.revokeToken(req.user._id, function (err) {
@@ -212,10 +212,10 @@ module.exports = function() {
                 !auth.providers.local ||
                 !auth.providers.local.enable_registration) {
 
-                return req.io.respond({
+                return req.io.status(403).respond({
                     status: 'error',
                     message: 'Permission denied'
-                }, 403);
+                });
             }
 
             var fields = req.body || req.data;
@@ -247,51 +247,52 @@ module.exports = function() {
                         console.error(err);
                     }
                     // Notify
-                    return req.io.respond({
+                    return req.io.status(400).respond({
                         status: 'error',
                         message: message
-                    }, 400);
+                    });
                 }
 
-                req.io.respond({
+                req.io.status(201).respond({
                     status: 'success',
                     message: 'You\'ve been registered, ' +
                              'please try logging in now!'
-                }, 201);
+                });
             });
         },
         login: function(req) {
             auth.authenticate(req.body.username, req.body.password,
                                                  function(err, user, info) {
                 if (err) {
-                    return req.io.respond({
+                    return req.io.status(400).respond({
                         status: 'error',
                         message: 'There were problems logging you in.',
                         errors: err
-                    }, 400);
+                    });
                 }
 
                 if (!user && info && info.locked) {
-                    return req.io.respond({
+                    return req.io.status(403).respond({
                         status: 'error',
                         message: info.message || 'Account is locked.'
-                    }, 403);
+                    });
                 }
 
                 if (!user) {
-                    return req.io.respond({
+                    return req.io.status(401).respond({
                         status: 'error',
                         message: info && info.message ||
                                  'Incorrect login credentials.'
-                    }, 401);
+                    });
                 }
+                
                 req.login(user, function(err) {
                     if (err) {
-                        return req.io.respond({
+                        return req.io.status(400).respond({
                             status: 'error',
                             message: 'There were problems logging you in.',
                             errors: err
-                        }, 400);
+                        });
                     }
                     req.io.respond({
                         status: 'success',

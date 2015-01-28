@@ -1,6 +1,7 @@
 var _ = require('underscore'),
     async = require('async'),
     express = require('express.io'),
+    cookieParser = require('cookie-parser'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     passportSocketIo = require('passport.socketio'),
@@ -27,20 +28,6 @@ function getProviders(core) {
 
         return new Provider(provider_settings, core);
     });
-}
-
-function middleware(req, res, next) {
-    // Let's make sure req.user is always populated
-
-    next = next || res; // No res object if called as a socket.io middleware
-
-    if (!req.user) {
-        if (req.handshake && req.handshake.user) {
-            req.user = req.handshake.user;
-        }
-    }
-
-    next();
 }
 
 function setup(app, session, core) {
@@ -78,35 +65,30 @@ function setup(app, session, core) {
     app.use(passport.session());
 
     session = _.extend(session, {
-        cookieParser: express.cookieParser,
+        cookieParser: cookieParser,
         passport: passport
     });
 
-
     var psiAuth = passportSocketIo.authorize(session);
 
-    app.io.set('authorization', function (data, cb) {
+    app.io.use(function (socket, next) {
         var User = mongoose.model('User');
-
-        if (data.query && data.query.token) {
-            User.findByToken(data.query.token, function(err, user) {
+        if (socket.request._query && socket.request._query.token) {
+            User.findByToken(socket.request._query.token, function(err, user) {
                 if (err || !user) {
-                    return cb(err, false);
+                    return next('Fail');
                 }
 
-                data.user = user;
-                data.user.logged_in = true;
-                data.user.using_token = true;
-                cb(null, true);
+                socket.request.user = user;
+                socket.request.user.logged_in = true;
+                socket.request.user.using_token = true;
+                next();
             });
         } else {
-            psiAuth(data, cb);
+            psiAuth(socket, next);
         }
 
     });
-
-    app.use(middleware);
-    app.io.use(middleware);
 }
 
 function checkIfAccountLocked(username, cb) {

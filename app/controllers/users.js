@@ -36,7 +36,7 @@ module.exports = function() {
                 User.find(function(err, users) {
                     if (err) {
                         console.log(err);
-                        return req.io.respond(err, 400);
+                        return req.io.status(400).respond(err);
                     }
 
                     req.io.respond(users);
@@ -48,12 +48,13 @@ module.exports = function() {
             models.room.findById(data.room || null, function(err, room) {
                 if (err) {
                     console.error(err);
-                    return req.io.respond(err, 400);
+                    return req.io.status(400).respond(err);
                 }
 
                 if (!room) {
                     // Invalid room!
-                    return req.io.respond('This room does not exist', 404);
+                    return req.io.status(404)
+                                 .respond('This room does not exist');
                 }
 
                 var userIds = core.presence.rooms
@@ -63,7 +64,7 @@ module.exports = function() {
                     if (err) {
                         // Something bad happened
                         console.error(err);
-                        return req.io.respond(err, 400);
+                        return req.io.status(400).respond(err);
                     }
                     // The client needs user.room in
                     // order to properly route users
@@ -83,14 +84,14 @@ module.exports = function() {
             User.findByIdentifier(identifier, function (err, user) {
                 if (err) {
                     console.error(err);
-                    return req.io.respond(err, 400);
+                    return req.io.status(400).respond(err);
                 }
 
                 if (!user) {
-                    return req.io.respond(404);
+                    return req.io.sendStatus(404);
                 }
 
-                req.io.respond(user, 200);
+                req.io.respond(user);
             });
         }
     });

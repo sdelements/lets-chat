@@ -2,7 +2,8 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId;
+    ObjectId = Schema.ObjectId,
+    core = require('./../core/files');
 
 var FileSchema = new Schema({
     room: {
@@ -32,6 +33,18 @@ var FileSchema = new Schema({
         type: Date,
         default: Date.now
     }
+});
+
+FileSchema.method('toJSON', function() {
+    return {
+        id: this._id,
+        room: this.room,
+        owner: this.owner,
+        name: this.name,
+        type: this.type,
+        size: this.size,
+        url: core.getUrl(this)
+    };
 });
 
 module.exports = mongoose.model('File', FileSchema);
