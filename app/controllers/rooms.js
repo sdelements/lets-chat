@@ -69,6 +69,15 @@ module.exports = function() {
                     console.error(err);
                     return req.io.status(400).respond(err);
                 }
+
+                if (req.data && req.data.userCounts) {
+                    rooms = _.map(rooms, function(room) {
+                        room = room.toJSON();
+                        room.users = core.presence.getUserCountForRoom(room.id)
+                        return room;
+                    });
+                }
+
                 req.io.respond(rooms);
             });
         },

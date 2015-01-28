@@ -13,7 +13,13 @@ function PresenceManager(options) {
     this.rooms.on('user_leave', this.onLeave.bind(this));
 
     this.connect = this.connect.bind(this);
+    this.getUserCountForRoom = this.getUserCountForRoom.bind(this);
 }
+
+PresenceManager.prototype.getUserCountForRoom = function(roomId) {
+    var room = this.rooms.get(roomId);
+    return room ? room.getUserCount() : 0;
+};
 
 PresenceManager.prototype.connect = function(connection) {
     this.connections.add(connection);
