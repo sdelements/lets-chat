@@ -57,7 +57,7 @@
             // Get users for each room!
             // We do it here for the room browser
             _.each(rooms, function(room) {
-                if (room.users) {
+                if (room.userCount) {
                     that.getRoomUsers(room.id, _.bind(that.setUsers, that));
                 }
             });

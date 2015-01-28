@@ -73,7 +73,8 @@ module.exports = function() {
                 if (req.data && req.data.userCounts) {
                     rooms = _.map(rooms, function(room) {
                         room = room.toJSON();
-                        room.users = core.presence.getUserCountForRoom(room.id)
+                        room.userCount =
+                            core.presence.getUserCountForRoom(room.id);
                         return room;
                     });
                 }
