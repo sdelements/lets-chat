@@ -1,7 +1,9 @@
 'use strict';
 
-var MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config');
+var mongoose = require('mongoose'),
+    MessageProcessor = require('./../msg-processor'),
+    settings = require('./../../config'),
+    helper = require('./../helper');
 
 module.exports = MessageProcessor.extend({
 
@@ -10,23 +12,40 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
-        var stanza = this.Iq();
+        var jid = helper.getUserJid(this.client.conn.username);
+        var other = this.to && this.to !== jid;
 
-        var v = stanza.c('vCard', {
-            xmlns: 'vcard-temp'
-        });
+        var sendVcard = function (user) {
+            var stanza = this.Iq();
 
-        v.c('FN').t(this.client.user.firstName + ' ' +
-                    this.client.user.lastName);
+            var v = stanza.c('vCard', {
+             xmlns: 'vcard-temp'
+            });
+
+            v.c('FN').t(user.firstName + ' ' + user.lastName);
 
 
-        var name = v.c('N');
-        name.c('GIVEN').t(this.client.user.firstName);
-        name.c('FAMILY').t(this.client.user.lastName);
+            var name = v.c('N');
+            name.c('GIVEN').t(user.firstName);
+            name.c('FAMILY').t(user.lastName);
 
-        v.c('NICKNAME').t(this.client.user.username);
+            v.c('NICKNAME').t(user.username);
 
-        cb(null, stanza);
+            cb(null, stanza);
+
+        }.bind(this);
+
+        if (other) {
+            var User = mongoose.model('User');
+            var username = this.to.split('@')[0];
+            User.findByIdentifier(username, function(err, user) {
+                if (user) {
+                    sendVcard(user);
+                }
+            });
+        } else {
+            sendVcard(this.client.user);
+        }
     }
 
 });
