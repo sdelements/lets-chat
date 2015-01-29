@@ -73,7 +73,7 @@ module.exports = function() {
                     return res.status(400).json(err);
                 }
 
-                if (req.data && req.data.userCounts) {
+                if (req.param('userCounts')) {
                     rooms = _.map(rooms, function(room) {
                         room = room.toJSON();
                         room.userCount =
@@ -86,7 +86,7 @@ module.exports = function() {
             });
         },
         get: function(req, res) {
-            var roomId = req.data && req.data.id || req.param('room');
+            var roomId = req.param('room') || req.param('id');
 
             core.rooms.get(roomId, function(err, room) {
                 if (err) {
@@ -102,12 +102,11 @@ module.exports = function() {
             });
         },
         create: function(req, res) {
-            var data = req.data || req.body,
-                options = {
+            var options = {
                     owner: req.user._id,
-                    name: data.name,
-                    slug: data.slug,
-                    description: data.description
+                    name: req.param('name'),
+                    slug: req.param('slug'),
+                    description: req.param('description')
                 };
 
             core.rooms.create(options, function(err, room) {
@@ -120,13 +119,12 @@ module.exports = function() {
             });
         },
         update: function(req, res) {
-            var roomId = req.data && req.data.id || req.param('room'),
-                data = req.data || req.body;
+            var roomId = req.param('room') || req.param('id');
 
             var options = {
-                    name: data.name,
-                    slug: data.slug,
-                    description: data.description
+                    name: req.param('name'),
+                    slug: req.param('slug'),
+                    description: req.param('description')
                 };
 
             core.rooms.update(roomId, options, function(err, room) {
@@ -144,10 +142,7 @@ module.exports = function() {
             });
         },
         archive: function(req, res) {
-            // TODO: Make consitent with update method?
-            var roomId = req.data && req.data.room ||
-                         req.data && req.data.id || req.param('room'),
-                data = req.data || req.body;
+            var roomId = req.param('room') || req.param('id');
 
             core.rooms.archive(roomId, function(err, room) {
                 if (err) {
@@ -193,9 +188,9 @@ module.exports = function() {
             res.json();
         },
         users: function(req, res) {
-            var data = req.data || req.query;
+            var roomId = req.param('room');
 
-            core.rooms.get(data.room, function(err, room) {
+            core.rooms.get(roomId, function(err, room) {
                 if (err) {
                     console.error(err);
                     return res.sendStatus(400);

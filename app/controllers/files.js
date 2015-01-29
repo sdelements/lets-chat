@@ -81,10 +81,9 @@ module.exports = function() {
                 return res.sendStatus(400);
             }
 
-            var data = req.data || req.body,
-                options = {
+            var options = {
                     owner: req.user._id,
-                    room: data.room,
+                    room: req.param('room'),
                     file: req.files.file
                 };
 
@@ -97,10 +96,12 @@ module.exports = function() {
             });
         },
         list: function(req, res) {
-            var data = req.data || req.query,
-                options = {
-                    room: data.room || null
-                };
+            var room = req.param('room'),
+                options = {};
+
+            if (room) {
+                options.room = room;
+            }
 
             core.files.list(options, function(err, files) {
                 if (err) {

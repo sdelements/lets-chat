@@ -47,11 +47,10 @@ module.exports = function() {
     //
     app.io.route('messages', {
         create: function(req, res) {
-            var data = req.data || req.body,
-                options = {
+            var options = {
                     owner: req.user._id,
-                    room: data.room,
-                    text: data.text
+                    room: req.param('room'),
+                    text: req.param('text')
                 };
 
             core.messages.create(options, function(err, message) {
@@ -62,12 +61,22 @@ module.exports = function() {
             });
         },
         list: function(req, res) {
-            var data = req.data || req.query,
-                options = {
-                    room: data.room || null,
-                    from: data.from || null,
-                    limit: data.limit || null,
-                };
+            var room = req.param('room'),
+                from = req.param('from'),
+                limit = req.param('limit'),
+                options = {};
+
+            if (room) {
+                options.room = room;
+            }
+
+            if (limit) {
+                options.limit = limit;
+            }
+
+            if (from) {
+                options.from = from;
+            }
 
             core.messages.list(options, function(err, messages) {
                 if (err) {

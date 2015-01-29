@@ -30,9 +30,9 @@ module.exports = function() {
     //
     app.io.route('users', {
         list: function(req, res) {
-            var data = req.data || req.query;
+            var roomId = req.param('room');
 
-            if (!data || !data.room) {
+            if (!roomId) {
                 User.find(function(err, users) {
                     if (err) {
                         console.log(err);
@@ -45,7 +45,7 @@ module.exports = function() {
                 return;
             }
 
-            models.room.findById(data.room || null, function(err, room) {
+            models.room.findById(roomId || null, function(err, room) {
                 if (err) {
                     console.error(err);
                     return res.status(400).json(err);
