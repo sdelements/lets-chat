@@ -89,7 +89,7 @@
     "passport-local": "^1.0.0",
     "passport.socketio": "^3.4.1",
     "require-directory": "~2.0.0",
-    "require-tree": "^1.0.1"
+    "require-tree": "~0.3.3"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
