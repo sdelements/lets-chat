@@ -172,9 +172,15 @@ UserSchema.statics.findByToken = function(token, cb) {
         return cb(null, null);
     }
 
-    var tokenParts = new Buffer(token, 'base64').toString('ascii').split(':');
+    var tokenParts = new Buffer(token, 'base64').toString('ascii').split(':'),
+        userId = tokenParts[0],
+        hash = tokenParts[1];
 
-    this.findById(tokenParts[0], function(err, user) {
+    if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
+        cb(null, null);
+    }
+
+    this.findById(userId, function(err, user) {
         if (err) {
             return cb(err);
         }
@@ -183,7 +189,7 @@ UserSchema.statics.findByToken = function(token, cb) {
             return cb(null, null);
         }
 
-        bcrypt.compare(tokenParts[1], user.token, function(err, isMatch) {
+        bcrypt.compare(hash, user.token, function(err, isMatch) {
             if (isMatch) {
                 return cb(null, user);
             }
@@ -224,7 +230,7 @@ UserSchema.statics.authenticate = function(identifier, password, cb) {
         if (user.provider !== 'local') {
             return cb(null, null, 0);
         }
-        
+
         // Is password okay?
         user.comparePassword(password, function(err, isMatch) {
             if (err) {
