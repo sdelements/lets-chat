@@ -1,6 +1,7 @@
 'use strict';
 
-var mongoose = require('mongoose');
+var moment = require('moment'),
+    mongoose = require('mongoose');
 
 function MessageManager(options) {
     this.core = options.core;
@@ -52,6 +53,11 @@ MessageManager.prototype.list = function(options, cb) {
 
     if (options.from) {
         find.where('_id').gt(options.from);
+    }
+
+    if (options.since) {
+        var since = moment(options.since).utc().toDate();
+        find.where('posted').gt(since);
     }
 
     find

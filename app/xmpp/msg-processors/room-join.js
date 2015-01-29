@@ -1,6 +1,8 @@
 'use strict';
 
-var MessageProcessor = require('./../msg-processor'),
+var _ = require('lodash'),
+    Stanza = require('node-xmpp-core').Stanza,
+    MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config'),
     helper = require('./../helper');
 
@@ -21,6 +23,17 @@ module.exports = MessageProcessor.extend({
 
         // TODO: Do we need to track nickname for each individual room?
         connection.nickname = nickname;
+
+        var xNode = _.find(this.request.children, function(child) {
+            return child.name === 'x';
+        });
+
+        var historyNode;
+        if (xNode) {
+            var historyNode = _.find(xNode.children, function(child) {
+                return child.name === 'history';
+            });
+        }
 
         this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
@@ -64,13 +77,43 @@ module.exports = MessageProcessor.extend({
 
             }, this);
 
-            var message = this.Message({
+            var subject = this.Message({
                 type: 'groupchat'
             });
 
-            message.c('subject').t(room.name + ' | ' + room.description);
+            subject.c('subject').t(room.name + ' | ' + room.description);
 
-            cb(null, presences, message);
+            if (!historyNode) {
+                return cb(null, presences, subject);
+            }
+
+            var since = historyNode.attrs.since;
+            this.core.messages.list({since:since}, function(err, messages) {
+
+                var msgs = messages.map(function(msg) {
+
+                    var stanza = new Stanza.Message({
+                        id: msg._id,
+                        type: 'groupchat',
+                        to: helper.getRoomJid(room.slug),
+                        from: helper.getRoomJid(room.slug, msg.owner.username)
+                    });
+
+                    stanza.c('body').t(msg.text);
+
+                    stanza.c('delay', {
+                        xmlns: 'urn:xmpp:delay',
+                        from: helper.getRoomJid(room.slug),
+                        stamp: msg.posted.toISOString()
+                    });
+
+                    return stanza;
+
+                }, this);
+
+                cb(null, presences, subject, msgs);
+
+            }.bind(this));
 
         }.bind(this));
     }

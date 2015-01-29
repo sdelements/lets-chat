@@ -72,6 +72,7 @@
     "lodash": "^3.0.0",
     "migroose": "^0.2.1",
     "migroose-cli": "^0.1.0",
+    "moment": "^2.9.0",
     "mongoose": "~3.8.22",
     "mongoose-unique-validator": "~0.4.1",
     "mongoose-validate": "0.0.5",
