@@ -103,7 +103,7 @@ module.exports = function() {
                 }
 
                 res.json(user);
-                app.io.broadcast('users:update', user);
+                app.io.emit('users:update', user);
             });
         },
         settings: function(req, res) {
@@ -153,7 +153,7 @@ module.exports = function() {
                         });
                     }
                     res.json(user);
-                    app.io.broadcast('users:update', user);
+                    app.io.emit('users:update', user);
                 });
             });
         },

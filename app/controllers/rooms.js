@@ -18,7 +18,7 @@ module.exports = function() {
         User.findById(data.userId, function (err, user) {
             user = user.toJSON();
             user.room = data.roomId;
-            app.io.sockets.emit('users:join', user);
+            app.io.emit('users:join', user);
         });
     });
 
@@ -26,7 +26,7 @@ module.exports = function() {
         User.findById(data.userId, function (err, user) {
             user = user.toJSON();
             user.room = data.roomId;
-            app.io.sockets.emit('users:leave', user);
+            app.io.emit('users:leave', user);
         });
     });
 
@@ -116,7 +116,7 @@ module.exports = function() {
                     return res.status(400).json(err);
                 }
                 res.status(201).json(room);
-                app.io.broadcast('rooms:new', room);
+                app.io.emit('rooms:new', room);
             });
         },
         update: function(req, res) {
@@ -139,7 +139,7 @@ module.exports = function() {
                     return res.sendStatus(404);
                 }
 
-                app.io.broadcast('rooms:update', room);
+                app.io.emit('rooms:update', room);
                 res.json(room);
             });
         },
@@ -160,7 +160,7 @@ module.exports = function() {
                 }
 
                 res.json(room);
-                app.io.broadcast('rooms:archive', room);
+                app.io.emit('rooms:archive', room);
             });
         },
         join: function(req, res) {

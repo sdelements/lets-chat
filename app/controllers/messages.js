@@ -17,8 +17,8 @@ module.exports = function() {
         msg.owner = user;
         msg.room = room;
 
-        app.io.room(room._id)
-              .broadcast('messages:new', msg);
+        app.io.to(room._id)
+              .emit('messages:new', msg);
     });
 
     //

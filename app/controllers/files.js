@@ -24,8 +24,8 @@ module.exports = function() {
         fil.owner = user;
         fil.room = room;
 
-        app.io.room(room._id)
-              .broadcast('files:new', fil);
+        app.io.to(room._id)
+              .emit('files:new', fil);
     });
 
     var fileUpload = multer({
