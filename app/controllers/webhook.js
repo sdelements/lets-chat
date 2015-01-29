@@ -8,9 +8,7 @@ module.exports = function() {
 
     var app = this.app,
         core = this.core,
-        middlewares = this.middlewares,
-        models = this.models,
-        Room = models.room;
+        middlewares = this.middlewares;
 
 
     //
