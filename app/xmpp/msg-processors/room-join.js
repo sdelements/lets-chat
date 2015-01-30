@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash'),
+    moment = require('moment'),
     Stanza = require('node-xmpp-core').Stanza,
     MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config'),
@@ -45,13 +46,11 @@ module.exports = MessageProcessor.extend({
 
             var username = connection.username;
 
-            this.core.presence.join(connection, room._id, room.slug);
-
             var usernames = this.core.presence.rooms
                                   .get(room._id).getUsernames();
 
             // User's own presence must be last - and be their nickname
-            var i = usernames.indexOf(username);
+                var i = usernames.indexOf(username);
             if (i > -1) {
                 usernames.splice(i, 1);
             }
@@ -83,12 +82,32 @@ module.exports = MessageProcessor.extend({
 
             subject.c('subject').t(room.name + ' | ' + room.description);
 
-            if (!historyNode) {
-                return cb(null, presences, subject);
+            if (!historyNode ||
+                historyNode.attrs.maxchars === 0 ||
+                historyNode.attrs.maxchars === '0') {
+                    // Send no history
+                    this.core.presence.join(connection, room._id, room.slug);
+                    return cb(null, presences, subject);
             }
 
-            var since = historyNode.attrs.since;
-            this.core.messages.list({since:since}, function(err, messages) {
+            var query = {};
+
+            if (historyNode.attrs.since) {
+                query.since = moment(historyNode.attrs.since).utc().toDate();
+            }
+
+            if (historyNode.attrs.seconds) {
+                query.since = moment()
+                    .subtract(historyNode.attrs.since, 'seconds')
+                    .utc()
+                    .toDate();
+            }
+
+            if (historyNode.attrs.maxstanzas) {
+                query.limit = historyNode.attrs.maxstanzas;
+            }
+
+            this.core.messages.list(query, function(err, messages) {
 
                 var msgs = messages.map(function(msg) {
 
@@ -107,11 +126,19 @@ module.exports = MessageProcessor.extend({
                         stamp: msg.posted.toISOString()
                     });
 
+                    stanza.c('addresses', {
+                        xmlns: 'http://jabber.org/protocol/address'
+                    }).c('address', {
+                        type: 'ofrom',
+                        jid: helper.getUserJid(msg.owner.username)
+                    });
+
                     return stanza;
 
                 }, this);
 
-                cb(null, presences, subject, msgs);
+                this.core.presence.join(connection, room._id, room.slug);
+                cb(null, presences, msgs, subject);
 
             }.bind(this));
 
