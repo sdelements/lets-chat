@@ -89,12 +89,6 @@
             this.atwhoRooms();
             this.atwhoEmotes();
         },
-        getEmotes: function(cb) {
-            if (!window.LCB.RoomView.emotes) {
-                window.LCB.RoomView.emotes = $.get('/extras/emotes');
-            }
-            window.LCB.RoomView.emotes.success(cb);
-        },
         getUsers: function(cb) {
             if (!window.LCB.RoomView.users) {
                 window.LCB.RoomView.users = $.get('/users');
@@ -245,7 +239,7 @@
         },
         atwhoEmotes: function() {
             var that = this;
-            this.getEmotes(function(emotes) {
+            this.client.getEmotes(function(emotes) {
                 that.$('.lcb-entry-input')
                 .atwho({
                     at: ':',
@@ -351,19 +345,36 @@
             // Templatin' time
             var $html = $(this.messageTemplate(message).trim());
             var $text = $html.find('.lcb-message-text');
-            $text.html(this.formatMessage($text.html()));
-            $html.find('time').updateTimeStamp();
-            this.$messages.append($html);
-            this.lastMessageOwner = message.owner.id;
-            this.lastMessagePosted = posted;
-            this.scrollMessages();
 
-            if (!message.historical) {
-                window.utils.eggs.message(message.text);
-            }
+            var that = this;
+            this.formatMessage($text.html(), function(text) {
+                $text.html(text);
+                $html.find('time').updateTimeStamp();
+                that.$messages.append($html);
+                that.lastMessageOwner = message.owner.id;
+                that.lastMessagePosted = posted;
+                that.scrollMessages();
+
+                if (!message.historical) {
+                    window.utils.eggs.message(message.text);
+                }
+            });
+
         },
-        formatMessage: function(text) {
-            return window.utils.message.format(text, this.client.extras || {}, this.client.rooms);
+        formatMessage: function(text, cb) {
+            var client = this.client;
+            client.getEmotes(function(emotes) {
+                client.getReplacements(function(replacements) {
+                    var data = {
+                        emotes: emotes,
+                        replacements: replacements,
+                        rooms: client.rooms
+                    };
+
+                    var msg = window.utils.message.format(text, data);
+                    cb(msg);
+                });
+            });
         },
         updateScrollLock: function() {
             this.scrollLocked = this.$messages[0].scrollHeight -

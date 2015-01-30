@@ -29,7 +29,7 @@
         this.socket.emit('account:profile', profile, function(user) {
             that.user.set(user);
         });
-    }
+    };
 
     //
     // Rooms
@@ -66,7 +66,7 @@
     Client.prototype.switchRoom = function(id) {
         // Make sure we have a last known room ID
         this.rooms.last.set('id', this.rooms.current.get('id'));
-        if (!id || id == 'list') {
+        if (!id || id === 'list') {
             this.rooms.current.set('id', 'list');
             this.router.navigate('!/', {
                 replace: true
@@ -101,7 +101,9 @@
     Client.prototype.archiveRoom = function(id) {
         this.socket.emit('rooms:archive', id, function(room) {
             if (!room.id) {
-                swal('Unable to Archive!', 'Unable to archive this room!', 'error');
+                swal('Unable to Archive!',
+                     'Unable to archive this room!',
+                     'error');
             }
         });
     }
@@ -263,22 +265,26 @@
     // Extras
     //
     Client.prototype.getEmotes = function(callback) {
-        this.socket.emit('extras:emotes:list', _.bind(function(emotes) {
-            this.extras = this.extras || {};
-            this.extras.emotes = emotes;
-            if (callback) {
-                callback(emotes);
-            }
-        }, this));
+        this.extras = this.extras || {};
+        if (!this.extras.emotes) {
+            // Use AJAX, so we can take advantage of HTTP caching
+            // Also, it's a promise - which ensures we only load emotes once
+            this.extras.emotes = $.get('/extras/emotes');
+        }
+        if (callback) {
+            this.extras.emotes.done(callback);
+        }
     };
     Client.prototype.getReplacements = function(callback) {
-        this.socket.emit('extras:replacements:list', _.bind(function(replacements) {
-            this.extras = this.extras || {};
-            this.extras.replacements = replacements;
-            if (callback) {
-                callback(replacements);
-            }
-        }, this));
+        this.extras = this.extras || {};
+        if (!this.extras.replacements) {
+            // Use AJAX, so we can take advantage of HTTP caching
+            // Also, it's a promise - which ensures we only load emotes once
+            this.extras.replacements = $.get('/extras/replacements');
+        }
+        if (callback) {
+            this.extras.replacements.done(callback);
+        }
     };
 
     //
@@ -314,16 +320,12 @@
             reconnect: true
         });
         this.socket.on('connect', function() {
-            that.getEmotes();
-            that.getReplacements();
             that.getUser();
             that.getUsers();
             that.getRooms();
             that.status.set('connected', true);
         });
         this.socket.on('reconnect', function() {
-            that.getEmotes();
-            that.getReplacements();
             _.each(that.rooms.where({ joined: true }), function(room) {
                 that.joinRoom(room.id);
             });
@@ -367,6 +369,8 @@
     // Start
     //
     Client.prototype.start = function() {
+        this.getEmotes();
+        this.getReplacements();
         this.listen();
         this.route();
         this.view = new window.LCB.ClientView({

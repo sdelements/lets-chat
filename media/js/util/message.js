@@ -24,8 +24,8 @@ if (typeof exports !== 'undefined') {
         return text.replace(mentionPattern, '<strong>@$1</strong>');
     }
 
-    function roomLinks(text, extras, rooms) {
-        if (!rooms) {
+    function roomLinks(text, data) {
+        if (!data.rooms) {
             return text;
         }
 
@@ -33,7 +33,7 @@ if (typeof exports !== 'undefined') {
 
         return text.replace(slugPattern, function(slug) {
             var s = slug.substring(1);
-            var room = rooms.find(function(room) {
+            var room = data.rooms.find(function(room) {
                 return room.attributes.slug === s;
             });
 
@@ -64,12 +64,12 @@ if (typeof exports !== 'undefined') {
         }
     }
 
-    function emotes(text, extras) {
+    function emotes(text, data) {
         var regex = new RegExp('\\B(:[a-z0-9_\\+\\-]+:?)[\\b]?', 'ig');
 
         return text.replace(regex, function(group) {
             var key = group.split(':')[1];
-            var emote = _.find(extras.emotes, function(emote) {
+            var emote = _.find(data.emotes, function(emote) {
                 return emote.emote === key;
             });
 
@@ -85,14 +85,14 @@ if (typeof exports !== 'undefined') {
         });
     }
 
-    function replacements(text, extras) {
-        _.each(extras.replacements, function(replacement) {
+    function replacements(text, data) {
+        _.each(data.replacements, function(replacement) {
             text = text.replace(new RegExp(replacement.regex, 'ig'), replacement.template);
         });
         return text;
     }
 
-    exports.format = function(text, extras, rooms) {
+    exports.format = function(text, data) {
         var pipeline = [
             trim,
             mentions,
@@ -103,7 +103,7 @@ if (typeof exports !== 'undefined') {
         ];
 
         _.each(pipeline, function(func) {
-            text = func(text, extras, rooms);
+            text = func(text, data);
         });
 
         return text;
