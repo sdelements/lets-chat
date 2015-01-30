@@ -109,6 +109,8 @@ module.exports = MessageProcessor.extend({
 
             this.core.messages.list(query, function(err, messages) {
 
+                messages.reverse();
+
                 var msgs = messages.map(function(msg) {
 
                     var stanza = new Stanza.Message({
