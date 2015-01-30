@@ -90,7 +90,9 @@ module.exports = MessageProcessor.extend({
                     return cb(null, presences, subject);
             }
 
-            var query = {};
+            var query = {
+                room: room._id
+            };
 
             if (historyNode.attrs.since) {
                 query.since = moment(historyNode.attrs.since).utc().toDate();
