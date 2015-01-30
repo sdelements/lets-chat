@@ -19,10 +19,11 @@ module.exports = function() {
     //
     // Routes
     //
-    app.use('/extras/emotes/', express.static(path.join(process.cwd(), 'extras/emotes/public')));
     app.get('/extras/emotes', middlewares.requireLogin, function(req, res) {
         req.io.route('extras:emotes:list');
     });
+    
+    app.use('/extras/emotes/', express.static(path.join(process.cwd(), 'extras/emotes/public')));
 
     app.get('/extras/replacements', middlewares.requireLogin, function(req, res) {
         req.io.route('extras:replacements:list');
