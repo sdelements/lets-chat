@@ -11,6 +11,7 @@ var _ = require('lodash'),
     session = require('express-session'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
+    compression = require('compression'),
     helmet = require('helmet'),
     http = require('http'),
     nunjucks = require('nunjucks'),
@@ -65,6 +66,9 @@ var session = {
     resave: false,
     saveUninitialized: true
 };
+
+// Set compression before any routes
+app.use(compression({ threshold: 512 }));
 
 app.use(cookieParser());
 app.io.session(session);
