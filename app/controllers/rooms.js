@@ -77,6 +77,7 @@ module.exports = function() {
                     rooms = _.map(rooms, function(room) {
                         room = room.toJSON();
                         room.users = core.presence.getUsersForRoom(room.id.toString());
+                        room.userCount = room.users.length;
                         return room;
                     });
                 }
@@ -88,6 +89,9 @@ module.exports = function() {
                         return room;
                     });
                 }
+
+                rooms = _.sortByAll(rooms, ['userCount', 'lastActive'])
+                         .reverse();
 
                 res.json(rooms);
             });
