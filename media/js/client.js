@@ -52,13 +52,13 @@
     };
     Client.prototype.getRooms = function() {
         var that = this;
-        this.socket.emit('rooms:list', { userCounts: true }, function(rooms) {
+        this.socket.emit('rooms:list', { users: true }, function(rooms) {
             that.rooms.set(rooms);
             // Get users for each room!
             // We do it here for the room browser
             _.each(rooms, function(room) {
-                if (room.userCount) {
-                    that.getRoomUsers(room.id, _.bind(that.setUsers, that));
+                if (room.users) {
+                    that.setUsers(room.users);
                 }
             });
         });

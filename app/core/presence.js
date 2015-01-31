@@ -16,11 +16,17 @@ function PresenceManager(options) {
 
     this.connect = this.connect.bind(this);
     this.getUserCountForRoom = this.getUserCountForRoom.bind(this);
+    this.getUsersForRoom = this.getUsersForRoom.bind(this);
 }
 
 PresenceManager.prototype.getUserCountForRoom = function(roomId) {
     var room = this.rooms.get(roomId);
     return room ? room.userCount : 0;
+};
+
+PresenceManager.prototype.getUsersForRoom = function(roomId) {
+    var room = this.rooms.get(roomId);
+    return room ? room.getUsers() : [];
 };
 
 PresenceManager.prototype.connect = function(connection) {

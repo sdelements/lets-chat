@@ -73,7 +73,14 @@ module.exports = function() {
                     return res.status(400).json(err);
                 }
 
-                if (req.param('userCounts')) {
+                if (req.param('users')) {
+                    rooms = _.map(rooms, function(room) {
+                        room = room.toJSON();
+                        room.users = core.presence.getUsersForRoom(room.id.toString());
+                        return room;
+                    });
+                }
+                else if (req.param('userCounts')) {
                     rooms = _.map(rooms, function(room) {
                         room = room.toJSON();
                         room.userCount =
