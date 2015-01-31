@@ -89,12 +89,6 @@
             this.atwhoRooms();
             this.atwhoEmotes();
         },
-        getUsers: function(cb) {
-            if (!window.LCB.RoomView.users) {
-                window.LCB.RoomView.users = $.get('/users');
-            }
-            window.LCB.RoomView.users.success(cb);
-        },
         atwhoTplEval: function(tpl, map) {
             var error;
             try {
@@ -111,12 +105,10 @@
                 return "";
             }
         },
-        atwhoMentions: function () {
-            var users = this.model.users;
-
-            function filter(query, data, searchKey) {
+        getAtwhoUserFilter: function(collection) {
+            return function filter(query, data, searchKey) {
                 var q = query.toLowerCase();
-                var results = users.filter(function(user) {
+                var results = collection.filter(function(user) {
                     var attr = user.attributes;
 
                     if (!attr.safeName) {
@@ -143,7 +135,9 @@
                 return results.map(function(user) {
                     return user.attributes;
                 });
-            }
+            };
+        },
+        atwhoMentions: function () {
 
             function sorter(query, items, search_key) {
                 return items.sort(function(a, b) {
@@ -156,38 +150,19 @@
                 at: '@',
                 tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
-                    filter: filter,
+                    filter: this.getAtwhoUserFilter(this.model.users),
                     sorter: sorter,
                     tpl_eval: this.atwhoTplEval
                 }
             });
         },
         atwhoAllMentions: function () {
+            var that = this;
+
             function filter(query, data, searchKey) {
-                var q = query.toLowerCase();
-                var results = _.filter(data, function(user) {
-
-                    if (!user.safeName) {
-                        user.safeName = user.displayName.replace(/\W/g, '');
-                    }
-
-                    var val1 = user.username.toLowerCase();
-                    var val1i = val1.indexOf(q);
-                    if (val1i > -1) {
-                        user.atwho_order = val1i;
-                        return true;
-                    }
-
-                    var val2 = user.safeName.toLowerCase();
-                    var val2i = val2.indexOf(q);
-                    if (val2i > -1) {
-                        user.atwho_order = val2i + user.username.length;
-                        return true;
-                    }
-
-                    return false;
-                });
-                return results;
+                var users = that.client.getUsersSync();
+                var filt = that.getAtwhoUserFilter(users);
+                return filt(query, data, searchKey);
             }
 
             function sorter(query, items, search_key) {
@@ -196,19 +171,15 @@
                 });
             }
 
-            var that = this;
-            this.getUsers(function(users) {
-                that.$('.lcb-entry-input')
-                .atwho({
-                    at: '@@',
-                    data: users,
-                    tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
-                    callbacks: {
-                        filter: filter,
-                        sorter: sorter,
-                        tpl_eval: that.atwhoTplEval
-                    }
-                });
+            this.$('.lcb-entry-input')
+            .atwho({
+                at: '@@',
+                tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
+                callbacks: {
+                    filter: filter,
+                    sorter: sorter,
+                    tpl_eval: that.atwhoTplEval
+                }
             });
         },
         atwhoRooms: function() {

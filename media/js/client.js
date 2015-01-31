@@ -251,15 +251,21 @@
             });
             target && target.set(user);
         }, this);
-    }
-    Client.prototype.getUsers = function(id, callback) {
+    };
+    Client.prototype.getUsersSync = function() {
+        if (this.users.length) {
+            return this.users;
+        }
+
         var that = this;
-        this.socket.emit('users:list', function(users) {
+
+        function success(users) {
             that.users.set(users);
-            if (callback) {
-                callback(users);
-            }
-        });
+        }
+
+        $.ajax({url:'/users', async: false, success: success});
+
+        return this.users;
     };
     //
     // Extras
@@ -321,7 +327,6 @@
         });
         this.socket.on('connect', function() {
             that.getUser();
-            that.getUsers();
             that.getRooms();
             that.status.set('connected', true);
         });
