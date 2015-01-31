@@ -58,7 +58,7 @@
             // We do it here for the room browser
             _.each(rooms, function(room) {
                 if (room.users) {
-                    that.setUsers(room.users);
+                    that.setUsers(room.id, room.users);
                 }
             });
         });
@@ -211,12 +211,12 @@
     //
     // Users
     //
-    Client.prototype.setUsers = function(users) {
-        if (!users || !users[0] ||!users[0].room) {
+    Client.prototype.setUsers = function(roomId, users) {
+        if (!roomId || !users || !users.length) {
             // Data is not valid
             return;
         }
-        var room = this.rooms.get(users[0].room);
+        var room = this.rooms.get(roomId);
         if (!room) {
             // No room
             return;
