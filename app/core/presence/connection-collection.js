@@ -54,6 +54,13 @@ ConnectionCollection.prototype.query = function(options) {
     }).filter(function(conn) {
         var result = true;
 
+        if (options.user) {
+            var u = options.user;
+            if (conn.user.id !== u && conn.user.username !== u) {
+                result = false;
+            }
+        }
+
         if (options.userId && conn.user.id !== options.userId) {
             result = false;
         }

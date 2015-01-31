@@ -14,4 +14,12 @@ function Connection(type, user) {
 
 util.inherits(Connection, EventEmitter);
 
+Connection.prototype.toJSON = function() {
+    return {
+        id: this.id,
+        type: this.type,
+        user: this.user
+    };
+};
+
 module.exports = Connection;
