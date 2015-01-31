@@ -76,7 +76,9 @@ app.io.session(session);
 auth.setup(app, session, core);
 
 // Public
-app.use('/media', express.static(__dirname + '/media'));
+app.use('/media', express.static(__dirname + '/media', {
+    maxAge: '364d',
+}));
 
 // Templates
 nunjucks.configure('templates', {
