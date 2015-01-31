@@ -294,9 +294,20 @@ module.exports = function() {
                             errors: err
                         });
                     }
-                    res.json({
-                        status: 'success',
-                        message: 'Logging you in...'
+                    var temp = req.session.passport;
+                    req.session.regenerate(function(err) {
+                        if (err) {
+                            return res.status(400).json({
+                                status: 'error',
+                                message: 'There were problems logging you in.',
+                                errors: err
+                            });
+                        }
+                        req.session.passport = temp;
+                        res.json({
+                            status: 'success',
+                            message: 'Logging you in...'
+                        });
                     });
                 });
             });
