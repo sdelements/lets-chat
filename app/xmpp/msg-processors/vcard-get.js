@@ -31,6 +31,8 @@ module.exports = MessageProcessor.extend({
 
             v.c('NICKNAME').t(user.username);
 
+            v.c('JABBERID').t(helper.getUserJid(user.username));
+
             cb(null, stanza);
 
         }.bind(this);

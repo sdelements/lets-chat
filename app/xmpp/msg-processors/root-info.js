@@ -22,6 +22,10 @@ module.exports = MessageProcessor.extend({
             type: 'text',
             name: 'Let\'s chat'
         });
+        
+        query.c('feature', {
+            var: 'vcard-temp'
+        });
 
         query.c('feature', {
             var: 'http://jabber.org/protocol/muc'
