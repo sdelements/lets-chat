@@ -75,24 +75,6 @@ app.io.session(session);
 
 auth.setup(app, session, core);
 
-// Public
-app.use('/media', express.static(__dirname + '/media', {
-    maxAge: '364d',
-}));
-
-// Templates
-nunjucks.configure('templates', {
-        autoescape: true,
-        express: app
-    })
-    .addGlobal('bundles', bundles);
-
-// HTTP Middlewares
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
 // Security protections
 app.use(helmet.crossdomain());
 app.use(helmet.frameguard());
@@ -114,6 +96,24 @@ app.use(helmet.contentSecurityPolicy({
     fontSrc: ['\'self\'', 'fonts.gstatic.com'],
     mediaSrc: ['\'self\''],
     imgSrc: ['*']
+}));
+
+// Public
+app.use('/media', express.static(__dirname + '/media', {
+    maxAge: '364d',
+}));
+
+// Templates
+nunjucks.configure('templates', {
+        autoescape: true,
+        express: app
+    })
+    .addGlobal('bundles', bundles);
+
+// HTTP Middlewares
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
 }));
 
 //
