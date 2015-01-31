@@ -14,8 +14,8 @@ module.exports = EventListener.extend({
         connections.forEach(function(connection) {
 
             var message = new Stanza.Message({
-                to: helper.getRoomJid(room.slug, connection.username),
-                from: helper.getRoomJid(room.slug, connection.username),
+                to: helper.getRoomJid(room.slug, connection.user.username),
+                from: helper.getRoomJid(room.slug, connection.user.username),
                 type: 'groupchat'
             });
 

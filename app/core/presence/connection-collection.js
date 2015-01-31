@@ -8,6 +8,7 @@ function ConnectionCollection() {
     this.connections = {};
 
     this.get = this.get.bind(this);
+    this.getUsers = this.getUsers.bind(this);
     this.getUserIds = this.getUserIds.bind(this);
 
     this.add = this.add.bind(this);
@@ -19,18 +20,26 @@ ConnectionCollection.prototype.get = function(connectionId) {
     return this.connections[connectionId];
 };
 
+ConnectionCollection.prototype.getUsers = function() {
+    var users = _.map(this.connections, function(value, key) {
+        return value.user;
+    });
+
+    return _.uniq(users, 'id');
+};
+
 ConnectionCollection.prototype.getUserIds = function() {
-    var userIds = Object.keys(this.connections).map(function(key) {
-        return this.connections[key].userId;
-    }, this);
+    var userIds = _.map(this.connections, function(value, key) {
+        return value.user.id;
+    });
 
     return _.uniq(userIds);
 };
 
 ConnectionCollection.prototype.getUsernames = function() {
-    var usernames = Object.keys(this.connections).map(function(key) {
-        return this.connections[key].username;
-    }, this);
+    var usernames = _.map(this.connections, function(value, key) {
+        return value.user.username;
+    });
 
     return _.uniq(usernames);
 };
@@ -40,12 +49,12 @@ ConnectionCollection.prototype.query = function(options) {
         options.userId = options.userId.toString();
     }
 
-    return Object.keys(this.connections).map(function(key) {
-        return this.connections[key];
-    }, this).filter(function(conn) {
+    return _.map(this.connections, function(value, key) {
+        return value;
+    }).filter(function(conn) {
         var result = true;
 
-        if (options.userId && conn.userId !== options.userId) {
+        if (options.userId && conn.user.id !== options.userId) {
             result = false;
         }
 
@@ -59,9 +68,9 @@ ConnectionCollection.prototype.query = function(options) {
 };
 
 ConnectionCollection.prototype.byType = function(type) {
-    return Object.keys(this.connections).map(function(key) {
-        return this.connections[key];
-    }, this).filter(function(conn) {
+    return _.map(this.connections, function(value, key) {
+        return value;
+    }).filter(function(conn) {
         return conn.type === type;
     });
 };

@@ -42,11 +42,10 @@ function xmppStart(core) {
                     return cb(false);
                 }
 
+                // TODO: remove?
                 client.user = user;
 
-                var conn = new XmppConnection(
-                    user._id, user.username, client
-                );
+                var conn = new XmppConnection(user, client);
                 core.presence.connect(conn);
 
                 cb(null, opts);

@@ -10,12 +10,12 @@ function Room(roomId, roomSlug) {
     this.roomId = roomId;
     this.roomSlug = roomSlug;
     this.connections = new ConnectionCollection();
-    this.users = {};
+    this.userCount = 0;
 
+    this.getUsers = this.getUsers.bind(this);
     this.getUserIds = this.getUserIds.bind(this);
     this.getUsernames = this.getUsernames.bind(this);
     this.containsUser = this.containsUser.bind(this);
-    this.getUserCount = this.getUserCount.bind(this);
 
     this.emitUserJoin = this.emitUserJoin.bind(this);
     this.emitUserLeave = this.emitUserLeave.bind(this);
@@ -24,6 +24,10 @@ function Room(roomId, roomSlug) {
 }
 
 util.inherits(Room, EventEmitter);
+
+Room.prototype.getUsers = function() {
+    return this.connections.getUsers();
+};
 
 Room.prototype.getUserIds = function() {
     return this.connections.getUserIds();
@@ -37,12 +41,8 @@ Room.prototype.containsUser = function(userId) {
     return this.getUserIds().indexOf(userId) !== -1;
 };
 
-Room.prototype.getUserCount = function() {
-    return Object.keys(this.users).length;
-};
-
 Room.prototype.emitUserJoin = function(data) {
-    this.users[data.userId] = true;
+    this.userCount++;
     this.emit('user_join', {
         roomId: this.roomId,
         roomSlug: this.roomSlug,
@@ -52,7 +52,7 @@ Room.prototype.emitUserJoin = function(data) {
 };
 
 Room.prototype.emitUserLeave = function(data) {
-    delete this.users[data.userId];
+    this.userCount--;
     this.emit('user_leave', {
         roomId: this.roomId,
         roomSlug: this.roomSlug,
@@ -82,11 +82,11 @@ Room.prototype.addConnection = function(connection) {
         return;
     }
 
-    if (!this.containsUser(connection.userId)) {
+    if (!this.containsUser(connection.user.id)) {
         // User joining room
         this.emitUserJoin({
-            userId: connection.userId,
-            username: connection.username
+            userId: connection.user.id,
+            username: connection.user.username
         });
     }
     this.connections.add(connection);
@@ -99,11 +99,11 @@ Room.prototype.removeConnection = function(connection) {
     }
 
     if (this.connections.remove(connection)) {
-        if (!this.containsUser(connection.userId)) {
+        if (!this.containsUser(connection.user.id)) {
             // Leaving room altogether
             this.emitUserLeave({
-                userId: connection.userId,
-                username: connection.username
+                userId: connection.user.id,
+                username: connection.user.username
             });
         }
     }

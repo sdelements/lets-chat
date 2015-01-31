@@ -15,8 +15,8 @@ module.exports = EventListener.extend({
             // Kick connection from room!
 
             var presence = new Stanza.Presence({
-                to: helper.getRoomJid(room.slug, connection.username),
-                from: helper.getRoomJid(room.slug, connection.username),
+                to: helper.getRoomJid(room.slug, connection.user.username),
+                from: helper.getRoomJid(room.slug, connection.user.username),
                 type: 'unavailable'
             });
 
@@ -26,7 +26,7 @@ module.exports = EventListener.extend({
             });
 
             x.c('item', {
-                jid: helper.getRoomJid(room.slug, connection.username),
+                jid: helper.getRoomJid(room.slug, connection.user.username),
                 affiliation: 'none',
                 role: 'none'
             });

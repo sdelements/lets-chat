@@ -13,7 +13,7 @@ module.exports = MessageProcessor.extend({
 
     then: function(cb) {
         var stanza = this.Iq({
-            to: helper.getUserJid(this.client.conn.username)
+            to: helper.getUserJid(this.client.conn.user.username)
         });
 
         stanza.c('error', {

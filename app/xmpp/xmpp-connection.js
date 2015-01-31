@@ -3,8 +3,8 @@
 var util = require('util'),
     Connection = require('./../core/presence').Connection;
 
-function XmppConnection(userId, username, client) {
-    Connection.call(this, 'xmpp', userId, username);
+function XmppConnection(user, client) {
+    Connection.call(this, 'xmpp', user);
     this.client = client;
     client.conn = this;
     client.on('disconnect', this.disconnect.bind(this));

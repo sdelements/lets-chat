@@ -3,8 +3,8 @@
 var util = require('util'),
     Connection = require('./../core/presence').Connection;
 
-function SocketIoConnection(userId, username, socket) {
-    Connection.call(this, 'socket.io', userId, username);
+function SocketIoConnection(user, socket) {
+    Connection.call(this, 'socket.io', user);
     this.socket = socket;
     socket.conn = this;
     socket.on('disconnect', this.disconnect.bind(this));
@@ -31,7 +31,7 @@ module.exports = function() {
                 console.error(err);
                 return;
             }
-            var conn = new SocketIoConnection(userId, user.username, socket);
+            var conn = new SocketIoConnection(user, socket);
             core.presence.connect(conn);
         });
     });

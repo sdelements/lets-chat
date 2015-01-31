@@ -18,7 +18,7 @@ module.exports = EventListener.extend({
 
             var mentions = msg.text.match(mentionPattern);
 
-            if (mentions && mentions.indexOf('@' + connection.username) > -1) {
+            if (mentions && mentions.indexOf('@' + connection.user.username) > -1) {
                 text = connection.nickname + ': ' + text;
             }
 

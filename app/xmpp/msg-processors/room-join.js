@@ -44,13 +44,13 @@ module.exports = MessageProcessor.extend({
                 return cb(null);
             }
 
-            var username = connection.username;
+            var username = connection.user.username;
 
             var proom = this.core.presence.rooms.get(room._id);
             var usernames = proom ? proom.getUsernames() : [];
 
             // User's own presence must be last - and be their nickname
-                var i = usernames.indexOf(username);
+            var i = usernames.indexOf(username);
             if (i > -1) {
                 usernames.splice(i, 1);
             }

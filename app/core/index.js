@@ -2,6 +2,7 @@
 
 var EventEmitter = require('events').EventEmitter,
     util = require('util'),
+    _ = require('lodash'),
     AccountManager = require('./account'),
     FileManager = require('./files'),
     MessageManager = require('./messages'),
@@ -31,35 +32,35 @@ function Core() {
         core: this
     });
 
-    this.onUsernameChanged = this.onUsernameChanged.bind(this);
+    this.onAccountUpdated = this.onAccountUpdated.bind(this);
 
-    this.on('account:username_changed', this.onUsernameChanged);
+    this.on('account:update', this.onAccountUpdated);
 }
 
 util.inherits(Core, EventEmitter);
 
-Core.prototype.onUsernameChanged = function(data) {
-    var connections = this.presence.connections.query({
-        userId: data.userId
-    });
+Core.prototype.onAccountUpdated = function(data) {
+    var userId = data.user.id.toString();
+    var user = this.presence.users.get(userId);
 
-    if (!connections.length) {
+    if (!user) {
         return;
     }
 
     var new_data = {
-        userId: data.userId,
-        oldUsername: connections[0].username,
-        username: data.username
+        userId: userId,
+        oldUsername: user.username,
+        username: data.user.username
     };
 
-    // Update connections with new username
-    connections.forEach(function(connection) {
-        connection.username = new_data.username;
-    });
+    if (user) {
+        _.assign(user, data.user, { id: userId });
+    }
 
-    // Emit to all rooms, that this user has changed their username
-    this.presence.rooms.usernameChanged(new_data);
+    if (data.usernameChanged) {
+        // Emit to all rooms, that this user has changed their username
+        this.presence.rooms.usernameChanged(new_data);
+    }
 };
 
 module.exports = new Core();

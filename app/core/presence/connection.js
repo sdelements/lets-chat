@@ -5,12 +5,11 @@ var EventEmitter = require('events').EventEmitter,
     uuid = require('node-uuid');
 
 
-function Connection(type, userId, username) {
+function Connection(type, user) {
     EventEmitter.call(this);
     this.type = type;
     this.id = uuid.v4();
-    this.userId = userId.toString();
-    this.username = username.toString();
+    this.user = user;
 }
 
 util.inherits(Connection, EventEmitter);

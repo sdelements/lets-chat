@@ -3,12 +3,14 @@
 var _ = require('lodash'),
     Connection = require('./presence/connection'),
     ConnectionCollection = require('./presence/connection-collection'),
-    RoomCollection = require('./presence/room-collection');
+    RoomCollection = require('./presence/room-collection'),
+    UserCollection = require('./presence/user-collection');
 
 function PresenceManager(options) {
     this.core = options.core;
     this.connections = new ConnectionCollection();
     this.rooms = new RoomCollection();
+    this.users = new UserCollection();
     this.rooms.on('user_join', this.onJoin.bind(this));
     this.rooms.on('user_leave', this.onLeave.bind(this));
 
@@ -18,11 +20,13 @@ function PresenceManager(options) {
 
 PresenceManager.prototype.getUserCountForRoom = function(roomId) {
     var room = this.rooms.get(roomId);
-    return room ? room.getUserCount() : 0;
+    return room ? room.userCount : 0;
 };
 
 PresenceManager.prototype.connect = function(connection) {
     this.connections.add(connection);
+
+    connection.user = this.users.getOrAdd(connection.user);
 
     connection.on('disconnect', function() {
         this.disconnect(connection);

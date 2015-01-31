@@ -68,12 +68,10 @@ AccountManager.prototype.update = function(id, options, cb) {
                 return cb(err);
             }
 
-            if (usernameChange) {
-                this.core.emit('account:username_changed', {
-                    userId: user._id.toString(),
-                    username: user.username
-                });
-            }
+            this.core.emit('account:update', {
+                usernameChanged: usernameChange,
+                user: user.toJSON()
+            });
 
             if (cb) {
                 cb(null, user);

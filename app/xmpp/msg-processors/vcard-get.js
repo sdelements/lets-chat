@@ -12,7 +12,7 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
-        var jid = helper.getUserJid(this.client.conn.username);
+        var jid = helper.getUserJid(this.client.conn.user.username);
         var other = this.to && this.to !== jid;
 
         var sendVcard = function (user) {

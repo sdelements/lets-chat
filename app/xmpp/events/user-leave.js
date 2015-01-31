@@ -13,7 +13,7 @@ module.exports = EventListener.extend({
 
         connections.forEach(function(connection) {
             var presence = new Stanza.Presence({
-                to: helper.getRoomJid(data.roomSlug, connection.username),
+                to: helper.getRoomJid(data.roomSlug, connection.user.username),
                 from: helper.getRoomJid(data.roomSlug, data.username),
                 type: 'unavailable'
             });

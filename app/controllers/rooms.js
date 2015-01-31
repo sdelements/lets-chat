@@ -200,30 +200,16 @@ module.exports = function() {
                     return res.sendStatus(404);
                 }
 
-                var userIds = core.presence.rooms
-                        .getOrAdd(room._id, room.slug).getUserIds();
+                var users = core.presence.rooms
+                        .getOrAdd(room._id, room.slug)
+                        .getUsers()
+                        .map(function(user) {
+                            // TODO: Do we need to do this?
+                            user.room = room.id;
+                            return user;
+                        });
 
-                if (!userIds.length) {
-                    return res.json([]);
-                }
-
-                User.find({ _id: { $in: userIds } }, function(err, users) {
-                    if (err) {
-                        // Something bad happened
-                        console.error(err);
-                        return res.sendStatus(400);
-                    }
-
-                    // The client needs user.room in
-                    // order to properly route users
-                    users = _.map(users, function(user) {
-                        user = user.toJSON();
-                        user.room = room.id;
-                        return user;
-                    });
-
-                    res.json(users);
-                });
+                res.json(users);
             });
         }
     });
