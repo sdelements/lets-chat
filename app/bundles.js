@@ -18,6 +18,9 @@ function production(value, key) {
 
 function development(value, key) {
     var tags = value.src.map(function(asset) {
+        if (asset.indexOf('socket.io.js') > -1) {
+            asset ='socket.io/socket.io.js';
+        }
         return getTag(key, asset);
     });
 
