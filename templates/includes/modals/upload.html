@@ -1,0 +1,46 @@
+<div id="lcb-upload" class="modal" style="display: block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="validate form-horizontal" action="/files" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><i class="fa fa-upload"></i> Upload</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-6">Select</label>
+                        <div class="col-sm-11">
+                            <input type="file" name="files[]" multiple />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-6">Room</label>
+                        <div class="col-sm-11">
+                            <select class="form-control" name="room"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-6">Paste in room?</label>
+                        <div class="col-sm-11">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" checked />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-6">Preview</label>
+                        <div class="col-sm-11">
+                            <div class="lcb-upload-preview-files"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info indicator" name="submit"><i class="icon-ok"></i> Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

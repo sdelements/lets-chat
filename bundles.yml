@@ -24,6 +24,15 @@ vendor_js:
     - media/js/vendor/bootstrap/bootstrap.js
     - media/js/vendor/store.js/store.js
     - media/js/vendor/JVFloat/jvfloat.js
+    # uploads
+    - media/js/vendor/jquery.fileupload/load-image.js
+    - media/js/vendor/jquery.fileupload/load-image-meta.js
+    - media/js/vendor/jquery.fileupload/jquery.ui.widget.js
+    - media/js/vendor/jquery.fileupload/jquery.iframe-transport.js
+    - media/js/vendor/jquery.fileupload/jquery.fileupload.js
+    - media/js/vendor/jquery.fileupload/jquery.fileupload-process.js
+    - media/js/vendor/jquery.fileupload/jquery.fileupload-image.js
+    # /uploads
     - media/js/vendor/sweetalert/sweet-alert.js
     - media/js/vendor/notifications/desktop-notifications.js
     - media/js/vendor/at/jquery.caret.js
@@ -51,6 +60,7 @@ chat_js:
     - media/js/views/window.js
     - media/js/views/panes.js
     - media/js/views/modals.js
+    - media/js/views/upload.js
     - media/js/views/client.js
     - media/js/client.js
     - media/js/chat.js

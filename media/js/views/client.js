@@ -47,6 +47,10 @@
                 el: this.$el.find('.lcb-account-button'),
                 model: this.client.user
             });
+            this.upload = new window.LCB.UploadView({
+                el: this.$el.find('#lcb-upload'),
+                rooms: this.client.rooms
+            })
             this.notifications = new window.LCB.NotificationsView();
             //
             // Modals
