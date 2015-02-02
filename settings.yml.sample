@@ -45,7 +45,7 @@ files:
     region:
 
 auth:
-  enable: [local]
+  providers: [local]
 
   local:
     enable_registration: true

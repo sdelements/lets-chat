@@ -20,12 +20,12 @@ var _ = require('lodash'),
     enabledProviders = [];
 
 function getProviders(core) {
-    return settings.auth.providers.enable.map(function(key) {
+    return settings.auth.providers.map(function(key) {
         var Provider = _.find(available_providers, function (p) {
             return p.key === key;
         });
 
-        var provider_settings = settings.auth.providers[key];
+        var provider_settings = settings.auth[key];
 
         return new Provider(provider_settings, core);
     });

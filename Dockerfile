@@ -8,7 +8,7 @@ RUN git clone -b release/0.3.0 https://github.com/sdelements/lets-chat.git
 WORKDIR lets-chat
 RUN npm install
 
-ENV database_uri mongodb://db/letschat
+ENV LCB_DATABASE_URI mongodb://db/letschat
 
 EXPOSE 5000
 
