@@ -49,9 +49,9 @@ files:
     region:
 
 auth:
-  login_throttling:
+  throttling:
     enable: true
-    login_attempts_before_throttling: 3
+    threshold: 3
 
   providers: [local] # [local, kerberos, ldap] - You can specify the order
 
