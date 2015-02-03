@@ -77,7 +77,7 @@ module.exports = function() {
                 });
             });
         },
-        retrieve: function(req, res) {
+        get: function(req, res) {
             var identifier = req.param('id');
 
             User.findByIdentifier(identifier, function (err, user) {
