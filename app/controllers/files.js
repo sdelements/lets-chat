@@ -84,7 +84,8 @@ module.exports = function() {
             var options = {
                     owner: req.user._id,
                     room: req.param('room'),
-                    file: req.files.file
+                    file: req.files.file,
+                    post: req.param('post') && true
                 };
 
             core.files.create(options, function(err, file) {

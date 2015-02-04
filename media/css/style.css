@@ -3352,6 +3352,9 @@ body {
   -moz-opacity: 0.4;
   opacity: 0.4;
 }
+.modal {
+  overflow-y: scroll;
+}
 .form-control {
   height: auto;
   font-size: 14px;

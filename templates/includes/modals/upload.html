@@ -1,4 +1,4 @@
-<div id="lcb-upload" class="modal" style="display: block;">
+<div id="lcb-upload" class="modal dropzone fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="validate form-horizontal" action="/files" method="post">
@@ -10,7 +10,9 @@
                     <div class="form-group">
                         <label class="control-label col-sm-6">Select</label>
                         <div class="col-sm-11">
-                            <input type="file" name="files[]" multiple />
+                            <div class="lcb-upload-target" style="background: orange; width: 100%; height: 40px;">
+                                
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -20,18 +22,17 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-6">Paste in room?</label>
+                        <label class="control-label col-sm-6">Post in room?</label>
                         <div class="col-sm-11">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" checked />
+                                    <input type="checkbox" checked name="post" />
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-6">Preview</label>
-                        <div class="col-sm-11">
+                        <div class="col-sm-18">
                             <div class="lcb-upload-preview-files"></div>
                         </div>
                     </div>

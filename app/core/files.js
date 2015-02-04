@@ -31,9 +31,13 @@ FileManager.prototype.create = function(options, cb) {
     }
 
     Room.findById(options.room, function(err, room) {
+
         if (err) {
             console.error(err);
             return cb(err);
+        }
+        if (!room) {
+            return cb('No room found!');
         }
         if (room.archived) {
             return cb('Room is archived.');
@@ -59,7 +63,11 @@ FileManager.prototype.create = function(options, cb) {
                     }
                     cb(null, savedFile, room, user);
                     this.core.emit('files:new', savedFile, room, user);
-
+                    options.post && this.core.messages.create({
+                        room: room,
+                        owner: user,
+                        text: 'file:' + savedFile._id
+                    });
                 }.bind(this));
             }.bind(this));
         }.bind(this));

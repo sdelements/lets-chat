@@ -4,6 +4,7 @@ vendor_css:
     - media/js/vendor/JVFloat/jvfloat.css
     - media/js/vendor/sweetalert/sweet-alert.css
     - media/js/vendor/at/jquery.atwho.css
+    - media/js/vendor/dropzone/basic.css
     - media/css/vendor.css
 
 base_css:
@@ -24,15 +25,7 @@ vendor_js:
     - media/js/vendor/bootstrap/bootstrap.js
     - media/js/vendor/store.js/store.js
     - media/js/vendor/JVFloat/jvfloat.js
-    # uploads
-    - media/js/vendor/jquery.fileupload/load-image.js
-    - media/js/vendor/jquery.fileupload/load-image-meta.js
-    - media/js/vendor/jquery.fileupload/jquery.ui.widget.js
-    - media/js/vendor/jquery.fileupload/jquery.iframe-transport.js
-    - media/js/vendor/jquery.fileupload/jquery.fileupload.js
-    - media/js/vendor/jquery.fileupload/jquery.fileupload-process.js
-    - media/js/vendor/jquery.fileupload/jquery.fileupload-image.js
-    # /uploads
+    - media/js/vendor/dropzone/dropzone.js
     - media/js/vendor/sweetalert/sweet-alert.js
     - media/js/vendor/notifications/desktop-notifications.js
     - media/js/vendor/at/jquery.caret.js
