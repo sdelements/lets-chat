@@ -42,6 +42,8 @@ MessageManager.prototype.create = function(options, cb) {
 };
 
 MessageManager.prototype.list = function(options, cb) {
+    options = options || {};
+    
     var Message = mongoose.model('Message'),
         User = mongoose.model('User');
 

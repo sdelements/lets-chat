@@ -85,6 +85,8 @@ RoomManager.prototype.archive = function(roomId, cb) {
 };
 
 RoomManager.prototype.list = function(options, cb) {
+    options = options || {};
+
     var Room = mongoose.model('Room');
 
     var find = Room.find({ archived: { $ne: true }});

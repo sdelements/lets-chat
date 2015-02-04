@@ -67,6 +67,8 @@ FileManager.prototype.create = function(options, cb) {
 };
 
 FileManager.prototype.list = function(options, cb) {
+    options = options || {};
+    
     var File = mongoose.model('File'),
         User = mongoose.model('User');
 
