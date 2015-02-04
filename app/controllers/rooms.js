@@ -67,7 +67,12 @@ module.exports = function() {
     //
     app.io.route('rooms', {
         list: function(req, res) {
-            core.rooms.list(null, function(err, rooms) {
+            var options = {
+                    skip: req.param('skip'),
+                    take: req.param('take')
+                };
+
+            core.rooms.list(options, function(err, rooms) {
                 if (err) {
                     console.error(err);
                     return res.status(400).json(err);

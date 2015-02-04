@@ -1,6 +1,7 @@
 'use strict';
 
-var mongoose = require('mongoose');
+var _ = require('lodash'),
+    mongoose = require('mongoose');
 
 function MessageManager(options) {
     this.core = options.core;
@@ -50,18 +51,31 @@ MessageManager.prototype.list = function(options, cb) {
         find.where('room', options.room);
     }
 
-    if (options.from) {
-        find.where('_id').gt(options.from);
+    if (options.since_id) {
+        find.where('_id').gt(options.since_id);
     }
 
     if (options.since) {
         find.where('posted').gt(options.since);
     }
 
-    find
-        .populate('owner', 'id username displayName email avatar')
-        .populate('room', 'id name')
-        .limit(options.limit || 500)
+    if (options.include) {
+        var includes = options.include.split(',');
+
+        if (_.includes(includes, 'owner')) {
+            find.populate('owner', 'id username displayName email avatar');
+        }
+
+        if (_.includes(includes, 'room')) {
+            find.populate('room', 'id name');
+        }
+    }
+
+    if (options.skip) {
+        find.skip(options.skip);
+    }
+
+    find.limit(options.take || 500)
         .sort({ 'posted': -1 })
         .exec(function(err, messages) {
             if (err) {

@@ -96,12 +96,12 @@ module.exports = function() {
             });
         },
         list: function(req, res) {
-            var room = req.param('room'),
-                options = {};
-
-            if (room) {
-                options.room = room;
-            }
+            var options = {
+                    room: req.param('room'),
+                    skip: req.param('skip'),
+                    take: req.param('take'),
+                    include: req.param('include')
+                };
 
             core.files.list(options, function(err, files) {
                 if (err) {

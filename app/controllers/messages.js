@@ -61,21 +61,16 @@ module.exports = function() {
             });
         },
         list: function(req, res) {
-            var room = req.param('room'),
-                from = req.param('from'),
-                limit = req.param('limit'),
-                options = {};
+            var options = {
+                    room: req.param('room'),
+                    since_id: req.param('since_id') || req.param('from'),
+                    skip: req.param('skip'),
+                    take: req.param('take') || req.param('limit'),
+                    include: req.param('include')
+                };
 
-            if (room) {
-                options.room = room;
-            }
-
-            if (limit) {
-                options.limit = limit;
-            }
-
-            if (from) {
-                options.from = from;
+            if (req.socket) {
+                options.include = 'owner,room';
             }
 
             core.messages.list(options, function(err, messages) {

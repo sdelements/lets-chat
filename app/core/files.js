@@ -38,7 +38,7 @@ FileManager.prototype.create = function(options, cb) {
         if (room.archived) {
             return cb('Room is archived.');
         }
-        
+
         new File({
             owner: options.owner,
             name: options.file.originalname,
@@ -68,7 +68,7 @@ FileManager.prototype.create = function(options, cb) {
 
 FileManager.prototype.list = function(options, cb) {
     var File = mongoose.model('File'),
-    User = mongoose.model('User');
+        User = mongoose.model('User');
 
     var find = File.find();
 
@@ -76,8 +76,19 @@ FileManager.prototype.list = function(options, cb) {
         find.where('room', options.room);
     }
 
+    if (options.include && _.isArray(options.include)) {
+        var includes = options.include.split(',');
+
+        if (_.includes(includes, 'owner')) {
+            find.populate('owner', 'id username displayName email avatar');
+        }
+    }
+
+    if (options.skip) {
+        find.skip(options.skip);
+    }
+
     find
-    .populate('owner', 'id username displayName email avatar')
     .limit(options.limit || 500)
     .sort({ 'uploaded': -1 })
     .exec(function(err, files) {
