@@ -3,6 +3,7 @@
 var fs = require('fs'),
     _ = require('lodash'),
     mongoose = require('mongoose'),
+    helpers = require('./helpers'),
     settings = require('./../config').files,
     enabled = settings.enable,
     provider = _.find([
@@ -69,6 +70,14 @@ FileManager.prototype.create = function(options, cb) {
 FileManager.prototype.list = function(options, cb) {
     options = options || {};
 
+    options = helpers.sanitizeQuery(options, {
+        defaults: {
+            reverse: true,
+            take: 500
+        },
+        maxTake: 5000
+    });
+
     var File = mongoose.model('File'),
         User = mongoose.model('User');
 
@@ -86,8 +95,8 @@ FileManager.prototype.list = function(options, cb) {
         find.where('uploaded').lte(options.to);
     }
 
-    if (options.include && _.isArray(options.include)) {
-        var includes = options.include.split(',');
+    if (options.expand && _.isArray(options.include)) {
+        var includes = options.expand.split(',');
 
         if (_.includes(includes, 'owner')) {
             find.populate('owner', 'id username displayName email avatar');
@@ -98,15 +107,14 @@ FileManager.prototype.list = function(options, cb) {
         find.skip(options.skip);
     }
 
-    if (options.sort) {
-        var sort = options.sort.replace(',', ' ');
-        find.sort(sort);
-    } else {
+    if (options.reverse) {
         find.sort({ 'uploaded': -1 });
+    } else {
+        find.sort({ 'uploaded': 1 });
     }
 
     find
-    .limit(options.limit || 500)
+    .limit(options.limit)
     .exec(function(err, files) {
         if (err) {
             console.error(err);

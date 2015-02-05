@@ -6,7 +6,8 @@
 
 module.exports = function() {
 
-    var _ = require('lodash');
+    var _ = require('lodash'),
+        helpers = require('./../core/helpers');
 
     var app = this.app,
         core = this.core,
@@ -34,6 +35,13 @@ module.exports = function() {
                     skip: req.param('skip'),
                     take: req.param('take')
                 };
+
+            options = helpers.sanitizeQuery(options, {
+                defaults: {
+                    take: 500
+                },
+                maxTake: 5000
+            });
 
             var find = User.find();
 

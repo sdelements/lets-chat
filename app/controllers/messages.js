@@ -66,15 +66,16 @@ module.exports = function() {
                     since_id: req.param('since_id'),
                     from: req.param('from'),
                     to: req.param('to'),
-                    sort: req.param('sort'),
+                    reverse: req.param('reverse'),
                     skip: req.param('skip'),
                     take: req.param('take') || req.param('limit'),
-                    include: req.param('include')
+                    expand: req.param('expand') || req.param('include')
                 };
 
             if (req.isSocket) {
                 options.since_id = req.param('since_id') || req.param('from');
-                options.include = 'owner,room';
+                options.expand = 'owner';
+                options.reverse = true;
             }
 
             core.messages.list(options, function(err, messages) {

@@ -1,7 +1,8 @@
 'use strict';
 
 var _ = require('lodash'),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    helpers = require('./helpers');
 
 function MessageManager(options) {
     this.core = options.core;
@@ -44,6 +45,14 @@ MessageManager.prototype.create = function(options, cb) {
 MessageManager.prototype.list = function(options, cb) {
     options = options || {};
 
+    options = helpers.sanitizeQuery(options, {
+        defaults: {
+            reverse: true,
+            take: 500
+        },
+        maxTake: 5000
+    });
+
     var Message = mongoose.model('Message'),
         User = mongoose.model('User');
 
@@ -65,8 +74,8 @@ MessageManager.prototype.list = function(options, cb) {
         find.where('posted').lte(options.to);
     }
 
-    if (options.include) {
-        var includes = options.include.split(',');
+    if (options.expand) {
+        var includes = options.expand.split(',');
 
         if (_.includes(includes, 'owner')) {
             find.populate('owner', 'id username displayName email avatar');
@@ -81,14 +90,13 @@ MessageManager.prototype.list = function(options, cb) {
         find.skip(options.skip);
     }
 
-    if (options.sort) {
-        var sort = options.sort.replace(',', ' ');
-        find.sort(sort);
-    } else {
+    if (options.reverse) {
         find.sort({ 'posted': -1 });
+    } else {
+        find.sort({ 'posted': 1 });
     }
 
-    find.limit(options.take || 500)
+    find.limit(options.take)
         .exec(function(err, messages) {
             if (err) {
                 console.error(err);

@@ -54,21 +54,27 @@
         },
 
         loadTranscript: function() {
-            var that = this;
-            this.$messages.html('');
+            this.clearMessages();
 
+            var that = this;
             $.get('/messages', {
                 room: this.room.id,
                 from: moment(this.startDate).utc().toISOString(),
                 to: moment(this.endDate).utc().toISOString(),
-                include: 'owner,room',
-                sort: 'posted',
+                expand: 'owner',
+                reverse: false,
                 take: 5000
             }, function(messages) {
                 _.each(messages, function(message) {
                     that.addMessage(message);
                 });
             });
+        },
+
+        clearMessages: function() {
+            this.$messages.html('');
+            delete this.lastMessageOwner;
+            delete this.lastMessagePosted;
         },
 
         addMessage: function(message) {

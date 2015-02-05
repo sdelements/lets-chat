@@ -30,6 +30,18 @@ module.exports = function() {
         });
     });
 
+    core.on('rooms:new', function(room) {
+        app.io.emit('rooms:new', room);
+    });
+
+    core.on('rooms:update', function(room) {
+        app.io.emit('rooms:update', room);
+    });
+
+    core.on('rooms:archive', function(room) {
+        app.io.emit('rooms:archive', room);
+    });
+
 
     //
     // Routes
@@ -130,8 +142,8 @@ module.exports = function() {
                     console.error(err);
                     return res.status(400).json(err);
                 }
+
                 res.status(201).json(room);
-                app.io.emit('rooms:new', room);
             });
         },
         update: function(req, res) {
@@ -153,7 +165,6 @@ module.exports = function() {
                     return res.sendStatus(404);
                 }
 
-                app.io.emit('rooms:update', room);
                 res.json(room);
             });
         },
@@ -170,8 +181,7 @@ module.exports = function() {
                     return res.sendStatus(404);
                 }
 
-                res.json(room);
-                app.io.emit('rooms:archive', room);
+                res.sendStatus(204);
             });
         },
         join: function(req, res) {

@@ -98,10 +98,10 @@ module.exports = function() {
         list: function(req, res) {
             var options = {
                     room: req.param('room'),
-                    sort: req.param('sort'),
+                    reverse: req.param('reverse'),
                     skip: req.param('skip'),
                     take: req.param('take'),
-                    include: req.param('include')
+                    expand: req.param('expand') || req.param('include')
                 };
 
             core.files.list(options, function(err, files) {

@@ -1,6 +1,7 @@
 'use strict';
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    helpers = require('./helpers');
 
 function RoomManager(options) {
     this.core = options.core;
@@ -86,6 +87,13 @@ RoomManager.prototype.archive = function(roomId, cb) {
 
 RoomManager.prototype.list = function(options, cb) {
     options = options || {};
+
+    options = helpers.sanitizeQuery(options, {
+        defaults: {
+            take: 500
+        },
+        maxTake: 5000
+    });
 
     var Room = mongoose.model('Room');
 
