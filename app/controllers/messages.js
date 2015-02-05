@@ -63,13 +63,16 @@ module.exports = function() {
         list: function(req, res) {
             var options = {
                     room: req.param('room'),
-                    since_id: req.param('since_id') || req.param('from'),
+                    since_id: req.param('since_id'),
+                    from: req.param('from'),
+                    to: req.param('to'),
                     skip: req.param('skip'),
                     take: req.param('take') || req.param('limit'),
                     include: req.param('include')
                 };
 
-            if (req.socket) {
+            if (req.isSocket) {
+                options.since_id = req.param('since_id') || req.param('from');
                 options.include = 'owner,room';
             }
 

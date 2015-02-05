@@ -4236,6 +4236,11 @@ body {
 .lcb-room-heading {
   line-height: 100%;
   margin: 0;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
 }
 @media (max-width: 767px) {
   .lcb-room-heading {
@@ -4246,6 +4251,22 @@ body {
   font-size: 24px;
   font-weight: 300;
   color: #aaa;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.lcb-room-heading .btn {
+  color: #aaa;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.lcb-room-heading .btn:active {
+  box-shadow: none;
+}
+.lcb-room-heading .btn:hover {
+  color: #666;
 }
 .lcb-room-description {
   color: #777;

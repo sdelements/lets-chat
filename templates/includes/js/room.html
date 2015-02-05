@@ -4,10 +4,19 @@
             <div class="lcb-room-chat ">
                 <div class="lcb-room-header">
                     <div class="lcb-room-meta">
-                        <h2 class="lcb-room-heading show-edit-room" placeholder="Room Name...">
+                        <h2 class="lcb-room-heading">
                             <span class="name">{{name}}</span>
-                            <span class="slug">#{{slug}}</span></h2>
-                        <div class="lcb-room-description show-edit-room" placeholder="Description...">
+                            <span class="slug">#{{slug}}</span>
+                            <a class="btn hidden-xs show-edit-room"
+                                title="Edit Room">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a class="btn hidden-xs" title="Chat History"
+                                href="transcript?room={{ id }}" target="_blank">
+                                <i class="fa fa-history"></i>
+                            </a>
+                            </h2>
+                        <div class="lcb-room-description show-edit-room">
                             <p>{{description}}</p>
                         </div>
                     </div>

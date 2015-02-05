@@ -43,6 +43,7 @@
 .lcb-room-heading {
     line-height: 100%;
     margin: 0;
+    .flex-display;
     @media (max-width: @screen-xs-max) {
         font-size: 20px;
     }
@@ -50,6 +51,23 @@
         font-size: 24px;
         font-weight: 300;
         color: #aaa;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .btn {
+        color: #aaa;
+        line-height: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: 5px;
+        padding-right: 5px;
+
+        &:active {
+            box-shadow: none;
+        }
+    }
+    .btn:hover {
+        color: #666;
     }
 }
 

@@ -68,7 +68,7 @@ FileManager.prototype.create = function(options, cb) {
 
 FileManager.prototype.list = function(options, cb) {
     options = options || {};
-    
+
     var File = mongoose.model('File'),
         User = mongoose.model('User');
 
@@ -76,6 +76,14 @@ FileManager.prototype.list = function(options, cb) {
 
     if (options.room) {
         find.where('room', options.room);
+    }
+
+    if (options.from) {
+        find.where('uploaded').gt(options.from);
+    }
+
+    if (options.to) {
+        find.where('uploaded').lte(options.to);
     }
 
     if (options.include && _.isArray(options.include)) {

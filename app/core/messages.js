@@ -43,7 +43,7 @@ MessageManager.prototype.create = function(options, cb) {
 
 MessageManager.prototype.list = function(options, cb) {
     options = options || {};
-    
+
     var Message = mongoose.model('Message'),
         User = mongoose.model('User');
 
@@ -57,8 +57,12 @@ MessageManager.prototype.list = function(options, cb) {
         find.where('_id').gt(options.since_id);
     }
 
-    if (options.since) {
-        find.where('posted').gt(options.since);
+    if (options.from) {
+        find.where('posted').gt(options.from);
+    }
+
+    if (options.to) {
+        find.where('posted').lte(options.to);
     }
 
     if (options.include) {
