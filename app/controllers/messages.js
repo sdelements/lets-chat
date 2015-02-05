@@ -66,6 +66,7 @@ module.exports = function() {
                     since_id: req.param('since_id'),
                     from: req.param('from'),
                     to: req.param('to'),
+                    sort: req.param('sort'),
                     skip: req.param('skip'),
                     take: req.param('take') || req.param('limit'),
                     include: req.param('include')

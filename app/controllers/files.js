@@ -98,6 +98,7 @@ module.exports = function() {
         list: function(req, res) {
             var options = {
                     room: req.param('room'),
+                    sort: req.param('sort'),
                     skip: req.param('skip'),
                     take: req.param('take'),
                     include: req.param('include')
