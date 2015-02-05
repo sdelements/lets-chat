@@ -80,7 +80,7 @@ module.exports = function() {
                 if (err) {
                     return res.sendStatus(400);
                 }
-                res.json(messages.reverse());
+                res.json(messages);
             });
         }
     });

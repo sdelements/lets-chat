@@ -138,6 +138,7 @@
                 since_id: room.lastMessage.get('id'),
                 include: 'owner,room'
             }, function(messages) {
+                messages.reverse();
                 that.addMessages(messages, !room.get('loaded'));
                 room.set('loaded', true);
             });

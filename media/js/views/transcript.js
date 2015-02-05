@@ -70,6 +70,7 @@
                 to: to,
                 include: 'owner,room'
             }, function(messages) {
+                messages.reverse();
                 _.each(messages, function(message) {
                     self.addMessage(message);
                 });
