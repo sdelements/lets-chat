@@ -98,9 +98,15 @@ FileManager.prototype.list = function(options, cb) {
         find.skip(options.skip);
     }
 
+    if (options.sort) {
+        var sort = options.sort.replace(',', ' ');
+        find.sort(sort);
+    } else {
+        find.sort({ 'uploaded': -1 });
+    }
+
     find
     .limit(options.limit || 500)
-    .sort({ 'uploaded': -1 })
     .exec(function(err, files) {
         if (err) {
             console.error(err);

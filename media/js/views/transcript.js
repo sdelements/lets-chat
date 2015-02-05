@@ -7,10 +7,6 @@
     window.LCB.TranscriptView = Backbone.View.extend({
         el: '#transcript',
 
-        events: {
-            'click .load-transcript': 'loadTranscript',
-        },
-
         initialize: function(options) {
             this.options = options;
             this.room = options.room;
@@ -18,8 +14,6 @@
             this.$messages = this.$('.messages');
             this.messageTemplate =
                 Handlebars.compile($('#template-message').html());
-
-            this.initializeDatepickers();
 
             var that = this;
             $.when(
@@ -29,50 +23,50 @@
                     emotes: emotes[0],
                     replacements: replacements[0]
                 };
-                that.loadTranscript();
+                that.setup();
             });
         },
 
-        initializeDatepickers: function() {
-            var from = moment().subtract(1, 'days').toDate(),
-                to = moment().toDate();
+        setup: function() {
+            var format = 'YYYY-MM-DD';
 
-            this.$fromDate = this.$('#from-date');
-            this.$toDate = this.$('#to-date');
-            // Set initial from and to dates
-            this.$fromDate.datepicker("setDate", from);
-            this.$toDate.datepicker("setDate", to);
-        },
+            var that = this;
 
-        getMessages: function(query, callback) {
-            $.get('/messages', query, callback);
+            function setRange(start, end) {
+                that.startDate = moment(start).local().startOf('day');
+                that.endDate = moment(end).local().endOf('day');
+                that.loadTranscript();
+            }
+
+            setRange(moment(), moment());
+
+            this.$daterange = $('input[name="daterange"]')
+                .daterangepicker({
+                    format: format,
+                    startDate: this.startDate,
+                    endDate: this.endDate,
+                    dateLimit: { months: 1 }
+                }, setRange);
+
+            var str = that.startDate.format(format) + ' - ' + that.endDate.format(format);
+
+            $('input[name="daterange"]').val(str);
         },
 
         loadTranscript: function() {
-            var self = this;
+            var that = this;
             this.$messages.html('');
 
-            var from = moment(this.$fromDate.datepicker("getDate"))
-                .utc()
-                .toISOString();
-
-            var to = moment(this.$toDate.datepicker("getDate"))
-                .add(1, 'day')
-                .subtract(1, 'second')
-                .utc()
-                .toISOString();
-
-
-            // Query for relevant messages and add them
-            this.getMessages({
+            $.get('/messages', {
                 room: this.room.id,
-                from: from,
-                to: to,
-                include: 'owner,room'
+                from: moment(this.startDate).utc().toISOString(),
+                to: moment(this.endDate).utc().toISOString(),
+                include: 'owner,room',
+                sort: 'posted',
+                take: 5000
             }, function(messages) {
-                messages.reverse();
                 _.each(messages, function(message) {
-                    self.addMessage(message);
+                    that.addMessage(message);
                 });
             });
         },
@@ -97,7 +91,7 @@
 
             $text.html(this.formatMessage($text.html()));
 
-            $html.find('time').updateTimeStamp();
+            this.formatTimestamp($html.find('time'));
             this.$messages.append($html);
             this.lastMessageOwner = message.owner.id;
             this.lastMessagePosted = posted;
@@ -105,6 +99,12 @@
 
         formatMessage: function(text) {
             return window.utils.message.format(text, this.formatData);
+        },
+
+        formatTimestamp: function($ele) {
+            var time = $ele.attr('title');
+            time = moment(time).format('ddd, MMM Do YYYY, h:mm:ss a');
+            $ele.text(time);
         }
     });
 

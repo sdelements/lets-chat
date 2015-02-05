@@ -81,8 +81,14 @@ MessageManager.prototype.list = function(options, cb) {
         find.skip(options.skip);
     }
 
+    if (options.sort) {
+        var sort = options.sort.replace(',', ' ');
+        find.sort(sort);
+    } else {
+        find.sort({ 'posted': -1 });
+    }
+
     find.limit(options.take || 500)
-        .sort({ 'posted': -1 })
         .exec(function(err, messages) {
             if (err) {
                 console.error(err);

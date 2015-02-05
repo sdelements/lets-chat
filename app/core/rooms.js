@@ -99,6 +99,11 @@ RoomManager.prototype.list = function(options, cb) {
         find.limit(options.take);
     }
 
+    if (options.sort) {
+        var sort = options.sort.replace(',', ' ');
+        find.sort(sort);
+    }
+
     find.exec(cb);
 };
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="media/js/vendor/bootstrap-datepicker/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="media/js/vendor/bootstrap-daterangepicker/daterangepicker-bs3.css" />
     <style type="text/css">
         .header {
             position: fixed;
@@ -21,6 +21,9 @@
         .header input, .header button {
             padding: 4px 10px;
         }
+        .header input.daterange {
+            width: 181px;
+        }
         .messages {
             margin-top: 90px;
         }
@@ -29,7 +32,7 @@
 
 {% block js %}
     <script type="text/javascript" src="socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="media/js/vendor/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="media/js/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script type="text/javascript" src="media/js/util/message.js"></script>
     <script type="text/javascript" src="media/js/views/transcript.js"></script>
     <script type="text/javascript" src="media/js/transcript.js"></script>
@@ -54,23 +57,12 @@
             <h1>Transcript for <strong>{{ room.name }}</strong></h1>
 
             <form class="form-inline">
-
-                <div class="form-group">
-                    <label for="from-date" class="control-label">
-                        From Date
-                        </label>
-                    <input data-provide="datepicker" id="from-date" class="form-control">
-                </div>
-
                 <div class="form-group">
                     <label for="to-date" class="control-label">
-                        To Date
+                        Dates
                     </label>
-                    <input data-provide="datepicker" id="to-date" class="form-control">
+                    <input name="daterange" class="form-control daterange" />
                 </div>
-
-            <button class="btn btn-default load-transcript" type="button">Load</button>
-
             </form>
     </div>
 
