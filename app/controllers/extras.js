@@ -10,7 +10,7 @@ module.exports = function() {
         fs = require('fs'),
         path = require('path'),
         yaml = require('js-yaml'),
-        express = require('express.io');
+        express = require('express.oi');
 
     var app = this.app,
         core = this.core,

@@ -7,7 +7,7 @@
 var _ = require('lodash'),
     fs = require('fs'),
     colors = require('colors'),
-    express = require('express.io'),
+    express = require('express.oi'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     compression = require('compression'),
@@ -33,7 +33,7 @@ var auth = require('./app/auth/index'),
     app;
 
 //
-// Express.io Setup
+// express.oi Setup
 //
 if (httpsEnabled) {
      app = express().https({

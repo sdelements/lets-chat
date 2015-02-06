@@ -1,6 +1,6 @@
 var _ = require('lodash'),
     async = require('async'),
-    express = require('express.io'),
+    express = require('express.oi'),
     cookieParser = require('cookie-parser'),
     mongoose = require('mongoose'),
     passport = require('passport'),
