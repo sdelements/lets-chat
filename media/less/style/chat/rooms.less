@@ -90,7 +90,9 @@
 }
 
 .lcb-entry {
+    background: #fff;
     height: 70px;
+    border-top: 1px #eee solid;
     .flex-display;
     @media (max-width: @screen-xs-max) {
         height: 42px;
@@ -101,7 +103,6 @@
     max-height: 100%;
     padding: 15px;
     border: none;
-    border-top: 1px #eee solid;
     border-radius: 0 0 0 2px;
     resize: none;
     .flex(1);
@@ -110,6 +111,20 @@
     }
     @media (max-width: @screen-xs-max) {
         padding: 10px;
+    }
+}
+
+.lcb-entry-action {
+    background: none;
+    font-size: 18px;
+    color: #999;
+    &:active,
+    &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    &:active {
+        color: #999 !important;
     }
 }
 
@@ -170,10 +185,12 @@
 }
 
 .lcb-room-sidebar-header {
+    min-height: inherit;
     line-height: 36px;
     padding: 0 10px;
     border-radius: 3px 3px 0 0;
     border-bottom: 1px #ddd solid;
+    position: relative;
 }
 
 .lcb-room-sidebar-heading {
@@ -245,5 +262,18 @@
 .lcb-room-poke {
     &:hover {
         cursor: pointer;
+    }
+}
+
+.lcb-room-sidebar-files-add {
+    .size(24px);
+    font-size: 11px;
+    padding: 0;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    &:focus,
+    &:active {
+        outline: none !important;
     }
 }

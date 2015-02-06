@@ -4309,7 +4309,9 @@ body {
   flex-direction: column;
 }
 .lcb-entry {
+  background: #fff;
   height: 70px;
+  border-top: 1px #eee solid;
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
@@ -4325,7 +4327,6 @@ body {
   max-height: 100%;
   padding: 15px;
   border: none;
-  border-top: 1px #eee solid;
   border-radius: 0 0 0 2px;
   resize: none;
   -moz-flex: 1;
@@ -4342,6 +4343,19 @@ body {
   .lcb-entry-input {
     padding: 10px;
   }
+}
+.lcb-entry-action {
+  background: none;
+  font-size: 18px;
+  color: #999;
+}
+.lcb-entry-action:active,
+.lcb-entry-action:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.lcb-entry-action:active {
+  color: #999 !important;
 }
 .lcb-entry-button {
   padding-left: 20px;
@@ -4439,10 +4453,12 @@ body {
   flex: 1;
 }
 .lcb-room-sidebar-header {
+  min-height: inherit;
   line-height: 36px;
   padding: 0 10px;
   border-radius: 3px 3px 0 0;
   border-bottom: 1px #ddd solid;
+  position: relative;
 }
 .lcb-room-sidebar-heading {
   height: 36px;
@@ -4511,6 +4527,19 @@ body {
 }
 .lcb-room-poke:hover {
   cursor: pointer;
+}
+.lcb-room-sidebar-files-add {
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+  padding: 0;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+.lcb-room-sidebar-files-add:focus,
+.lcb-room-sidebar-files-add:active {
+  outline: none !important;
 }
 /*********************
  * Messages
