@@ -2,7 +2,7 @@
 
 A self-hosted chat app for small teams.
 
-![Screenshot](http://i.imgur.com/djnd0Uk.png)
+![Screenshot](http://i.imgur.com/C4uMD67.png)
 
 ## Features and Stuff
 
