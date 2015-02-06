@@ -58,7 +58,8 @@
             'click .hide-edit-room': 'hideEditRoom',
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
-            'click .lcb-room-poke': 'poke'
+            'click .lcb-room-poke': 'poke',
+            'click .lcb-upload-trigger': 'upload'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -387,6 +388,10 @@
                 text = $.trim($input.val()),
                 at = (text.length > 0 ? ' ' : '') + '@' + user.get('username') + ' '
             $input.val(text + at).focus();
+        },
+        upload: function(e) {
+            e.preventDefault();
+            this.model.trigger('upload:show', this.model);
         }
     });
 

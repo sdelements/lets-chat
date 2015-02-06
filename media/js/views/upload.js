@@ -19,6 +19,7 @@ Dropzone && (Dropzone.autoDiscover = false);
             this.template = Handlebars.compile($('#template-upload-preview').html());
             this.rooms = options.rooms;
             this.rooms.on('add remove', this.populateRooms, this);
+            this.rooms.on('upload:show', this.show, this)
             this.render();
         },
         render: function() {
