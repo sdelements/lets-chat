@@ -60,14 +60,6 @@
                 if (room.users) {
                     that.setUsers(room.id, room.users);
                 }
-                _.defer(function() {
-                     that.getFiles({
-                         room: room.id,
-                         take: 15
-                     }, function(files) {
-                         that.setFiles(room.id, files);
-                     })
-                });
             });
         });
     };
@@ -150,6 +142,12 @@
                 messages.reverse();
                 that.addMessages(messages, !room.get('loaded'));
                 room.set('loaded', true);
+            });
+            that.getFiles({
+                room: room.id,
+                take: 15
+            }, function(files) {
+                that.setFiles(room.id, files);
             });
             // Do we want to switch?
             if (switchRoom) {
