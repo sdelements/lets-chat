@@ -396,6 +396,9 @@
         this.socket.on('users:update', function(user) {
             that.updateUser(user);
         });
+        this.socket.on('files:new', function(file) {
+            that.addFile(file);
+        });
         this.socket.on('disconnect', function() {
             that.status.set('connected', false);
         });
