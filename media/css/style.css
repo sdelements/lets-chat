@@ -3355,6 +3355,9 @@ body {
 .modal {
   overflow-y: scroll;
 }
+.modal-content {
+  border: none;
+}
 .form-control {
   height: auto;
   font-size: 14px;
