@@ -1,5 +1,15 @@
 # Lets Chat Vagrant file
-$LCB_SCRIPT = <<EOF
+
+# Set LCB_BRANCH to pick what git checkout to use when spinning up the
+# application. For example:
+#
+# $ LCB_BRANCH="feature-branch vagrant up.
+#
+LCB_BRANCH = ENV['LCB_BRANCH'] || 'master'
+
+
+# Script that we run to bootstrap the system to run Let's Chat
+LCB_SCRIPT = <<EOF
 sudo apt-get update
 sudo apt-get install -y python-software-properties
 sudo apt-add-repository -y ppa:chris-lea/node.js
@@ -7,11 +17,12 @@ sudo apt-get update
 sudo apt-get install -y mongodb build-essential nodejs git libkrb5-dev
 git clone https://github.com/sdelements/lets-chat.git
 cd lets-chat
-git checkout release/0.3.0
+git checkout #{LCB_BRANCH}
 npm install
 cp settings.yml.sample settings.yml
 nodejs app.js
 EOF
+
 
 VAGRANTFILE_API_VERSION = "2"
 
@@ -24,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       lcb.vm.network "forwarded_port", guest: 5222, host: 5222
       lcb.vm.provision :shell, :inline => $LCB_SCRIPT, :privileged => false
   end
-  
+
   config.vm.provider "virtualbox" do |v|
       v.gui = true
       v.name = "Lets Chat"
