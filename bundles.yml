@@ -4,7 +4,6 @@ vendor_css:
     - media/js/vendor/JVFloat/jvfloat.css
     - media/js/vendor/sweetalert/sweet-alert.css
     - media/js/vendor/at/jquery.atwho.css
-    - media/js/vendor/dropzone/basic.css
     - media/js/vendor/selectize/selectize.css
     - media/js/vendor/selectize/selectize.bootstrap3.css
     - media/css/vendor.css

@@ -16,7 +16,7 @@ Dropzone && (Dropzone.autoDiscover = false);
             'submit form': 'submit'
         },
         initialize: function(options) {
-            this.template = Handlebars.compile($('#template-upload-preview').html());
+            this.template = $('#template-upload').html();
             this.rooms = options.rooms;
             this.rooms.current.on('change:id', this.setRoom, this);
             this.rooms.on('add remove', this.populateRooms, this);
@@ -35,7 +35,8 @@ Dropzone && (Dropzone.autoDiscover = false);
                 addRemoveLinks: true,
                 dictRemoveFile: 'Remove',
                 parallelUploads: 8,
-                maxFiles: 8
+                maxFiles: 8,
+                previewTemplate: this.template
             });
             this.dropzone
                 .on('sending', _.bind(this.sending, this))
