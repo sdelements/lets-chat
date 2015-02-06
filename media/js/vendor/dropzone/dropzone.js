@@ -638,12 +638,6 @@
                 return _this.emit("dragleave", e);
               };
             })(this),
-            "paste": (function(_this) {
-              return function(e) {
-                noPropagation(e);
-                return _this.paste(e);
-              };
-            })(this),
             "drop": (function(_this) {
               return function(e) {
                 noPropagation(e);
