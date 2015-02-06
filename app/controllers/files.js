@@ -31,7 +31,8 @@ module.exports = function() {
 
     var fileUpload = multer({
         limits: {
-            files: 1
+            files: 1,
+            fileSize: 100000000
         }
     });
 
