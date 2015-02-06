@@ -18,8 +18,9 @@ Dropzone && (Dropzone.autoDiscover = false);
         initialize: function(options) {
             this.template = Handlebars.compile($('#template-upload-preview').html());
             this.rooms = options.rooms;
+            this.rooms.current.on('change:id', this.setRoom, this);
             this.rooms.on('add remove', this.populateRooms, this);
-            this.rooms.on('upload:show', this.show, this)
+            this.rooms.on('upload:show', this.show, this);
             this.render();
         },
         render: function() {
@@ -41,6 +42,14 @@ Dropzone && (Dropzone.autoDiscover = false);
                 .on('sendingmultiple', _.bind(this.sending, this))
                 .on('addedfile', _.bind(this.show, this))
                 .on('queuecomplete', _.bind(this.complete, this));
+            //
+            // Selectize
+            //
+            this.selectize = this.$('select[name="room"]').selectize({
+                valueField: 'id',
+				labelField: 'name',
+				searchField: 'name'
+            }).get(0).selectize;
             //
             // Modal events
             //
@@ -80,17 +89,16 @@ Dropzone && (Dropzone.autoDiscover = false);
             this.dropzone.processQueue();
         },
         setRoom: function() {
-            this.$('select[name="room"]').val(this.rooms.current.id);
+            this.selectize.setValue(this.rooms.current.id)
         },
         populateRooms: function() {
-            var $select = this.$('select[name="room"]').empty();
+            this.selectize.clearOptions();
             this.rooms.each(function(room) {
-                var $option = $('<option />');
-                $option
-                    .attr('value', room.id)
-                    .text(room.get('name'))
-                    .appendTo($select);
-            });
+                this.selectize.addOption({
+                    id: room.id,
+                    name: room.get('name')
+                })
+            }, this);
         }
     });
 

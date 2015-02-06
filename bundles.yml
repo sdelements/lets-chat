@@ -5,6 +5,8 @@ vendor_css:
     - media/js/vendor/sweetalert/sweet-alert.css
     - media/js/vendor/at/jquery.atwho.css
     - media/js/vendor/dropzone/basic.css
+    - media/js/vendor/selectize/selectize.css
+    - media/js/vendor/selectize/selectize.bootstrap3.css
     - media/css/vendor.css
 
 base_css:
@@ -26,6 +28,7 @@ vendor_js:
     - media/js/vendor/store.js/store.js
     - media/js/vendor/JVFloat/jvfloat.js
     - media/js/vendor/dropzone/dropzone.js
+    - media/js/vendor/selectize/selectize.js
     - media/js/vendor/sweetalert/sweet-alert.js
     - media/js/vendor/notifications/desktop-notifications.js
     - media/js/vendor/at/jquery.caret.js

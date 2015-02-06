@@ -1,0 +1,60 @@
+{
+  "name": "selectize",
+  "keywords": [
+    "select",
+    "ui",
+    "form",
+    "input",
+    "control",
+    "autocomplete",
+    "tagging",
+    "tag"
+  ],
+  "description": "Selectize is a jQuery-based custom <select> UI control. Useful for tagging, contact lists, country selectors, etc.",
+  "version": "0.12.0",
+  "license": "Apache License, Version 2.0",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brianreavis/selectize.js.git"
+  },
+  "main": [
+    "dist/css/selectize.css",
+    "dist/js/selectize.js"
+  ],
+  "ignore": [
+    "Makefile",
+    "Gruntfile.js",
+    "examples",
+    "node_modules",
+    "bower_components",
+    "docs",
+    "src",
+    "test",
+    ".travis.yml",
+    "testem.json",
+    "selectize.jquery.json",
+    "*.sh",
+    "package.json"
+  ],
+  "dependencies": {
+    "jquery": ">=1.7.0",
+    "sifter": "0.4.x",
+    "microplugin": "0.0.x"
+  },
+  "devDependencies": {
+    "bootstrap2": "bootstrap#2",
+    "bootstrap3": "bootstrap#3.2"
+  },
+  "homepage": "https://github.com/brianreavis/selectize.js",
+  "_release": "0.12.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.12.0",
+    "commit": "ada2dcd03237ea6ee5782c9f05a6e83b8b08363a"
+  },
+  "_source": "git://github.com/brianreavis/selectize.js.git",
+  "_target": "~0.12.0",
+  "_originalSource": "selectize",
+  "_direct": true
+}
