@@ -62,7 +62,8 @@
                 }
                 _.defer(function() {
                      that.getFiles({
-                             room: room.id
+                         room: room.id,
+                         take: 15
                      }, function(files) {
                          that.setFiles(room.id, files);
                      })
