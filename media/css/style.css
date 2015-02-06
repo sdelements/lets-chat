@@ -4479,6 +4479,11 @@ body {
   overflow: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 .lcb-room-sidebar-item {
   background: #fff;
@@ -4702,9 +4707,15 @@ body {
 }
 .lcb-upload-item-size {
   width: 100%;
+  color: #fff;
+  font-size: 12px;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
   position: absolute;
   bottom: 4px;
   left: 0;
+}
+.lcb-upload-item-size strong {
+  font-weight: 300;
 }
 .lcb-upload-item-progress {
   height: 3px;
