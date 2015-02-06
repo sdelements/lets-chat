@@ -4405,7 +4405,6 @@ body {
 }
 @media (max-width: 991px) {
   .lcb-room-sidebar {
-    background: none;
     width: 200px;
     height: 100%;
     padding: 0;
@@ -4698,6 +4697,7 @@ body {
   overflow: hidden;
 }
 .lcb-upload-item-preview {
+  background: #333;
   min-height: 28px;
   position: relative;
 }
@@ -4709,7 +4709,7 @@ body {
   width: 100%;
   color: #fff;
   font-size: 12px;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
   position: absolute;
   bottom: 4px;
   left: 0;

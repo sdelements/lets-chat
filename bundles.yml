@@ -16,7 +16,7 @@ base_css:
 vendor_js:
   dest: ./media/dist/vendor.js
   src:
-    - ./node_modules/express.io/node_modules/socket.io-client/socket.io.js
+    - ./node_modules/socket.io-client/socket.io.js
     - ./media/js/vendor/jquery/jquery.js
     - ./media/js/vendor/jquery-validate/jquery.validate.js
     - ./media/js/vendor/lodash/lodash.js
