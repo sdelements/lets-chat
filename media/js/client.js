@@ -60,14 +60,6 @@
                 if (room.users) {
                     that.setUsers(room.id, room.users);
                 }
-                _.defer(function() {
-                     that.getFiles({
-                         room: room.id,
-                         take: 15
-                     }, function(files) {
-                         that.setFiles(room.id, files);
-                     })
-                });
             });
         });
     };
@@ -150,6 +142,12 @@
                 messages.reverse();
                 that.addMessages(messages, !room.get('loaded'));
                 room.set('loaded', true);
+            });
+            that.getFiles({
+                room: room.id,
+                take: 15
+            }, function(files) {
+                that.setFiles(room.id, files);
             });
             // Do we want to switch?
             if (switchRoom) {
@@ -304,7 +302,7 @@
             that.users.set(users);
         }
 
-        $.ajax({url:'/users', async: false, success: success});
+        $.ajax({url:'./users', async: false, success: success});
 
         return this.users;
     };
@@ -316,7 +314,7 @@
         if (!this.extras.emotes) {
             // Use AJAX, so we can take advantage of HTTP caching
             // Also, it's a promise - which ensures we only load emotes once
-            this.extras.emotes = $.get('/extras/emotes');
+            this.extras.emotes = $.get('./extras/emotes');
         }
         if (callback) {
             this.extras.emotes.done(callback);
@@ -327,7 +325,7 @@
         if (!this.extras.replacements) {
             // Use AJAX, so we can take advantage of HTTP caching
             // Also, it's a promise - which ensures we only load emotes once
-            this.extras.replacements = $.get('/extras/replacements');
+            this.extras.replacements = $.get('./extras/replacements');
         }
         if (callback) {
             this.extras.replacements.done(callback);

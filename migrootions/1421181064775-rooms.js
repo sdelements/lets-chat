@@ -29,18 +29,28 @@ migration.step(function(data, stepComplete) {
         }
 
         Room.findById(item._id, function(err, doc) {
+            if (err) {
+                console.error(err);
+                return callback(err);
+            }
+
             doc.slug = getSlug(doc.name);
 
 
             // TODO: Need to handle conflict
             doc.save(function(err) {
+                if (err) {
+                    console.error(err);
+                    return callback(err);
+                }
+
                 callback();
             });
         });
     }
 
     async.each(data.rooms, updateDoc, function(err) {
-        stepComplete();
+        stepComplete(err);
     });
 });
 

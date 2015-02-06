@@ -104,7 +104,7 @@
         },
         getToken: function() {
             var that = this;
-            $.post('/account/token/generate', function(data) {
+            $.post('./account/token/generate', function(data) {
                 if (data.token) {
                     that.$('.token').val(data.token);
                     that.$('.generated-token').show();
@@ -113,7 +113,7 @@
         },
         removeToken: function() {
             var that = this;
-            $.post('/account/token/revoke', function(data) {
+            $.post('./account/token/revoke', function(data) {
                 that.refresh();
                 swal('Success', 'Authentication token revoked!', 'success');
             });

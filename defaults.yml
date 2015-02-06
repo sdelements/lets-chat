@@ -14,14 +14,6 @@ https:
   key: key.pem
   cert: certificate.pem
 
-files:
-  enable: true
-  provider: local
-  allowed_file_types:
-    - 'image/jpeg'
-    - 'image/png'
-    - 'image/gif'
-
 xmpp:
   enable: false
   debug:
@@ -29,9 +21,10 @@ xmpp:
     unhandled: false
   port: 5222
   host: localhost
-  # tls:
-  #   keyPath: ./server.key
-  #   certPath: ./server.crt
+  tls:
+    enable: false
+    key: ./server.key
+    cert: ./server.crt
 
 database:
   uri: mongodb://localhost/letschat
@@ -42,13 +35,15 @@ secrets:
 files:
   enable: false
   provider: local
-  allowed_file_types:
+  maxFileSize: 100000000
+  restrictTypes: true
+  allowedTypes:
     - 'image/jpeg'
     - 'image/png'
     - 'image/gif'
 
   local:
-    upload_dir: uploads
+    dir: uploads
 
   s3:
     accessKeyId:
@@ -64,8 +59,8 @@ auth:
   providers: [local] # [local, kerberos, ldap] - You can specify the order
 
   local:
-    enable_registration: true
-    password_regex: ^.{8,64}$
+    enableRegistration: true
+    passwordRegex: ^.{8,64}$
     salt: secretsauce # Required when upgrading from version < 0.3
 
   kerberos:

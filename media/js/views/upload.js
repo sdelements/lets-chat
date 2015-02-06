@@ -28,7 +28,7 @@ Dropzone && (Dropzone.autoDiscover = false);
             // Dropzone
             //
             this.dropzone = new Dropzone(this.$el.closest('.lcb-client').get(0), {
-                url: '/files',
+                url: './files',
                 autoProcessQueue: false,
                 clickable: [this.$('.lcb-upload-target').get(0)],
                 previewsContainer: this.$('.lcb-upload-preview-files').get(0),

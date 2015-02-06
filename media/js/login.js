@@ -27,7 +27,7 @@
                     });
                     if ($form.data('refresh')) {
                         setTimeout(function() {
-                            window.location = '/';
+                            window.location = './';
                         }, 1000);
                         return;
                     }
@@ -73,7 +73,7 @@
             }
         });
         // Show avatar
-        $('[action="/account/login"] [name="username"]').on('blur', function(e) {
+        $('[action="./account/login"] [name="username"]').on('blur', function(e) {
             var email = $(this).val();
             var valid = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(email);
             if (valid) {

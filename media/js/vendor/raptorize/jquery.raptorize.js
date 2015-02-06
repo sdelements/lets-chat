@@ -34,8 +34,8 @@ $(document).ready(function() {
             // }
 
             //Raptor Vars (Modify the 'src' to your prefrence)
-            var raptorImageMarkup = '<img id="elRaptor" style="display: none" src="/media/js/vendor/raptorize/raptor.png" />'
-            var raptorAudioMarkup = '<audio id="elRaptorShriek" preload="auto"><source src="/media/js/vendor/raptorize/raptor-sound.mp3" /><source src="/media/js/vendor/raptorize/raptor-sound.ogg" /></audio>';
+            var raptorImageMarkup = '<img id="elRaptor" style="display: none" src="./media/js/vendor/raptorize/raptor.png" />'
+            var raptorAudioMarkup = '<audio id="elRaptorShriek" preload="auto"><source src="./media/js/vendor/raptorize/raptor-sound.mp3" /><source src="./media/js/vendor/raptorize/raptor-sound.ogg" /></audio>';
             var locked = false;
 
             //Append Raptor and Style

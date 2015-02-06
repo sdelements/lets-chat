@@ -31,7 +31,8 @@ module.exports = function() {
 
     var fileUpload = multer({
         limits: {
-            files: 1
+            files: 1,
+            fileSize: settings.maxFileSize
         }
     });
 
@@ -67,8 +68,11 @@ module.exports = function() {
 
                 var url = coreFiles.getUrl(file);
                 if (settings.provider === 'local') {
-                    res.contentType(file.type);
-                    res.sendFile(url);
+                    res.sendFile(url, {
+                        headers: {
+                            'Content-Type': file.type
+                        }
+                    });
                 } else {
                     res.redirect(url);
                 }

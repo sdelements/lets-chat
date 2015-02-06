@@ -17,7 +17,7 @@
 
             var that = this;
             $.when(
-                $.get('/extras/emotes'), $.get('/extras/replacements')
+                $.get('./extras/emotes'), $.get('./extras/replacements')
             ).done(function(emotes, replacements) {
                 that.formatData = {
                     emotes: emotes[0],
@@ -57,7 +57,7 @@
             this.clearMessages();
 
             var that = this;
-            $.get('/messages', {
+            $.get('./messages', {
                 room: this.room.id,
                 from: moment(this.startDate).utc().toISOString(),
                 to: moment(this.endDate).utc().toISOString(),
