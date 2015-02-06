@@ -4215,7 +4215,7 @@ body {
   position: relative;
   border-radius: 2px 2px 0 0;
   box-shadow: 0 4px 5px -5px rgba(0, 0, 0, 0.1);
-  z-index: 1100;
+  z-index: 1000;
 }
 @media (max-width: 767px) {
   .lcb-room-header {
