@@ -4228,6 +4228,9 @@ body {
     padding: 5px 8px;
   }
 }
+.lcb-room-sidebar-opened .lcb-room-header {
+  border-radius: 2px 0 0 0;
+}
 .lcb-room-header-actions {
   position: absolute;
   top: 5px;
@@ -4346,6 +4349,9 @@ body {
   border-radius: 0;
   border-radius: 0 0 2px 0;
 }
+.lcb-room-sidebar-opened .lcb-entry-button {
+  border-radius: 0;
+}
 .lcb-room-toggle-sidebar {
   font-size: 30px;
   display: block;
@@ -4363,13 +4369,11 @@ body {
   transform: rotateY(180deg);
 }
 .lcb-room-sidebar {
-  background: #222;
+  background: #f2f2f2;
   width: 20%;
   min-width: 160px;
   max-width: 240px;
-  padding: 5px;
-  border: 1px #333 solid;
-  border-left: none;
+  border-left: 1px #ddd solid;
   border-radius: 0 3px 3px 0;
   display: -webkit-flex;
   display: -moz-flex;
@@ -4412,10 +4416,8 @@ body {
 }
 .lcb-room-sidebar-group {
   min-height: 36px;
-  margin-bottom: 5px;
-  border: 1px #444 solid;
-  border-radius: 3px;
   overflow: hidden;
+  border-bottom: 1px #ddd solid;
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
@@ -4429,23 +4431,24 @@ body {
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
-}
-@media (max-width: 767px) {
-  .lcb-room-sidebar-group {
-    margin-bottom: 3px;
-  }
+  -moz-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
 }
 .lcb-room-sidebar-header {
-  background: #222222 url('../img/header.png') repeat-x;
-  min-height: inherit;
-  padding: 10px 7px;
+  line-height: 36px;
+  padding: 0 10px;
   border-radius: 3px 3px 0 0;
+  border-bottom: 1px #ddd solid;
 }
 .lcb-room-sidebar-heading {
-  color: #f2f2f2;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 100%;
+  height: 36px;
+  line-height: 36px;
+  font-size: 13px;
+  font-weight: 400;
   margin: 0;
 }
 .lcb-room-sidebar-heading .fa {
@@ -4457,17 +4460,16 @@ body {
   margin: 0;
 }
 .lcb-room-sidebar-list {
-  border-radius: 3px;
   overflow: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 .lcb-room-sidebar-item {
-  background: #e9e9e9;
+  background: #fff;
+  font-size: 12px;
   padding: 5px;
   margin: 0;
-  border-top: 1px #f2f2f2 solid;
-  border-bottom: 1px #ddd solid;
+  border-bottom: 1px #eee solid;
   display: block;
   position: relative;
   overflow: hidden;
@@ -4481,8 +4483,8 @@ body {
   min-height: 40px;
 }
 .lcb-room-sidebar-user-name {
-  font-weight: 500;
-  font-size: 15px;
+  font-weight: 400;
+  font-size: 14px;
   line-height: 17px;
   margin-left: 36px;
   display: block;

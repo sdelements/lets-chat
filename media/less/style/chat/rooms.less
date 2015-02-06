@@ -28,6 +28,9 @@
     @media (max-width: @screen-xs-max) {
         padding: 5px 8px;
     }
+    .lcb-room-sidebar-opened & {
+        border-radius: 2px 0 0 0;
+    }
 }
 
 .lcb-room-header-actions {
@@ -115,6 +118,9 @@
     padding-right: 20px;
     border-radius: 0;
     border-radius: 0 0 2px 0;
+    .lcb-room-sidebar-opened & {
+        border-radius: 0;
+    }
 }
 
 .lcb-room-toggle-sidebar {
@@ -127,13 +133,11 @@
 }
 
 .lcb-room-sidebar {
-    background: #222;
+    background: #f2f2f2;
     width: 20%;
     min-width: 160px;
     max-width: 240px;
-    padding: 5px;
-    border: 1px #333 solid;
-    border-left: none;
+    border-left: 1px #ddd solid;
     border-radius: 0 3px 3px 0;
     .flex-display;
     .flex-direction(column);
@@ -158,29 +162,25 @@
 
 .lcb-room-sidebar-group {
     min-height: 36px;
-    margin-bottom: 5px;
-    border: 1px #444 solid;
-    border-radius: 3px;
     overflow: hidden;
+    border-bottom: 1px #ddd solid;
     .flex-display;
     .flex-direction(column);
-    @media (max-width: @screen-xs-max) {
-        margin-bottom: 3px;
-    }
+    .flex(1);
 }
 
 .lcb-room-sidebar-header {
-    background: #222 url('../img/header.png') repeat-x;
-    min-height: inherit;
-    padding: 10px 7px;
+    line-height: 36px;
+    padding: 0 10px;
     border-radius: 3px 3px 0 0;
+    border-bottom: 1px #ddd solid;
 }
 
 .lcb-room-sidebar-heading {
-    color: #f2f2f2;
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 100%;
+    height: 36px;
+    line-height: 36px;
+    font-size: 13px;
+    font-weight: 400;
     margin: 0;
     .fa {
         margin-right: 4px;
@@ -194,18 +194,17 @@
 }
 
 .lcb-room-sidebar-list {
-    border-radius: 3px;
     overflow: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 
 .lcb-room-sidebar-item {
-    background: #e9e9e9;
+    background: #fff;
+    font-size: 12px;
     padding: 5px;
     margin: 0;
-    border-top: 1px #f2f2f2 solid;
-    border-bottom: 1px #ddd solid;
+    border-bottom: 1px #eee solid;
     display: block;
     position: relative;
     .text-overflow;
@@ -219,8 +218,8 @@
 }
 
 .lcb-room-sidebar-user-name {
-    font-weight: 500;
-    font-size: 15px;
+    font-weight: 400;
+    font-size: 14px;
     line-height: 17px;
     margin-left: 36px;
     display: block;
