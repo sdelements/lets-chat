@@ -103,7 +103,7 @@ FileManager.prototype.list = function(options, cb) {
         find.where('uploaded').lte(options.to);
     }
 
-    if (options.expand && _.isArray(options.include)) {
+    if (options.expand) {
         var includes = options.expand.split(',');
 
         if (_.includes(includes, 'owner')) {

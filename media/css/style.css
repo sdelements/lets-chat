@@ -4541,6 +4541,23 @@ body {
 .lcb-room-sidebar-files-add:active {
   outline: none !important;
 }
+.lcb-room-sidebar-file-icon {
+  position: absolute;
+  top: 8px;
+  left: 7px;
+}
+.lcb-room-sidebar-file-meta {
+  font-size: 11px;
+  color: #777;
+  margin-left: 20px;
+}
+.lcb-room-sidebar-file-name {
+  font-size: 13px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 /*********************
  * Messages
  *********************/

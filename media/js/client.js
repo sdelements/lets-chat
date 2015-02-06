@@ -224,7 +224,8 @@
     Client.prototype.getFiles = function(query, callback) {
         this.socket.emit('files:list', {
             room: query.room || '',
-            take: query.take || 40
+            take: query.take || 40,
+            expand: query.expand || 'owner'
         }, callback);
     };
     Client.prototype.setFiles = function(roomId, files) {

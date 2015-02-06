@@ -42,7 +42,7 @@ FileSchema.method('toJSON', function() {
         owner: this.owner,
         name: this.name,
         type: this.type,
-        size: this.size,
+        size: Math.floor(this.size / 1024) + 'kb',
         url: core.getUrl(this)
     };
 });
