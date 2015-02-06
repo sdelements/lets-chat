@@ -60,6 +60,13 @@
                 if (room.users) {
                     that.setUsers(room.id, room.users);
                 }
+                _.defer(function() {
+                     that.getFiles({
+                             room: room.id
+                     }, function(files) {
+                         that.setFiles(room.id, files);
+                     })
+                });
             });
         });
     };
@@ -210,6 +217,35 @@
     };
     Client.prototype.getMessages = function(query, callback) {
         this.socket.emit('messages:list', query, callback);
+    };
+    //
+    // Files
+    //
+    Client.prototype.getFiles = function(query, callback) {
+        this.socket.emit('files:list', {
+            room: query.room || '',
+            take: query.take || 40
+        }, callback);
+    };
+    Client.prototype.setFiles = function(roomId, files) {
+        if (!roomId || !files || !files.length) {
+            // Nothing to do here...
+            return;
+        }
+        var room = this.rooms.get(roomId);
+        if (!room) {
+            // No room
+            return;
+        }
+        room.files.set(files);
+    };
+    Client.prototype.addFile = function(file) {
+        var room = this.rooms.get(file.room);
+        if (!room) {
+            // No room
+            return;
+        }
+        room.files.add(file);
     };
     //
     // Users

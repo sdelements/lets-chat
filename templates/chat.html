@@ -9,6 +9,7 @@
 {% block templates %}
     {% include 'includes/js/room.html' %}
     {% include 'includes/js/user.html' %}
+    {% include 'includes/js/file.html' %}
     {% include 'includes/js/message.html' %}
     {% include 'includes/js/tab.html' %}
     {% include 'includes/js/browser-item.html' %}
@@ -49,16 +50,16 @@
                         </a>
                     </li>
                     {% if settings.xmpp.enable %}
-                    <li>
-                        <a data-toggle="modal" href="#lcb-xmpp">
-                            <i class="fa fa-comments"></i> XMPP/Jabber
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="modal" href="#lcb-tokens">
-                            <i class="fa fa-lock"></i> Auth tokens
-                        </a>
-                    </li>
+                        <li>
+                            <a data-toggle="modal" href="#lcb-xmpp">
+                                <i class="fa fa-comments"></i> XMPP/Jabber
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#lcb-tokens">
+                                <i class="fa fa-lock"></i> Auth tokens
+                            </a>
+                        </li>
                     {% endif %}
                     <li class="divider"></li>
                     <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>

@@ -9,44 +9,6 @@
 
     window.LCB = window.LCB || {};
 
-    window.LCB.RoomUsersView = Backbone.View.extend({
-        initialize: function(options) {
-            this.template = Handlebars.compile($('#template-user').html());
-            this.collection.on('add remove', function() {
-                this.count();
-            }, this);
-            this.collection.on('add', function(user) {
-                this.add(user.toJSON());
-            }, this);
-            this.collection.on('change', function(user) {
-                this.update(user.toJSON());
-            }, this);
-            this.collection.on('remove', function(user) {
-                this.remove(user.id);
-            }, this);
-            this.render();
-        },
-        render: function() {
-            this.collection.each(function(user) {
-                this.add(user.toJSON());
-            }, this);
-            this.count();
-        },
-        add: function(user) {
-            this.$('.lcb-room-sidebar-list').prepend(this.template(user));
-        },
-        remove: function(id) {
-            this.$('.lcb-room-sidebar-user[data-id=' + id + ']').remove();
-        },
-        count: function(users) {
-            this.$('.lcb-room-sidebar-users-count').text(this.collection.length);
-        },
-        update: function(user){
-            this.$('.lcb-room-sidebar-user[data-id=' + user.id + ']')
-                .replaceWith(this.template(user));
-        }
-    });
-
     window.LCB.RoomView = Backbone.View.extend({
         events: {
             'scroll .lcb-messages': 'updateScrollLock',
@@ -75,6 +37,10 @@
             this.usersList = new window.LCB.RoomUsersView({
                 el: this.$('.lcb-room-sidebar-users'),
                 collection: this.model.users
+            });
+            this.filesList = new window.LCB.RoomFilesView({
+                el: this.$('.lcb-room-sidebar-files'),
+                collection: this.model.files
             });
         },
         render: function() {
@@ -393,6 +359,52 @@
             e.preventDefault();
             this.model.trigger('upload:show', this.model);
         }
+    });
+
+    window.LCB.RoomSidebarListView = Backbone.View.extend({
+        initialize: function(options) {
+            this.template = Handlebars.compile($(this.templateSelector).html());
+            this.collection.on('add remove', function() {
+                this.count();
+            }, this);
+            this.collection.on('add', function(model) {
+                this.add(model.toJSON());
+            }, this);
+            this.collection.on('change', function(model) {
+                this.update(model.toJSON());
+            }, this);
+            this.collection.on('remove', function(model) {
+                this.remove(model.id);
+            }, this);
+            this.render();
+        },
+        render: function() {
+            this.collection.each(function(model) {
+                this.add(model.toJSON());
+            }, this);
+            this.count();
+        },
+        add: function(model) {
+            this.$('.lcb-room-sidebar-list').prepend(this.template(model));
+        },
+        remove: function(id) {
+            this.$('.lcb-room-sidebar-item[data-id=' + id + ']').remove();
+        },
+        count: function(models) {
+            this.$('.lcb-room-sidebar-items-count').text(this.collection.length);
+        },
+        update: function(model){
+            this.$('.lcb-room-sidebar-item[data-id=' + model.id + ']')
+                .replaceWith(this.template(model));
+        }
+    });
+
+    window.LCB.RoomUsersView = window.LCB.RoomSidebarListView.extend({
+        templateSelector: '#template-user'
+    });
+
+    window.LCB.RoomFilesView = window.LCB.RoomSidebarListView.extend({
+        templateSelector: '#template-file'
     });
 
 }(window, $, _);

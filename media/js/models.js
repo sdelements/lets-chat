@@ -2,22 +2,19 @@
 // LCB Models
 //
 
-var UserModel = Backbone.Model.extend({
-});
+var UserModel = Backbone.Model.extend();
 
 var UsersCollection = Backbone.Collection.extend({
     model: UserModel
 });
 
-var MessageModel = Backbone.Model.extend({
-});
+var MessageModel = Backbone.Model.extend();
 
 var MessagesCollection = Backbone.Collection.extend({
     model: MessageModel
 });
 
-var FileModel = Backbone.Model.extend({
-});
+var FileModel = Backbone.Model.extend();
 
 var FilesCollection = Backbone.Collection.extend({
     model: FileModel
