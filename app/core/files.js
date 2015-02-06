@@ -24,7 +24,8 @@ FileManager.prototype.create = function(options, cb) {
         return cb('Files are disabled.');
     }
 
-    if (settings.allowed_file_types &&
+    if (settings.restrict_file_types &&
+        settings.allowed_file_types &&
         settings.allowed_file_types.length &&
         !_.include(settings.allowed_file_types, options.file.mimetype)) {
             return cb('The MIME type ' + options.file.mimetype +

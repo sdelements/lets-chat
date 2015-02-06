@@ -17,6 +17,7 @@ https:
 files:
   enable: true
   provider: local
+  restrict_file_types: true
   allowed_file_types:
     - 'image/jpeg'
     - 'image/png'
