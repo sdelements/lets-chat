@@ -4211,9 +4211,11 @@ body {
   background: #fff;
   min-height: 46px;
   padding: 10px;
-  border-bottom: 1px #eee solid;
+  border-bottom: 1px #ddd solid;
   position: relative;
   border-radius: 2px 2px 0 0;
+  box-shadow: 0 4px 5px -5px rgba(0, 0, 0, 0.1);
+  z-index: 1100;
 }
 @media (max-width: 767px) {
   .lcb-room-header {
