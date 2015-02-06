@@ -25,3 +25,7 @@ A self-hosted chat app for small teams.
 
 See the [wiki](https://github.com/sdelements/lets-chat/wiki) for instructions on deploying locally, or to Docker, Vagrant and Heroku.
 
+## Upgrading from 0.2.x
+
+Release 0.3.0+ uses a new settings file called ```settings.yml```, just move over your old ```settings.js``` options and run ```npm scripts migrate```.
+
