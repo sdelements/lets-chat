@@ -68,7 +68,11 @@ module.exports = function() {
 
                 var url = coreFiles.getUrl(file);
                 if (settings.provider === 'local') {
-                    res.sendFile(url);
+                    res.sendFile(url, {
+                        headers: {
+                            'Content-Type': file.type
+                        }
+                    });
                 } else {
                     res.redirect(url);
                 }
