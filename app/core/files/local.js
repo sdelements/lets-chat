@@ -1,4 +1,5 @@
 var fs = require('fs'),
+    path = require('path'),
     settings = require('./../../config').files;
 
 var moveFile = function(path, newPath, callback) {
@@ -18,7 +19,7 @@ module.exports = {
     enabled: settings.enable && settings.provider === 'local',
 
     getUrl: function(file) {
-        return settings.local.upload_dir + '/' + file._id;
+        return path.resolve(settings.local.upload_dir + '/' + file._id);
     },
 
     save: function(options, callback) {
