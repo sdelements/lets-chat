@@ -19,7 +19,7 @@ module.exports = {
     enabled: settings.enable && settings.provider === 'local',
 
     getUrl: function(file) {
-        return path.resolve(settings.local.upload_dir + '/' + file._id);
+        return path.resolve(settings.local.dir + '/' + file._id);
     },
 
     save: function(options, callback) {
@@ -29,7 +29,7 @@ module.exports = {
             filePath = fileFolder + '/' + encodeURIComponent(doc.name);
 
         moveFile(file.path,
-                settings.local.upload_dir + '/' + fileFolder, function(err) {
+                settings.local.dir + '/' + fileFolder, function(err) {
 
             if (err) {
                 return callback(err);

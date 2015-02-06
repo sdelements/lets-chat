@@ -212,7 +212,7 @@ module.exports = function() {
 
             if (req.user ||
                 !auth.providers.local ||
-                !auth.providers.local.enable_registration) {
+                !auth.providers.local.enableRegistration) {
 
                 return res.status(403).json({
                     status: 'error',

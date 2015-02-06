@@ -28,7 +28,7 @@ secrets:
   cookie: secretsauce
 
   local:
-    upload_dir: uploads
+    dir: uploads
 
   s3:
     accessKeyId:
@@ -40,7 +40,7 @@ auth:
   providers: [local]
 
   local:
-    enable_registration: true
+    enableRegistration: true
     salt: secretsauce # Required when upgrading from version < 0.3
 
   kerberos:

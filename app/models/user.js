@@ -42,7 +42,7 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: false, // Only required if local
         trim: true,
-        match: new RegExp(settings.auth.local.password_regex),
+        match: new RegExp(settings.auth.local.passwordRegex),
         set: function(value) {
             // User can only change their password if it's a local account
             if (this.local) {

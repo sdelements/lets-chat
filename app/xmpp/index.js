@@ -24,10 +24,10 @@ function xmppStart(core) {
         domain: settings.xmpp.host
     };
 
-    if (settings.xmpp.tls) {
+    if (settings.xmpp.tls && settings.xmpp.tls.enable) {
         options.tls = {
-            keyPath: settings.xmpp.tls.keyPath,
-            certPath: settings.xmpp.tls.certPath
+            keyPath: settings.xmpp.tls.key,
+            certPath: settings.xmpp.tls.cert
         };
     }
 

@@ -32,7 +32,7 @@ module.exports = function() {
     var fileUpload = multer({
         limits: {
             files: 1,
-            fileSize: settings.max_file_size
+            fileSize: settings.maxFileSize
         }
     });
 
