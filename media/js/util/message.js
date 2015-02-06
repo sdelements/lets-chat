@@ -15,6 +15,27 @@ if (typeof exports !== 'undefined') {
     // Message Text Formatting
     //
 
+
+    function getBaseUrl() {
+        var parts = window.location.pathname.split('/');
+
+        parts = _.filter(parts, function(part) {
+            return part.length;
+        });
+
+        if (parts.length) {
+            parts.splice(parts.length - 1, 1);
+        }
+
+        var path = window.location.origin;
+
+        if (parts.length) {
+            path = path + '/' + parts.join('/');
+        }
+
+        return path + '/';
+    }
+
     function trim(text) {
         return text.trim();
     }
@@ -42,6 +63,14 @@ if (typeof exports !== 'undefined') {
             }
 
             return '<a href="#!/room/' + room.id + '">&#35;' + s + '</a>';
+        });
+    }
+
+    function uploads(text) {
+        var pattern = /^\s*(upload:\/\/[-A-Z0-9+&*@#\/%?=~_|!:,.;'"!()]*)\s*$/i;
+
+        return text.replace(pattern, function(url) {
+            return getBaseUrl() + url.substring(9);
         });
     }
 
@@ -97,6 +126,7 @@ if (typeof exports !== 'undefined') {
             trim,
             mentions,
             roomLinks,
+            uploads,
             links,
             emotes,
             replacements

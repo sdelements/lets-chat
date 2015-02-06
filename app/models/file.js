@@ -2,8 +2,7 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId,
-    core = require('./../core/files');
+    ObjectId = Schema.ObjectId;
 
 var FileSchema = new Schema({
     room: {
@@ -35,6 +34,10 @@ var FileSchema = new Schema({
     }
 });
 
+FileSchema.virtual('url').get(function(file) {
+    return 'files/' + this._id + '/' + encodeURIComponent(this.name);
+});
+
 FileSchema.method('toJSON', function() {
     return {
         id: this._id,
@@ -43,7 +46,7 @@ FileSchema.method('toJSON', function() {
         name: this.name,
         type: this.type,
         size: Math.floor(this.size / 1024) + 'kb',
-        url: core.getUrl(this)
+        url: this.url
     };
 });
 

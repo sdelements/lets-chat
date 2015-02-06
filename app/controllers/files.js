@@ -5,7 +5,8 @@
 'use strict';
 
 var multer = require('multer'),
-    settings = require('./../config').files;
+    settings = require('./../config').files,
+    coreFiles = require('./../core/files');
 
 module.exports = function() {
 
@@ -55,22 +56,25 @@ module.exports = function() {
             req.io.route('files:create');
         });
 
-    if (settings.provider === 'local') {
+    app.route('/files/:id/:name')
+        .all(middlewares.requireLogin)
+        .get(function(req, res) {
+            models.file.findById(req.params.id, function(err, file) {
+                if (err) {
+                    // Error
+                    return res.send(400);
+                }
 
-        app.route('/files/:id/:name')
-            .all(middlewares.requireLogin)
-            .get(function(req, res) {
-                models.file.findById(req.params.id, function(err, file) {
-                    if (err) {
-                        // Error
-                        return res.send(400);
-                    }
-
+                var url = coreFiles.getUrl(file);
+                if (settings.provider === 'local') {
                     res.contentType(file.type);
-                    res.sendfile(settings.local.upload_dir + '/' + file._id);
-                });
+                    res.sendfile(url);
+                } else {
+                    res.redirect(url);
+                }
+
             });
-    }
+        });
 
     //
     // Sockets

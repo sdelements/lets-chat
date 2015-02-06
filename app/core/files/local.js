@@ -18,8 +18,7 @@ module.exports = {
     enabled: settings.enable && settings.provider === 'local',
 
     getUrl: function(file) {
-        var filePath = file._id + '/' + encodeURIComponent(file.name);
-        return '/files/' + filePath;
+        return settings.local.upload_dir + '/' + file._id;
     },
 
     save: function(options, callback) {

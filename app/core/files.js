@@ -62,13 +62,18 @@ FileManager.prototype.create = function(options, cb) {
                         console.error(err);
                         return cb(err);
                     }
+
                     cb(null, savedFile, room, user);
+
                     this.core.emit('files:new', savedFile, room, user);
-                    options.post && this.core.messages.create({
-                        room: room,
-                        owner: user,
-                        text: 'file:' + savedFile._id
-                    });
+
+                    if (options.post) {
+                        this.core.messages.create({
+                            room: room,
+                            owner: user,
+                            text: 'upload://' + savedFile.url
+                        });
+                    }
                 }.bind(this));
             }.bind(this));
         }.bind(this));
