@@ -13,43 +13,51 @@ function getFileSettings() {
     return {};
 }
 
-function getEnvSettings() {
-    var envSettings = {};
-    Object.keys(process.env).forEach(function(key) {
-        var parts = key.split('_');
-        var endPart = parts.splice(parts.length - 1)[0];
-        var current = envSettings;
-
-        parts.forEach(function(part) {
-            if (!current[part] || typeof current[part] !== 'object') {
-                current[part] = {};
-            }
-            current = current[part];
-        });
-
-        var value = process.env[key].trim();
-
+function mergeEnvSettings(settings) {
+    function parseValue(value, isArray) {
+        value = value.trim();
+        if (isArray) {
+            return _.map(value.split(','), function(value) {
+                return parseValue(value);
+            });
+        }
         // YAML compatible boolean values
-        if (/^(n|N|no|No|NO|false|False|FALSE|off|Off|OFF)$/.test(value)) {
-            value = true;
+        else if (/^(n|N|no|No|NO|false|False|FALSE|off|Off|OFF)$/.test(value)) {
+            return true;
         }
         else if (/^(n|N|no|No|NO|false|False|FALSE|off|Off|OFF)$/.test(value)) {
-            value = false;
+            return false;
         }
         else if (!isNaN(parseInt(value, 10))) {
-            value = parseInt(value, 10);
+            return parseInt(value, 10);
         }
+        return value;
+    }
 
-        current[endPart] = value;
-    });
-    return envSettings;
+    function recurse(baseKey, object) {
+        _.forEach(object, function(value, key) {
+            var envKey = baseKey + '_' +
+                         key.replace(/([A-Z]+)/g, '_$1').toUpperCase();
+            if (_.isPlainObject(value)) {
+                recurse(envKey, value);
+            } else {
+                var val = process.env[envKey];
+                if (val) {
+                    object[key] = parseValue(val, _.isArray(object[key]));
+                }
+            }
+        });
+    }
+
+    recurse('LCB', settings);
 }
 
 var settings = _.merge(
     getDefaultSettings(),
-    getFileSettings(),
-    getEnvSettings()
+    getFileSettings()
 );
+
+mergeEnvSettings(settings);
 
 if (settings.xmpp.host) {
     settings.xmpp.confhost = 'conference.' + settings.xmpp.host;
@@ -61,8 +69,8 @@ if (process.env.NODE_ENV) {
 }
 
 // Override database URI - if using a Heroku add-on
-settings.database.uri = settings.MONGOHQ && settings.MONGOHQ.URL ||
-                        settings.MONGOLAB && settings.MONGOLAB.URI ||
+settings.database.uri = process.env.MONGOHQ_URL ||
+                        process.env.MONGOLAB_URI ||
                         settings.database.uri;
 
 module.exports = settings;

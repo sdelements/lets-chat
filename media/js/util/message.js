@@ -21,8 +21,7 @@ if (typeof exports !== 'undefined') {
 
     function mentions(text) {
         var mentionPattern = /\B@(\w+)(?!@)\b/g;
-        return text.replace(mentionPattern,
-            '<strong class="lcb-room-poke">@$1</strong>');
+        return text.replace(mentionPattern, '<strong>@$1</strong>');
     }
 
     function roomLinks(text, data) {

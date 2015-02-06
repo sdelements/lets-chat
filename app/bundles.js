@@ -1,8 +1,14 @@
-var fs = require('fs'),
+var crypto = require('crypto'),
+    fs = require('fs'),
     _ = require('lodash'),
     yaml = require('js-yaml'),
     bundles = yaml.safeLoad(fs.readFileSync('bundles.yml', 'utf8')),
     settings = require('./config');
+
+function getHash(path) {
+    var file = fs.readFileSync(path);
+    return crypto.createHash('md5').update(file, 'utf8').digest('hex');
+}
 
 function getTag(key, asset) {
     if (key.indexOf('_js') > -1) {
@@ -13,7 +19,8 @@ function getTag(key, asset) {
 }
 
 function production(value, key) {
-    return [key, getTag(key, value.dest)];
+    var hash = getHash(value.dest);
+    return [key, getTag(key, value.dest + '?md5=' + hash)];
 }
 
 function development(value, key) {

@@ -1,6 +1,8 @@
 'use strict';
 
-var mongoose = require('mongoose');
+var _ = require('lodash'),
+    mongoose = require('mongoose'),
+    helpers = require('./helpers');
 
 function MessageManager(options) {
     this.core = options.core;
@@ -41,6 +43,16 @@ MessageManager.prototype.create = function(options, cb) {
 };
 
 MessageManager.prototype.list = function(options, cb) {
+    options = options || {};
+
+    options = helpers.sanitizeQuery(options, {
+        defaults: {
+            reverse: true,
+            take: 500
+        },
+        maxTake: 5000
+    });
+
     var Message = mongoose.model('Message'),
         User = mongoose.model('User');
 
@@ -50,19 +62,41 @@ MessageManager.prototype.list = function(options, cb) {
         find.where('room', options.room);
     }
 
+    if (options.since_id) {
+        find.where('_id').gt(options.since_id);
+    }
+
     if (options.from) {
-        find.where('_id').gt(options.from);
+        find.where('posted').gt(options.from);
     }
 
-    if (options.since) {
-        find.where('posted').gt(options.since);
+    if (options.to) {
+        find.where('posted').lte(options.to);
     }
 
-    find
-        .populate('owner', 'id username displayName email avatar')
-        .populate('room', 'id name')
-        .limit(options.limit || 500)
-        .sort({ 'posted': -1 })
+    if (options.expand) {
+        var includes = options.expand.split(',');
+
+        if (_.includes(includes, 'owner')) {
+            find.populate('owner', 'id username displayName email avatar');
+        }
+
+        if (_.includes(includes, 'room')) {
+            find.populate('room', 'id name');
+        }
+    }
+
+    if (options.skip) {
+        find.skip(options.skip);
+    }
+
+    if (options.reverse) {
+        find.sort({ 'posted': -1 });
+    } else {
+        find.sort({ 'posted': 1 });
+    }
+
+    find.limit(options.take)
         .exec(function(err, messages) {
             if (err) {
                 console.error(err);

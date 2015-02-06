@@ -134,9 +134,12 @@
             // Get room history
             that.getMessages({
                 room: room.id,
-                limit: 200,
-                from: room.lastMessage.get('id')
+                since_id: room.lastMessage.get('id'),
+                take: 200,
+                expand: 'owner',
+                reverse: true
             }, function(messages) {
+                messages.reverse();
                 that.addMessages(messages, !room.get('loaded'));
                 room.set('loaded', true);
             });
@@ -185,7 +188,7 @@
     // Messages
     //
     Client.prototype.addMessage = function(message) {
-        var room = this.rooms.get(message.room.id || message.room);
+        var room = this.rooms.get(message.room);
         if (!room || !message) {
             // Unknown room, nothing to do!
             return;

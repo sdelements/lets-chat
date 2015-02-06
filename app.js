@@ -8,7 +8,6 @@ var _ = require('lodash'),
     fs = require('fs'),
     colors = require('colors'),
     express = require('express.io'),
-    session = require('express-session'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     compression = require('compression'),
@@ -17,7 +16,7 @@ var _ = require('lodash'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
     migroose = require('./migroose'),
-    MongoStore = require('connect-mongo')(session),
+    MongoStore = require('connect-mongo')(express.session),
     all = require('require-tree');
 
 var psjon = require('./package.json'),
@@ -75,22 +74,6 @@ app.io.session(session);
 
 auth.setup(app, session, core);
 
-// Public
-app.use('/media', express.static(__dirname + '/media'));
-
-// Templates
-nunjucks.configure('templates', {
-        autoescape: true,
-        express: app
-    })
-    .addGlobal('bundles', bundles);
-
-// HTTP Middlewares
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
 // Security protections
 app.use(helmet.crossdomain());
 app.use(helmet.frameguard());
@@ -112,6 +95,24 @@ app.use(helmet.contentSecurityPolicy({
     fontSrc: ['\'self\'', 'fonts.gstatic.com'],
     mediaSrc: ['\'self\''],
     imgSrc: ['*']
+}));
+
+// Public
+app.use('/media', express.static(__dirname + '/media', {
+    maxAge: '364d',
+}));
+
+// Templates
+nunjucks.configure('templates', {
+        autoescape: true,
+        express: app
+    })
+    .addGlobal('bundles', bundles);
+
+// HTTP Middlewares
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
 }));
 
 //

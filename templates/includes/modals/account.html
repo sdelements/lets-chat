@@ -1,42 +1,66 @@
 <div id="lcb-account" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form class="validate form-horizontal" action="/account/settings" method="post">
+            <form action="/account/settings" method="post"
+                class="validate form-horizontal">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"><i class="icon-cogs"></i> Account Settings</h4>
+                    <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">
+                        <i class="icon-cogs"></i> Account Settings
+                    </h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="control-label col-sm-6">Username</label>
                         <div class="col-sm-11">
-                            <input class="form-control" name="username" type="text" value="{{ account.username }}" required />
+                            <div class="input-group">
+                                <span class="input-group-addon">@</span>
+                                <input type="text" name="username" required
+                                    class="lcb-room-slug form-control"
+                                    value="{{ account.username }}" >
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-6">Email</label>
                         <div class="col-sm-11">
-                            <input class="required email form-control" name="email" type="text" value="{{ account.email }}" required />
+                            <input type="text" name="email" required
+                                class="required email form-control"
+                                value="{{ account.email }}" />
                         </div>
                     </div>
                     {% if account.local %}
                         <div class="form-group">
-                            <label class="control-label col-sm-6">New Password</label>
+                            <label class="control-label col-sm-6">
+                                New Password
+                            </label>
                             <div class="col-sm-11">
-                                <input class="form-control" name="new-password" type="password" minlength="4" maxlength="64" data-clear="true" />
+                                <input type="password" name="new-password"
+                                    class="form-control"
+                                    minlength="4" maxlength="64"
+                                    data-clear="true" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-6">Confirm New Password</label>
+                            <label class="control-label col-sm-6">
+                                Confirm New Password
+                            </label>
                             <div class="col-sm-11">
-                                <input class="form-control" name="confirm-password" type="password" minlength="4" maxlength="64" />
+                                <input type="password" name="confirm-password"
+                                class="form-control"
+                                minlength="4" maxlength="64" />
                             </div>
                         </div>
                     {% endif %}
                     <div class="form-group">
-                        <label class="control-label col-sm-6">Current Password <small>Required</small></label>
+                        <label class="control-label col-sm-6">
+                            Current Password <small>Required</small>
+                        </label>
                         <div class="col-sm-11">
-                            <input class="form-control" name="current-password" type="password" minlength="4" maxlength="64" required />
+                            <input type="password" name="current-password"
+                            class="form-control"
+                            minlength="4" maxlength="64" required />
                         </div>
                     </div>
                     <p class="alert response" style="display: none;"></p>

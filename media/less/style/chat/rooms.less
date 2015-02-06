@@ -20,9 +20,11 @@
     background: #fff;
     min-height: 46px;
     padding: 10px;
-    border-bottom: 1px #eee solid;
+    border-bottom: 1px #ddd solid;
     position: relative;
     border-radius: 2px 2px 0 0;
+    box-shadow: 0 4px 5px -5px rgba(0, 0, 0, .1);
+    z-index: 1000;
     @media (max-width: @screen-xs-max) {
         padding: 5px 8px;
     }
@@ -43,6 +45,7 @@
 .lcb-room-heading {
     line-height: 100%;
     margin: 0;
+    .flex-display;
     @media (max-width: @screen-xs-max) {
         font-size: 20px;
     }
@@ -50,6 +53,23 @@
         font-size: 24px;
         font-weight: 300;
         color: #aaa;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .btn {
+        color: #aaa;
+        line-height: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: 5px;
+        padding-right: 5px;
+
+        &:active {
+            box-shadow: none;
+        }
+    }
+    .btn:hover {
+        color: #666;
     }
 }
 

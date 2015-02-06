@@ -6,7 +6,8 @@
 
 module.exports = function() {
 
-    var _ = require('lodash');
+    var _ = require('lodash'),
+        helpers = require('./../core/helpers');
 
     var app = this.app,
         core = this.core,
@@ -30,54 +31,38 @@ module.exports = function() {
     //
     app.io.route('users', {
         list: function(req, res) {
-            var roomId = req.param('room');
+            var options = {
+                    skip: req.param('skip'),
+                    take: req.param('take')
+                };
 
-            if (!roomId) {
-                User.find(function(err, users) {
-                    if (err) {
-                        console.log(err);
-                        return res.status(400).json(err);
-                    }
+            options = helpers.sanitizeQuery(options, {
+                defaults: {
+                    take: 500
+                },
+                maxTake: 5000
+            });
 
-                    res.json(users);
-                });
+            var find = User.find();
 
-                return;
+            if (options.skip) {
+                find.skip(options.skip);
             }
 
-            models.room.findById(roomId || null, function(err, room) {
+            if (options.take) {
+                find.limit(options.take);
+            }
+
+            find.exec(function(err, users) {
                 if (err) {
-                    console.error(err);
+                    console.log(err);
                     return res.status(400).json(err);
                 }
 
-                if (!room) {
-                    // Invalid room!
-                    return res.status(404).json('This room does not exist');
-                }
-
-                var userIds = core.presence.rooms
-                                  .getOrAdd(room._id, room.slug).getUserIds();
-
-                User.find({ _id: { $in: userIds } }, function(err, users) {
-                    if (err) {
-                        // Something bad happened
-                        console.error(err);
-                        return res.status(400).json(err);
-                    }
-                    // The client needs user.room in
-                    // order to properly route users
-                    users = _.map(users, function(user) {
-                        user = user.toJSON();
-                        user.room = room.id;
-                        return user;
-                    });
-
-                    res.json(users);
-                });
+                res.json(users);
             });
         },
-        retrieve: function(req, res) {
+        get: function(req, res) {
             var identifier = req.param('id');
 
             User.findByIdentifier(identifier, function (err, user) {

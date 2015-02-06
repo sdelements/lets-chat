@@ -97,18 +97,19 @@ module.exports = function() {
             });
         },
         list: function(req, res) {
-            var room = req.param('room'),
-                options = {};
-
-            if (room) {
-                options.room = room;
-            }
+            var options = {
+                    room: req.param('room'),
+                    reverse: req.param('reverse'),
+                    skip: req.param('skip'),
+                    take: req.param('take'),
+                    expand: req.param('expand') || req.param('include')
+                };
 
             core.files.list(options, function(err, files) {
                 if (err) {
                     return res.sendStatus(400);
                 }
-                res.json(files.reverse());
+                res.json(files);
             });
         }
     });

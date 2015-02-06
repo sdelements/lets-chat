@@ -61,28 +61,28 @@ module.exports = function() {
             });
         },
         list: function(req, res) {
-            var room = req.param('room'),
-                from = req.param('from'),
-                limit = req.param('limit'),
-                options = {};
+            var options = {
+                    room: req.param('room'),
+                    since_id: req.param('since_id'),
+                    from: req.param('from'),
+                    to: req.param('to'),
+                    reverse: req.param('reverse'),
+                    skip: req.param('skip'),
+                    take: req.param('take') || req.param('limit'),
+                    expand: req.param('expand') || req.param('include')
+                };
 
-            if (room) {
-                options.room = room;
-            }
-
-            if (limit) {
-                options.limit = limit;
-            }
-
-            if (from) {
-                options.from = from;
+            if (req.isSocket) {
+                options.since_id = req.param('since_id') || req.param('from');
+                options.expand = 'owner';
+                options.reverse = true;
             }
 
             core.messages.list(options, function(err, messages) {
                 if (err) {
                     return res.sendStatus(400);
                 }
-                res.json(messages.reverse());
+                res.json(messages);
             });
         }
     });

@@ -12,6 +12,8 @@ $.validator.setDefaults({
     errorPlacement: function(error, element) {
         if(element.parent('.input-group').length) {
             error.insertAfter(element.parent());
+        } else if(element.parent().parent('.input-group').length) {
+            error.insertAfter(element.parent().parent());
         } else {
             error.insertAfter(element);
         }

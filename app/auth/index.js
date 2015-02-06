@@ -14,18 +14,17 @@ var _ = require('lodash'),
         require('./ldap')
     ],
     providerSettings = {},
-    NO_DELAY_AUTH_ATTEMPTS = 3,
     MAX_AUTH_DELAY_TIME = 24 * 60 * 60 * 1000,
     loginAttempts = {},
     enabledProviders = [];
 
 function getProviders(core) {
-    return settings.auth.providers.enable.map(function(key) {
+    return settings.auth.providers.map(function(key) {
         var Provider = _.find(available_providers, function (p) {
             return p.key === key;
         });
 
-        var provider_settings = settings.auth.providers[key];
+        var provider_settings = settings.auth[key];
 
         return new Provider(provider_settings, core);
     });
@@ -121,7 +120,7 @@ function wrapAuthCallback(username, cb) {
 
             attempt.attempts++;
 
-            if (attempt.attempts >= NO_DELAY_AUTH_ATTEMPTS) {
+            if (attempt.attempts >= settings.auth.throttling.threshold) {
                 var lock = Math.min(5000 * Math.pow(2,(attempt.attempts - NO_DELAY_AUTH_ATTEMPTS), MAX_AUTH_DELAY_TIME));
                 attempt.lockedUntil = Date.now() + lock;
                 return cb(err, user, {
@@ -153,8 +152,8 @@ function authenticate(username, password, cb) {
             });
         }
 
-        if (settings.auth.login_throttling &&
-            settings.auth.login_throttling.enable) {
+        if (settings.auth.throttling &&
+            settings.auth.throttling.enable) {
             cb = wrapAuthCallback(username, cb);
         }
 

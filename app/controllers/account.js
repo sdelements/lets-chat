@@ -19,6 +19,10 @@ module.exports = function() {
         models = this.models,
         User = models.user;
 
+    core.on('account:update', function(data) {
+        app.io.emit('users:update', data.user);
+    });
+
     //
     // Routes
     //
@@ -103,7 +107,6 @@ module.exports = function() {
                 }
 
                 res.json(user);
-                app.io.emit('users:update', user);
             });
         },
         settings: function(req, res) {
@@ -153,7 +156,6 @@ module.exports = function() {
                         });
                     }
                     res.json(user);
-                    app.io.emit('users:update', user);
                 });
             });
         },

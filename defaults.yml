@@ -57,41 +57,40 @@ files:
     region:
 
 auth:
-  login_throttling:
+  throttling:
     enable: true
-    login_attempts_before_throttling: 3
+    threshold: 3
 
-  providers:
-    enable: [local] # [local, kerberos, ldap] - You can specify the order
+  providers: [local] # [local, kerberos, ldap] - You can specify the order
 
-    local:
-      enable_registration: true
-      password_regex: ^.{8,64}$
-      salt: secretsauce # Required when upgrading from version < 0.3
+  local:
+    enable_registration: true
+    password_regex: ^.{8,64}$
+    salt: secretsauce # Required when upgrading from version < 0.3
 
-    kerberos:
-      realm: example.com
-      use_ldap_authorization: false
-      #ldap: #Same format as below
+  kerberos:
+    realm: example.com
+    use_ldap_authorization: false
+    #ldap: #Same format as below
 
-    ldap:
-      connect_settings:
-        url: ldap://example.com
-      #   tlsOptions:
-      #     ca: ca.pem
-      server_certs: []
-      bind_options:
-        bindDN:
-        bindCredentials:
-      search:
-        base:
-        opts:
-          scope: one
-          filter: (uid={{username}})
-          attributes: []
-      field_mappings:
-        uid: uid
-        firstName: givenName
-        lastName: sn
-        displayName: givenName
-        email: mail
+  ldap:
+    connect_settings:
+      url: ldap://example.com
+    #   tlsOptions:
+    #     ca: ca.pem
+    server_certs: []
+    bind_options:
+      bindDN:
+      bindCredentials:
+    search:
+      base:
+      opts:
+        scope: one
+        filter: (uid={{username}})
+        attributes: []
+    field_mappings:
+      uid: uid
+      firstName: givenName
+      lastName: sn
+      displayName: givenName
+      email: mail

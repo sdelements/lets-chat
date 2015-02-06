@@ -106,7 +106,7 @@ module.exports = MessageProcessor.extend({
             }
 
             if (historyNode.attrs.maxstanzas) {
-                query.limit = historyNode.attrs.maxstanzas;
+                query.take = historyNode.attrs.maxstanzas;
             }
 
             this.core.messages.list(query, function(err, messages) {

@@ -25,7 +25,7 @@ module.exports = function() {
 
     app.use('/extras/emotes/',
             express.static(path.join(process.cwd(), 'extras/emotes/public'), {
-                maxage: 86400000 * 28 // 4 weeks
+                maxage: '364d'
             })
     );
 

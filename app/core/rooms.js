@@ -1,6 +1,7 @@
 'use strict';
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    helpers = require('./helpers');
 
 function RoomManager(options) {
     this.core = options.core;
@@ -85,8 +86,33 @@ RoomManager.prototype.archive = function(roomId, cb) {
 };
 
 RoomManager.prototype.list = function(options, cb) {
+    options = options || {};
+
+    options = helpers.sanitizeQuery(options, {
+        defaults: {
+            take: 500
+        },
+        maxTake: 5000
+    });
+
     var Room = mongoose.model('Room');
-    Room.find({ archived: { $ne: true }}, cb);
+
+    var find = Room.find({ archived: { $ne: true }});
+
+    if (options.skip) {
+        find.skip(options.skip);
+    }
+
+    if (options.take) {
+        find.limit(options.take);
+    }
+
+    if (options.sort) {
+        var sort = options.sort.replace(',', ' ');
+        find.sort(sort);
+    }
+
+    find.exec(cb);
 };
 
 RoomManager.prototype.get = function(identifier, cb) {
