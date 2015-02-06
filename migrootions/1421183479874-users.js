@@ -27,6 +27,10 @@ migration.step(function(data, stepComplete) {
 
     function updateDoc(item, callback) {
         User.findById(item._id, function(err, doc) {
+            if (err) {
+                console.error(err);
+                return callback(err);
+            }
 
             if (doc.uid) {
 
@@ -49,6 +53,11 @@ migration.step(function(data, stepComplete) {
 
             // TODO: Need to handle conflict
             doc.save(function(err) {
+                if (err) {
+                    console.error(err);
+                    return callback(err);
+                }
+
                 callback();
             });
         });
@@ -57,7 +66,7 @@ migration.step(function(data, stepComplete) {
     var users = data.external_users.concat(data.local_users);
 
     async.each(users, updateDoc, function(err) {
-        stepComplete();
+        stepComplete(err);
     });
 });
 
