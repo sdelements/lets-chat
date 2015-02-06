@@ -17,6 +17,7 @@ https:
 files:
   enable: true
   provider: local
+  max_file_size: 100000000
   restrict_file_types: true
   allowed_file_types:
     - 'image/jpeg'
