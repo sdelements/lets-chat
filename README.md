@@ -25,6 +25,3 @@ A self-hosted chat app for small teams.
 
 See the [wiki](https://github.com/sdelements/lets-chat/wiki) for instructions on deploying locally, or to Docker, Vagrant and Heroku.
 
-## Documentation
-
-See the [wiki](https://github.com/sdelements/lets-chat/wiki) for documentation.
