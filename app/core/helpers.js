@@ -11,7 +11,7 @@ module.exports = {
             query.reverse = query.reverse.toLowerCase() === 'true';
         }
 
-        if (typeof options.defaults.reverse === 'undefined') {
+        if (typeof query.reverse === 'undefined') {
             query.reverse = options.defaults.reverse;
         }
 
