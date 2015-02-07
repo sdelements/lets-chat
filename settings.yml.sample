@@ -16,6 +16,12 @@ https:
   key: key.pem
   cert: certificate.pem
 
+files:
+  enable: true
+  provider: local
+  local:
+    dir: uploads
+
 xmpp:
   enable: false
   port: 5222
