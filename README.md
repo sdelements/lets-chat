@@ -1,8 +1,8 @@
-# **Let's Chat**
-
-A self-hosted chat app for small teams.
+![Let's Chat](http://i.imgur.com/Es2KMi6.png)
 
 ![Screenshot](http://i.imgur.com/C4uMD67.png)
+
+A self-hosted chat app for small teams.
 
 ## Features and Stuff
 
