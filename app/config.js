@@ -68,6 +68,11 @@ if (process.env.NODE_ENV) {
     settings.env = process.env.NODE_ENV;
 }
 
+// Override port variable - if using Heroku
+if (process.env.PORT) {
+    settings.http.port = process.env.PORT;
+}
+
 // Override database URI - if using a Heroku add-on
 settings.database.uri = process.env.MONGOHQ_URL ||
                         process.env.MONGOLAB_URI ||

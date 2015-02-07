@@ -147,9 +147,8 @@ mongoose.connection.on('disconnected', function() {
 //
 
 function startApp() {
-    var port = settings.PORT ||
-    httpsEnabled && settings.https.port ||
-    httpEnabled && settings.http.port;
+    var port = httpsEnabled && settings.https.port ||
+               httpEnabled && settings.http.port;
 
     if (httpsEnabled && httpEnabled) {
         // Create an HTTP -> HTTPS redirect server
