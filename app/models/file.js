@@ -46,7 +46,8 @@ FileSchema.method('toJSON', function() {
         name: this.name,
         type: this.type,
         size: Math.floor(this.size / 1024) + 'kb',
-        url: this.url
+        url: this.url,
+        uploaded: this.uploaded
     };
 });
 
