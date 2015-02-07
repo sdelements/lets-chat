@@ -17,7 +17,7 @@ https:
   cert: certificate.pem
 
 xmpp:
-  enable: true
+  enable: false
   port: 5222
   host: localhost
 

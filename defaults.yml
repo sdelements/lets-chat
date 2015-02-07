@@ -33,7 +33,7 @@ secrets:
   cookie: secretsauce
 
 files:
-  enable: false
+  enable: true
   provider: local
   maxFileSize: 100000000
   restrictTypes: true
