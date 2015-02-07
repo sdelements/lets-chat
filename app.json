@@ -13,6 +13,10 @@
         "LCB_SECRETS_COOKIE": {
             "description": "Session cookies are signed with this secret to prevent tampering",
             "generator": "secret"
+        },
+        "LCB_FILES_ENABLE": {
+            "description": "Toggles file upload functionality",
+            "value": "false"
         }
     }
 }
