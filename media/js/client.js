@@ -147,6 +147,7 @@
                 room: room.id,
                 take: 15
             }, function(files) {
+                files.reverse();
                 that.setFiles(room.id, files);
             });
             // Do we want to switch?
