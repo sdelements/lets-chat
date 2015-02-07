@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
+<% extends 'base.html' %>
 
-{% block css %}
+<% block css %>
     <link rel="stylesheet" type="text/css" href="./media/js/vendor/bootstrap-daterangepicker/daterangepicker-bs3.css" />
     <style type="text/css">
         .header {
@@ -28,32 +28,32 @@
             margin-top: 90px;
         }
     </style>
-{% endblock %}
+<% endblock %>
 
-{% block js %}
+<% block js %>
     <script type="text/javascript" src="./media/js/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script type="text/javascript" src="./media/js/util/message.js"></script>
     <script type="text/javascript" src="./media/js/views/transcript.js"></script>
     <script type="text/javascript" src="./media/js/transcript.js"></script>
-{% endblock %}
+<% endblock %>
 
-{% block templates %}
-    {% include 'includes/js/room.html' %}
-    {% include 'includes/js/user.html' %}
-    {% include 'includes/js/message.html' %}
-    {% include 'includes/js/tab.html' %}
-    {% include 'includes/js/browser-item.html' %}
-    {% include 'includes/js/browser-item-user.html' %}
-{% endblock %}
+<% block templates %>
+    <% include 'includes/js/room.html' %>
+    <% include 'includes/js/user.html' %>
+    <% include 'includes/js/message.html' %>
+    <% include 'includes/js/tab.html' %>
+    <% include 'includes/js/browser-item.html' %>
+    <% include 'includes/js/browser-item-user.html' %>
+<% endblock %>
 
-{% block body %}
-    <input type="hidden" id="room_id" value="{{ room.id }}" />
-    <input type="hidden" id="room_name" value="{{ room.name }}" />
+<% block body %>
+    <input type="hidden" id="room_id" value="<$ room.id $>" />
+    <input type="hidden" id="room_name" value="<$ room.name $>" />
     <div id="transcript">
 
         <div class="header">
 
-            <h1>Transcript for <strong>{{ room.name }}</strong></h1>
+            <h1>Transcript for <strong><$ room.name $></strong></h1>
 
             <form class="form-inline">
                 <div class="form-group">
@@ -68,4 +68,4 @@
         <div class="messages"></div>
 
     </div>
-{% endblock %}
+<% endblock %>

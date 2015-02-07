@@ -18,7 +18,7 @@
                                 <span class="input-group-addon">@</span>
                                 <input type="text" name="username" required
                                     class="lcb-room-slug form-control"
-                                    value="{{ account.username }}" >
+                                    value="<$ account.username $>" >
                             </div>
                         </div>
                     </div>
@@ -27,10 +27,10 @@
                         <div class="col-sm-11">
                             <input type="text" name="email" required
                                 class="required email form-control"
-                                value="{{ account.email }}" />
+                                value="<$ account.email $>" />
                         </div>
                     </div>
-                    {% if account.local %}
+                    <% if account.local %>
                         <div class="form-group">
                             <label class="control-label col-sm-6">
                                 New Password
@@ -52,7 +52,7 @@
                                 minlength="4" maxlength="64" />
                             </div>
                         </div>
-                    {% endif %}
+                    <% endif %>
                     <div class="form-group">
                         <label class="control-label col-sm-6">
                             Current Password <small>Required</small>

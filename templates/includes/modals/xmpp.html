@@ -15,26 +15,26 @@
                         <dl class="">
                             <dt>Username</dt>
                             <dd>
-                                {% if account.local %}
-                                    {{ account.username }}@{{ settings.xmpp.host }}
-                                {% else %}
-                                    {{ account.uid }}@{{ settings.xmpp.host }}
-                                {% endif %}</dd>
-                            {% if settings.xmpp.port != 5222 %}
+                                <% if account.local %>
+                                    <$ account.username $>@<$ settings.xmpp.host $>
+                                <% else %>
+                                    <$ account.uid $>@<$ settings.xmpp.host $>
+                                <% endif %></dd>
+                            <% if settings.xmpp.port != 5222 %>
                             <dt>Port</dt>
-                            <dd>{{ settings.xmpp.port }}</dd>
-                            {% endif %}
+                            <dd><$ settings.xmpp.port $></dd>
+                            <% endif %>
                         </dl>
 
                         <dl class="">
                             <dt>Host</dt>
-                            <dd>{{ settings.xmpp.host }}</dd>
-                            {% if settings.xmpp.port == 5222 %}
+                            <dd><$ settings.xmpp.host $></dd>
+                            <% if settings.xmpp.port == 5222 %>
                             <dt>Port</dt>
-                            <dd>{{ settings.xmpp.port }}</dd>
-                            {% endif %}
+                            <dd><$ settings.xmpp.port $></dd>
+                            <% endif %>
                             <dt>Conference Host</dt>
-                            <dd>{{ settings.xmpp.confhost }}</dd>
+                            <dd><$ settings.xmpp.confhost $></dd>
                         </dl>
 
                     </div>

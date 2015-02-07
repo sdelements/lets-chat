@@ -106,7 +106,15 @@ app.use('/media', express.static(__dirname + '/media', {
 // Templates
 nunjucks.configure('templates', {
         autoescape: true,
-        express: app
+        express: app,
+        tags: {
+            blockStart: '<%',
+            blockEnd: '%>',
+            variableStart: '<$',
+            variableEnd: '$>',
+            commentStart: '<#',
+            commentEnd: '#>'
+        }
     })
     .addGlobal('bundles', bundles);
 

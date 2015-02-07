@@ -1,102 +1,101 @@
-{% raw %}
-    <script type="text/x-handlebars-template" id="template-room">
-        <div class="lcb-room lcb-pane lcb-pane-{{id}} {{#if sidebar}}lcb-room-sidebar-opened{{/if}}" data-id="{{id}}" style="display: none;">
-            <div class="lcb-room-chat ">
-                <div class="lcb-room-header">
-                    <div class="lcb-room-meta">
-                        <h2 class="lcb-room-heading">
-                            <span class="name">{{name}}</span>
-                            <span class="slug">#{{slug}}</span>
-                            <a class="btn hidden-xs show-edit-room"
-                                title="Edit Room">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <a class="btn hidden-xs" title="Chat History"
-                                href="./transcript?room={{ id }}" target="_blank">
-                                <i class="fa fa-history"></i>
-                            </a>
-                            <a class="btn hidden-xs lcb-upload-trigger" href="#">
-                                <i class="fa fa-upload"></i>
-                            </a>
-                        </h2>
-                        <div class="lcb-room-description">
-                            <p>{{description}}</p>
-                        </div>
-                    </div>
-                    <div class="lcb-room-header-actions">
-                        <a class="lcb-room-toggle-sidebar" href="#">
-                            <i class="fa fa-arrow-circle-o-left"></i>
+<script type="text/x-handlebars-template" id="template-room">
+    <div class="lcb-room lcb-pane lcb-pane-{{id}} {{#if sidebar}}lcb-room-sidebar-opened{{/if}}" data-id="{{id}}" style="display: none;">
+        <div class="lcb-room-chat ">
+            <div class="lcb-room-header">
+                <div class="lcb-room-meta">
+                    <h2 class="lcb-room-heading">
+                        <span class="name">{{name}}</span>
+                        <span class="slug">#{{slug}}</span>
+                        <a class="btn hidden-xs show-edit-room"
+                            title="Edit Room">
+                            <i class="fa fa-edit"></i>
                         </a>
+                        <a class="btn hidden-xs" title="Chat History"
+                            href="./transcript?room={{ id }}" target="_blank">
+                            <i class="fa fa-history"></i>
+                        </a>
+                        <% if settings.files.enable %>
+                        <a class="btn hidden-xs lcb-upload-trigger" href="#">
+                            <i class="fa fa-upload"></i>
+                        </a>
+                        <% endif %>
+                    </h2>
+                    <div class="lcb-room-description">
+                        <p>{{description}}</p>
                     </div>
-                </div><!-- lcb-room-header end -->
-                <ul class="lcb-messages">
-                </ul>
-                <form class="lcb-entry">
-                    <textarea class="lcb-entry-input" placeholder="Got something to say?" autofocus></textarea>
-                    <button class="btn lcb-entry-action lcb-upload-trigger">
-                        <i class="fa fa-paperclip"></i>
-                    </button>
-                    <button type="submit" class="btn btn-info lcb-entry-button">Send</button>
-                </form>
-            </div><!-- lcb-chat end -->
-            <div class="lcb-room-sidebar">
-                <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
-                    <header class="lcb-room-sidebar-header">
-                        <h3 class="lcb-room-sidebar-heading">
-                            <i class="fa fa-users"></i> Who's Here (<span class="lcb-room-sidebar-items-count"></span>)
-                        </h3>
-                    </header>
-                    <ul class="lcb-room-sidebar-list"></ul>
                 </div>
-                <div class="lcb-room-sidebar-group lcb-room-sidebar-files">
-                    <header class="lcb-room-sidebar-header">
-                        <h3 class="lcb-room-sidebar-heading">
-                            <i class="fa fa-file-text"></i> Files
-                        </h3>
-                        <button class="btn lcb-room-sidebar-files-add lcb-upload-trigger">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </header>
-                    <ul class="lcb-room-sidebar-list"></ul>
+                <div class="lcb-room-header-actions">
+                    <a class="lcb-room-toggle-sidebar" href="#">
+                        <i class="fa fa-arrow-circle-o-left"></i>
+                    </a>
                 </div>
-            </div><!-- lcb-room-sidebar end -->
-            <div class="edit-room modal fade lcb-room-edit">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="" class="validate form-horizontal" method="post">
-                        <div class="modal-header">
-                            <button class="close hide-edit-room" type="button">&times;</button>
-                            <h4 class="modal-title">Edit Room</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label class="control-label col-sm-4">Name</label>
-                                <div class="col-sm-7">
-                                    <input class="required name form-control" name=
-                                    "name" type="text" value="{{name}}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class=
-                                "control-label col-sm-4">Description</label>
-                                <div class="col-sm-7">
-                                    <textarea class="form-control" name=
-                                    "description">{{description}}</textarea>
-                                </div>
-                            </div>
-                            <p class="response" style="display: none;"></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-success pull-right submit-edit-room" type=
-                            "submit"><i class="icon-ok"></i> Save</button>
-                            <a class="archive-room btn btn-danger pull-left"
-                            tabindex="-1"><i class="icon-remove icon-white"></i>
-                            Archive Room</a>
-                        </div>
-                    </form>
-                </div>
+            </div><!-- lcb-room-header end -->
+            <ul class="lcb-messages">
+            </ul>
+            <form class="lcb-entry">
+                <textarea class="lcb-entry-input" placeholder="Got something to say?" autofocus></textarea>
+                <button type="submit" class="btn btn-info lcb-entry-button">Send</button>
+            </form>
+        </div><!-- lcb-chat end -->
+        <div class="lcb-room-sidebar">
+            <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
+                <header class="lcb-room-sidebar-header">
+                    <h3 class="lcb-room-sidebar-heading">
+                        <i class="fa fa-users"></i> Who's Here (<span class="lcb-room-sidebar-items-count"></span>)
+                    </h3>
+                </header>
+                <ul class="lcb-room-sidebar-list"></ul>
             </div>
-            </div><!-- edit room end -->
-        </div><!-- lcb-room end -->
-    </script>
-{% endraw %}
+            <% if settings.files.enable %>
+            <div class="lcb-room-sidebar-group lcb-room-sidebar-files">
+                <header class="lcb-room-sidebar-header">
+                    <h3 class="lcb-room-sidebar-heading">
+                        <i class="fa fa-file-text"></i> Files
+                    </h3>
+                    <button class="btn lcb-room-sidebar-files-add lcb-upload-trigger">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </header>
+                <ul class="lcb-room-sidebar-list"></ul>
+            </div>
+            <% endif %>
+        </div><!-- lcb-room-sidebar end -->
+        <div class="edit-room modal fade lcb-room-edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="" class="validate form-horizontal" method="post">
+                    <div class="modal-header">
+                        <button class="close hide-edit-room" type="button">&times;</button>
+                        <h4 class="modal-title">Edit Room</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Name</label>
+                            <div class="col-sm-7">
+                                <input class="required name form-control" name=
+                                "name" type="text" value="{{name}}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class=
+                            "control-label col-sm-4">Description</label>
+                            <div class="col-sm-7">
+                                <textarea class="form-control" name=
+                                "description">{{description}}</textarea>
+                            </div>
+                        </div>
+                        <p class="response" style="display: none;"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success pull-right submit-edit-room" type=
+                        "submit"><i class="icon-ok"></i> Save</button>
+                        <a class="archive-room btn btn-danger pull-left"
+                        tabindex="-1"><i class="icon-remove icon-white"></i>
+                        Archive Room</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div><!-- edit room end -->
+    </div><!-- lcb-room end -->
+</script>
