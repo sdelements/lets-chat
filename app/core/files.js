@@ -128,7 +128,7 @@ FileManager.prototype.list = function(options, cb) {
     }
 
     find
-    .limit(options.limit)
+    .limit(options.take)
     .exec(function(err, files) {
         if (err) {
             console.error(err);
