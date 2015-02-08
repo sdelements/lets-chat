@@ -49,10 +49,9 @@
             });
             this.notifications = new window.LCB.NotificationsView();
 
-            var $upload = this.$el.find('#lcb-upload');
-            if ($upload.length) {
+            if (this.client.options.uploadsEnabled) {
                 this.upload = new window.LCB.UploadView({
-                    el: $upload,
+                    el: this.$el.find('#lcb-upload'),
                     rooms: this.client.rooms
                 });
             }

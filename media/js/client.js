@@ -6,8 +6,8 @@
     //
     // Base
     //
-    var Client = function(config) {
-        this.config = config;
+    var Client = function(options) {
+        this.options = options;
         this.status = new Backbone.Model();
         this.user = new UserModel();
         this.users = new UsersCollection();
@@ -143,13 +143,15 @@
                 that.addMessages(messages, !room.get('loaded'));
                 room.set('loaded', true);
             });
-            that.getFiles({
-                room: room.id,
-                take: 15
-            }, function(files) {
-                files.reverse();
-                that.setFiles(room.id, files);
-            });
+            if (that.options.filesEnabled) {
+                that.getFiles({
+                    room: room.id,
+                    take: 15
+                }, function(files) {
+                    files.reverse();
+                    that.setFiles(room.id, files);
+                });
+            }
             // Do we want to switch?
             if (switchRoom) {
                 that.switchRoom(id);
