@@ -52,10 +52,38 @@ function mergeEnvSettings(settings) {
     recurse('LCB', settings);
 }
 
+function heroku(settings) {
+    if (process.env.PORT) {
+        settings.http.port = process.env.PORT;
+    }
+
+    // Override database URI - if using a Heroku add-on
+    settings.database.uri = process.env.MONGOHQ_URL ||
+                            process.env.MONGOLAB_URI ||
+                            settings.database.uri;
+}
+
+function openShift(settings) {
+    if (!process.env.OPENSHIFT_APP_NAME) {
+        return;
+    }
+
+    if (process.env.OPENSHIFT_NODEJS_PORT) {
+        settings.http.port = process.env.OPENSHIFT_NODEJS_PORT;
+    }
+
+    if (process.env.OPENSHIFT_MONGODB_DB_URL) {
+    settings.database.uri = process.env.OPENSHIFT_MONGODB_DB_URL + 'letschat';
+    }
+}
+
 var settings = _.merge(
     getDefaultSettings(),
     getFileSettings()
 );
+
+heroku(settings);
+openShift(settings);
 
 mergeEnvSettings(settings);
 
@@ -67,15 +95,5 @@ if (settings.xmpp.host) {
 if (process.env.NODE_ENV) {
     settings.env = process.env.NODE_ENV;
 }
-
-// Override port variable - if using Heroku
-if (process.env.PORT) {
-    settings.http.port = process.env.PORT;
-}
-
-// Override database URI - if using a Heroku add-on
-settings.database.uri = process.env.MONGOHQ_URL ||
-                        process.env.MONGOLAB_URI ||
-                        settings.database.uri;
 
 module.exports = settings;
