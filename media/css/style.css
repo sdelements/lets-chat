@@ -4603,6 +4603,9 @@ body {
 .lcb-message.lcb-message-own {
   background: #fcffd8;
 }
+.lcb-message.lcb-message-mentioned {
+  background: #ffe9ee;
+}
 .lcb-message.lcb-message-mentioned:before {
   background: #f22472;
   width: 3px;
