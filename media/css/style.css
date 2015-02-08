@@ -4598,8 +4598,10 @@ body {
 }
 .lcb-message.lcb-message-fragment {
   min-height: 0;
-  padding-top: 0;
   border-top: none;
+}
+.lcb-message.lcb-message-fragment {
+  margin-top: -3.5px;
 }
 .lcb-message.lcb-message-own {
   background: #fcffd8;
