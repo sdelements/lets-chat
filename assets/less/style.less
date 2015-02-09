@@ -61,20 +61,33 @@ body {
 }
 
 .lc-section {
-    padding: 40px 0;
+    padding: 60px 0;
+    @media (max-width: @screen-sm-max) {
+        padding: 30px 0;
+    }
 }
 
 .lc-section-header {
-    margin-bottom: 40px;
+    margin-bottom: 50px;
+    @media (max-width: @screen-sm-max) {
+        margin-bottom: 30px;
+    }
 }
 
 .lc-section-heading {
-    text-transform: upperacse;
-    font-weight: 300;
-    font-size: 40px;
+    font-weight: 400;
+    font-size: 50px;
     text-transform: uppercase;
     @media (max-width: @screen-xs-max) {
-        font-size: 30px;
+        font-size: 40px;
+    }
+}
+
+.lc-section-subheading {
+    font-size: 26px;
+    font-weight: 300;
+    @media (max-width: @screen-xs-max) {
+        font-size: 20px;
     }
 }
 
@@ -148,7 +161,7 @@ body {
     @media (max-width: @screen-md-max) {
         width: 25%;
     }
-    @media (max-width: @screen-sm-max) {
+    @media (max-width: @screen-xs-max) {
         width: 40%;
     }
 }
@@ -167,7 +180,7 @@ body {
     margin-bottom: 20px;
     border: 2px #fff solid;
     border-radius: 100%;
-    @media (max-width: @screen-sm-max) {
+    @media (max-width: @screen-xs-max) {
         .square(70px);
         line-height: 70px;
         font-size: 20px;
@@ -176,7 +189,7 @@ body {
 
 .lc-feature-name {
     font-weight: 300;
-    @media (max-width: @screen-sm-max) {
+    @media (max-width: @screen-xs-max) {
         font-size: 12px;
     }
 }

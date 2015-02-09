@@ -9099,20 +9099,38 @@ body {
   background: url('../img/overlay.png');
 }
 .lc-section {
-  padding: 40px 0;
+  padding: 60px 0;
+}
+@media (max-width: 991px) {
+  .lc-section {
+    padding: 30px 0;
+  }
 }
 .lc-section-header {
-  margin-bottom: 40px;
+  margin-bottom: 50px;
+}
+@media (max-width: 991px) {
+  .lc-section-header {
+    margin-bottom: 30px;
+  }
 }
 .lc-section-heading {
-  text-transform: upperacse;
-  font-weight: 300;
-  font-size: 40px;
+  font-weight: 400;
+  font-size: 50px;
   text-transform: uppercase;
 }
 @media (max-width: 767px) {
   .lc-section-heading {
-    font-size: 30px;
+    font-size: 40px;
+  }
+}
+.lc-section-subheading {
+  font-size: 26px;
+  font-weight: 300;
+}
+@media (max-width: 767px) {
+  .lc-section-subheading {
+    font-size: 20px;
   }
 }
 .lc-header {
@@ -9196,7 +9214,7 @@ body {
     width: 25%;
   }
 }
-@media (max-width: 991px) {
+@media (max-width: 767px) {
   .lc-feature {
     width: 40%;
   }
@@ -9216,7 +9234,7 @@ body {
   border: 2px #fff solid;
   border-radius: 100%;
 }
-@media (max-width: 991px) {
+@media (max-width: 767px) {
   .lc-feature-icon {
     width: 70px;
     height: 70px;
@@ -9227,7 +9245,7 @@ body {
 .lc-feature-name {
   font-weight: 300;
 }
-@media (max-width: 991px) {
+@media (max-width: 767px) {
   .lc-feature-name {
     font-size: 12px;
   }
