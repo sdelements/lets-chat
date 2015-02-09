@@ -49,7 +49,7 @@
             });
             this.notifications = new window.LCB.NotificationsView();
 
-            if (this.client.options.uploadsEnabled) {
+            if (this.client.options.filesEnabled) {
                 this.upload = new window.LCB.UploadView({
                     el: this.$el.find('#lcb-upload'),
                     rooms: this.client.rooms
