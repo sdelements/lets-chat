@@ -14,4 +14,4 @@ ENV LCB_DATABASE_URI mongodb://db/letschat
 
 EXPOSE 5000
 
-CMD ["node", "./app.js"]
+CMD ["npm", "start"]
