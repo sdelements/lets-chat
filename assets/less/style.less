@@ -21,7 +21,7 @@ body {
 }
 
 .btn-lc {
-    background: none;
+    background: rgba(0, 0, 0, 0.1);
     border: 3px rgb(242, 36, 114) solid;
     text-transform: uppercase;
     .transition(all .2s ease-in);
@@ -36,16 +36,14 @@ body {
     }
 }
 
-.lc-header {
-    background-image: url('../img/photos/plane.jpg');
+.lc-header,
+.lc-section {
     background-position: center center;
     background-attachment: fixed;
     background-size: cover;
-    height: 100%;
     text-align: center;
     font-family: 'Source Sans Pro';
     color: #f2f2f2;
-    position: relative;
     &:before,
     &:after {
         .size(100%);
@@ -55,11 +53,34 @@ body {
         left: 0;
     }
     &:before {
-        background: rgba(242, 36, 114, .3);
+        background: rgba(242, 36, 114, .2);
     }
     &:after {
         background: url('../img/overlay.png');
     }
+}
+
+.lc-section {
+    padding: 40px 0;
+}
+
+.lc-section-header {
+    margin-bottom: 40px;
+}
+
+.lc-section-heading {
+    text-transform: upperacse;
+    font-weight: 300;
+    font-size: 40px;
+    text-transform: uppercase;
+    @media (max-width: @screen-xs-max) {
+        font-size: 30px;
+    }
+}
+
+.lc-header { 
+    background-image: url('../img/photos/plane.jpg');
+    height: 100%;
     .container {
         padding: 40px 0;
         position: relative;
@@ -67,10 +88,6 @@ body {
         top: 50%;
         transform: translateY(-50%);
     }
-}
-
-.lc-section {
-    height: 100%;
 }
 
 .lc-header-logo {
@@ -95,11 +112,66 @@ body {
 
 .lc-header-featurette {
     margin: 40px 0;
+    @media (max-width: @screen-sm-max) {
+        margin: 20px 0;
+    }
     img {
         width: 70%;
         margin: 0 auto;
+        @media screen and (max-height: 700px) {
+            width: 40%;
+        }
+        @media screen and (max-height: 900px) {
+            width: 60%;
+        }
         @media (max-width: @screen-sm-max) {
             width: 100%;
         }
     }
+}
+
+.lc-features,
+.lc-feature {
+    vertical-align: top;
+    display: block;
+}
+
+.lc-features {
+    text-align: center;
+    padding: 0;
+}
+
+.lc-feature {
+    width: 20%;
+    text-align: center;
+    display: inline-block;
+    @media (max-width: @screen-md-max) {
+        width: 25%;
+    }
+    @media (max-width: @screen-sm-max) {
+        width: 40%;
+    }
+    @media (max-width: @screen-xs-max) {
+        width: 100%;
+    }
+}
+
+.lc-feature-box {
+    padding: 20px;
+}
+
+.lc-feature-icon {
+    .square(100px);
+    line-height: 100px;
+    font-size: 30px;
+    vertical-align: middle;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border: 2px #fff solid;
+    border-radius: 100%;
+}
+
+.lc-feature-name {
+    font-weight: 300;
 }

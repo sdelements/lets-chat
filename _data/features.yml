@@ -1,0 +1,38 @@
+
+
+- name: BYOS (bring your own server)
+  icon: database
+
+- name: LDAP / Kerberos Authentication
+  icon: unlock-alt
+
+- name: XMPP Multi-user chat (MUC)
+  icon: users
+
+- name: Multiple Rooms
+  icon: reorder
+
+- name: Desktop Notifications
+  icon: bell
+
+- name: Mentions
+  icon: at
+
+- name: Image embeds
+  icon: image
+
+- name: File uploads
+  icon: cloud-upload
+
+- name: Hubot Friendly
+  icon: thumbs-up
+
+- name: REST-like API
+  icon: exchange
+
+- name: Transcripts / Chat History
+  icon: file-text
+
+- name: MIT Licensed
+  icon: code-fork
+  
