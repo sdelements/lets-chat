@@ -9201,11 +9201,6 @@ body {
     width: 40%;
   }
 }
-@media (max-width: 767px) {
-  .lc-feature {
-    width: 100%;
-  }
-}
 .lc-feature-box {
   padding: 20px;
 }
@@ -9221,6 +9216,19 @@ body {
   border: 2px #fff solid;
   border-radius: 100%;
 }
+@media (max-width: 991px) {
+  .lc-feature-icon {
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 20px;
+  }
+}
 .lc-feature-name {
   font-weight: 300;
+}
+@media (max-width: 991px) {
+  .lc-feature-name {
+    font-size: 12px;
+  }
 }

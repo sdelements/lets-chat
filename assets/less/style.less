@@ -151,9 +151,6 @@ body {
     @media (max-width: @screen-sm-max) {
         width: 40%;
     }
-    @media (max-width: @screen-xs-max) {
-        width: 100%;
-    }
 }
 
 .lc-feature-box {
@@ -170,8 +167,16 @@ body {
     margin-bottom: 20px;
     border: 2px #fff solid;
     border-radius: 100%;
+    @media (max-width: @screen-sm-max) {
+        .square(70px);
+        line-height: 70px;
+        font-size: 20px;
+    }
 }
 
 .lc-feature-name {
     font-weight: 300;
+    @media (max-width: @screen-sm-max) {
+        font-size: 12px;
+    }
 }
