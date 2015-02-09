@@ -1,6 +1,12 @@
 /*********************
  * LCB Styles
  *********************/
+@font-face {
+  font-family: 'Pacifico';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Pacifico Regular'), local('Pacifico-Regular'), url('../font/pacifico.woff') format('woff');
+}
 .animated {
   -webkit-animation-duration: 1s;
   -moz-animation-duration: 1s;
@@ -9039,4 +9045,79 @@ button.close {
 }
 .fa-meanpath:before {
   content: "\f20c";
+}
+html,
+body {
+  background: #222;
+  height: 100%;
+}
+.btn-lc {
+  background: none;
+  border: 3px #f22472 solid;
+  text-transform: uppercase;
+  -ms-transition: all 0.2s ease-in;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+.btn-lc:hover {
+  color: #fff;
+  border-color: #fff;
+}
+.btn-lc:focus,
+.btn-lc:active {
+  color: #f2f2f2;
+  outline: none !important;
+}
+.lc-header {
+  background-image: url('../img/photos/plane.jpg');
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  height: 100%;
+  text-align: center;
+  font-family: 'Source Sans Pro';
+  color: #f2f2f2;
+  position: relative;
+}
+.lc-header:before,
+.lc-header:after {
+  width: 100%;
+  height: 100%;
+  content: ' ';
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.lc-header:before {
+  background: rgba(242, 36, 114, 0.3);
+}
+.lc-header:after {
+  background: url('../img/overlay.png');
+}
+.lc-header .container {
+  position: relative;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.lc-section {
+  height: 100%;
+}
+.lc-header-logo {
+  font-family: Pacifico;
+  font-size: 85px;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.lc-header-subheading {
+  font-weight: 300;
+  text-transform: uppercase;
+}
+.lc-header-featurette {
+  margin: 40px 0;
+}
+.lc-header-featurette img {
+  width: 50%;
+  margin: 0 auto;
 }
