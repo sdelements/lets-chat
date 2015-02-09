@@ -9097,7 +9097,7 @@ body {
   background: url('../img/overlay.png');
 }
 .lc-header .container {
-  padding: 40px 20px;
+  padding: 40px 0;
   position: relative;
   z-index: 1;
   top: 50%;
@@ -9137,8 +9137,8 @@ body {
   width: 70%;
   margin: 0 auto;
 }
-@media (max-width: 767px) {
-  .lc-header-featurette {
+@media (max-width: 991px) {
+  .lc-header-featurette img {
     width: 100%;
   }
 }
