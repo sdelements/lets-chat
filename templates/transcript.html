@@ -31,10 +31,7 @@
 <% endblock %>
 
 <% block js %>
-    <script type="text/javascript" src="./media/js/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <script type="text/javascript" src="./media/js/util/message.js"></script>
-    <script type="text/javascript" src="./media/js/views/transcript.js"></script>
-    <script type="text/javascript" src="./media/js/transcript.js"></script>
+<$ 'transcript' | js | safe $>
 <% endblock %>
 
 <% block templates %>

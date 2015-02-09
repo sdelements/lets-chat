@@ -21,7 +21,6 @@ var _ = require('lodash'),
 
 var psjon = require('./package.json'),
     settings = require('./app/config'),
-    bundles = require('./app/bundles'),
     httpEnabled = settings.http && settings.http.enable,
     httpsEnabled = settings.https && settings.https.enable;
 
@@ -98,13 +97,27 @@ app.use(helmet.contentSecurityPolicy({
     imgSrc: ['*']
 }));
 
+var bundles = {};
+app.use(require('connect-assets')({
+    paths: [
+        'media/js',
+        'media/less',
+        // 'media/img',
+        // 'media/font',
+    ],
+    helperContext: bundles,
+    build: settings.env === 'production',
+    fingerprinting: settings.env === 'production',
+    servePath: 'media/dist'
+}));
+
 // Public
 app.use('/media', express.static(__dirname + '/media', {
     maxAge: '364d',
 }));
 
 // Templates
-nunjucks.configure('templates', {
+var nun = nunjucks.configure('templates', {
         autoescape: true,
         express: app,
         tags: {
@@ -115,8 +128,10 @@ nunjucks.configure('templates', {
             commentStart: '<#',
             commentEnd: '#>'
         }
-    })
-    .addGlobal('bundles', bundles);
+    });
+
+nun.addFilter('js', bundles.js);
+nun.addFilter('css', bundles.css);
 
 // HTTP Middlewares
 app.use(bodyParser.json());

@@ -1,6 +1,4 @@
-//
-// Login JS
-//
+//= require vendor/md5/md5.js
 
 +function() {
 

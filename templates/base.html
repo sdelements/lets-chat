@@ -7,9 +7,9 @@
         <link rel="icon" type="image/png" href="./media/favicon.ico" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0" />
         <% block css %><% endblock %>
-        <$ bundles.vendor_css | safe $>
-        <$ bundles.base_css | safe $>
-        <$ bundles.vendor_js | safe $>
+        <$ 'vendor' | css | safe $>
+        <$ 'style' | css | safe $>
+        <$ 'vendor' | js | safe $>
         <% block js %><% endblock %>
     </head>
     <body class="<% block class %><% endblock %>" <% block attributes %><% endblock %>>
