@@ -20,6 +20,15 @@ body {
     height: 100%;
 }
 
+.lc-love {
+    color: #f22472;
+    a& {
+        &:hover {
+            color: lighten(#f22472, 5%);
+        }
+    }
+}
+
 .btn-lc {
     background: rgba(0, 0, 0, 0.1);
     border: 3px rgb(242, 36, 114) solid;
@@ -36,7 +45,6 @@ body {
     }
 }
 
-.lc-header,
 .lc-section {
     background-position: center center;
     background-attachment: fixed;
@@ -44,6 +52,11 @@ body {
     text-align: center;
     font-family: 'Source Sans Pro';
     color: #f2f2f2;
+    padding: 60px 0;
+    position: relative;
+    @media (max-width: @screen-sm-max) {
+        padding: 30px 0;
+    }
     &:before,
     &:after {
         .size(100%);
@@ -52,18 +65,23 @@ body {
         top: 0;
         left: 0;
     }
-    &:before {
-        background: rgba(242, 36, 114, .2);
-    }
-    &:after {
-        background: url('../img/overlay.png');
+    .container {
+        position: relative;
+        z-index: 1;
     }
 }
 
-.lc-section {
-    padding: 60px 0;
-    @media (max-width: @screen-sm-max) {
-        padding: 30px 0;
+.lc-section-alt {
+    background: #fff;
+    color: #555;
+}
+
+.lc-section-overlayed {
+    &:before {
+        background: rgba(0, 0, 0, .1);
+    }
+    &:after {
+        background: url('../img/overlay.png');
     }
 }
 
@@ -91,13 +109,26 @@ body {
     }
 }
 
+.lc-section-content {
+    text-align: left;
+    ul {
+        margin-bottom: 20px;
+    }
+    pre {
+        padding: 20px;
+        border: 1px #eee solid;
+        border-radius: 2px;
+    }
+}
+
 .lc-header { 
     background-image: url('../img/photos/plane.jpg');
     height: 100%;
+    &:before {
+        background: rgba(242, 36, 114, .3);
+    }
     .container {
         padding: 40px 0;
-        position: relative;
-        z-index: 1;
         top: 50%;
         transform: translateY(-50%);
     }
@@ -192,4 +223,64 @@ body {
     @media (max-width: @screen-xs-max) {
         font-size: 12px;
     }
+}
+
+.lc-footer { 
+    background-image: url('../img/photos/streak.jpg');
+    &:before {
+        background: rgba(0, 0, 0, .8);
+    }
+}
+
+.lc-footer-powered {
+    margin: 0;
+    margin-top: 40px;
+}
+
+.lc-people,
+.lc-person {
+    vertical-align: top;
+    display: block;
+}
+
+.lc-people {
+    text-align: center;
+    padding: 0;
+}
+
+.lc-person {
+    text-align: center;
+    display: inline-block;
+    @media (max-width: @screen-xs-max) {
+        width: 40%;
+    }
+}
+
+.lc-person-box {
+    color: #eee;
+    display: block;
+    padding: 20px;
+    .transition(color .2s ease-in);
+    &:hover {
+        color: #fff;
+        text-decoration: none;
+    }
+}
+
+.lc-person-avatar {
+    margin: 0 auto;
+    margin-bottom: 8px;
+    padding: 3px;
+    border: 2px transparent solid;
+    display: block;
+    border-radius: 100%;
+    .transition(border .2s ease-in);
+    .lc-person-box:hover & {
+        border-color: #f22472;
+    }
+}
+
+.lc-person-name {
+    text-transform: uppercase;
+    font-weight: 300;
 }

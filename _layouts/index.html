@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="assets/css/style.css" />
     </head>
     <body>
-        <header class="lc-header">
+        <header class="lc-header lc-section lc-section-overlayed">
             <div class="container">
                 <h1 class="lc-header-logo">Let's Chat</h1>
                 <h2 class="lc-header-subheading">Self-hosted chat <br class="visible-xs" /> for small teams.</h2>
@@ -40,13 +40,58 @@
                 </ul>
             </div>
         </section>
-        <section class="lc-people lc-section hide">
+        <section class="lc-section lc-section-alt">
             <div class="container">
-                <h2>From T.O. With Love</h2>
-                <h3>What.</h3>
+                <header class="lc-section-header">
+                    <h2 class="lc-section-heading">Getting Started</h2>
+                    <h3 class="lc-section-subheading"></h3>
+                </header>
+                <article class="lc-section-content">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-4">
+                            <h4>Requirements</h4>
+                            <ul>
+                                <li><a href="#">Node.js (0.10+)</a></li>
+                                <li><a href="#">MongoDB (2.0+)</a></li>
+                                <li><a href="#">Kerberos 5 Dev Packages</a></li>
+                            </ul>
+                            <h4>Installation</h4>
+                            <p>Clone the Let's Chat repository, and install dependencies.</p>
+<pre>
+git clone https://github.com/sdelements/lets-chat.git
+cd lets-chat
+npm install
+</pre>
+<p><em>Optional &mdash;</em> For custom settings, copy and edit settings.yml.sample:</p>
+<pre>
+cp settings.yml.sample settings.yml
+</pre>
+                        </div>
+                    </div>
+                </article>
             </div>
         </section>
-        <footer class="lc-footer">
+        <footer class="lc-footer lc-section lc-section-overlayed">
+            <div class="container">
+                <header class="lc-section-header">
+                    <h2 class="lc-section-heading">Made in Toronto</h2>
+                    <h3 class="lc-section-subheading"><i class="fa fa-heart lc-love" style="margin-right: 5px;"></i> With all the love in the world.</h3>
+                </header>
+                <ul class="lc-people">
+                    {% for person in site.data.people %}
+                        <li class="lc-person">
+                            <a class="lc-person-box" href="{{ person.github }}" target="_blank">
+                                <img class="lc-person-avatar" src="https://www.gravatar.com/avatar/{{ person.gravatar }}?s=100" />
+                                <span class="lc-person-name">{{ person.name }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <p class="lc-footer-powered">
+                    &copy; 2015 SD Elements Inc. <br />
+                    <small>Powered by <a class="lc-love" href="#" target="_blank">express.oi</a></small>
+                </p>
+            </div>
         </footer>
         <a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/52760788cde945287fbb584134c4cbc2bc36f904/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png"></a>
     </body>
