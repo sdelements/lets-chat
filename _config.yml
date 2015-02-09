@@ -1,0 +1,2 @@
+permalink: pretty
+exclude: ['package.json', 'README.md', 'gruntfile.js', 'bower_components', 'bower.json', '.bowerrc', 'node_modules']
