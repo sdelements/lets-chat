@@ -61,6 +61,7 @@ body {
         background: url('../img/overlay.png');
     }
     .container {
+        padding: 40px 20px;
         position: relative;
         z-index: 1;
         top: 50%;
@@ -76,17 +77,29 @@ body {
     font-family: Pacifico;
     font-size: 85px;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    @media (max-width: @screen-md-max) {
+        font-size: 60px;
+    }
+    @media (max-width: @screen-xs-max) {
+        font-size: 50px;
+    }
 }
 
 .lc-header-subheading {
     font-weight: 300;
     text-transform: uppercase;
+    @media (max-width: @screen-xs-max) {
+        font-size: 20px;
+    }
 }
 
 .lc-header-featurette {
     margin: 40px 0;
     img {
-        width: 50%;
+        width: 70%;
         margin: 0 auto;
+    }
+    @media (max-width: @screen-xs-max) {
+        width: 100%;
     }
 }

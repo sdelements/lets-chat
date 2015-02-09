@@ -9097,6 +9097,7 @@ body {
   background: url('../img/overlay.png');
 }
 .lc-header .container {
+  padding: 40px 20px;
   position: relative;
   z-index: 1;
   top: 50%;
@@ -9110,14 +9111,34 @@ body {
   font-size: 85px;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
+@media (max-width: 1199px) {
+  .lc-header-logo {
+    font-size: 60px;
+  }
+}
+@media (max-width: 767px) {
+  .lc-header-logo {
+    font-size: 50px;
+  }
+}
 .lc-header-subheading {
   font-weight: 300;
   text-transform: uppercase;
+}
+@media (max-width: 767px) {
+  .lc-header-subheading {
+    font-size: 20px;
+  }
 }
 .lc-header-featurette {
   margin: 40px 0;
 }
 .lc-header-featurette img {
-  width: 50%;
+  width: 70%;
   margin: 0 auto;
+}
+@media (max-width: 767px) {
+  .lc-header-featurette {
+    width: 100%;
+  }
 }
