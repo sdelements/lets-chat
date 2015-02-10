@@ -9049,7 +9049,6 @@ button.close {
 html,
 body {
   background: #222;
-  height: 100%;
 }
 .lc-love {
   color: #f22472;
@@ -9176,15 +9175,9 @@ a.lc-love:hover {
 }
 .lc-header {
   background-image: url('../img/photos/plane.jpg');
-  height: 100%;
 }
 .lc-header:before {
   background: rgba(242, 36, 114, 0.3);
-}
-.lc-header .container {
-  padding: 40px 0;
-  top: 50%;
-  transform: translateY(-50%);
 }
 .lc-header-logo {
   font-family: Pacifico;
