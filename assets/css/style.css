@@ -9345,6 +9345,11 @@ a.lc-love:hover {
   color: #fff;
   text-decoration: none;
 }
+@media (max-width: 767px) {
+  .lc-person-box {
+    padding: 0;
+  }
+}
 .lc-person-avatar {
   margin: 0 auto;
   margin-bottom: 8px;

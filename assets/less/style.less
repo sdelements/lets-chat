@@ -1,7 +1,7 @@
 /*********************
  * LCB Styles
  *********************/
- 
+
  @font-face {
     font-family: 'Pacifico';
     font-style: normal;
@@ -141,7 +141,7 @@ body {
     }
 }
 
-.lc-header { 
+.lc-header {
     background-image: url('../img/photos/plane.jpg');
     &:before {
         background: rgba(242, 36, 114, .3);
@@ -260,7 +260,7 @@ body {
     }
 }
 
-.lc-footer { 
+.lc-footer {
     background-image: url('../img/photos/streak.jpg');
     &:before {
         background: rgba(0, 0, 0, .8);
@@ -301,6 +301,9 @@ body {
     &:hover {
         color: #fff;
         text-decoration: none;
+    }
+    @media (max-width: @screen-xs-max) {
+      padding: 0;
     }
 }
 
