@@ -9142,7 +9142,17 @@ a.lc-love:hover {
   }
 }
 .lc-section-content {
+  font-size: 16px;
   text-align: left;
+}
+.lc-section-content h2 {
+  font-size: 28px;
+}
+.lc-section-content h3 {
+  font-size: 24px;
+}
+.lc-section-content h4 {
+  font-size: 20px;
 }
 .lc-section-content ul {
   margin-bottom: 20px;
@@ -9151,6 +9161,17 @@ a.lc-love:hover {
   padding: 20px;
   border: 1px #eee solid;
   border-radius: 2px;
+}
+.lc-section-content-epic {
+  font-size: 24px;
+  font-weight: 300;
+}
+.lc-section-content-epic h4 {
+  font-size: 30px;
+  font-weight: 300;
+}
+.lc-section-content-epic p {
+  margin-bottom: 20px;
 }
 .lc-header {
   background-image: url('../img/photos/plane.jpg');
