@@ -20,7 +20,6 @@ cd lets-chat
 git checkout #{LCB_BRANCH}
 npm install
 cp settings.yml.sample settings.yml
-mkdir uploads
 npm start
 EOF
 
