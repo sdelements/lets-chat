@@ -9112,7 +9112,7 @@ a.lc-love:hover {
   background: rgba(0, 0, 0, 0.1);
 }
 .lc-section-overlayed:after {
-  background: url('../img/overlay.png');
+  background: rgba(0, 0, 0, 0.2);
 }
 .lc-section-header {
   margin-bottom: 50px;
