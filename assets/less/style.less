@@ -32,6 +32,7 @@ body {
 .btn-lc {
     background: rgba(0, 0, 0, 0.1);
     border: 3px rgb(242, 36, 114) solid;
+    color: #f7f7f7;
     text-transform: uppercase;
     .transition(all .2s ease-in);
     &:hover {
@@ -168,6 +169,19 @@ body {
     }
 }
 
+.lc-header-source {
+    margin-top: 10px;
+}
+
+.lc-header-source-link {
+    color: #ccc;
+    font-weight: 300;
+    &:hover {
+        color: #fff;
+        text-decoration: none;
+    }
+}
+
 .lc-header-subheading {
     font-weight: 300;
     text-transform: uppercase;
@@ -177,7 +191,7 @@ body {
 }
 
 .lc-header-featurette {
-    margin: 40px 0;
+    margin: 30px 0;
     @media (max-width: @screen-sm-max) {
         margin: 20px 0;
     }

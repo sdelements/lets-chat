@@ -9060,6 +9060,7 @@ a.lc-love:hover {
 .btn-lc {
   background: rgba(0, 0, 0, 0.1);
   border: 3px #f22472 solid;
+  color: #f7f7f7;
   text-transform: uppercase;
   -ms-transition: all 0.2s ease-in;
   -webkit-transition: all 0.2s ease-in;
@@ -9200,6 +9201,17 @@ a.lc-love:hover {
     font-size: 50px;
   }
 }
+.lc-header-source {
+  margin-top: 10px;
+}
+.lc-header-source-link {
+  color: #ccc;
+  font-weight: 300;
+}
+.lc-header-source-link:hover {
+  color: #fff;
+  text-decoration: none;
+}
 .lc-header-subheading {
   font-weight: 300;
   text-transform: uppercase;
@@ -9210,7 +9222,7 @@ a.lc-love:hover {
   }
 }
 .lc-header-featurette {
-  margin: 40px 0;
+  margin: 30px 0;
 }
 @media (max-width: 991px) {
   .lc-header-featurette {
