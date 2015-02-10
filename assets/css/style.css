@@ -9363,6 +9363,9 @@ a.lc-love:hover {
 .lc-person-box:hover .lc-person-avatar {
   border-color: #f22472;
 }
+.lc-person-avatar img {
+  max-width: 100%;
+}
 .lc-person-name {
   text-transform: uppercase;
   font-weight: 300;

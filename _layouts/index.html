@@ -10,6 +10,16 @@
         <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="assets/css/style.css" />
         <script type="text/javascript" src="assets/js/vendor/jquery/jquery.js"></script>
+        <script type="text/javascript">
+        $(function() {
+            $('.lc-lets-roll').on('click', function(e) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($(this).attr('href')).offset().top
+                }, 500);
+            });
+        });
+        </script>
     </head>
     <body>
         <header class="lc-header lc-section lc-section-overlayed">
@@ -19,7 +29,7 @@
                 <div class="lc-header-featurette">
                     <img class="img-responsive" src="assets/img/devices.png" />
                 </div>
-                <a class="btn btn-lc btn-lg" href="">Let's Roll</a>
+                <a class="btn btn-lc btn-lg lc-lets-roll" href="#getting-started">Let's Roll</a>
                 <div class="lc-header-source">
                     <a class="lc-header-source-link" href="https://github.com/sdelements/lets-chat" target="_blank"><i class="fa fa-github"></i> Source Code</a>
                 </div>
@@ -30,7 +40,7 @@
             <iframe src="https://ghbtns.com/github-btn.html?user=sdelements&repo=lets-chat&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
             <iframe src="https://ghbtns.com/github-btn.html?user=sdelements&repo=lets-chat&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="158px" height="30px"></iframe>
         </div>
-        <section class="lc-section lc-section-alt">
+        <section id="what-is-this" class="lc-section lc-section-alt">
             <div class="container">
                 <header class="lc-section-header">
                     <h2 class="lc-section-heading">What is this thing?</h2>
@@ -47,7 +57,7 @@
                 </article>
             </div>
         </section>
-        <section class="lc-section">
+        <section id="features" class="lc-section">
             <div class="container">
                 <header class="lc-section-header">
                     <h2 class="lc-section-heading">Features and Stuff</h2>
@@ -65,7 +75,7 @@
                 </ul>
             </div>
         </section>
-        <section class="lc-section lc-section-alt">
+        <section id="getting-started" class="lc-section lc-section-alt">
             <div class="container">
                 <header class="lc-section-header">
                     <h2 class="lc-section-heading">Getting Started</h2>
