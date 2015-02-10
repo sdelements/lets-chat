@@ -62,30 +62,3 @@ auth:
     enableRegistration: true
     passwordRegex: ^.{8,64}$
     salt: secretsauce # Required when upgrading from version < 0.3
-
-  kerberos:
-    realm: example.com
-    use_ldap_authorization: false
-    #ldap: #Same format as below
-
-  ldap:
-    connect_settings:
-      url: ldap://example.com
-    #   tlsOptions:
-    #     ca: ca.pem
-    server_certs: []
-    bind_options:
-      bindDN:
-      bindCredentials:
-    search:
-      base:
-      opts:
-        scope: one
-        filter: (uid={{username}})
-        attributes: []
-    field_mappings:
-      uid: uid
-      firstName: givenName
-      lastName: sn
-      displayName: givenName
-      email: mail

@@ -48,11 +48,3 @@ auth:
   local:
     enableRegistration: true
     salt: secretsauce # Required when upgrading from version < 0.3
-
-  kerberos:
-    realm: example.com
-    use_ldap_authorization: false
-    #ldap: # See defaults.yml for LDAP options
-
-  ldap:
-    # See defaults.yml for all LDAP options
