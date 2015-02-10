@@ -25,7 +25,7 @@
   icon: cloud-upload
 
 - name: Hubot Friendly
-  icon: thumbs-up
+  icon: heart
 
 - name: REST-like API
   icon: exchange
