@@ -8,11 +8,6 @@ var _ = require('lodash'),
     BearerStrategy = require('passport-http-bearer'),
     BasicStrategy = require('passport-http').BasicStrategy,
     settings = require('./../config'),
-    available_providers = [
-        require('./local'),
-        require('./kerberos'),
-        require('./ldap')
-    ],
     providerSettings = {},
     MAX_AUTH_DELAY_TIME = 24 * 60 * 60 * 1000,
     loginAttempts = {},
@@ -20,13 +15,20 @@ var _ = require('lodash'),
 
 function getProviders(core) {
     return settings.auth.providers.map(function(key) {
-        var Provider = _.find(available_providers, function (p) {
-            return p.key === key;
-        });
+        var Provider;
 
-        var provider_settings = settings.auth[key];
+        if (key === 'local') {
+            Provider = require('./local');
+        } else {
+            var pkgName = 'lets-chat-' + key;
+            var pkg = require(pkgName);
+            Provider = pkg && pkg.auth;
+            if (!Provider) {
+                throw 'Module "' + pkgName + '"" is not a auth provider';
+            }
+        }
 
-        return new Provider(provider_settings, core);
+        return new Provider(settings.auth[key], core);
     });
 }
 

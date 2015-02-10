@@ -16,7 +16,7 @@ A self-hosted chat app for small teams.
 * File uploads
 * Transcripts / chat history
 * XMPP Multi-user chat (MUC)
-* Local / Kerberos / LDAP authentication
+* Local / [Kerberos](https://github.com/sdelements/lets-chat-kerberos) / [LDAP](https://github.com/sdelements/lets-chat-ldap) authentication
 * [Hubot Adapter](https://github.com/hhaidar/hubot-lets-chat)
 * REST-like API
 * MIT Licensed
