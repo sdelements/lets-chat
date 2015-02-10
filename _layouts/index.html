@@ -21,6 +21,11 @@
                 <button class="btn btn-lc btn-lg">Let's Roll</button>
             </div>
         </header>
+        <div class="lc-social">
+            <iframe src="https://ghbtns.com/github-btn.html?user=sdelements&repo=lets-chat&type=watch&count=true&size=large&v=2" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+            <iframe src="https://ghbtns.com/github-btn.html?user=sdelements&repo=lets-chat&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+            <iframe src="https://ghbtns.com/github-btn.html?user=sdelements&repo=lets-chat&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="158px" height="30px"></iframe>
+        </div>
         <section class="lc-section lc-section-alt">
             <div class="container">
                 <header class="lc-section-header">
@@ -103,7 +108,7 @@ cp settings.yml.sample settings.yml
                 <ul class="lc-people">
                     {% for person in site.data.people %}
                         <li class="lc-person">
-                            <a class="lc-person-box" href="{{ person.github }}" target="_blank">
+                            <a class="lc-person-box" href="https://github.com/{{ person.github }}" target="_blank">
                                 <img class="lc-person-avatar" src="https://www.gravatar.com/avatar/{{ person.gravatar }}?s=100" />
                                 <span class="lc-person-name">{{ person.name }}</span>
                             </a>
@@ -111,8 +116,7 @@ cp settings.yml.sample settings.yml
                     {% endfor %}
                 </ul>
                 <p class="lc-footer-powered">
-                    &copy; 2015 SD Elements Inc. <br />
-                    <small>Powered by <a class="lc-love" href="#" target="_blank">express.oi</a></small>
+                    &copy; 2015 SD Elements Inc.
                 </p>
             </div>
         </footer>

@@ -9236,6 +9236,11 @@ a.lc-love:hover {
     width: 100%;
   }
 }
+.lc-social {
+  background: #eee;
+  padding: 15px 0 10px 0;
+  text-align: center;
+}
 .lc-features,
 .lc-feature {
   vertical-align: top;
