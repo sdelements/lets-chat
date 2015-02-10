@@ -9201,6 +9201,8 @@ a.lc-love:hover {
   color: #ccc;
   font-weight: 300;
 }
+.lc-header-source-link:focus,
+.lc-header-source-link:active,
 .lc-header-source-link:hover {
   color: #fff;
   text-decoration: none;
@@ -9339,6 +9341,8 @@ a.lc-love:hover {
   -o-transition: color 0.2s ease-in;
   transition: color 0.2s ease-in;
 }
+.lc-person-box:focus,
+.lc-person-box:active,
 .lc-person-box:hover {
   color: #fff;
   text-decoration: none;
