@@ -4,10 +4,10 @@ MAINTAINER SD Elements
 RUN apt-get update
 RUN apt-get install -y nodejs nodejs-legacy npm git libkrb5-dev
 
-# TODO: pull branch from environment variable?
-RUN git clone -b master https://github.com/sdelements/lets-chat.git
+# Ensure to mount the Let's Chat repository as "/lets-chat".
+VOLUME "/lets-chat"
 
-WORKDIR lets-chat
+WORKDIR /lets-chat
 RUN npm install
 
 ENV LCB_DATABASE_URI mongodb://db/letschat
