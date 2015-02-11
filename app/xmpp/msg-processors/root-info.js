@@ -18,8 +18,8 @@ module.exports = MessageProcessor.extend({
         });
 
         query.c('identity', {
-            category: 'conference',
-            type: 'text',
+            category: 'server',
+            type: 'im',
             name: 'Let\'s chat'
         });
 
