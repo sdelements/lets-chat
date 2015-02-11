@@ -11,8 +11,7 @@ RoomManager.prototype.create = function(options, cb) {
     var Room = mongoose.model('Room');
     Room.create(options, function(err, room) {
         if (err) {
-            cb(err);
-            return;
+            return cb(err);
         }
 
         if (cb) {
@@ -34,9 +33,7 @@ RoomManager.prototype.update = function(roomId, options, cb) {
         }
 
         if (!room) {
-            // WHY IS THERE NO ROOM!?
-            console.error('No room!');
-            return cb(null, null);
+            return cb('Room does not exist.');
         }
 
         room.name = options.name;
@@ -67,9 +64,7 @@ RoomManager.prototype.archive = function(roomId, cb) {
         }
 
         if (!room) {
-            // WHY IS THERE NO ROOM!?
-            console.error('No room!');
-            return cb(null, null);
+            return cb('Room does not exist.');
         }
 
         room.archived = true;

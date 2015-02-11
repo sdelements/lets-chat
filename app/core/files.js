@@ -39,7 +39,7 @@ FileManager.prototype.create = function(options, cb) {
             return cb(err);
         }
         if (!room) {
-            return cb('No room found!');
+            return cb('Room does not exist.');
         }
         if (room.archived) {
             return cb('Room is archived.');

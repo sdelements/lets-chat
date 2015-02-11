@@ -18,6 +18,9 @@ MessageManager.prototype.create = function(options, cb) {
             console.error(err);
             return cb(err);
         }
+        if (!room) {
+            return cb('Room does not exist.');
+        }
         if (room.archived) {
             return cb('Room is archived.');
         }
