@@ -28,7 +28,8 @@ function mergeEnvSettings(settings) {
         else if (/^(n|N|no|No|NO|false|False|FALSE|off|Off|OFF)$/.test(value)) {
             return false;
         }
-        else if (!isNaN(parseInt(value, 10))) {
+        else if (/^[+-]?\d+.?\d*$/.test(value) &&
+                 !isNaN(parseInt(value, 10))) {
             return parseInt(value, 10);
         }
         return value;
