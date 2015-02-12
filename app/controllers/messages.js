@@ -68,15 +68,9 @@ module.exports = function() {
                     to: req.param('to'),
                     reverse: req.param('reverse'),
                     skip: req.param('skip'),
-                    take: req.param('take') || req.param('limit'),
-                    expand: req.param('expand') || req.param('include')
+                    take: req.param('take'),
+                    expand: req.param('expand')
                 };
-
-            if (req.isSocket) {
-                options.since_id = req.param('since_id') || req.param('from');
-                options.expand = 'owner';
-                options.reverse = true;
-            }
 
             core.messages.list(options, function(err, messages) {
                 if (err) {

@@ -110,7 +110,7 @@ module.exports = function() {
                     reverse: req.param('reverse'),
                     skip: req.param('skip'),
                     take: req.param('take'),
-                    expand: req.param('expand') || req.param('include')
+                    expand: req.param('expand')
                 };
 
             core.files.list(options, function(err, files) {
