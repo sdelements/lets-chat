@@ -7,9 +7,9 @@
 app:
   build: .
   links:
-   - db:db
+    - db:db
   ports:
-   - "5000:5000"
+    - 5000:5000
 
 # Mongo Database
 db:

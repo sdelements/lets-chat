@@ -14,7 +14,7 @@ sudo apt-get update
 sudo apt-get install -y python-software-properties
 sudo apt-add-repository -y ppa:chris-lea/node.js
 sudo apt-get update
-sudo apt-get install -y mongodb build-essential nodejs git libkrb5-dev
+sudo apt-get install -y mongodb build-essential nodejs git
 git clone https://github.com/sdelements/lets-chat.git
 cd lets-chat
 git checkout #{LCB_BRANCH}

@@ -2,10 +2,9 @@ FROM ubuntu:latest
 MAINTAINER SD Elements
 
 RUN apt-get update
-RUN apt-get install -y nodejs nodejs-legacy npm git libkrb5-dev
+RUN apt-get install -y nodejs nodejs-legacy npm git
 
-# Ensure to mount the Let's Chat repository as "/lets-chat".
-VOLUME "/lets-chat"
+RUN git clone -b master https://github.com/sdelements/lets-chat.git
 
 WORKDIR /lets-chat
 RUN npm install
