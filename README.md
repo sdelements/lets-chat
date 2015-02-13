@@ -1,6 +1,7 @@
 ![Let's Chat](http://i.imgur.com/Es2KMi6.png)
 
 ![Screenshot](http://i.imgur.com/C4uMD67.png)
+[Free Demo](http://chat.sagivo.com)
 
 A self-hosted chat app for small teams.
 
