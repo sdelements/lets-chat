@@ -82,7 +82,8 @@ Room.prototype.addConnection = function(connection) {
         return;
     }
 
-    if (!this.containsUser(connection.user.id)) {
+    if (connection.user && connection.user.id &&
+        !this.containsUser(connection.user.id)) {
         // User joining room
         this.emitUserJoin({
             userId: connection.user.id,
@@ -99,7 +100,8 @@ Room.prototype.removeConnection = function(connection) {
     }
 
     if (this.connections.remove(connection)) {
-        if (!this.containsUser(connection.user.id)) {
+        if (connection.user && connection.user.id &&
+            !this.containsUser(connection.user.id)) {
             // Leaving room altogether
             this.emitUserLeave({
                 userId: connection.user.id,
