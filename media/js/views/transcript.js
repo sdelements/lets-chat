@@ -28,29 +28,37 @@
         },
 
         setup: function() {
-            var format = 'YYYY-MM-DD';
+            var format = 'MMMM D, YYYY';
+            var ranges = {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            }
 
             var that = this;
 
             function setRange(start, end) {
                 that.startDate = moment(start).local().startOf('day');
                 that.endDate = moment(end).local().endOf('day');
+
+                var str = that.startDate.format(format) + ' - ' + that.endDate.format(format);
+                $('#daterange span').html(str);
+
                 that.loadTranscript();
             }
 
             setRange(moment(), moment());
 
-            this.$daterange = $('input[name="daterange"]')
+            this.$daterange = $('#daterange')
                 .daterangepicker({
                     format: format,
                     startDate: this.startDate,
                     endDate: this.endDate,
-                    dateLimit: { months: 1 }
+                    dateLimit: { months: 1 },
+                    ranges: ranges
                 }, setRange);
 
-            var str = that.startDate.format(format) + ' - ' + that.endDate.format(format);
-
-            $('input[name="daterange"]').val(str);
         },
 
         loadTranscript: function() {

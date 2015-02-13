@@ -18,11 +18,15 @@
             font-size: 24px;
             font-weight: normal;
         }
-        .header input, .header button {
-            padding: 4px 10px;
-        }
-        .header input.daterange {
-            width: 190px;
+        .header #daterange {
+            background: #ffffff;
+            -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+            -moz-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+            color: #333333;
+            padding: 8px;
+            line-height: 18px;
+            cursor: pointer;
         }
         .messages {
             margin-top: 90px;
@@ -52,15 +56,12 @@
 
             <h1>Transcript for <strong><$ room.name $></strong></h1>
 
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="to-date" class="control-label">
-                        Dates
-                    </label>
-                    <input name="daterange" class="form-control daterange" />
-                </div>
-            </form>
-    </div>
+            <div id="daterange" class="pull-left">
+                <i class="fa fa-calendar fa-lg"></i>
+                <span></span> <b class="caret"></b>
+            </div>
+
+        </div>
 
         <div class="messages"></div>
 
