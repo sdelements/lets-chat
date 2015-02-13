@@ -47,10 +47,16 @@
 
 .lcb-room-heading {
     line-height: 100%;
+    padding-right: 35px;
     margin: 0;
     .flex-display;
     @media (max-width: @screen-xs-max) {
         font-size: 20px;
+    }
+    .name,
+    .slug {
+        max-width: 50%;
+        .text-overflow;
     }
     .slug {
         font-size: 24px;
