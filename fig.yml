@@ -13,4 +13,4 @@ app:
 
 # Mongo Database
 db:
-  image: mongo
+  image: mongo:latest
