@@ -7,7 +7,7 @@
         "lets",
         "chat",
         "xmpp"
-    ]
+    ],
     "addons": [
         "mongolab"
     ],
