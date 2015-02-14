@@ -5,7 +5,8 @@ var _ = require('lodash'),
     Stanza = require('node-xmpp-core').Stanza,
     MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config'),
-    helper = require('./../helper');
+    helper = require('./../helper'),
+    bcrypt = require('bcryptjs');
 
 module.exports = MessageProcessor.extend({
 
@@ -31,7 +32,7 @@ module.exports = MessageProcessor.extend({
             }
 
             if (room) {
-                return this.handleJoin(room, cb);
+                return this.checkPassword(room, cb);(room, cb);
             }
 
             if (!settings.xmpp.roomCreation) {
@@ -42,17 +43,20 @@ module.exports = MessageProcessor.extend({
                 if (err) {
                     return cb(err);
                 }
-                this.handleJoin(room, cb);
+                this.checkPassword(room, cb);(room, cb);
             }.bind(this));
+
         }.bind(this));
     },
 
     createRoom: function(roomSlug, cb) {
+        var password = this.getPassword();
         var options = {
             owner: this.connection.user.id,
             name: roomSlug,
             slug: roomSlug,
-            description: ''
+            description: '',
+            password: password
         };
         this.core.rooms.create(options, cb);
     },
@@ -75,6 +79,82 @@ module.exports = MessageProcessor.extend({
         });
 
         cb(null, presence);
+    },
+
+    _getXNode: function() {
+        if(!this.xNode) {
+            this.xNode = _.find(this.request.children, function(child) {
+                return child.name === 'x';
+            });
+        }
+        return this.xNode;
+    },
+
+    getHistoryNode: function() {
+        var xNode = this._getXNode();
+        if (xNode) {
+            return _.find(xNode.children, function(child) {
+                return child.name === 'history';
+            });
+        }
+    },
+
+    getPassword: function() {
+        var xNode = this._getXNode();
+        if (xNode) {
+            var passwordNode = _.find(xNode.children, function(child) {
+                return child.name === 'password';
+            });
+            if(passwordNode && passwordNode.children) {
+                return passwordNode.children[0];
+            }
+        }
+    },
+
+    checkPassword: function(room, cb) {
+        if(!!room.password) {
+            var password = this.getPassword();
+            if(!password) {
+                return this.sendErrorPassword(room, cb);
+            }
+            bcrypt.compare(password, room.password, function(err, isMatch) {
+                if(err) {
+                    return cb(err);
+                }
+                if(!!isMatch) {
+                    this.handleJoin(room, cb);
+                } else {
+                    this.sendErrorPassword(room, cb);
+                }
+            }.bind(this));
+        } else {
+            this.handleJoin(room, cb);
+        }
+    },
+
+    sendErrorPassword: function(room, cb) {
+        var connection = this.client.conn;
+        var username = connection.user.username;
+
+        //from http://xmpp.org/extensions/xep-0045.html#enter-pw
+        var presence = this.Presence({
+            type: 'error'
+        });
+
+        presence
+            .c('x', {
+                xmlns:'http://jabber.org/protocol/muc'
+            });
+        presence
+            .c('error', {
+                type: 'auth',
+                by: helper.getRoomJid(room.slug)
+            })
+            .c('not-authorized', {
+                xmlns: 'urn:ietf:params:xml:ns:xmpp-stanzas'
+            });
+
+        return cb(null, presence);
     },
 
     handleJoin: function(room, cb) {
@@ -116,16 +196,7 @@ module.exports = MessageProcessor.extend({
 
         subject.c('subject').t(room.name + ' | ' + room.description);
 
-        var xNode = _.find(this.request.children, function(child) {
-            return child.name === 'x';
-        });
-
-        var historyNode;
-        if (xNode) {
-            historyNode = _.find(xNode.children, function(child) {
-                return child.name === 'history';
-            });
-        }
+        var historyNode = this.getHistoryNode();
 
         if (!historyNode ||
             historyNode.attrs.maxchars === 0 ||
