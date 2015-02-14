@@ -179,6 +179,7 @@
         var room = this.rooms.get(id);
         if (room) {
             room.set('joined', false);
+            room.lastMessage.clear();
         }
         this.socket.emit('rooms:leave', id);
         if (id === this.rooms.current.get('id')) {
