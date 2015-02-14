@@ -10,6 +10,7 @@ module.exports = {
         var filePath = file._id + '/' + encodeURIComponent(file.name);
         var url = 'https://' + settings.s3.bucket + '.s3-' +
                   settings.s3.region + '.amazonaws.com/' + filePath;
+        return url;
     },
 
     save: function(options, callback) {
@@ -26,19 +27,17 @@ module.exports = {
         });
 
         client.putFile(file.path, '/' + decodeURIComponent(filePath), {
-            'Content-Type': file.type,
+            'Content-Type': file.mimetype,
             'Content-Length': file.size
         }, function (err, response) {
             if (err) {
                 return callback(err);
             }
-
             if (response.statusCode !== 200) {
                 return callback(
-                    'There was a problem with the server\'s S3 credentials.'
+                    'S3: There was a problem uploading or authenticating. ' + response.statusCode
                 );
             }
-
             var url = 'https://' + client.urlBase + '/' + filePath;
             callback(null, url, doc);
         });
