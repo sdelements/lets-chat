@@ -2,6 +2,12 @@
     "name": "Let's Chat",
     "description": "Self-hosted chat app for small teams",
     "repository": "https://github.com/sdelements/lets-chat",
+    "logo": "http://i.imgur.com/eXTLHNN.png",
+    "keywords": [
+        "lets",
+        "chat",
+        "xmpp"
+    ]
     "addons": [
         "mongolab"
     ],
