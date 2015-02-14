@@ -7,6 +7,7 @@
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId,
     uniqueValidator = require('mongoose-unique-validator'),
+    bcrypt = require('bcryptjs'),
     settings = require('./../config');
 
 var RoomSchema = new mongoose.Schema({
@@ -47,11 +48,30 @@ var RoomSchema = new mongoose.Schema({
     lastActive: {
         type: Date,
         default: Date.now
+    },
+    password: {
+        type: String,
+        required: false//only for passworded room
     }
 });
 
 RoomSchema.virtual('handle').get(function() {
     return this.slug || this.name.replace(/\W/i, '');
+});
+
+RoomSchema.pre('save', function(next) {
+    var room = this;
+    if (!room.password || !room.isModified('password')) {
+        return next();
+    }
+
+    bcrypt.hash(room.password, 10, function(err, hash) {
+        if (err) {
+            return next(err);
+        }
+        room.password = hash;
+        next();
+    });
 });
 
 RoomSchema.plugin(uniqueValidator, {
