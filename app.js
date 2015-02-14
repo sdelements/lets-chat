@@ -183,7 +183,7 @@ function startApp() {
         http.createServer(redirectServer).listen(settings.http.port || 5000);
     }
 
-    app.listen(port);
+    app.listen(port, settings.http.host || '0.0.0.0');
 
     //
     // XMPP
