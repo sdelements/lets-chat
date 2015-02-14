@@ -47,8 +47,7 @@
                 swal("Unable to create room",
                      "Room slugs can only contain lower case letters, numbers or underscores!",
                      "error");
-            }
-            else if (room && room.id) {
+            } else if (room && room.id) {
                 that.rooms.add(room);
                 that.switchRoom(room.id);
             }
