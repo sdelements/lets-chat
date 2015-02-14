@@ -9,6 +9,7 @@ var xmpp = require('node-xmpp-server'),
 
 function MessageProcessor(client, request, core) {
     this.client = client;
+    this.connection = client.conn;
     this.request = request;
     this.core = core;
 

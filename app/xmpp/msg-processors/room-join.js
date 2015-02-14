@@ -23,34 +23,62 @@ module.exports = MessageProcessor.extend({
             connection = this.client.conn;
 
         // TODO: Do we need to track nickname for each individual room?
-        connection.nickname = nickname;
+        this.connection.nickname = nickname;
 
         this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
                 return cb(err);
             }
-            if (!room) {
-                var options = {
-                    owner: connection.user.id,
-                    name: roomSlug,
-                    slug: roomSlug,
-                    description: ''
-                };
-                this.core.rooms.create(options, function(err, room) {
-                    if (err) {
-                        return cb(err);
-                    }
-                    this.handleJoin(room, cb);
-                }.bind(this));
-            } else {
-                this.handleJoin(room, cb);
+
+            if (room) {
+                return this.handleJoin(room, cb);
             }
+
+            if (!settings.xmpp.roomCreation) {
+                return this.cantCreateRoom(roomSlug, cb);
+            }
+
+            this.createRoom(roomSlug, function(err, room) {
+                if (err) {
+                    return cb(err);
+                }
+                this.handleJoin(room, cb);
+            }.bind(this));
         }.bind(this));
     },
 
+    createRoom: function(roomSlug, cb) {
+        var options = {
+            owner: this.connection.user.id,
+            name: roomSlug,
+            slug: roomSlug,
+            description: ''
+        };
+        this.core.rooms.create(options, cb);
+    },
+
+    cantCreateRoom: function(roomSlug, cb) {
+        var presence = this.Presence({
+            from: helper.getRoomJid(roomSlug, 'admin'),
+            type: 'error'
+        });
+
+        presence.c('x', {
+            xmlns:'http://jabber.org/protocol/muc'
+        });
+
+        presence.c('error', {
+            by: helper.getRoomJid(roomSlug),
+            type: 'cancel'
+        }).c('not-allowed', {
+            xmlns: 'urn:ietf:params:xml:ns:xmpp-stanzas'
+        });
+
+        cb(null, presence);
+    },
+
     handleJoin: function(room, cb) {
-        var connection = this.client.conn;
-        var username = connection.user.username;
+        var username = this.connection.user.username;
 
         var proom = this.core.presence.rooms.get(room._id);
         var usernames = proom ? proom.getUsernames() : [];
@@ -60,7 +88,7 @@ module.exports = MessageProcessor.extend({
         if (i > -1) {
             usernames.splice(i, 1);
         }
-        usernames.push(connection.nickname);
+        usernames.push(this.connection.nickname);
 
         var presences = usernames.map(function(username) {
 
@@ -103,7 +131,7 @@ module.exports = MessageProcessor.extend({
             historyNode.attrs.maxchars === 0 ||
             historyNode.attrs.maxchars === '0') {
                 // Send no history
-                this.core.presence.join(connection, room._id, room.slug);
+                this.core.presence.join(this.connection, room._id, room.slug);
                 return cb(null, presences, subject);
         }
 
@@ -158,7 +186,7 @@ module.exports = MessageProcessor.extend({
 
             }, this);
 
-            this.core.presence.join(connection, room._id, room.slug);
+            this.core.presence.join(this.connection, room._id, room.slug);
             cb(null, presences, msgs, subject);
 
         }.bind(this));

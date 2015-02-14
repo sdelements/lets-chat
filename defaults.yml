@@ -16,6 +16,7 @@ https:
 
 xmpp:
   enable: false
+  roomCreation: false
   debug:
     handled: false
     unhandled: false
