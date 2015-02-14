@@ -105,14 +105,20 @@ MessageProcessor.prototype.send = function(msgs) {
 MessageProcessor.extend = function(options) {
     var processor = function() {
         MessageProcessor.apply(this, arguments);
-        this.if = this.if.bind(this);
-        this.then = this.then.bind(this);
+
+        _.forEach(this.methods, function(key) {
+            this[key] = this[key].bind(this);
+        }, this);
     };
 
     util.inherits(processor, MessageProcessor);
 
-    processor.prototype.if = options.if;
-    processor.prototype.then = options.then;
+    processor.prototype.methods = [];
+
+    _.forEach(options, function(value, key) {
+        processor.prototype.methods.push(key);
+        processor.prototype[key] = value;
+    });
 
     return processor;
 };
