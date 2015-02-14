@@ -41,7 +41,7 @@ if (typeof exports !== 'undefined') {
     }
 
     function mentions(text) {
-        var mentionPattern = /\B@(\w+)(?!@)\b/g;
+        var mentionPattern = /\B@([\w\.]+)(?!@)\b/g;
         return text.replace(mentionPattern, '<strong>@$1</strong>');
     }
 
