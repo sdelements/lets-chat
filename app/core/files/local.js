@@ -2,7 +2,37 @@ var fs = require('fs'),
     path = require('path'),
     settings = require('./../../config').files;
 
-var moveFile = function(path, newPath, callback) {
+function LocalFiles(options) {
+    this.options = options;
+
+    this.getUrl = this.getUrl.bind(this);
+    this.save = this.save.bind(this);
+}
+
+LocalFiles.prototype.getUrl = function(file) {
+    return path.resolve(this.options.dir + '/' + file._id);
+};
+
+LocalFiles.prototype.save = function(options, callback) {
+    var file = options.file,
+        doc = options.doc,
+        fileFolder = doc._id,
+        filePath = fileFolder + '/' + encodeURIComponent(doc.name),
+        newPath = this.options.dir + '/' + fileFolder;
+
+    this.moveFile(file.path, newPath, function(err) {
+
+        if (err) {
+            return callback(err);
+        }
+
+        // Let the clients know about the new file
+        var url = '/files/' + filePath;
+        callback(null, url, doc);
+    });
+};
+
+LocalFiles.prototype.moveFile = function(path, newPath, callback) {
     fs.readFile(path, function(err, data) {
         if (err) {
             return callback(err);
@@ -14,31 +44,4 @@ var moveFile = function(path, newPath, callback) {
     });
 };
 
-module.exports = {
-
-    enabled: settings.enable && settings.provider === 'local',
-
-    getUrl: function(file) {
-        return path.resolve(settings.local.dir + '/' + file._id);
-    },
-
-    save: function(options, callback) {
-        var file = options.file,
-            doc = options.doc,
-            fileFolder = doc._id,
-            filePath = fileFolder + '/' + encodeURIComponent(doc.name);
-
-        moveFile(file.path,
-                settings.local.dir + '/' + fileFolder, function(err) {
-
-            if (err) {
-                return callback(err);
-            }
-
-            // Let the clients know about the new file
-            var url = '/files/' + filePath;
-            callback(null, url, doc);
-        });
-    }
-
-};
+module.exports = LocalFiles;

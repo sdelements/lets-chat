@@ -5,24 +5,38 @@ var fs = require('fs'),
     mongoose = require('mongoose'),
     helpers = require('./helpers'),
     settings = require('./../config').files,
-    enabled = settings.enable,
-    provider = _.find([
-        require('./files/local'),
-        require('./files/s3')
-    ], function(provider) { return provider.enabled; });
+    enabled = settings.enable;
 
 function FileManager(options) {
     this.core = options.core;
+
+    if (!enabled) {
+        return;
+    }
+
+    var Provider;
+
+    if (settings.provider === 'local') {
+        Provider = require('./files/local');
+    } else {
+        var pkg = require('lets-chat-' + settings.provider);
+        Provider = pkg && pkg.files;
+        if (!Provider) {
+            throw 'Module "' + pkgName + '"" is not a files provider';
+        }
+    }
+
+    this.provider = new Provider(settings[settings.provider]);
 }
 
 FileManager.prototype.create = function(options, cb) {
-    var File = mongoose.model('File'),
-    Room = mongoose.model('Room'),
-    User = mongoose.model('User');
-
     if (!enabled) {
         return cb('Files are disabled.');
     }
+
+    var File = mongoose.model('File'),
+    Room = mongoose.model('Room'),
+    User = mongoose.model('User');
 
     if (settings.restrictTypes &&
         settings.allowedTypes &&
@@ -52,7 +66,7 @@ FileManager.prototype.create = function(options, cb) {
             size: options.file.size,
             room: options.room
         }).save(function(err, savedFile) {
-            provider.save({file: options.file, doc: savedFile}, function(err) {
+            this.provider.save({file: options.file, doc: savedFile}, function(err) {
                 if (err) {
                     savedFile.remove();
                     return cb(err);
@@ -82,6 +96,10 @@ FileManager.prototype.create = function(options, cb) {
 };
 
 FileManager.prototype.list = function(options, cb) {
+    if (!enabled) {
+        return cb(null, []);
+    }
+
     options = options || {};
 
     options = helpers.sanitizeQuery(options, {
@@ -138,6 +156,12 @@ FileManager.prototype.list = function(options, cb) {
     });
 };
 
-FileManager.getUrl = provider ? provider.getUrl : function(){};
+FileManager.prototype.getUrl = function(file) {
+    if (!enabled) {
+        return;
+    }
+
+    return this.provider.getUrl(file);
+};
 
 module.exports = FileManager;

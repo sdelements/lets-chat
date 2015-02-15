@@ -5,8 +5,7 @@
 'use strict';
 
 var multer = require('multer'),
-    settings = require('./../config').files,
-    coreFiles = require('./../core/files');
+    settings = require('./../config').files;
 
 module.exports = function() {
 
@@ -66,7 +65,7 @@ module.exports = function() {
                     return res.send(400);
                 }
 
-                var url = coreFiles.getUrl(file);
+                var url = core.files.getUrl(file);
                 if (settings.provider === 'local') {
                     res.sendFile(url, {
                         headers: {

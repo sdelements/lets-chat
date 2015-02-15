@@ -13,7 +13,7 @@ A self-hosted chat app for small teams.
 * Mentions (hey @you)
 * Image embeds
 * Code pasting
-* File uploads
+* File uploads (Local / [Amazon S3](https://github.com/sdelements/lets-chat-s3))
 * Transcripts / chat history
 * XMPP Multi-user chat (MUC)
 * Local / [Kerberos](https://github.com/sdelements/lets-chat-kerberos) / [LDAP](https://github.com/sdelements/lets-chat-ldap) authentication
