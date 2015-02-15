@@ -46,12 +46,6 @@ files:
   local:
     dir: uploads
 
-  s3:
-    accessKeyId:
-    secretAccessKey:
-    bucket:
-    region:
-
 auth:
   throttling:
     enable: true
