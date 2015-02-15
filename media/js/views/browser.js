@@ -14,7 +14,9 @@
             'submit .lcb-rooms-add': 'create',
             'keyup .lcb-rooms-browser-filter-input': 'filter',
             'change .lcb-rooms-switch': 'toggle',
-            'click .lcb-rooms-switch-label': 'toggle'
+            'click .lcb-rooms-switch-label': 'toggle',
+            'click .lcb-rooms-list-item-name-password': 'clickPasswordRequired',
+            'submit .lcb-password': 'enterWithPassword',
         },
         initialize: function(options) {
             this.client = options.client;
@@ -47,8 +49,26 @@
             if (!room) {
                 return;
             }
-            (!$input.is(':checked') && this.client.joinRoom(room.id)) ||
+            (!$input.is(':checked') && this.client.joinRoom(room)) ||
                 (this.rooms.get(room.id).get('joined') && this.client.leaveRoom(room.id));
+        },
+        clickPasswordRequired: function(e) {
+            this.lastPasswordedRoomIdClicked = $(e.currentTarget).data('id');
+        },
+        enterWithPassword: function(e) {
+            e.preventDefault();
+            var $target = $(e.currentTarget),
+                password = this.$('.lcb-room-password-required').val(),
+                room = this.rooms.get(this.lastPasswordedRoomIdClicked),
+                $modal = this.$('#lcb-password'),
+                $form = this.$(e.target);
+            room.password = password;
+            var callback = function success() {
+                $modal.modal('hide');
+                $form.trigger('reset');
+                this.lastPasswordedRoomIdClicked = undefined;
+            }.bind(this);
+            this.client.events.trigger('rooms:join', room, true, callback);
         },
         add: function(room) {
             var room = room.toJSON ? room.toJSON() : room,
