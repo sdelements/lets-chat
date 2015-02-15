@@ -1,4 +1,4 @@
-![Let's Chat](http://i.imgur.com/Es2KMi6.png)
+![Let's Chat](http://i.imgur.com/vDbhXul.png)
 
 ![Screenshot](http://i.imgur.com/C4uMD67.png)
 
