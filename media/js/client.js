@@ -39,7 +39,8 @@
         var room = {
             name: data.name,
             slug: data.slug,
-            description: data.description
+            description: data.description,
+            password: data.password
         };
         var callback = data.callback;
         this.socket.emit('rooms:create', room, function(room) {

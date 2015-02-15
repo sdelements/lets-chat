@@ -134,7 +134,8 @@ module.exports = function() {
                     owner: req.user._id,
                     name: req.param('name'),
                     slug: req.param('slug'),
-                    description: req.param('description')
+                    description: req.param('description'),
+                    password: req.param('password')
                 };
 
             core.rooms.create(options, function(err, room) {
