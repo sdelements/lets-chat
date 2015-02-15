@@ -102,6 +102,10 @@ FileManager.prototype.list = function(options, cb) {
 
     options = options || {};
 
+    if (!options.room) {
+        return cb(null, []);
+    }
+
     options = helpers.sanitizeQuery(options, {
         defaults: {
             reverse: true,
@@ -113,11 +117,9 @@ FileManager.prototype.list = function(options, cb) {
     var File = mongoose.model('File'),
         User = mongoose.model('User');
 
-    var find = File.find();
-
-    if (options.room) {
-        find.where('room', options.room);
-    }
+    var find = File.find({
+        room: options.room
+    });
 
     if (options.from) {
         find.where('uploaded').gt(options.from);

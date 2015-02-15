@@ -1,6 +1,5 @@
 var fs = require('fs'),
-    path = require('path'),
-    settings = require('./../../config').files;
+    path = require('path');
 
 function LocalFiles(options) {
     this.options = options;
