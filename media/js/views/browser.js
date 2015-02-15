@@ -107,6 +107,7 @@
                     name: this.$('.lcb-room-name').val().trim(),
                     slug: this.$('.lcb-room-slug').val().trim(),
                     description: this.$('.lcb-room-description').val(),
+                    password: this.$('.lcb-room-password').val(),
                     callback: function success() {
                         $modal.modal('hide');
                         $form.trigger('reset');

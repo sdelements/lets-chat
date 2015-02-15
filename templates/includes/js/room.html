@@ -6,6 +6,9 @@
                     <h2 class="lcb-room-heading">
                         <span class="name">{{name}}</span>
                         <span class="slug">#{{slug}}</span>
+                        {{#if isPassworded}}
+                            <span class="fa fa-lock btn password" title="This room require password to enter."></span>
+                        {{/if}}
                         <a class="btn hidden-xs show-edit-room"
                             title="Edit Room">
                             <i class="fa fa-edit"></i>
