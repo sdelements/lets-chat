@@ -5,7 +5,8 @@
 'use strict';
 
 var _ = require('lodash'),
-    bcrypt = require('bcryptjs');
+    bcrypt = require('bcryptjs'),
+    settings = require('./../config').rooms;
 
 module.exports = function() {
     var app = this.app,
@@ -132,12 +133,15 @@ module.exports = function() {
         },
         create: function(req, res) {
             var options = {
-                    owner: req.user._id,
-                    name: req.param('name'),
-                    slug: req.param('slug'),
-                    description: req.param('description'),
-                    password: req.param('password')
-                };
+                owner: req.user._id,
+                name: req.param('name'),
+                slug: req.param('slug'),
+                description: req.param('description'),
+                password: req.param('password')
+            };
+            if(!settings.passworded) {
+                options.password = undefined;
+            }
 
             core.rooms.create(options, function(err, room) {
                 if (err) {
