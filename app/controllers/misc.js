@@ -19,7 +19,7 @@ module.exports = function() {
             res.sendFile(path.resolve(__dirname, '../misc/robots.txt'));
             return;
         }
-        res.send(404);
+        res.sendStatus(404);
     });
 
 };
