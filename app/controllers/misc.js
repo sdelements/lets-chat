@@ -17,9 +17,9 @@ module.exports = function() {
     app.get('/robots.txt', function(req, res) {
         if (settings.misc && settings.misc.noRobots) {
             res.sendFile(path.resolve(__dirname, '../misc/robots.txt'));
-        } else {
-            res.send(404);
+            return;
         }
+        res.send(404);
     });
 
 };
