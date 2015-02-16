@@ -15,11 +15,11 @@ module.exports = function() {
     // Routes
     //
     app.get('/robots.txt', function(req, res) {
-        if (settings.misc && settings.misc.noRobots) {
-            res.sendFile(path.resolve(__dirname, '../misc/robots.txt'));
-            return;
+        if (!settings.noRobots) {
+            return res.sendStatus(404);
         }
-        res.sendStatus(404);
+        
+        res.sendFile(path.resolve(__dirname, '../misc/robots.txt'));
     });
 
 };
