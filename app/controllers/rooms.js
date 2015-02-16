@@ -139,7 +139,7 @@ module.exports = function() {
                 description: req.param('description'),
                 password: req.param('password')
             };
-            if(!settings.passworded) {
+            if(!settings.passwords) {
                 options.password = undefined;
             }
 

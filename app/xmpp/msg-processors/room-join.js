@@ -58,7 +58,7 @@ module.exports = MessageProcessor.extend({
             description: '',
             password: password
         };
-        if(!settings.rooms.passworded) {
+        if(!settings.rooms.passwords) {
             options.password = undefined;
         }
         this.core.rooms.create(options, cb);
