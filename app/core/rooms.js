@@ -40,6 +40,7 @@ RoomManager.prototype.update = function(roomId, options, cb) {
         // DO NOT UPDATE SLUG
         // room.slug = options.slug;
         room.description = options.description;
+        room.password = options.password;
         room.save(function(err, room) {
             if (err) {
                 console.error(err);
