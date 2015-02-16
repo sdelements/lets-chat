@@ -148,7 +148,7 @@
             if (!!data.password) {
                 swal({
                     title: 'Are you sure?',
-                    text: 'Think to share the password "'+data.password+'" with others users.',
+                    text: 'Users can share this password with other users (who were not invited by you).',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, I know it!' 
