@@ -88,7 +88,7 @@ RoomSchema.method('toJSON', function() {
         lastActive: room.lastActive,
         created: room.created,
         owner: room.owner,
-        isPassworded: !!this.password
+        hasPassword: !!this.password
         //password : never send password to client !
     };
  });
