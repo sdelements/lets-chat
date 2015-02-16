@@ -58,3 +58,5 @@ auth:
     enableRegistration: true
     passwordRegex: ^.{8,64}$
     salt: secretsauce # Required when upgrading from version < 0.3
+
+noRobots: true # Serve robots.txt with disallow
