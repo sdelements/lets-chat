@@ -6,6 +6,7 @@ env: development # development / production
 
 http:
   enable: true
+  host:
   port: 5000
 
 https:
