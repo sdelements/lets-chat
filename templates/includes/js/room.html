@@ -9,10 +9,12 @@
                         {{#if hasPassword}}
                             <span class="fa fa-lock btn password" title="This room require password to enter."></span>
                         {{/if}}
-                        <a class="btn hidden-xs show-edit-room"
-                            title="Edit Room">
-                            <i class="fa fa-edit"></i>
-                        </a>
+                        {{#if iAmOwner}}
+                            <a class="btn hidden-xs show-edit-room"
+                                title="Edit Room">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        {{/if}}
                         <a class="btn hidden-xs" title="Chat History"
                             href="./transcript?room={{ id }}" target="_blank">
                             <i class="fa fa-history"></i>

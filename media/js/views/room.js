@@ -25,6 +25,7 @@
         },
         initialize: function(options) {
             this.client = options.client;
+            this.model.set('iAmOwner', this.model.get('owner') === this.client.user.id);
             this.template = options.template;
             this.messageTemplate = Handlebars.compile($('#template-message').html());
             this.render();

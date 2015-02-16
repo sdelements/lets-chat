@@ -159,7 +159,8 @@ module.exports = function() {
                     name: req.param('name'),
                     slug: req.param('slug'),
                     description: req.param('description'),
-                    password: req.param('password')
+                    password: req.param('password'),
+                    user: req.user
                 };
 
             core.rooms.update(roomId, options, function(err, room) {
