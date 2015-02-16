@@ -93,6 +93,15 @@
     };
     Client.prototype.updateRoom = function(room) {
         this.socket.emit('rooms:update', room);
+        //
+        // update room to localstorage so we can reopen it on refresh
+        //
+        var savedRooms = store.get('openrooms');
+        _.remove(savedRooms, function(r) { 
+            return r.id === room.id; 
+        });
+        savedRooms.push({id: room.id, password: room.password});
+        store.set('openrooms', savedRooms);
     };
     Client.prototype.roomUpdate = function(resRoom) {
         var room = this.rooms.get(resRoom.id);

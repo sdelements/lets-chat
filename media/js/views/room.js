@@ -224,10 +224,16 @@
             }
             var name = this.$('.edit-room input[name="name"]').val();
             var description = this.$('.edit-room textarea[name="description"]').val();
+            var password = this.$('.edit-room input[name="password"]').val();
+            if(this.model.get('hasPassword') && !password) {
+                swal('Password is required!');
+                return;
+            }
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
                 name: name,
-                description: description
+                description: description,
+                password: password
             });
             this.$('.lcb-room-edit').modal('hide');
         },

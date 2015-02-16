@@ -87,6 +87,16 @@
                                 "description">{{description}}</textarea>
                             </div>
                         </div>
+                        {{#if hasPassword}}
+                            <div class="form-group">
+                                <label class=
+                                "control-label col-sm-4">Password</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" name=
+                                    "password" type="password" value="{{password}}">
+                                </div>
+                            </div>
+                        {{/if}}
                         <p class="response" style="display: none;"></p>
                     </div>
                     <div class="modal-footer">
