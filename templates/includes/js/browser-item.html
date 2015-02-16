@@ -1,6 +1,6 @@
 <script type="text/x-handlebars-template" id="template-room-browser-item">
     <li class="lcb-rooms-list-item" data-id="{{id}}">
-        {{#if isPassworded}}
+        {{#if hasPassword}}
             <span class="lcb-rooms-list-item-password fa fa-lock"></span>
             <a class="lcb-rooms-list-item-name lcb-rooms-list-item-name-password" href="#!/password" data-id="{{id}}" data-toggle="modal" data-target="#lcb-password">{{name}}</a>
         {{else}}

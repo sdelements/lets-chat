@@ -120,6 +120,7 @@
             });
         },
         create: function(e) {
+            var that = this;
             e.preventDefault();
             var $modal = this.$('#lcb-add-room'),
                 $form = this.$(e.target),
@@ -143,6 +144,21 @@
                 $slug.parent().addClass('has-error');
                 return;
             }
+            // remind the user, that users may share the password with others
+            if (!!data.password) {
+                swal({
+                    title: 'Are you sure?',
+                    text: 'Think to share the password '+data.password+' with others users.',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, I know it!',
+                    closeOnConfirm: false 
+                }, function(){
+                    that.client.events.trigger('rooms:create', data);
+                });
+                return;
+            }
+
             this.client.events.trigger('rooms:create', data);
         },
         addUser: function(user, room) {
