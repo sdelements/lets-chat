@@ -148,11 +148,10 @@
             if (!!data.password) {
                 swal({
                     title: 'Are you sure?',
-                    text: 'Think to share the password '+data.password+' with others users.',
+                    text: 'Think to share the password "'+data.password+'" with others users.',
                     type: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes, I know it!',
-                    closeOnConfirm: false 
+                    confirmButtonText: 'Yes, I know it!' 
                 }, function(){
                     that.client.events.trigger('rooms:create', data);
                 });
