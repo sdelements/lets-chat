@@ -173,6 +173,11 @@ function startApp() {
     var port = httpsEnabled && settings.https.port ||
                httpEnabled && settings.http.port;
 
+    var host = httpsEnabled && settings.https.host ||
+               httpEnabled && settings.http.host || '0.0.0.0' ;
+
+
+
     if (httpsEnabled && httpEnabled) {
         // Create an HTTP -> HTTPS redirect server
         var redirectServer = express();
@@ -183,7 +188,7 @@ function startApp() {
         http.createServer(redirectServer).listen(settings.http.port || 5000);
     }
 
-    app.listen(port, settings.http.host || '0.0.0.0');
+    app.listen(port, host);
 
     //
     // XMPP

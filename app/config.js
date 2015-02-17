@@ -69,14 +69,14 @@ if (process.env.NODE_ENV) {
     settings.env = process.env.NODE_ENV;
 }
 
-// Override port variable - if using Heroku
-if (process.env.PORT) {
-    settings.http.port = process.env.PORT;
-}
+// Override host and port variable - if using Heroku or Openshift
+settings.http.host = process.env.OPENSHIFT_NODEJS_IP || settings.http.host ;
+settings.http.port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || settings.http.port ;
 
-// Override database URI - if using a Heroku add-on
+// Override database URI - if using a Heroku add-on or Openshirt
 settings.database.uri = process.env.MONGOHQ_URL ||
                         process.env.MONGOLAB_URI ||
+                        process.env.OPENSHIFT_MONGODB_DB_URL ||
                         settings.database.uri;
 
 module.exports = settings;
