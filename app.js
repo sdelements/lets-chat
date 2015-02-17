@@ -174,7 +174,7 @@ function startApp() {
                httpEnabled && settings.http.port;
 
     var host = httpsEnabled && settings.https.host ||
-               httpEnabled && settings.http.host || '0.0.0.0' ;
+               httpEnabled && settings.http.host || '0.0.0.0';
 
 
 
@@ -185,7 +185,8 @@ function startApp() {
             var urlPort = port === 80 ? '' : ':' + port;
             res.redirect('https://' + req.hostname + urlPort + req.path);
         });
-        http.createServer(redirectServer).listen(settings.http.port || 5000);
+        http.createServer(redirectServer)
+            .listen(settings.http.port || 5000, host);
     }
 
     app.listen(port, host);

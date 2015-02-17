@@ -11,6 +11,7 @@ http:
 
 https:
   enable: false
+  host:
   port: 5001
   key: key.pem
   cert: certificate.pem
