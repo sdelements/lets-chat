@@ -2,7 +2,7 @@
 
 ![Screenshot](http://i.imgur.com/C4uMD67.png)
 
-A self-hosted chat app for small teams.
+A self-hosted chat app for small teams built by [Security Compass](http://securitycompass.com/).
 
 ## Features and Stuff
 
