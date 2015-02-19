@@ -22,11 +22,11 @@ function mergeEnvSettings(settings) {
             });
         }
         // YAML compatible boolean values
-        else if (/^(n|N|no|No|NO|false|False|FALSE|off|Off|OFF)$/.test(value)) {
-            return true;
-        }
-        else if (/^(n|N|no|No|NO|false|False|FALSE|off|Off|OFF)$/.test(value)) {
+        else if (/^(n|no|false|off)$/i.test(value)) {
             return false;
+        }
+        else if (/^(y|yes|true|on)$/i.test(value)) {
+            return true;
         }
         else if (/^[+-]?\d+.?\d*$/.test(value) &&
                  !isNaN(parseInt(value, 10))) {
