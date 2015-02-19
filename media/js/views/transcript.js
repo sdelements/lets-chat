@@ -7,6 +7,10 @@
     window.LCB.TranscriptView = Backbone.View.extend({
         el: '#transcript',
 
+        events: {
+            'keyup #search-query': 'search'
+        },
+
         initialize: function(options) {
             this.options = options;
             this.room = options.room;
@@ -14,6 +18,8 @@
             this.$messages = this.$('.messages');
             this.messageTemplate =
                 Handlebars.compile($('#template-message').html());
+
+            this.$query = this.$('#search-query')
 
             var that = this;
             $.when(
@@ -61,6 +67,11 @@
 
         },
 
+        search: _.debounce(function() {
+            this.query = this.$query.val()
+            this.loadTranscript();
+        }, 1000),
+
         loadTranscript: function() {
             this.clearMessages();
 
@@ -69,6 +80,7 @@
                 room: this.room.id,
                 from: moment(this.startDate).utc().toISOString(),
                 to: moment(this.endDate).utc().toISOString(),
+                query: this.query,
                 expand: 'owner',
                 reverse: false,
                 take: 5000
