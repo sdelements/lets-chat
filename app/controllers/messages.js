@@ -66,6 +66,7 @@ module.exports = function() {
                     since_id: req.param('since_id'),
                     from: req.param('from'),
                     to: req.param('to'),
+                    query: req.param("query"),
                     reverse: req.param('reverse'),
                     skip: req.param('skip'),
                     take: req.param('take'),

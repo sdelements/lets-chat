@@ -30,7 +30,7 @@ var MessageSchema = new mongoose.Schema({
     }
 });
 
-MessageSchema.index({ room: 1, posted: -1, _id: 1 });
+MessageSchema.index({ text: 'text', room: 1, posted: -1, _id: 1 });
 
 // EXPOSE ONLY CERTAIN FIELDS
 // This helps ensure that the client gets

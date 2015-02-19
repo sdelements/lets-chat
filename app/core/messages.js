@@ -77,6 +77,10 @@ MessageManager.prototype.list = function(options, cb) {
         find.where('posted').lte(options.to);
     }
 
+    if (options.query) {
+        find = find.find({$text: {$search: options.query}});
+    }
+
     if (options.expand) {
         var includes = options.expand.split(',');
 
