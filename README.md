@@ -27,4 +27,4 @@ See the [wiki](https://github.com/sdelements/lets-chat/wiki) for instructions on
 
 ## Upgrading from 0.2.x
 
-Release 0.3.0+ uses a new settings file called ```settings.yml```, just move over your old ```settings.js``` options and run ```npm run-script migrate```.
+Release 0.3.0+ uses a new settings file called ```settings.yml```, just move over your old ```settings.js``` options and run ```npm run migrate```.
