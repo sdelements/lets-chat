@@ -11,13 +11,13 @@
   gravatar: a74b7ad4ae60e8189e06b572e78366de
   github: geoffwhittington
 
-- name: Shawn
-  gravatar: ffed00e1442e29f7544753ac54223fe3
-  github: notsrg
-
 - name: Hanif
   gravatar: 49e001e5a211aa60c2195c5567a49bfd
   github: hanifvirani
+
+- name: Shawn
+  gravatar: ffed00e1442e29f7544753ac54223fe3
+  github: notsrg
 
 - name: Ram
   gravatar: bfa5bfae39ce7bdd1e0f385c961d4afa
