@@ -297,6 +297,7 @@
                 id: user.id
             });
             target && target.set(user);
+            room.trigger("user:update", user);
         }, this);
     };
     Client.prototype.getUsersSync = function() {

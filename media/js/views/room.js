@@ -31,6 +31,7 @@
             this.model.on('messages:new', this.addMessage, this);
             this.model.on('change', this.updateMeta, this);
             this.model.on('remove', this.goodbye, this);
+            this.model.on("user:update", this.updateUser, this);
             //
             // Subviews
             //
@@ -358,6 +359,9 @@
         upload: function(e) {
             e.preventDefault();
             this.model.trigger('upload:show', this.model);
+        },
+        updateUser : function(user) {
+          this.$messages.find(".lcb-message[data-owner={0}] .lcb-message-name .lcb-room-poke".replace("{0}", user.id)).html(user.displayName);
         }
     });
 
