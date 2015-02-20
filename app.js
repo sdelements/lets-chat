@@ -214,7 +214,7 @@ mongoose.connect(settings.database.uri, function(err) {
             console.log('Ensure you backup your database first.');
             console.log('');
             console.log(
-                'Run the following command: ' + 'npm run-script migrate'.yellow
+                'Run the following command: ' + 'npm run migrate'.yellow
             );
 
             return process.exit();
