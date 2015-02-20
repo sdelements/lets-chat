@@ -112,7 +112,7 @@
                 id = 'list';
             }
             var $pane = this.$el.find('.lcb-pane[data-id=' + id + ']');
-            $pane.show().siblings().hide();
+            $pane.removeClass('hide').siblings().addClass('hide');
             $(window).width() > 767 && $pane.find('[autofocus]').focus();
             this.views[id] && this.views[id].scrollMessages(true);
         },

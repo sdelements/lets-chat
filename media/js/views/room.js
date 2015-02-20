@@ -320,7 +320,7 @@
             return this.scrollLocked;
         },
         scrollMessages: function(force) {
-            if (!force && !this.scrollLocked) {
+            if ((!force && !this.scrollLocked) || this.$el.hasClass('hide')) {
                 return;
             }
             this.$messages[0].scrollTop = this.$messages[0].scrollHeight;
