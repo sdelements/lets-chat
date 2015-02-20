@@ -61,6 +61,7 @@
     "bcryptjs": "~2.1.0",
     "body-parser": "^1.11.0",
     "colors": "~1.0.3",
+    "commander": "2.6.0",
     "compression": "^1.4.0",
     "connect-assets": "^4.6.0",
     "connect-mongo": "^0.7.0",

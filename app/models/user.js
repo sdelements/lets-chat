@@ -83,6 +83,10 @@ var UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    active: {
+        type: Boolean,
+        default: true
+    },
     status: {
         type: String,
         trim: true
@@ -229,6 +233,11 @@ UserSchema.statics.authenticate = function(identifier, password, cb) {
         // Is this a local user?
         if (user.provider !== 'local') {
             return cb(null, null, 0);
+        }
+
+        // (Is the user active?
+        if (!user.active) {
+            return cb(null, null, 1);
         }
 
         // Is password okay?
