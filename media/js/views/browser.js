@@ -71,7 +71,7 @@
             var that = this,
                 $items = this.$('.lcb-rooms-list-item');
             // We only care about other users
-            if (this.$el.is(':visible') && model && model.id === this.client.user.id)
+            if (this.$el.hasClass('hide') && model && model.id === this.client.user.id)
                 return;
             $items.sort(function(a, b){
                 var ar = that.rooms.get($(a).data('id')),
