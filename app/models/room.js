@@ -37,6 +37,10 @@ var RoomSchema = new mongoose.Schema({
 		ref: 'User',
         required: true
     },
+    participants: [{ // We can have an array per role
+		type: ObjectId,
+		ref: 'User'
+	}],
 	messages: [{
 		type: ObjectId,
 		ref: 'Message'
@@ -76,6 +80,48 @@ RoomSchema.pre('save', function(next) {
 
 RoomSchema.plugin(uniqueValidator, {
     message: 'Expected {PATH} to be unique'
+});
+
+RoomSchema.method('canJoin', function(options, cb) {
+    var userId = options.userId,
+        password = options.password,
+        saveMembership = options.saveMembership;
+
+    if(!this.password) {
+        return cb(null, true);
+    }
+
+    var isInArray = this.participants.some(function(participant) {
+        return participant.equals(userId);
+    });
+
+    if (isInArray) {
+        return cb(null, true);
+    }
+
+    bcrypt.compare(password || '', this.password, function(err, isMatch) {
+        if(err) {
+            return cb(err);
+        }
+
+        if (!isMatch) {
+            return cb(null, false);
+        }
+
+        if (!saveMembership) {
+            return cb(null, true);
+        }
+
+        this.participants.push(userId);
+
+        this.save(function(err) {
+            if(err) {
+                return cb(err);
+            }
+
+            cb(null, true);
+        });
+    });
 });
 
 RoomSchema.method('toJSON', function() {

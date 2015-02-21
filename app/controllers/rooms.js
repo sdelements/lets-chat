@@ -5,7 +5,6 @@
 'use strict';
 
 var _ = require('lodash'),
-    bcrypt = require('bcryptjs'),
     settings = require('./../config').rooms;
 
 module.exports = function() {
@@ -193,53 +192,37 @@ module.exports = function() {
             });
         },
         join: function(req, res) {
-            var roomId = req.data.roomId;
-            core.rooms.get(roomId, function(err, room) {
+            var options = {
+                id: req.param('roomId'),
+                userId: req.user._id,
+                password: req.param('password'),
+                saveMembership: true
+            };
+
+            core.rooms.canJoin(options, function(err, room, canJoin) {
                 if (err) {
                     console.error(err);
                     return res.sendStatus(400);
                 }
 
                 if (!room) {
-                    return res.sendStatus(400);
+                    return res.sendStatus(404);
                 }
 
-                var password = req.data.password;
-                if(!!room.password && !password) {
+                if(!canJoin) {
                     return res.status(403).json({
                         status: 'error',
                         message: 'password required',
                         errors: 'password required'
                     });
-                } else if(!!room.password && password) {
-                    bcrypt.compare(password, room.password, function(err, isMatch) {
-                        if(err) {
-                            console.error(err);
-                            return res.sendStatus(400);
-                        }
-                        if(!!isMatch) {
-                            var user = req.user.toJSON();
-                            user.room = room._id;
-
-                            core.presence.join(req.socket.conn, room._id, room.slug);
-                            req.socket.join(room._id);
-                            res.json(room.toJSON());
-                        } else {
-                            return res.status(403).json({
-                                status: 'error',
-                                message: 'password required',
-                                errors: 'password required'
-                            });
-                        }
-                    });
-                } else {
-                    var user = req.user.toJSON();
-                    user.room = room._id;
-
-                    core.presence.join(req.socket.conn, room._id, room.slug);
-                    req.socket.join(room._id);
-                    res.json(room.toJSON());
                 }
+
+                var user = req.user.toJSON();
+                user.room = room._id;
+
+                core.presence.join(req.socket.conn, room._id, room.slug);
+                req.socket.join(room._id);
+                res.json(room.toJSON());
             });
         },
         leave: function(req, res) {

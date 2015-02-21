@@ -35,8 +35,8 @@ FileManager.prototype.create = function(options, cb) {
     }
 
     var File = mongoose.model('File'),
-    Room = mongoose.model('Room'),
-    User = mongoose.model('User');
+        Room = mongoose.model('Room'),
+        User = mongoose.model('User');
 
     if (settings.restrictTypes &&
         settings.allowedTypes &&
@@ -96,6 +96,8 @@ FileManager.prototype.create = function(options, cb) {
 };
 
 FileManager.prototype.list = function(options, cb) {
+    var Room = mongoose.model('Room');
+
     if (!enabled) {
         return cb(null, []);
     }
@@ -147,14 +149,37 @@ FileManager.prototype.list = function(options, cb) {
         find.sort({ 'uploaded': 1 });
     }
 
-    find
-    .limit(options.take)
-    .exec(function(err, files) {
+    Room.findById(options.room, function(err, room) {
         if (err) {
             console.error(err);
             return cb(err);
         }
-        cb(null, files);
+
+        var opts = {
+            userId: options.userId,
+            password: options.password
+        };
+
+        room.canJoin(opts, function(err, canJoin) {
+            if (err) {
+                console.error(err);
+                return cb(err);
+            }
+
+            if (!canJoin) {
+                return cb(null, []);
+            }
+
+            find
+                .limit(options.take)
+                .exec(function(err, files) {
+                    if (err) {
+                        console.error(err);
+                        return cb(err);
+                    }
+                    cb(null, files);
+                });
+        });
     });
 };
 

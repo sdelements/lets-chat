@@ -13,6 +13,12 @@
         this.users = new UsersCollection();
         this.rooms = new RoomsCollection();
         this.events = _.extend({}, Backbone.Events);
+
+
+        this.passwordModal = new window.LCB.RoomPasswordModalView({
+            el: $('#lcb-password')
+        });
+
         return this;
     };
     //
@@ -97,8 +103,8 @@
         // update room to localstorage so we can reopen it on refresh
         //
         var savedRooms = store.get('openrooms');
-        _.remove(savedRooms, function(r) { 
-            return r.id === room.id; 
+        _.remove(savedRooms, function(r) {
+            return r.id === room.id;
         });
         savedRooms.push({id: room.id, password: room.password});
         store.set('openrooms', savedRooms);
@@ -141,16 +147,32 @@
         //
         this.joining = this.joining || [];
         this.joining.push(id);
+
+        var passwordCB = function(password) {
+            room.password = password;
+            that.joinRoom(room, switchRoom, callback);
+        };
+
         this.socket.emit('rooms:join', {roomId: id, password: password}, function(resRoom) {
             // Room was likely archived if this returns
             if (!resRoom) {
                 return;
-            } else if(resRoom && resRoom.errors) {
-                if(!!password) {//if password is not set, it's probably because router has call this (on f5)
-                    swal('Wrong password');
-                }
+            }
+
+            if (resRoom && resRoom.errors &&
+                resRoom.errors === 'password required') {
+
+                that.passwordModal.show({
+                    callback: passwordCB
+                });
+                
                 return;
             }
+
+            if (resRoom && resRoom.errors) {
+                return;
+            }
+
             var room = that.rooms.get(id);
             room = that.rooms.add(resRoom);
             room.set('joined', true);
@@ -217,8 +239,8 @@
         }
         // Remove room id from localstorage
         var savedRooms = store.get('openrooms');
-        _.remove(savedRooms, function(room) { 
-            return room.id === id; 
+        _.remove(savedRooms, function(room) {
+            return room.id === id;
         })
         store.set('openrooms', savedRooms);
     };

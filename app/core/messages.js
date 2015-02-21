@@ -46,6 +46,8 @@ MessageManager.prototype.create = function(options, cb) {
 };
 
 MessageManager.prototype.list = function(options, cb) {
+    var Room = mongoose.model('Room');
+
     options = options || {};
 
     if (!options.room) {
@@ -101,14 +103,37 @@ MessageManager.prototype.list = function(options, cb) {
         find.sort({ 'posted': 1 });
     }
 
-    find.limit(options.take)
-        .exec(function(err, messages) {
+    Room.findById(options.room, function(err, room) {
+        if (err) {
+            console.error(err);
+            return cb(err);
+        }
+
+        var opts = {
+            userId: options.userId,
+            password: options.password
+        };
+
+        room.canJoin(opts, function(err, canJoin) {
             if (err) {
                 console.error(err);
                 return cb(err);
             }
-            cb(null, messages);
+
+            if (!canJoin) {
+                return cb(null, []);
+            }
+
+            find.limit(options.take)
+                .exec(function(err, messages) {
+                    if (err) {
+                        console.error(err);
+                        return cb(err);
+                    }
+                    cb(null, messages);
+                });
         });
+    });
 };
 
 module.exports = MessageManager;

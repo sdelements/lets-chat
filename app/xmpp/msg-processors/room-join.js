@@ -5,8 +5,7 @@ var _ = require('lodash'),
     Stanza = require('node-xmpp-core').Stanza,
     MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config'),
-    helper = require('./../helper'),
-    bcrypt = require('bcryptjs');
+    helper = require('./../helper');
 
 module.exports = MessageProcessor.extend({
 
@@ -26,24 +25,35 @@ module.exports = MessageProcessor.extend({
         // TODO: Do we need to track nickname for each individual room?
         this.connection.nickname = nickname;
 
-        this.core.rooms.slug(roomSlug, function(err, room) {
+        var options = {
+            userId: this.connection.user.id,
+            slug: roomSlug,
+            password: this.getPassword(),
+            saveMembership: true
+        };
+
+        this.core.rooms.canJoin(options, function(err, room, canJoin) {
             if (err) {
                 return cb(err);
             }
 
-            if (room) {
-                return this.checkPassword(room, cb);(room, cb);
+            if (room && canJoin) {
+                return this.handleJoin(room, cb);
+            }
+
+            if (room && !canJoin) {
+                return this.sendErrorPassword(room, cb);
             }
 
             if (!settings.xmpp.roomCreation) {
                 return this.cantCreateRoom(roomSlug, cb);
             }
 
-            this.createRoom(roomSlug, function(err, room) {
+            return this.createRoom(roomSlug, function(err, room) {
                 if (err) {
                     return cb(err);
                 }
-                this.checkPassword(room, cb);(room, cb);
+                this.handleJoin(room, cb);
             }.bind(this));
 
         }.bind(this));
@@ -112,27 +122,8 @@ module.exports = MessageProcessor.extend({
                 return passwordNode.children[0];
             }
         }
-    },
 
-    checkPassword: function(room, cb) {
-        if(!!room.password) {
-            var password = this.getPassword();
-            if(!password) {
-                return this.sendErrorPassword(room, cb);
-            }
-            bcrypt.compare(password, room.password, function(err, isMatch) {
-                if(err) {
-                    return cb(err);
-                }
-                if(!!isMatch) {
-                    this.handleJoin(room, cb);
-                } else {
-                    this.sendErrorPassword(room, cb);
-                }
-            }.bind(this));
-        } else {
-            this.handleJoin(room, cb);
-        }
+        return '';
     },
 
     sendErrorPassword: function(room, cb) {
@@ -210,6 +201,7 @@ module.exports = MessageProcessor.extend({
         }
 
         var query = {
+            userId: this.connection.user.id,
             room: room._id,
             expand: 'owner'
         };

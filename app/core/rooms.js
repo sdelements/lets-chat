@@ -1,11 +1,31 @@
 'use strict';
 
 var mongoose = require('mongoose'),
+    bcrypt = require('bcryptjs'),
     helpers = require('./helpers');
 
 function RoomManager(options) {
     this.core = options.core;
 }
+
+RoomManager.prototype.canJoin = function(options, cb) {
+    var method = options.id ? 'get' : 'slug',
+        roomId = options.id ? options.id : options.slug;
+
+    this[method](roomId, function(err, room) {
+        if (err) {
+            return cb(err);
+        }
+
+        if (!room) {
+            return cb();
+        }
+
+        room.canJoin(options, function(err, canJoin) {
+            cb(err, room, canJoin);
+        });
+    });
+};
 
 RoomManager.prototype.create = function(options, cb) {
     var Room = mongoose.model('Room');

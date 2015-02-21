@@ -2,7 +2,7 @@
     <li class="lcb-rooms-list-item" data-id="{{id}}">
         {{#if hasPassword}}
             <span class="lcb-rooms-list-item-password fa fa-lock"></span>
-            <a class="lcb-rooms-list-item-name lcb-rooms-list-item-name-password" href="#!/password" data-id="{{id}}" data-toggle="modal" data-target="#lcb-password">{{name}}</a>
+            <a class="lcb-rooms-list-item-name" href="#!/room/{{id}}">{{name}}</a>
         {{else}}
             <a class="lcb-rooms-list-item-name" href="#!/room/{{id}}">{{name}}</a>
         {{/if}}
