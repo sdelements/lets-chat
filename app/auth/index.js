@@ -143,7 +143,7 @@ function wrapAuthCallback(username, cb) {
     };
 }
 
-function authenticate(username, password, cb) {
+function authenticate(username, password, headers, cb) {
     username = username.toLowerCase();
 
     checkIfAccountLocked(username, function(locked) {
@@ -163,7 +163,8 @@ function authenticate(username, password, cb) {
             body: {
                 username: username,
                 password: password
-            }
+            },
+            headers: headers
         };
 
         var series = enabledProviders.map(function(provider) {
