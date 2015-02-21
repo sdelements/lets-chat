@@ -13,7 +13,8 @@
         el: '#lcb-client',
         events: {
             'click .lcb-tab': 'toggleSideBar',
-            'click .lcb-header-toggle': 'toggleSideBar'
+            'click .lcb-header-toggle': 'toggleSideBar',
+            'click .lcb-logout': 'logout'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -79,6 +80,9 @@
         },
         toggleSideBar: function(e) {
             this.$el.toggleClass('lcb-sidebar-opened');
+        },
+        logout: function() {
+            this.client.logout();
         }
     });
 

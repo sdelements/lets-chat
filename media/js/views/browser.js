@@ -16,7 +16,7 @@
             'change .lcb-rooms-switch': 'toggle',
             'click .lcb-rooms-switch-label': 'toggle',
             'click .lcb-rooms-list-item-name-password': 'clickPasswordRequired',
-            'submit .lcb-password': 'enterWithPassword',
+            'submit .lcb-password': 'enterWithPassword'
         },
         initialize: function(options) {
             this.client = options.client;

@@ -30,6 +30,9 @@
             that.user.set(user);
         });
     };
+    Client.prototype.logout = function() {
+        store.set('openrooms', []);
+    };
 
     //
     // Rooms
