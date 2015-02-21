@@ -136,7 +136,8 @@ module.exports = MessageProcessor.extend({
         }
 
         var query = {
-            room: room._id
+            room: room._id,
+            expand: 'owner'
         };
 
         if (historyNode.attrs.since) {
