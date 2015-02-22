@@ -251,7 +251,7 @@
                 allowOutsideClick: true,
                 confirmButtonColor: "#DD6B55",
                 showCancelButton: true,
-                closeOnConfirm: false,
+                closeOnConfirm: true,
             }, function(isConfirm) {
                 if (isConfirm) {
                     that.$('.lcb-room-edit').modal('hide');
