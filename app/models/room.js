@@ -91,6 +91,10 @@ RoomSchema.method('isAuthorized', function(userId) {
         return true;
     }
 
+    if (this.owner.equals(userId)) {
+        return true;
+    }
+
     return this.participants.some(function(participant) {
         return participant.equals(userId);
     });
