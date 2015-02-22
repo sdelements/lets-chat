@@ -177,7 +177,7 @@ function authenticate() {
         cb = arguments[2];
 
     } else {
-        req = arguments[0];
+        req = _.extend({}, arguments[0]);
         req.body.username = username;
         cb = arguments[1];
     }
