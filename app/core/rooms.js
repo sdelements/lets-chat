@@ -34,12 +34,17 @@ RoomManager.prototype.update = function(roomId, options, cb) {
 
         if (!room) {
             return cb('Room does not exist.');
+        } else if(!!room.password && !room.owner.equals(options.user.id)) {
+            return cb('Only owner can change room with password.');
+        } else if(!!room.password && !options.password) {
+            return cb('A room with password can\'t become public.');
         }
 
         room.name = options.name;
         // DO NOT UPDATE SLUG
         // room.slug = options.slug;
         room.description = options.description;
+        room.password = options.password;
         room.save(function(err, room) {
             if (err) {
                 console.error(err);

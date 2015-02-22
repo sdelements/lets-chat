@@ -14,7 +14,9 @@
             'submit .lcb-rooms-add': 'create',
             'keyup .lcb-rooms-browser-filter-input': 'filter',
             'change .lcb-rooms-switch': 'toggle',
-            'click .lcb-rooms-switch-label': 'toggle'
+            'click .lcb-rooms-switch-label': 'toggle',
+            'click .lcb-rooms-list-item-name-password': 'clickPasswordRequired',
+            'submit .lcb-password': 'enterWithPassword'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -47,8 +49,26 @@
             if (!room) {
                 return;
             }
-            (!$input.is(':checked') && this.client.joinRoom(room.id)) ||
+            (!$input.is(':checked') && this.client.joinRoom(room)) ||
                 (this.rooms.get(room.id).get('joined') && this.client.leaveRoom(room.id));
+        },
+        clickPasswordRequired: function(e) {
+            this.lastPasswordedRoomIdClicked = $(e.currentTarget).data('id');
+        },
+        enterWithPassword: function(e) {
+            e.preventDefault();
+            var $target = $(e.currentTarget),
+                password = this.$('.lcb-room-password-required').val(),
+                room = this.rooms.get(this.lastPasswordedRoomIdClicked),
+                $modal = this.$('#lcb-password'),
+                $form = this.$(e.target);
+            room.password = password;
+            var callback = function success() {
+                $modal.modal('hide');
+                $form.trigger('reset');
+                this.lastPasswordedRoomIdClicked = undefined;
+            }.bind(this);
+            this.client.events.trigger('rooms:join', room, true, callback);
         },
         add: function(room) {
             var room = room.toJSON ? room.toJSON() : room,
@@ -100,6 +120,7 @@
             });
         },
         create: function(e) {
+            var that = this;
             e.preventDefault();
             var $modal = this.$('#lcb-add-room'),
                 $form = this.$(e.target),
@@ -107,6 +128,7 @@
                     name: this.$('.lcb-room-name').val().trim(),
                     slug: this.$('.lcb-room-slug').val().trim(),
                     description: this.$('.lcb-room-description').val(),
+                    password: this.$('.lcb-room-password').val(),
                     callback: function success() {
                         $modal.modal('hide');
                         $form.trigger('reset');
@@ -122,6 +144,20 @@
                 $slug.parent().addClass('has-error');
                 return;
             }
+            // remind the user, that users may share the password with others
+            if (!!data.password) {
+                swal({
+                    title: 'Are you sure?',
+                    text: 'Users can share this password with other users (who were not invited by you).',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, I know it!' 
+                }, function(){
+                    that.client.events.trigger('rooms:create', data);
+                });
+                return;
+            }
+
             this.client.events.trigger('rooms:create', data);
         },
         addUser: function(user, room) {

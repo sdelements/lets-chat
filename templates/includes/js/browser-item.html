@@ -1,6 +1,11 @@
 <script type="text/x-handlebars-template" id="template-room-browser-item">
     <li class="lcb-rooms-list-item" data-id="{{id}}">
-        <a class="lcb-rooms-list-item-name" href="#!/room/{{id}}">{{name}}</a>
+        {{#if hasPassword}}
+            <span class="lcb-rooms-list-item-password fa fa-lock"></span>
+            <a class="lcb-rooms-list-item-name lcb-rooms-list-item-name-password" href="#!/password" data-id="{{id}}" data-toggle="modal" data-target="#lcb-password">{{name}}</a>
+        {{else}}
+            <a class="lcb-rooms-list-item-name" href="#!/room/{{id}}">{{name}}</a>
+        {{/if}}
         <span class="lcb-rooms-list-item-slug">#{{slug}}</span>
         <div class="lcb-rooms-list-item-description">{{description}}</div>
         <ul class="lcb-rooms-list-users"></ul>
