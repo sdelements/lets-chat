@@ -25,7 +25,13 @@
         },
         initialize: function(options) {
             this.client = options.client;
-            this.model.set('iAmOwner', this.model.get('owner') === this.client.user.id);
+
+            var iAmOwner = this.model.get('owner') === this.client.user.id;
+            var iCanEdit = iAmOwner || !this.model.get('hasPassword');
+
+            this.model.set('iAmOwner', iAmOwner);
+            this.model.set('iCanEdit', iCanEdit);
+
             this.template = options.template;
             this.messageTemplate = Handlebars.compile($('#template-message').html());
             this.render();
