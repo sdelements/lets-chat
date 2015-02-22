@@ -129,7 +129,7 @@ module.exports = function() {
                         form.confirmPassword
                 };
 
-            auth.authenticate(req.user.uid || req.user.username,
+            auth.authenticate(req, req.user.uid || req.user.username,
                               data.currentPassword, function(err, user) {
                 if (err) {
                     return res.status(400).json({
@@ -273,8 +273,7 @@ module.exports = function() {
             });
         },
         login: function(req, res) {
-            auth.authenticate(req.body.username, req.body.password,
-                                                 function(err, user, info) {
+            auth.authenticate(req, function(err, user, info) {
                 if (err) {
                     return res.status(400).json({
                         status: 'error',
