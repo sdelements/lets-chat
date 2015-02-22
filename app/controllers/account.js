@@ -226,8 +226,6 @@ module.exports = function() {
             var passwordConfirm = fields.passwordConfirm || fields.passwordconfirm || fields['password-confirm'];
 
             if (fields.password !== passwordConfirm) {
-                console.log(fields.password);
-                console.log(fields.passwordConfirm);
                 return res.status(400).json({
                     status: 'error',
                     message: 'Password not confirmed'
