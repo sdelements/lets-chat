@@ -158,7 +158,7 @@ RoomManager.prototype.list = function(options, cb) {
                 }
 
                 room = room.toJSON();
-                room.users = users;
+                room.users = users || [];
                 room.userCount = room.users.length;
                 return room;
             }, this);
