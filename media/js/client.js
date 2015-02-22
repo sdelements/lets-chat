@@ -102,9 +102,9 @@
     Client.prototype.addRoom = function(room) {
         this.rooms.add(room);
     };
-    Client.prototype.archiveRoom = function(id) {
-        this.socket.emit('rooms:archive', id, function(room) {
-            if (!room.id) {
+    Client.prototype.archiveRoom = function(options) {
+        this.socket.emit('rooms:archive', options, function(data) {
+            if (data !== 'No Content') {
                 swal('Unable to Archive!',
                      'Unable to archive this room!',
                      'error');
