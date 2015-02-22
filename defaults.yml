@@ -63,4 +63,4 @@ auth:
 noRobots: true # Serve robots.txt with disallow
 
 rooms:
-  passworded: false
+  passwordProtected: false

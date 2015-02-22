@@ -55,7 +55,7 @@ var RoomSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: false//only for passworded room
+        required: false//only for password-protected room
     }
 });
 

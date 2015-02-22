@@ -58,7 +58,7 @@ RoomManager.prototype.update = function(roomId, options, cb) {
         }
 
         if(room.hasPassword && !room.owner.equals(options.user.id)) {
-            return cb('Only owner can change passworded room.');
+            return cb('Only owner can change password-protected room.');
         }
 
         room.name = options.name;

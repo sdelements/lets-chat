@@ -32,7 +32,7 @@ module.exports = function() {
         User.findById(data.userId, function (err, user) {
             user = user.toJSON();
             user.room = data.roomId;
-            
+
             if (data.roomHasPassword) {
                 app.io.to(data.roomId).emit('users:leave', user);
             } else {
@@ -131,8 +131,9 @@ module.exports = function() {
                 description: req.param('description'),
                 password: req.param('password')
             };
-            if(!settings.passworded) {
-                options.password = undefined;
+
+            if(!settings.passwordProtected) {
+                delete options.password;
             }
 
             core.rooms.create(options, function(err, room) {
