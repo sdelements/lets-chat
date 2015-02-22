@@ -19,7 +19,12 @@ module.exports = function() {
         User.findById(data.userId, function (err, user) {
             user = user.toJSON();
             user.room = data.roomId;
-            app.io.emit('users:join', user);
+
+            if (data.roomHasPassword) {
+                app.io.to(data.roomId).emit('users:join', user);
+            } else {
+                app.io.emit('users:join', user);
+            }
         });
     });
 
@@ -27,7 +32,12 @@ module.exports = function() {
         User.findById(data.userId, function (err, user) {
             user = user.toJSON();
             user.room = data.roomId;
-            app.io.emit('users:leave', user);
+            
+            if (data.roomHasPassword) {
+                app.io.to(data.roomId).emit('users:leave', user);
+            } else {
+                app.io.emit('users:leave', user);
+            }
         });
     });
 
@@ -81,6 +91,9 @@ module.exports = function() {
     app.io.route('rooms', {
         list: function(req, res) {
             var options = {
+                    userId: req.user._id,
+                    users: req.param('users'),
+
                     skip: req.param('skip'),
                     take: req.param('take')
                 };
@@ -90,26 +103,6 @@ module.exports = function() {
                     console.error(err);
                     return res.status(400).json(err);
                 }
-
-                if (req.param('users')) {
-                    rooms = _.map(rooms, function(room) {
-                        room = room.toJSON();
-                        room.users = core.presence.getUsersForRoom(room.id.toString());
-                        room.userCount = room.users.length;
-                        return room;
-                    });
-                }
-                else if (req.param('userCounts')) {
-                    rooms = _.map(rooms, function(room) {
-                        room = room.toJSON();
-                        room.userCount =
-                            core.presence.getUserCountForRoom(room.id);
-                        return room;
-                    });
-                }
-
-                rooms = _.sortByAll(rooms, ['userCount', 'lastActive'])
-                         .reverse();
 
                 res.json(rooms);
             });
@@ -220,7 +213,7 @@ module.exports = function() {
                 var user = req.user.toJSON();
                 user.room = room._id;
 
-                core.presence.join(req.socket.conn, room._id, room.slug);
+                core.presence.join(req.socket.conn, room);
                 req.socket.join(room._id);
                 res.json(room.toJSON());
             });
@@ -248,7 +241,7 @@ module.exports = function() {
                 }
 
                 var users = core.presence.rooms
-                        .getOrAdd(room._id, room.slug)
+                        .getOrAdd(room)
                         .getUsers()
                         .map(function(user) {
                             // TODO: Do we need to do this?

@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose'),
+    _ = require('lodash'),
     bcrypt = require('bcryptjs'),
     helpers = require('./helpers');
 
@@ -130,9 +131,43 @@ RoomManager.prototype.list = function(options, cb) {
     if (options.sort) {
         var sort = options.sort.replace(',', ' ');
         find.sort(sort);
+    } else {
+        find.sort('-lastActive');
     }
 
-    find.exec(cb);
+    find.exec(function(err, rooms) {
+        if (err) {
+            return cb(err);
+        }
+
+        if (options.users) {
+            rooms = _.map(rooms, function(room) {
+                var users = [];
+
+                // Better approach would be this,
+                // but need to fix join/leave events:
+                // var auth = room.isAuthorized(options.userId);
+
+                if (!room.password) {
+                    users = this.core.presence
+                                .getUsersForRoom(room.id.toString());
+                }
+
+                room = room.toJSON();
+                room.users = users;
+                room.userCount = room.users.length;
+                return room;
+            }, this);
+
+            if (!options.sort) {
+                rooms = _.sortByAll(rooms, ['userCount', 'lastActive'])
+                         .reverse();
+            }
+        }
+
+        cb(null, rooms);
+
+    }.bind(this));
 };
 
 RoomManager.prototype.get = function(identifier, cb) {

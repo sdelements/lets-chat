@@ -165,7 +165,7 @@
                 that.passwordModal.show({
                     callback: passwordCB
                 });
-                
+
                 return;
             }
 
@@ -176,6 +176,13 @@
             var room = that.rooms.get(id);
             room = that.rooms.add(resRoom);
             room.set('joined', true);
+
+            if (room.get('hasPassword')) {
+                that.getRoomUsers(room.id, _.bind(function(users) {
+                    this.setUsers(room.id, users);
+                }, that));
+            }
+
             // Get room history
             that.getMessages({
                 room: room.id,
@@ -188,6 +195,7 @@
                 that.addMessages(messages, !room.get('loaded'));
                 room.set('loaded', true);
             });
+
             if (that.options.filesEnabled) {
                 that.getFiles({
                     room: room.id,
@@ -231,6 +239,7 @@
         if (room) {
             room.set('joined', false);
             room.lastMessage.clear();
+            room.users.set([]);
         }
         this.socket.emit('rooms:leave', id);
         if (id === this.rooms.current.get('id')) {

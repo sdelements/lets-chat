@@ -253,7 +253,7 @@ module.exports = MessageProcessor.extend({
 
             }, this);
 
-            this.core.presence.join(this.connection, room._id, room.slug);
+            this.core.presence.join(this.connection, room);
             cb(null, presences, msgs, subject);
 
         }.bind(this));

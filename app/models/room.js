@@ -63,6 +63,10 @@ RoomSchema.virtual('handle').get(function() {
     return this.slug || this.name.replace(/\W/i, '');
 });
 
+RoomSchema.virtual('hasPassword').get(function() {
+    return !!this.password;
+});
+
 RoomSchema.pre('save', function(next) {
     var room = this;
     if (!room.password || !room.isModified('password')) {
@@ -82,20 +86,22 @@ RoomSchema.plugin(uniqueValidator, {
     message: 'Expected {PATH} to be unique'
 });
 
+RoomSchema.method('isAuthorized', function(userId) {
+    if(!this.password) {
+        return true;
+    }
+
+    return this.participants.some(function(participant) {
+        return participant.equals(userId);
+    });
+});
+
 RoomSchema.method('canJoin', function(options, cb) {
     var userId = options.userId,
         password = options.password,
         saveMembership = options.saveMembership;
 
-    if(!this.password) {
-        return cb(null, true);
-    }
-
-    var isInArray = this.participants.some(function(participant) {
-        return participant.equals(userId);
-    });
-
-    if (isInArray) {
+    if (this.isAuthorized(userId)) {
         return cb(null, true);
     }
 
@@ -121,7 +127,8 @@ RoomSchema.method('canJoin', function(options, cb) {
 
             cb(null, true);
         });
-    });
+
+    }.bind(this));
 });
 
 RoomSchema.method('toJSON', function() {
@@ -134,8 +141,7 @@ RoomSchema.method('toJSON', function() {
         lastActive: room.lastActive,
         created: room.created,
         owner: room.owner,
-        hasPassword: !!this.password
-        //password : never send password to client !
+        hasPassword: this.hasPassword
     };
  });
 
