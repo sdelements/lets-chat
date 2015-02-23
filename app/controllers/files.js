@@ -4,7 +4,10 @@
 
 'use strict';
 
-var multer = require('multer'),
+var fs = require('fs'),
+    _ = require('lodash'),
+    async = require('async'),
+    multer = require('multer'),
     settings = require('./../config').files;
 
 module.exports = function() {
@@ -29,6 +32,7 @@ module.exports = function() {
     });
 
     var fileUpload = multer({
+        putSingleFilesInArray: true,
         limits: {
             files: 1,
             fileSize: settings.maxFileSize
@@ -43,7 +47,7 @@ module.exports = function() {
         .get(function(req, res) {
             req.io.route('files:list');
         })
-        .post(fileUpload, function(req, res) {
+        .post(fileUpload, middlewares.cleanupFiles, function(req, res) {
             req.io.route('files:create');
         });
 
@@ -52,7 +56,7 @@ module.exports = function() {
         .get(function(req, res) {
             req.io.route('files:list');
         })
-        .post(fileUpload, function(req, res) {
+        .post(fileUpload, middlewares.cleanupFiles, function(req, res) {
             req.io.route('files:create');
         });
 
@@ -91,13 +95,13 @@ module.exports = function() {
             var options = {
                     owner: req.user._id,
                     room: req.param('room'),
-                    file: req.files.file,
+                    file: req.files.file[0],
                     post: req.param('post') && true
                 };
 
             core.files.create(options, function(err, file) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                     return res.sendStatus(400);
                 }
                 res.status(201).json(file);

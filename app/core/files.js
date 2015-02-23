@@ -19,7 +19,8 @@ function FileManager(options) {
     if (settings.provider === 'local') {
         Provider = require('./files/local');
     } else {
-        var pkg = require('lets-chat-' + settings.provider);
+        var pkgName = 'lets-chat-' + settings.provider;
+        var pkg = require(pkgName);
         Provider = pkg && pkg.files;
         if (!Provider) {
             throw 'Module "' + pkgName + '"" is not a files provider';
