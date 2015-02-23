@@ -217,7 +217,19 @@
             if (e) {
                 e.preventDefault();
             }
-            this.$('.lcb-room-edit').modal();
+
+            var $modal = this.$('.lcb-room-edit'),
+                $name = $modal.find('input[name="name"]'),
+                $description = $modal.find('textarea[name="description"]'),
+                $password = $modal.find('input[name="password"]'),
+                $confirmPassword = $modal.find('input[name="confirmPassword"]');
+
+            $name.val(this.model.get('name'));
+            $description.val(this.model.get('description'));
+            $password.val('');
+            $confirmPassword.val('');
+
+            $modal.modal();
         },
         hideEditRoom: function(e) {
             if (e) {
@@ -229,16 +241,34 @@
             if (e) {
                 e.preventDefault();
             }
-            var name = this.$('.edit-room input[name="name"]').val();
-            var description = this.$('.edit-room textarea[name="description"]').val();
-            var password = this.$('.edit-room input[name="password"]').val();
+
+            var $modal = this.$('.lcb-room-edit'),
+                $name = $modal.find('input[name="name"]'),
+                $description = $modal.find('textarea[name="description"]'),
+                $password = $modal.find('input[name="password"]'),
+                $confirmPassword = $modal.find('input[name="confirmPassword"]');
+
+            $name.parent().removeClass('has-error');
+            $confirmPassword.parent().removeClass('has-error');
+
+            if (!$name.val()) {
+                $name.parent().addClass('has-error');
+                return;
+            }
+
+            if ($password.val() && $password.val() !== $confirmPassword.val()) {
+                $confirmPassword.parent().addClass('has-error');
+                return;
+            }
+
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
-                name: name,
-                description: description,
-                password: password
+                name: $name.val(),
+                description: $description.val(),
+                password: $password.val()
             });
-            this.$('.lcb-room-edit').modal('hide');
+
+            $modal.modal('hide');
         },
         archiveRoom: function(e) {
             var that = this;
