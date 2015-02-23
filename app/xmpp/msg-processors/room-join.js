@@ -196,7 +196,7 @@ module.exports = MessageProcessor.extend({
             historyNode.attrs.maxchars === 0 ||
             historyNode.attrs.maxchars === '0') {
                 // Send no history
-                this.core.presence.join(this.connection, room._id, room.slug);
+                this.core.presence.join(this.connection, room);
                 return cb(null, presences, subject);
         }
 
