@@ -141,12 +141,12 @@ module.exports = MessageProcessor.extend({
         };
 
         if (historyNode.attrs.since) {
-            query.since = moment(historyNode.attrs.since).utc().toDate();
+            query.from = moment(historyNode.attrs.since).utc().toDate();
         }
 
         if (historyNode.attrs.seconds) {
-            query.since = moment()
-                .subtract(historyNode.attrs.since, 'seconds')
+            query.from = moment()
+                .subtract(historyNode.attrs.seconds, 'seconds')
                 .utc()
                 .toDate();
         }
