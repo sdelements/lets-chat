@@ -50,7 +50,8 @@ module.exports = function() {
             var options = {
                     owner: req.user._id,
                     room: req.param('room'),
-                    text: req.param('text')
+                    text: req.param('text'),
+                    format: req.param('format')
                 };
 
             core.messages.create(options, function(err, message) {

@@ -23,6 +23,11 @@ var MessageSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    format: {
+        type: String,
+        default: 'text',
+        trim: true
+    },
     posted: {
         type: Date,
         default: Date.now,
@@ -41,6 +46,7 @@ MessageSchema.method('toJSON', function() {
         room: this.room,
         owner: this.owner,
         text: this.text,
+        format: this.format,
         posted: this.posted
     };
 });

@@ -114,6 +114,32 @@ if (typeof exports !== 'undefined') {
         });
     }
 
+    function allowedHtml(text, data) {
+        var replacements = [
+            {
+                'regex' : new RegExp('\&lt\;b\&gt\;', 'ig'),
+                'template' : '<b>'
+            },
+            {
+                'regex' : new RegExp('\&lt\;/b\&gt\;', 'ig'),
+                'template' : '</b>'
+            },
+            {
+                'regex' : new RegExp('\&lt\;br\&gt\;', 'ig'),
+                'template' : '<br>'
+            },
+            {
+                'regex' : new RegExp('\&lt\;/br\&gt\;', 'ig'),
+                'template' : '</br>'
+            }
+        ];
+
+        _.each(replacements, function(replacement) {
+            text = text.replace(replacement.regex, replacement.template);
+        });
+        return text;
+    }
+
     function replacements(text, data) {
         _.each(data.replacements, function(replacement) {
             text = text.replace(new RegExp(replacement.regex, 'ig'), replacement.template);
@@ -129,8 +155,12 @@ if (typeof exports !== 'undefined') {
             uploads,
             links,
             emotes,
-            replacements
+            replacements,
         ];
+
+        if (data.format === 'html') {
+            pipeline.push(allowedHtml);
+        }
 
         _.each(pipeline, function(func) {
             text = func(text, data);
