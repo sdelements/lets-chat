@@ -18,37 +18,69 @@ module.exports = MessageProcessor.extend({
                 return cb(err);
             }
 
-            var stanza = this.Iq();
+            if (!room) {
+                return this.doesNotExist(cb);
+            }
 
-            var query = stanza.c('query', {
-                xmlns:'http://jabber.org/protocol/disco#info'
-            });
-
-            query.c('identity', {
-                category: 'conference',
-                type: 'text',
-                name: room.name
-            });
-
-            query.c('feature', {
-                var: 'http://jabber.org/protocol/muc'
-            });
-
-            query.c('feature', {
-                var: 'muc_open'
-            });
-
-            query.c('feature', {
-                var: 'muc_unmoderated'
-            });
-
-            query.c('feature', {
-                var: 'muc_nonanonymous'
-            });
-
-            cb(null, stanza);
+            this.sendInfo(room, cb);
 
         }.bind(this));
+    },
+
+    sendInfo: function(room, cb) {
+        var stanza = this.Iq();
+
+        var query = stanza.c('query', {
+            xmlns:'http://jabber.org/protocol/disco#info'
+        });
+
+        query.c('identity', {
+            category: 'conference',
+            type: 'text',
+            name: room.name
+        });
+
+        query.c('feature', {
+            var: 'http://jabber.org/protocol/muc'
+        });
+
+        query.c('feature', {
+            var: 'muc_persistent'
+        });
+
+        query.c('feature', {
+            var: 'muc_open'
+        });
+
+        query.c('feature', {
+            var: 'muc_unmoderated'
+        });
+
+        query.c('feature', {
+            var: 'muc_nonanonymous'
+        });
+
+        query.c('feature', {
+            var: 'muc_unsecured'
+        });
+
+        cb(null, stanza);
+    },
+
+    doesNotExist: function(cb) {
+        var stanza = this.Iq();
+
+        var query = stanza.c('query', {
+            xmlns:'http://jabber.org/protocol/disco#info'
+        });
+
+        query.c('error', {
+            type: 'cancel'
+        }).c('item-not-found', {
+            xmlns: 'urn:ietf:params:xml:ns:xmpp-stanzas'
+        });
+
+        cb(null, stanza);
     }
 
 });
