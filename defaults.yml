@@ -44,7 +44,6 @@ files:
     - 'image/jpeg'
     - 'image/png'
     - 'image/gif'
-
   local:
     dir: uploads
 
@@ -52,9 +51,7 @@ auth:
   throttling:
     enable: true
     threshold: 3
-
   providers: [local] # [local, kerberos, ldap] - You can specify the order
-
   local:
     enableRegistration: true
     passwordRegex: ^.{8,64}$
