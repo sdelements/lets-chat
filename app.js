@@ -139,6 +139,12 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+// IE header
+app.use(function(req, res, next) {
+    res.setHeader('X-UA-Compatible', 'IE=Edge,chrome=1');
+    next();
+});
+
 //
 // Controllers
 //
