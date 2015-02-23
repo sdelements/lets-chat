@@ -45,6 +45,10 @@ module.exports = MessageProcessor.extend({
         });
 
         query.c('feature', {
+            var: 'muc_persistent'
+        });
+
+        query.c('feature', {
             var: 'muc_open'
         });
 
@@ -54,6 +58,10 @@ module.exports = MessageProcessor.extend({
 
         query.c('feature', {
             var: 'muc_nonanonymous'
+        });
+
+        query.c('feature', {
+            var: 'muc_unsecured'
         });
 
         cb(null, stanza);
