@@ -5,21 +5,18 @@
     window.LCB = window.LCB || {};
 
     window.LCB.TranscriptView = Backbone.View.extend({
-        el: '#transcript',
-
         events: {
-            'keyup #search-query': 'search'
+            'keyup .lcb-search-entry': 'search'
         },
-
         initialize: function(options) {
             this.options = options;
             this.room = options.room;
 
-            this.$messages = this.$('.messages');
+            this.$messages = this.$('.lcb-transcript-messages');
             this.messageTemplate =
                 Handlebars.compile($('#template-message').html());
 
-            this.$query = this.$('#search-query')
+            this.$query = this.$('.lcb-search-entry')
 
             var that = this;
             $.when(
@@ -32,7 +29,6 @@
                 that.setup();
             });
         },
-
         setup: function() {
             var format = 'MMMM D, YYYY';
             var ranges = {
@@ -49,14 +45,14 @@
                 that.endDate = moment(end).local().endOf('day');
 
                 var str = that.startDate.format(format) + ' - ' + that.endDate.format(format);
-                $('#daterange span').html(str);
+                that.$('.lcb-transcript-daterange-range').html(str);
 
                 that.loadTranscript();
             }
 
             setRange(moment(), moment());
 
-            this.$daterange = $('#daterange')
+            this.$daterange = this.$('.lcb-transcript-daterange')
                 .daterangepicker({
                     format: format,
                     startDate: this.startDate,

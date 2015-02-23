@@ -1,73 +1,32 @@
 <% extends 'base.html' %>
 
 <% block css %>
-    <link rel="stylesheet" type="text/css" href="./media/js/vendor/bootstrap-daterangepicker/daterangepicker-bs3.css" />
-    <style type="text/css">
-        .header {
-            position: fixed;
-            height: 90px;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: #ddd;
-            z-index: 1030;
-            padding: 10px;
-        }
-        .header h1 {
-            margin-top: 0;
-            font-size: 24px;
-            font-weight: normal;
-        }
-        .header #daterange {
-            background: #ffffff;
-            -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
-            -moz-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
-            box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
-            color: #333333;
-            padding: 8px;
-            line-height: 18px;
-            cursor: pointer;
-        }
-        .messages {
-            margin-top: 90px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/media/js/vendor/bootstrap-daterangepicker/daterangepicker-bs3.css" />
 <% endblock %>
 
 <% block js %>
-<$ 'transcript' | js | safe $>
+    <$ 'transcript' | js | safe $>
 <% endblock %>
 
 <% block templates %>
-    <% include 'includes/js/room.html' %>
-    <% include 'includes/js/user.html' %>
     <% include 'includes/js/message.html' %>
-    <% include 'includes/js/tab.html' %>
-    <% include 'includes/js/browser-item.html' %>
-    <% include 'includes/js/browser-item-user.html' %>
 <% endblock %>
 
 <% block body %>
-    <input type="hidden" id="room_id" value="<$ room.id $>" />
-    <input type="hidden" id="room_name" value="<$ room.name $>" />
-    <div id="transcript">
-
-        <div class="header">
-
-            <h1>Transcript for <strong><$ room.name $></strong></h1>
-
-            <div id="daterange" class="pull-left">
-                <i class="fa fa-calendar fa-lg"></i>
-                <span></span> <b class="caret"></b>
+    <div class="lcb-transcript">
+        <input type="hidden" name="room-id" value="<$ room.id $>" />
+        <input type="hidden" name="room-name" value="<$ room.name $>" />
+        <div class="lcb-transcript-header">
+            <h1 class="lcb-transcript-heading">Transcript for <strong><$ room.name $></strong></h1>
+            <div class="lcb-transcript-filters clearfix">
+                <div class="lcb-transcript-daterange">
+                    <i class="fa fa-calendar fa-lg"></i>
+                    <span class="lcb-transcript-daterange-range"></span>
+                    <b class="caret"></b>
+                </div>
+                <input type="search" class="lcb-search-entry form-control" placeholder="Search..." />
             </div>
-
-            <div>
-              <input type="text" id="search-query" class="form-control" placeholder="Search...">
-            </div>
-
         </div>
-
-        <div class="messages"></div>
-
+        <ul class="lcb-transcript-messages"></ul>
     </div>
 <% endblock %>
