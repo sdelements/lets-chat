@@ -285,7 +285,7 @@
             var $text = $html.find('.lcb-message-text');
 
             var that = this;
-            this.formatMessage($text.html(), function(text) {
+            this.formatMessage($text.html(), message.format, function(text) {
                 $text.html(text);
                 $html.find('time').updateTimeStamp();
                 that.$messages.append($html);
@@ -299,14 +299,15 @@
             });
 
         },
-        formatMessage: function(text, cb) {
+        formatMessage: function(text, format, cb) {
             var client = this.client;
             client.getEmotes(function(emotes) {
                 client.getReplacements(function(replacements) {
                     var data = {
                         emotes: emotes,
                         replacements: replacements,
-                        rooms: client.rooms
+                        rooms: client.rooms,
+                        format: format
                     };
 
                     var msg = window.utils.message.format(text, data);

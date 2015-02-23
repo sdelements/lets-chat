@@ -156,8 +156,11 @@ if (typeof exports !== 'undefined') {
             links,
             emotes,
             replacements,
-            allowedHtml
         ];
+
+        if (data.format === 'html') {
+            pipeline.push(allowedHtml);
+        }
 
         _.each(pipeline, function(func) {
             text = func(text, data);
