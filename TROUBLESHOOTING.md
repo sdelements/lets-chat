@@ -1,6 +1,6 @@
 # Common Issues
 
-We'll be adding more common issues soon.
+We'll be improving this document soon.
 
 #### What version of Node.JS is required?
 

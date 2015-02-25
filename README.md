@@ -29,7 +29,7 @@ See the [wiki][wiki] for instructions on deploying locally, or to Docker, Vagran
 
 ## Support & Problems
 
-We have a document listing some [common issues][common-issues], otherwise please use our [mailing list][mailing-list] for support issues and questions.
+We have a [troubleshooting document][troubleshooting], otherwise please use our [mailing list][mailing-list] for support issues and questions.
 
 
 ## Bugs and feature requests
@@ -60,7 +60,7 @@ Released under [the MIT license][license].
 
 
 [wiki]: https://github.com/sdelements/lets-chat/wiki
-[common-issues]: https://github.com/sdelements/lets-chat/blob/master/COMMON-ISSUES.md
+[troubleshooting]: https://github.com/sdelements/lets-chat/blob/master/TROUBLESHOOTING.md
 [mailing-list]: https://groups.google.com/forum/#!forum/lets-chat-app
 [tracker]: https://github.com/sdelements/lets-chat/issues
 [contributing]: https://github.com/sdelements/lets-chat/blob/master/CONTRIBUTING.md
