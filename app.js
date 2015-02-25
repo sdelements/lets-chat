@@ -130,7 +130,7 @@ var nun = nunjucks.configure('templates', {
         }
     });
 
-function wrapBundlre(func) {
+function wrapBundler(func) {
     // This method ensures all assets paths start with "./"
     // Making them relative, and not absolute
     return function() {
