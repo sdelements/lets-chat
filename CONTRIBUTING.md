@@ -1,6 +1,6 @@
 ### Support / Issues
 
-Please use our [mailing list](https://groups.google.com/forum/#!forum/lets-chat-app) for support issues and questions.
+Please use our [mailing list][mailing-list] for support issues and questions.
 
 
 # Contributing to Let's Chat
@@ -18,12 +18,13 @@ patches and features.
 
 ## Using the issue tracker
 
-The [issue tracker](https://github.com/sdelements/lets-chat/issues) is
-the preferred channel for [bug reports](#bug-reports), [features requests](#feature-requests)
-and [submitting pull requests](#pull-requests), but please respect the following
-restrictions:
+The [issue tracker][tracker] is the preferred channel for [bug reports](#bug-reports),
+[features requests](#feature-requests) and [submitting pull requests](#pull-requests),
+but please respect the following restrictions:
 
-* Please **do not** use the issue tracker for personal support requests, instead use our [mailing list](https://groups.google.com/forum/#!forum/lets-chat-app).
+
+* Please **do not** use the issue tracker for personal support requests,
+  instead use our [mailing list][mailing-list].
 
 * Please **do not** derail or troll issues. Keep the discussion on topic and
   respect the opinions of others.
@@ -31,12 +32,15 @@ restrictions:
 
 ## Issues and labels
 
-Our bug tracker utilizes several labels to help organize and identify issues. They do not signal any commitment from us to deliver. Here's what they represent and how we use them:
+Our bug tracker utilizes several labels to help organize and identify issues.
+They do not signal any commitment from us to deliver. Here's what they
+represent and how we use them:
 
 #### Labels
 
 - `bug` - Bugs that are reported to us or found by us.
-- `feature` - Issues asking for a new feature to be added, or an existing one to be extended or modified.
+- `feature` - Issues asking for a new feature to be added, or an existing one 
+  to be extended or modified.
 
 
 - `duplicate` - Issues that duplicate an already existing issue.
@@ -46,11 +50,12 @@ Our bug tracker utilizes several labels to help organize and identify issues. Th
 
 - `xmpp` - Issues that are related to XMPP functionality.
 
-For a complete look at our labels, see the [project labels page](https://github.com/sdelements/lets-chat/labels).
+For a complete look at our labels, see the [project labels page][labels].
 
 #### Milestones
 
-- `backlog` - Issues that are we are not committing to yet, but may be nice to have in the future.
+- `backlog` - Issues that are we are not committing to yet, but may be nice to
+  have in the future.
 
 
 ## Bug reports
@@ -96,4 +101,10 @@ project's developers might not want to merge into the project.
 
 ## License
 
-By contributing your code, you agree to license your contribution under the [MIT License](LICENSE).
+By contributing your code, you agree to license your contribution under the
+[MIT License](LICENSE).
+
+
+[labels]: https://github.com/sdelements/lets-chat/labels
+[mailing-list]: https://groups.google.com/forum/#!forum/lets-chat-app
+[tracker]: https://github.com/sdelements/lets-chat/issues
