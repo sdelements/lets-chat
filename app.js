@@ -130,8 +130,18 @@ var nun = nunjucks.configure('templates', {
         }
     });
 
-nun.addFilter('js', bundles.js);
-nun.addFilter('css', bundles.css);
+function wrapBundlre(func) {
+    // This method ensures all assets paths start with "./"
+    // Making them relative, and not absolute
+    return function() {
+        return func.apply(func, arguments)
+                   .replace(/href="\//g, 'href="./')
+                   .replace(/src="\//g, 'src="./');
+    };
+}
+
+nun.addFilter('js', wrapBundler(bundles.js));
+nun.addFilter('css', wrapBundler(bundles.css));
 
 // HTTP Middlewares
 app.use(bodyParser.json());
