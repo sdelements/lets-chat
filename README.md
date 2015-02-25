@@ -16,7 +16,7 @@ A self-hosted chat app for small teams built by [Security Compass][seccom].
 * File uploads (Local / [Amazon S3][s3])
 * Transcripts / chat history
 * XMPP Multi-user chat (MUC)
-* Local / [Kerberos][] / [LDAP][] authentication
+* Local / [Kerberos][kerberos] / [LDAP][ldap] authentication
 * [Hubot Adapter][hubot]
 * REST-like API
 * MIT Licensed
