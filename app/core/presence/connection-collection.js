@@ -20,24 +20,42 @@ ConnectionCollection.prototype.get = function(connectionId) {
     return this.connections[connectionId];
 };
 
-ConnectionCollection.prototype.getUsers = function() {
-    var users = _.map(this.connections, function(value, key) {
+ConnectionCollection.prototype.getUsers = function(filter) {
+    var connections = this.connections;
+
+    if (filter) {
+        connections = this.query(filter);
+    }
+
+    var users = _.map(connections, function(value, key) {
         return value.user;
     });
 
     return _.uniq(users, 'id');
 };
 
-ConnectionCollection.prototype.getUserIds = function() {
-    var userIds = _.map(this.connections, function(value, key) {
+ConnectionCollection.prototype.getUserIds = function(filter) {
+    var connections = this.connections;
+
+    if (filter) {
+        connections = this.query(filter);
+    }
+
+    var userIds = _.map(connections, function(value, key) {
         return value.user.id;
     });
 
     return _.uniq(userIds);
 };
 
-ConnectionCollection.prototype.getUsernames = function() {
-    var usernames = _.map(this.connections, function(value, key) {
+ConnectionCollection.prototype.getUsernames = function(filter) {
+    var connections = this.connections;
+
+    if (filter) {
+        connections = this.query(filter);
+    }
+
+    var usernames = _.map(connections, function(value, key) {
         return value.user.username;
     });
 

@@ -12,31 +12,50 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
+        this.sendOnlineUsers(cb);
+    },
+
+    sendOnlineUsers: function(cb) {
+        var users = this.core.presence.connections.getUsers({
+            type: 'xmpp' // Only XMPP supports private messaging - for now
+        });
+
+        this.sendRoster(users, cb);
+    },
+
+    sendAllUsers: function(cb) {
+        var users = this.core.users.list({}, function(err, users) {
+            if (err) {
+                return cb(err);
+            }
+
+            this.sendRoster(users, cb);
+        }.bind(this));
+    },
+
+    sendRoster: function(users, cb) {
         var stanza = this.Iq();
 
         var v = stanza.c('query', {
             xmlns: 'jabber:iq:roster'
         });
 
-        var users = this.core.users.list({}, function(err, users) {
-            if (err) {
-                return cb(err);
+        _.each(users, function(user) {
+            if (user._id && user._id.equals(this.connection.user.id)) {
+                return;
+            }
+            if (user.id && user.id === this.connection.user.id) {
+                return;
             }
 
-            _.each(users, function(user) {
-                if (user._id.equals(this.connection.user.id)) {
-                    return;
-                }
+            v.c('item', {
+                jid: helper.getUserJid(user.username),
+                name: user.displayName,
+                subscription: 'both'
+            }).c('group').t('Friends');
+        }, this);
 
-                v.c('item', {
-                    jid: helper.getUserJid(user.username),
-                    name: user.displayName,
-                    subscription: 'both'
-                }).c('group').t('Friends');
-            }, this);
-
-            cb(null, stanza);
-        }.bind(this));
+        cb(null, stanza);
     }
 
 });
