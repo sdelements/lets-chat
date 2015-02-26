@@ -32,4 +32,16 @@ UserManager.prototype.list = function(options, cb) {
     find.exec(cb);
 };
 
+UserManager.prototype.get = function(identifier, cb) {
+    var User = mongoose.model('User');
+    User.findById(identifier, cb);
+};
+
+UserManager.prototype.username = function(username, cb) {
+    var User = mongoose.model('User');
+    User.findOne({
+        username: username
+    }, cb);
+};
+
 module.exports = UserManager;
