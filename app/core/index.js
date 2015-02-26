@@ -8,6 +8,7 @@ var EventEmitter = require('events').EventEmitter,
     MessageManager = require('./messages'),
     PresenceManager = require('./presence'),
     RoomManager = require('./rooms'),
+    UserManager = require('./users'),
     UserMessageManager = require('./usermessages');
 
 function Core() {
@@ -30,6 +31,10 @@ function Core() {
     });
 
     this.rooms = new RoomManager({
+        core: this
+    });
+
+    this.users = new UserManager({
         core: this
     });
 
