@@ -16,6 +16,10 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
+        if (!settings.private.enable) {
+            return cb();
+        }
+
         var msgs = [];
 
         var users = this.core.presence.system.connections.getUsers({

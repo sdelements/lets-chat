@@ -4,7 +4,8 @@
 
 'use strict';
 
-var _ = require('lodash');
+var _ = require('lodash'),
+    settings = require('./../config');
 
 module.exports = function() {
 
@@ -13,6 +14,11 @@ module.exports = function() {
         middlewares = this.middlewares,
         models = this.models,
         Room = models.room;
+
+
+    if (!settings.private.enable) {
+        return;
+    }
 
     core.on('user-messages:new', function(message, user, owner) {
         _.each(message.users, function(userId) {

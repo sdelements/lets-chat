@@ -1,6 +1,7 @@
 'use strict';
 
 var Stanza = require('node-xmpp-core').Stanza,
+    settings = require('./../../config'),
     helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
@@ -11,6 +12,9 @@ module.exports = EventListener.extend({
     on: 'user-messages:new',
 
     then: function(msg, user, owner) {
+        if (!settings.private.enable) {
+            return;
+        }
 
         var connections = this.core.presence.system.connections.query({
             userId: user._id.toString(),

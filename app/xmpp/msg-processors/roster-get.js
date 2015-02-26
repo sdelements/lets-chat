@@ -12,6 +12,14 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
+        if (!settings.private.enable) {
+            return this.sendRoster([], cb);
+        }
+
+        if (settings.private.roster === 'all') {
+            return this.sendAllUsers(cb);
+        }
+
         this.sendOnlineUsers(cb);
     },
 

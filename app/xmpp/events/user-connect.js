@@ -2,6 +2,7 @@
 
 var _ = require('lodash'),
     Stanza = require('node-xmpp-core').Stanza,
+    settings = require('./../../config'),
     helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
@@ -10,6 +11,10 @@ module.exports = EventListener.extend({
     on: 'connect',
 
     then: function(connection) {
+        if (!settings.private.enable) {
+            return;
+        }
+
         if (connection.type !== 'xmpp') {
             return;
         }

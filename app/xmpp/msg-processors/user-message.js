@@ -15,6 +15,10 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
+        if (!settings.private.enable) {
+            return cb();
+        }
+
         var username = this.request.attrs.to.split('@')[0];
 
         var body = _.find(this.request.children, function (child) {
