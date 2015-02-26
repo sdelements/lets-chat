@@ -18,7 +18,7 @@ module.exports = MessageProcessor.extend({
     then: function(cb) {
         var msgs = [];
 
-        var users = this.core.presence.connections.getUsers({
+        var users = this.core.presence.system.connections.getUsers({
             type: 'xmpp' // Only XMPP supports private messaging - for now
         });
 

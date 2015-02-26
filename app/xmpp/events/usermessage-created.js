@@ -12,7 +12,7 @@ module.exports = EventListener.extend({
 
     then: function(msg, user, owner) {
 
-        var connections = this.core.presence.connections.query({
+        var connections = this.core.presence.system.connections.query({
             userId: user._id.toString(),
             type: 'xmpp'
         });

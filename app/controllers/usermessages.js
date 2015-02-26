@@ -16,7 +16,7 @@ module.exports = function() {
 
     core.on('user-messages:new', function(message, user, owner) {
         _.each(message.users, function(userId) {
-            var connections = core.presence.connections.query({
+            var connections = core.presence.system.connections.query({
                 type: 'socket.io', userId: userId.toString()
             });
 

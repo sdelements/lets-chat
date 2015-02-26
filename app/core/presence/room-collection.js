@@ -28,7 +28,10 @@ RoomCollection.prototype.getOrAdd = function(roomId, roomSlug) {
     roomSlug = roomSlug && roomSlug.toString() || roomId.toString();
     var room = this.rooms[roomId];
     if (!room) {
-        room = this.rooms[roomId] = new Room(roomId, roomSlug);
+        room = this.rooms[roomId] = new Room({
+            roomId: roomId,
+            roomSlug: roomSlug
+        });
         room.on('user_join', this.onJoin);
         room.on('user_leave', this.onLeave);
     }
