@@ -23,16 +23,16 @@ RoomCollection.prototype.get = function(roomId) {
     return this.rooms[roomId];
 };
 
-RoomCollection.prototype.getOrAdd = function(roomId, roomSlug) {
-    roomId = roomId.toString();
-    roomSlug = roomSlug && roomSlug.toString() || roomId.toString();
-    var room = this.rooms[roomId];
-    if (!room) {
-        room = this.rooms[roomId] = new Room(roomId, roomSlug);
-        room.on('user_join', this.onJoin);
-        room.on('user_leave', this.onLeave);
+RoomCollection.prototype.getOrAdd = function(room) {
+    var roomId = room._id.toString();
+
+    var pRoom = this.rooms[roomId];
+    if (!pRoom) {
+        pRoom = this.rooms[roomId] = new Room(room);
+        pRoom.on('user_join', this.onJoin);
+        pRoom.on('user_leave', this.onLeave);
     }
-    return room;
+    return pRoom;
 };
 
 RoomCollection.prototype.onJoin = function(data) {

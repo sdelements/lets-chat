@@ -5,10 +5,11 @@ var EventEmitter = require('events').EventEmitter,
     _ = require('lodash'),
     ConnectionCollection = require('./connection-collection');
 
-function Room(roomId, roomSlug) {
+function Room(room) {
     EventEmitter.call(this);
-    this.roomId = roomId;
-    this.roomSlug = roomSlug;
+    this.roomId = room._id.toString();
+    this.roomSlug = room.slug;
+    this.hasPassword = room.hasPassword;
     this.connections = new ConnectionCollection();
     this.userCount = 0;
 
@@ -46,6 +47,7 @@ Room.prototype.emitUserJoin = function(data) {
     this.emit('user_join', {
         roomId: this.roomId,
         roomSlug: this.roomSlug,
+        roomHasPassword: this.hasPassword,
         userId: data.userId,
         username: data.username
     });
@@ -56,6 +58,7 @@ Room.prototype.emitUserLeave = function(data) {
     this.emit('user_leave', {
         roomId: this.roomId,
         roomSlug: this.roomSlug,
+        roomHasPassword: this.hasPassword,
         userId: data.userId,
         username: data.username
     });
