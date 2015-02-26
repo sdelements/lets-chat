@@ -33,6 +33,7 @@ PresenceManager.prototype.getUsersForRoom = function(roomId) {
 
 PresenceManager.prototype.connect = function(connection) {
     this.system.addConnection(connection);
+    this.core.emit('connect', connection);
 
     connection.user = this.users.getOrAdd(connection.user);
 
@@ -43,6 +44,7 @@ PresenceManager.prototype.connect = function(connection) {
 
 PresenceManager.prototype.disconnect = function(connection) {
     this.system.removeConnection(connection);
+    this.core.emit('disconnect', connection);
     this.rooms.removeConnection(connection);
 };
 

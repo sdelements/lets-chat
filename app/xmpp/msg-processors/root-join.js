@@ -30,6 +30,7 @@ module.exports = MessageProcessor.extend({
 
             var presence = this.Presence({
                 from: helper.getUserJid(user.username),
+                type: undefined
             });
 
             msgs.push(presence);
