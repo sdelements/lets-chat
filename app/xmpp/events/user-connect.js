@@ -62,6 +62,8 @@ module.exports = EventListener.extend({
                 from: helper.getUserJid(connection.user.username)
             });
 
+            helper.populateVcard(presence, connection.user);
+
             this.send(x, presence);
 
         }, this);

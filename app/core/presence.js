@@ -31,15 +31,15 @@ PresenceManager.prototype.getUsersForRoom = function(roomId) {
     return room ? room.getUsers() : [];
 };
 
-PresenceManager.prototype.connect = function(connection) {
+PresenceManager.prototype.connect = function(connection, cb) {
     this.system.addConnection(connection);
     this.core.emit('connect', connection);
-
-    connection.user = this.users.getOrAdd(connection.user);
 
     connection.on('disconnect', function() {
         this.disconnect(connection);
     }.bind(this));
+
+    connection.user = this.users.getOrAdd(connection.user, cb);
 };
 
 PresenceManager.prototype.disconnect = function(connection) {

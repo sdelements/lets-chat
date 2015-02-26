@@ -74,6 +74,7 @@ Room.prototype.emitUserLeave = function(data) {
     this.userCount--;
 
     var d = {
+        user: data.user,
         userId: data.userId,
         username: data.username
     };
@@ -113,6 +114,7 @@ Room.prototype.addConnection = function(connection) {
         !this.containsUser(connection.user.id)) {
         // User joining room
         this.emitUserJoin({
+            user: connection.user,
             userId: connection.user.id,
             username: connection.user.username
         });
@@ -131,6 +133,7 @@ Room.prototype.removeConnection = function(connection) {
             !this.containsUser(connection.user.id)) {
             // Leaving room altogether
             this.emitUserLeave({
+                user: connection.user,
                 userId: connection.user.id,
                 username: connection.user.username
             });

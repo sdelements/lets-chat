@@ -27,6 +27,10 @@ module.exports = EventListener.extend({
                 role: 'participant'
             });
 
+            if (data.user) {
+                helper.populateVcard(presence, data.user);
+            }
+
             this.send(connection, presence);
         }, this);
     }

@@ -106,6 +106,9 @@ module.exports = MessageProcessor.extend({
                     role: 'participant'
                 });
 
+            // TODO: Add avatar for each room user
+            // helper.populateVcard(presence, user);
+
             return presence;
 
         }, this);

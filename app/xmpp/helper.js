@@ -17,7 +17,16 @@ function getRoomJid(roomId, username) {
     return jid;
 }
 
+function populateVcard(presence, user) {
+    if (user._image) {
+        var vcard = presence.c('x', { xmlns: 'vcard-temp:x:update' });
+        var photo = vcard.c('PHOTO');
+        photo.t(user._image.sha1);
+    }
+}
+
 module.exports = {
     getUserJid: getUserJid,
-    getRoomJid: getRoomJid
+    getRoomJid: getRoomJid,
+    populateVcard: populateVcard
 };

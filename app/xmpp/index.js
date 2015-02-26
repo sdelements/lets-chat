@@ -46,9 +46,9 @@ function xmppStart(core) {
                 client.user = user;
 
                 var conn = new XmppConnection(user, client);
-                core.presence.connect(conn);
-
-                cb(null, opts);
+                core.presence.connect(conn, function() {
+                    cb(null, opts);
+                });
             });
         });
 
