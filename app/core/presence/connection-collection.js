@@ -10,6 +10,7 @@ function ConnectionCollection() {
     this.get = this.get.bind(this);
     this.getUsers = this.getUsers.bind(this);
     this.getUserIds = this.getUserIds.bind(this);
+    this.getUsernames = this.getUsernames.bind(this);
 
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
@@ -27,39 +28,33 @@ ConnectionCollection.prototype.getUsers = function(filter) {
         connections = this.query(filter);
     }
 
-    var users = _.map(connections, function(value, key) {
-        return value.user;
-    });
+    var users = _.chain(connections)
+                .filter(function(value, key) {
+                    return !!value.user;
+                })
+                .map(function(value, key) {
+                    return value.user;
+                })
+                .uniq('id')
+                .value();
 
-    return _.uniq(users, 'id');
+    return users;
 };
 
 ConnectionCollection.prototype.getUserIds = function(filter) {
-    var connections = this.connections;
+    var users = this.getUsers(filter);
 
-    if (filter) {
-        connections = this.query(filter);
-    }
-
-    var userIds = _.map(connections, function(value, key) {
-        return value.user.id;
+    return _.map(users, function(user) {
+        return user.id;
     });
-
-    return _.uniq(userIds);
 };
 
 ConnectionCollection.prototype.getUsernames = function(filter) {
-    var connections = this.connections;
+    var users = this.getUsers(filter);
 
-    if (filter) {
-        connections = this.query(filter);
-    }
-
-    var usernames = _.map(connections, function(value, key) {
-        return value.user.username;
+    return _.map(users, function(user) {
+        return user.username;
     });
-
-    return _.uniq(usernames);
 };
 
 ConnectionCollection.prototype.query = function(options) {
