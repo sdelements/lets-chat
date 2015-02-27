@@ -18,9 +18,9 @@ function getRoomJid(roomId, username) {
 }
 
 function populateVcard(presence, user) {
+    var vcard = presence.c('x', { xmlns: 'vcard-temp:x:update' });
+    var photo = vcard.c('photo');
     if (user._image) {
-        var vcard = presence.c('x', { xmlns: 'vcard-temp:x:update' });
-        var photo = vcard.c('PHOTO');
         photo.t(user._image.sha1);
     }
 }

@@ -58,7 +58,6 @@ module.exports = EventListener.extend({
 
             // Announce presence
             var presence = new Stanza.Presence({
-                to: helper.getUserJid(x.user.username),
                 from: helper.getUserJid(connection.user.username)
             });
 

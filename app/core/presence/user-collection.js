@@ -46,7 +46,7 @@ UserCollection.prototype.remove = function(user) {
 
 UserCollection.prototype.getAvatarFile = function(user, target, cb) {
     var fs = require('fs');
-    var url = 'http://www.gravatar.com/avatar/' + user.avatar + '?s=32';
+    var url = 'http://www.gravatar.com/avatar/' + user.avatar + '?s=64';
 
     var request = http.get(url, function(response) {
         if (response.statusCode !== 200) {
