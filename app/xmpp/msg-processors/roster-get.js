@@ -60,7 +60,7 @@ module.exports = MessageProcessor.extend({
                 jid: helper.getUserJid(user.username),
                 name: user.displayName,
                 subscription: 'both'
-            }).c('group').t('Friends');
+            }).c('group').t('Let\'s Chat');
         }, this);
 
         cb(null, stanza);

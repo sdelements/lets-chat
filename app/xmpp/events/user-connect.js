@@ -51,7 +51,7 @@ module.exports = EventListener.extend({
                 jid: helper.getUserJid(connection.user.username),
                 name: connection.user.displayName,
                 subscription: 'both'
-            }).c('group').t('Friends');
+            }).c('group').t('Let\'s Chat');
 
             this.send(x, roster);
 
