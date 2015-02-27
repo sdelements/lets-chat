@@ -36,7 +36,7 @@ module.exports = function() {
                     take: req.param('take')
                 };
 
-            core.user.list(options, function(err, users) {
+            core.users.list(options, function(err, users) {
                 if (err) {
                     console.log(err);
                     return res.status(400).json(err);
