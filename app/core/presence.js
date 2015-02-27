@@ -19,6 +19,10 @@ function PresenceManager(options) {
     this.connect = this.connect.bind(this);
     this.getUserCountForRoom = this.getUserCountForRoom.bind(this);
     this.getUsersForRoom = this.getUsersForRoom.bind(this);
+
+    this.users.on('xmpp:avatar_ready', function(user) {
+        this.emit('xmpp:avatar_ready', user);
+    }.bind(options.core));
 }
 
 PresenceManager.prototype.getUserCountForRoom = function(roomId) {
@@ -31,15 +35,15 @@ PresenceManager.prototype.getUsersForRoom = function(roomId) {
     return room ? room.getUsers() : [];
 };
 
-PresenceManager.prototype.connect = function(connection, cb) {
+PresenceManager.prototype.connect = function(connection) {
     this.system.addConnection(connection);
     this.core.emit('connect', connection);
+
+    connection.user = this.users.getOrAdd(connection.user);
 
     connection.on('disconnect', function() {
         this.disconnect(connection);
     }.bind(this));
-
-    connection.user = this.users.getOrAdd(connection.user, cb);
 };
 
 PresenceManager.prototype.disconnect = function(connection) {
