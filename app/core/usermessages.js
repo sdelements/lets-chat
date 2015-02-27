@@ -48,7 +48,7 @@ UserMessageManager.prototype.create = function(options, cb) {
         var message = new UserMessage(data);
 
         // Test if this message is OTR
-        if (data.text.match(/^(\?OTR\?|\?OTR:)/)) {
+        if (data.text.match(/^\?OTR/)) {
             message._id = 'OTR';
             this.onMessageCreated(message, user, cb);
         } else {
