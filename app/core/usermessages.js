@@ -10,6 +10,22 @@ function UserMessageManager(options) {
 
 // options.currentUser, options.user
 
+UserMessageManager.prototype.onMessageCreated = function(message, user, cb) {
+    var User = mongoose.model('User');
+
+    User.findOne(message.owner, function(err, owner) {
+        if (err) {
+            console.error(err);
+            return cb(err);
+        }
+        if (cb) {
+            cb(null, message, user, owner);
+        }
+
+        this.core.emit('user-messages:new', message, user, owner);
+    }.bind(this));
+};
+
 UserMessageManager.prototype.create = function(options, cb) {
     var UserMessage = mongoose.model('UserMessage'),
         User = mongoose.model('User');
@@ -29,22 +45,21 @@ UserMessageManager.prototype.create = function(options, cb) {
             text: options.text
         };
 
-        UserMessage.create(data, function(err, message) {
-            if (err) {
-                console.error(err);
-                return cb(err);
-            }
+        var message = new UserMessage(data);
 
-            // Temporary workaround for _id until populate can do aliasing
-            User.findOne(message.owner, function(err, owner) {
+        // Test if this message is OTR
+        if (data.text.match(/^(\?OTR\?|\?OTR:)/)) {
+            message._id = 'OTR';
+            this.onMessageCreated(message, user, cb);
+        } else {
+            message.save(function(err) {
                 if (err) {
                     console.error(err);
                     return cb(err);
                 }
-                typeof cb === 'function' && cb(null, message, user, owner);
-                this.core.emit('user-messages:new', message, user, owner);
+                this.onMessageCreated(message, user, cb);
             }.bind(this));
-        }.bind(this));
+        }
     }.bind(this));
 };
 
