@@ -20,6 +20,14 @@ ConnectionCollection.prototype.get = function(connectionId) {
     return this.connections[connectionId];
 };
 
+ConnectionCollection.prototype.contains = function(connection) {
+    if (!connection) {
+        return false;
+    }
+    
+    return !!this.connections[connection.id];
+};
+
 ConnectionCollection.prototype.getUsers = function() {
     var users = _.map(this.connections, function(value, key) {
         return value.user;
