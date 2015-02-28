@@ -4,6 +4,7 @@ var fs = require('fs'),
     _ = require('lodash'),
     mongoose = require('mongoose'),
     helpers = require('./helpers'),
+    plugins = require('./../plugins'),
     settings = require('./../config').files,
     enabled = settings.enable;
 
@@ -19,12 +20,7 @@ function FileManager(options) {
     if (settings.provider === 'local') {
         Provider = require('./files/local');
     } else {
-        var pkgName = 'lets-chat-' + settings.provider;
-        var pkg = require(pkgName);
-        Provider = pkg && pkg.files;
-        if (!Provider) {
-            throw 'Module "' + pkgName + '"" is not a files provider';
-        }
+        Provider = plugins.getPlugin(settings.provider, 'files');
     }
 
     this.provider = new Provider(settings[settings.provider]);

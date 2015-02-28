@@ -8,6 +8,7 @@ var _ = require('lodash'),
     BearerStrategy = require('passport-http-bearer'),
     BasicStrategy = require('passport-http').BasicStrategy,
     settings = require('./../config'),
+    plugins = require('./../plugins'),
     providerSettings = {},
     MAX_AUTH_DELAY_TIME = 24 * 60 * 60 * 1000,
     loginAttempts = {},
@@ -20,15 +21,13 @@ function getProviders(core) {
         if (key === 'local') {
             Provider = require('./local');
         } else {
-            var pkgName = 'lets-chat-' + key;
-            var pkg = require(pkgName);
-            Provider = pkg && pkg.auth;
-            if (!Provider) {
-                throw 'Module "' + pkgName + '"" is not a auth provider';
-            }
+            Provider = plugins.getPlugin(key, 'auth');
         }
 
-        return new Provider(settings.auth[key], core);
+        return {
+            key: key,
+            provider: new Provider(settings.auth[key], core)
+        };
     });
 }
 
@@ -36,9 +35,9 @@ function setup(app, session, core) {
 
     enabledProviders = getProviders(core);
 
-    enabledProviders.forEach(function(provider) {
-        provider.setup();
-        providerSettings[provider.key] = provider.options;
+    enabledProviders.forEach(function(p) {
+        p.provider.setup();
+        providerSettings[p.key] = p.provider.options;
     });
 
     function tokenAuth(username, password, done) {
@@ -195,7 +194,8 @@ function authenticate() {
             cb = wrapAuthCallback(username, cb);
         }
 
-        var series = enabledProviders.map(function(provider) {
+        var series = enabledProviders.map(function(p) {
+            var provider = p.provider;
             return function() {
                 var args = Array.prototype.slice.call(arguments);
                 var callback = args.slice(args.length - 1)[0];
