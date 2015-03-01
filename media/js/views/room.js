@@ -24,15 +24,10 @@
             'click .lcb-upload-trigger': 'upload'
         },
         initialize: function(options) {
-            Handlebars.registerPartial('message-user-name',
-                                       $('#template-message-user-name').html());
-
             this.client = options.client;
             this.template = options.template;
             this.messageTemplate =
                 Handlebars.compile($('#template-message').html());
-            this.messageUserNameTemplate =
-                Handlebars.compile('{{> message-user-name}}');
             this.render();
             this.model.on('messages:new', this.addMessage, this);
             this.model.on('change', this.updateMeta, this);
@@ -367,14 +362,10 @@
             e.preventDefault();
             this.model.trigger('upload:show', this.model);
         },
-        updateUser : function(user) {
-            var selector = '.lcb-message[data-owner="{0}"] .lcb-message-name'
-                .replace('{0}', user.id);
-            var messages = this.$messages.find(selector);
-            var tmpled = this.messageUserNameTemplate({
-                owner : user.attributes
-            });
-            messages.html(tmpled);
+        updateUser: function(user) {
+            var $messages = this.$('.lcb-message[data-owner="' + user.id + '"]');
+            $messages.find('.lcb-message-username').text(user.get('username'));
+            $messages.find('.lcb-message-displayname').text(user.get('displayName'));
         }
     });
 
