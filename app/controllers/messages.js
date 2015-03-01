@@ -62,6 +62,9 @@ module.exports = function() {
         },
         list: function(req, res) {
             var options = {
+                    userId: req.user._id,
+                    password: req.param('password'),
+
                     room: req.param('room'),
                     since_id: req.param('since_id'),
                     from: req.param('from'),

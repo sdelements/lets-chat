@@ -13,6 +13,12 @@
         this.users = new UsersCollection();
         this.rooms = new RoomsCollection();
         this.events = _.extend({}, Backbone.Events);
+
+
+        this.passwordModal = new window.LCB.RoomPasswordModalView({
+            el: $('#lcb-password')
+        });
+
         return this;
     };
     //
@@ -39,7 +45,8 @@
         var room = {
             name: data.name,
             slug: data.slug,
-            description: data.description
+            description: data.description,
+            password: data.password
         };
         var callback = data.callback;
         this.socket.emit('rooms:create', room, function(room) {
@@ -88,12 +95,23 @@
                 replace: true
             });
             return;
+        } else if(room) {
+            this.joinRoom(room, true);
         } else {
-            this.joinRoom(id, true);
+            this.joinRoom({id: id}, true);
         }
     };
     Client.prototype.updateRoom = function(room) {
         this.socket.emit('rooms:update', room);
+        //
+        // update room to localstorage so we can reopen it on refresh
+        //
+        var savedRooms = store.get('openrooms');
+        _.remove(savedRooms, function(r) {
+            return r.id === room.id;
+        });
+        savedRooms.push({id: room.id, password: room.password});
+        store.set('openrooms', savedRooms);
     };
     Client.prototype.roomUpdate = function(resRoom) {
         var room = this.rooms.get(resRoom.id);
@@ -119,8 +137,10 @@
         this.leaveRoom(room.id);
         this.rooms.remove(room.id);
     };
-    Client.prototype.joinRoom = function(id, switchRoom) {
+    Client.prototype.joinRoom = function(room, switchRoom, callback) {
         var that = this;
+        var id = room !== undefined ? room.id : undefined;
+        var password = room !== undefined ? room.password : undefined;
         // We need an id and unlocked joining
         if (!id || _.contains(this.joining, id)) {
             // Nothing to do
@@ -131,14 +151,42 @@
         //
         this.joining = this.joining || [];
         this.joining.push(id);
-        this.socket.emit('rooms:join', id, function(resRoom) {
+
+        var passwordCB = function(password) {
+            room.password = password;
+            that.joinRoom(room, switchRoom, callback);
+        };
+
+        this.socket.emit('rooms:join', {roomId: id, password: password}, function(resRoom) {
             // Room was likely archived if this returns
             if (!resRoom) {
                 return;
             }
+
+            if (resRoom && resRoom.errors &&
+                resRoom.errors === 'password required') {
+
+                that.passwordModal.show({
+                    callback: passwordCB
+                });
+
+                return;
+            }
+
+            if (resRoom && resRoom.errors) {
+                return;
+            }
+
             var room = that.rooms.get(id);
             room = that.rooms.add(resRoom);
             room.set('joined', true);
+
+            if (room.get('hasPassword')) {
+                that.getRoomUsers(room.id, _.bind(function(users) {
+                    this.setUsers(room.id, users);
+                }, that));
+            }
+
             // Get room history
             that.getMessages({
                 room: room.id,
@@ -151,6 +199,7 @@
                 that.addMessages(messages, !room.get('loaded'));
                 room.set('loaded', true);
             });
+
             if (that.options.filesEnabled) {
                 that.getFiles({
                     room: room.id,
@@ -170,12 +219,18 @@
             var openRooms = store.get('openrooms');
             if (openRooms instanceof Array) {
                 // Check for duplicates
-                if (!_.contains(openRooms, id)) {
-                    openRooms.push(id);
+                if (!_.find(openRooms, function(room) { return room.id === id; })) {
+                    openRooms.push({id: id, password: password});
+                    store.set('openrooms', openRooms);
                 }
-                store.set('openrooms', openRooms);
             } else {
-                store.set('openrooms', [id]);
+                store.set('openrooms', [room]);
+            }
+            //
+            // If this function is called by UI, callback permit to hide modals
+            //
+            if(callback) {
+                callback();
             }
         });
         // Remove joining lock
@@ -188,6 +243,7 @@
         if (room) {
             room.set('joined', false);
             room.lastMessage.clear();
+            room.users.set([]);
         }
         this.socket.emit('rooms:leave', id);
         if (id === this.rooms.current.get('id')) {
@@ -195,7 +251,11 @@
             this.switchRoom(room && room.get('joined') ? room.id : '');
         }
         // Remove room id from localstorage
-        store.set('openrooms', _.without(store.get('openrooms'), id));
+        var savedRooms = store.get('openrooms');
+        _.remove(savedRooms, function(room) {
+            return room.id === id;
+        })
+        store.set('openrooms', savedRooms);
     };
     Client.prototype.getRoomUsers = function(id, callback) {
         this.socket.emit('rooms:users', {
@@ -387,11 +447,13 @@
 
                 openRooms = _.uniq(openRooms);
                 // Let's open some rooms!
-                _.each(openRooms, function(id) {
-                    if (roomIds.indexOf(id) !== -1) {
-                        that.joinRoom(id);
-                    }
-                });
+                _.defer(function() {//slow down because router can start a join with no password
+                    _.each(openRooms, function(id) {
+                        if (roomIds.indexOf(id) !== -1) {
+                            that.joinRoom(id);
+                        }
+                    });
+                }.bind(this));
             }
         }
 
@@ -408,7 +470,7 @@
         });
         this.socket.on('reconnect', function() {
             _.each(that.rooms.where({ joined: true }), function(room) {
-                that.joinRoom(room.id);
+                that.joinRoom(room);
             });
         });
         this.socket.on('messages:new', function(message) {
@@ -448,6 +510,7 @@
         this.events.on('rooms:switch', this.switchRoom, this);
         this.events.on('rooms:archive', this.archiveRoom, this);
         this.events.on('profile:update', this.updateProfile, this);
+        this.events.on('rooms:join', this.joinRoom, this);
     };
     //
     // Start

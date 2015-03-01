@@ -44,11 +44,16 @@
                 $input = $target.is(':checkbox') && $target || $target.siblings('[type="checkbox"]'),
                 id = $input.data('id'),
                 room = this.rooms.get(id);
+
             if (!room) {
                 return;
             }
-            (!$input.is(':checked') && this.client.joinRoom(room.id)) ||
-                (this.rooms.get(room.id).get('joined') && this.client.leaveRoom(room.id));
+
+            if (room.get('joined')) {
+                this.client.leaveRoom(room.id);
+            } else {
+                this.client.joinRoom(room);
+            }
         },
         add: function(room) {
             var room = room.toJSON ? room.toJSON() : room,
@@ -100,28 +105,61 @@
             });
         },
         create: function(e) {
+            var that = this;
             e.preventDefault();
-            var $modal = this.$('#lcb-add-room'),
-                $form = this.$(e.target),
+            var $form = this.$(e.target),
+                $modal = this.$('#lcb-add-room'),
+                $name = this.$('.lcb-room-name'),
+                $slug = this.$('.lcb-room-slug'),
+                $description = this.$('.lcb-room-description'),
+                $password = this.$('.lcb-room-password'),
+                $confirmPassword = this.$('.lcb-room-confirm-password'),
                 data = {
-                    name: this.$('.lcb-room-name').val().trim(),
-                    slug: this.$('.lcb-room-slug').val().trim(),
-                    description: this.$('.lcb-room-description').val(),
+                    name: $name.val().trim(),
+                    slug: $slug.val().trim(),
+                    description: $description.val(),
+                    password: $password.val(),
                     callback: function success() {
                         $modal.modal('hide');
                         $form.trigger('reset');
                     }
                 };
+
+            $name.parent().removeClass('has-error');
+            $slug.parent().removeClass('has-error');
+            $confirmPassword.parent().removeClass('has-error');
+
             // we require name is non-empty
             if (!data.name) {
                 $name.parent().addClass('has-error');
                 return;
             }
+
             // we require slug is non-empty
             if (!data.slug) {
                 $slug.parent().addClass('has-error');
                 return;
             }
+
+            // remind the user, that users may share the password with others
+            if (data.password) {
+                if (data.password !== $confirmPassword.val()) {
+                    $confirmPassword.parent().addClass('has-error');
+                    return;
+                }
+
+                swal({
+                    title: 'Are you sure?',
+                    text: 'Users can share this password with other users (who were not invited by you).',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, I know it!'
+                }, function(){
+                    that.client.events.trigger('rooms:create', data);
+                });
+                return;
+            }
+
             this.client.events.trigger('rooms:create', data);
         },
         addUser: function(user, room) {

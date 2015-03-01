@@ -62,3 +62,6 @@ private:
   roster: online # online / all
 
 noRobots: true # Serve robots.txt with disallow
+
+rooms:
+  passwordProtected: false
