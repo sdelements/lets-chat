@@ -4,8 +4,10 @@
             <img class="lcb-message-avatar lcb-avatar lcb-room-poke" src="https://www.gravatar.com/avatar/{{owner.avatar}}?s=30" />
         {{/unless}}
         <div class="lcb-message-meta">
-            {{> message-user-name}}
-            <time class="lcb-message-time" title="{{posted}}"></time>
+            {{#unless fragment}}
+                {{> message-user-name}}
+                <time class="lcb-message-time" title="{{posted}}"></time>
+            {{/unless}}
             <div class="lcb-message-text">
                 {{#unless paste}}
                     {{text}}
