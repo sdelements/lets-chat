@@ -65,12 +65,20 @@
     }
 }
 
+.lcb-rooms-list-item-top {
+    padding-right: 60px;
+}
+
 .lcb-rooms-list-item-name,
 .lcb-rooms-list-item-slug {
-    max-width: 40%;
+    max-width: 49%;
     vertical-align: middle;
     display: inline-block;
     .text-overflow;
+    @media (max-width: @screen-xs-max) {
+        margin-bottom: 0;
+        max-width: 100%;
+    }
 }
 
 .lcb-rooms-list-item-name {
@@ -81,6 +89,14 @@
     font-size: 16px;
     font-weight: 300;
     color: #aaa;
+    @media (max-width: @screen-xs-max) {
+        margin-bottom: 10px;
+        display: block;
+    }
+}
+
+.lcb-rooms-list-item-description {
+    .text-overflow;
 }
 
 .lcb-rooms-list-item-last-active {
@@ -114,6 +130,7 @@
 }
 
 .lcb-rooms-list-item-switch {
+    font-size: 9px;
     position: absolute;
     right: 24px;
     top: 12px;
