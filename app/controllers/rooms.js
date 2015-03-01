@@ -187,11 +187,16 @@ module.exports = function() {
         },
         join: function(req, res) {
             var options = {
-                id: req.param('roomId'),
-                userId: req.user._id,
-                password: req.param('password'),
-                saveMembership: true
-            };
+                    userId: req.user._id,
+                    saveMembership: true
+                };
+
+            if (typeof req.data === 'string') {
+                options.id = req.data;
+            } else {
+                options.id = req.param('roomId');
+                options.password = req.param('password');
+            }
 
             core.rooms.canJoin(options, function(err, room, canJoin) {
                 if (err) {
