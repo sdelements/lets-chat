@@ -97,6 +97,21 @@ app.use(helmet.contentSecurityPolicy({
     imgSrc: ['*']
 }));
 
+// Disable cross-origin request sharing
+if(settings.security.serverAuthority){
+    app.use(function(req, res, next){
+        if(req.headers.origin && req.headers.origin !== settings.security.serverAuthority){
+            res.status(403).send({
+                status: 'error',
+                message: 'Requests not allowed from this origin'
+            });
+        }
+        else {
+            next();
+        }
+    });
+}
+
 var bundles = {};
 app.use(require('connect-assets')({
     paths: [
