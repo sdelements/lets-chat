@@ -236,7 +236,7 @@ function checkForMongoTextSearch() {
             return;
         }
 
-        if(version[0] === 2 && version[1] < 6) {
+        if(version[0] === '2' && version[1] < 6) {
             return;
         }
 
