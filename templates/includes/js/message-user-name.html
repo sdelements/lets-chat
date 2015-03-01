@@ -1,0 +1,12 @@
+<script type="text/x-handlebars-template" id="template-message-user-name">
+    {{#unless fragment}}
+    <span class="lcb-message-name">
+        <span class="lcb-room-poke">
+            {{owner.displayName}}
+            <span class="lcb-message-username">
+                @{{owner.username}}
+            </span>
+        </span>
+	</span>
+    {{/unless}}
+</script>

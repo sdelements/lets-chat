@@ -6,7 +6,7 @@
 'use strict';
 
 +function(window, $, _) {
-
+    
     window.LCB = window.LCB || {};
 
     window.LCB.RoomView = Backbone.View.extend({
@@ -24,13 +24,19 @@
             'click .lcb-upload-trigger': 'upload'
         },
         initialize: function(options) {
+
+            Handlebars.registerPartial("message-user-name", $("#template-message-user-name").html());
+            
             this.client = options.client;
             this.template = options.template;
             this.messageTemplate = Handlebars.compile($('#template-message').html());
+            this.messageUserNameTemplate = Handlebars.compile($('#template-message-user-name').html());
             this.render();
             this.model.on('messages:new', this.addMessage, this);
             this.model.on('change', this.updateMeta, this);
             this.model.on('remove', this.goodbye, this);
+            this.model.users.on("change:displayName", this.updateUser, this);
+            
             //
             // Subviews
             //
@@ -358,6 +364,9 @@
         upload: function(e) {
             e.preventDefault();
             this.model.trigger('upload:show', this.model);
+        },
+        updateUser : function(user) {
+          this.$messages.find(".lcb-message[data-owner='{0}'] .lcb-message-name".replace("{0}", user.id)).html($(this.messageUserNameTemplate({ owner : user.attributes }).trim()));
         }
     });
 
