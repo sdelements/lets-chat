@@ -54,7 +54,7 @@
             callback && callback(room);
         });
     };
-    Client.prototype.getRooms = function() {
+    Client.prototype.getRooms = function(cb) {
         var that = this;
         this.socket.emit('rooms:list', { users: true }, function(rooms) {
             that.rooms.set(rooms);
@@ -65,6 +65,10 @@
                     that.setUsers(room.id, room.users);
                 }
             });
+
+            if (cb) {
+                cb(rooms);
+            }
         });
     };
     Client.prototype.switchRoom = function(id) {
@@ -366,6 +370,31 @@
     //
     Client.prototype.listen = function() {
         var that = this;
+
+        function joinRooms(rooms) {
+            //
+            // Join rooms from localstorage
+            // We need to check each room is available before trying to join
+            //
+            var roomIds = _.map(rooms, function(room) {
+                return room.id;
+            });
+
+            var openRooms = store.get('openrooms');
+            if (openRooms instanceof Array) {
+                // Flush the stored array
+                store.set('openrooms', []);
+
+                openRooms = _.uniq(openRooms);
+                // Let's open some rooms!
+                _.each(openRooms, function(id) {
+                    if (roomIds.indexOf(id) !== -1) {
+                        that.joinRoom(id);
+                    }
+                });
+            }
+        }
+
         //
         // Socket
         //
@@ -374,7 +403,7 @@
         });
         this.socket.on('connect', function() {
             that.getUser();
-            that.getRooms();
+            that.getRooms(joinRooms);
             that.status.set('connected', true);
         });
         this.socket.on('reconnect', function() {
@@ -431,18 +460,6 @@
         this.view = new window.LCB.ClientView({
             client: this
         });
-        //
-        // Join rooms from localstorage
-        //
-        var openRooms = store.get('openrooms');
-        if (openRooms instanceof Array) {
-            // Flush the stored array
-            store.set('openrooms', []);
-            // Let's open some rooms!
-            _.each(_.uniq(openRooms), function(id) {
-                this.joinRoom(id);
-            }, this);
-        }
         return this;
     };
     //

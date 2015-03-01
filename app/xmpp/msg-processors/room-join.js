@@ -10,9 +10,27 @@ var _ = require('lodash'),
 module.exports = MessageProcessor.extend({
 
     if: function() {
-        return this.toARoom &&
+        var roomPresense = this.toARoom &&
                !this.request.type &&
                this.request.name === 'presence';
+
+        if (!roomPresense) {
+            return false;
+        }
+
+        var toParts = this.request.attrs.to.split('/'),
+            roomUrl = toParts[0],
+            roomSlug = roomUrl.split('@')[0];
+
+        var proom = this.core.presence.rooms.slug(roomSlug);
+
+        if (proom && proom.connections.contains(this.connection)) {
+            // If this connection is already in the room
+            // then no need to run this message processor
+            return false;
+        }
+
+        return true;
     },
 
     then: function(cb) {

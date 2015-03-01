@@ -7,7 +7,9 @@
             {{#unless fragment}}
                 <span class="lcb-message-name">
                     <span class="lcb-room-poke">
-                        {{owner.displayName}}
+                        <span class="lcb-message-displayname">
+                            {{owner.displayName}}
+                        </span>
                         <span class="lcb-message-username">
                             @{{owner.username}}
                         </span>

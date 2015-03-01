@@ -142,6 +142,7 @@ function wrapBundler(func) {
 
 nun.addFilter('js', wrapBundler(bundles.js));
 nun.addFilter('css', wrapBundler(bundles.css));
+nun.addGlobal('text_search', false);
 
 // HTTP Middlewares
 app.use(bodyParser.json());
@@ -219,10 +220,36 @@ function startApp() {
     console.log('\n' + art + '\n\n' + 'Release ' + psjon.version.yellow + '\n');
 }
 
+function checkForMongoTextSearch() {
+    var admin = new mongoose.mongo.Admin(mongoose.connection.db);
+    admin.buildInfo(function (err, info) {
+        if (err || !info) {
+            return;
+        }
+
+        var version = info.version.split('.');
+        if (version.length < 2) {
+            return;
+        }
+
+        if(version[0] < 2) {
+            return;
+        }
+
+        if(version[0] === 2 && version[1] < 6) {
+            return;
+        }
+
+        nun.addGlobal('text_search', true);
+    });
+}
+
 mongoose.connect(settings.database.uri, function(err) {
     if (err) {
         throw err;
     }
+
+    checkForMongoTextSearch();
 
     migroose.needsMigration(function(migrationRequired) {
         if (migrationRequired) {

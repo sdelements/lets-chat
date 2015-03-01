@@ -26,11 +26,14 @@
         initialize: function(options) {
             this.client = options.client;
             this.template = options.template;
-            this.messageTemplate = Handlebars.compile($('#template-message').html());
+            this.messageTemplate =
+                Handlebars.compile($('#template-message').html());
             this.render();
             this.model.on('messages:new', this.addMessage, this);
             this.model.on('change', this.updateMeta, this);
             this.model.on('remove', this.goodbye, this);
+            this.model.users.on('change', this.updateUser, this);
+
             //
             // Subviews
             //
@@ -358,6 +361,11 @@
         upload: function(e) {
             e.preventDefault();
             this.model.trigger('upload:show', this.model);
+        },
+        updateUser: function(user) {
+            var $messages = this.$('.lcb-message[data-owner="' + user.id + '"]');
+            $messages.find('.lcb-message-username').text(user.get('username'));
+            $messages.find('.lcb-message-displayname').text(user.get('displayName'));
         }
     });
 
