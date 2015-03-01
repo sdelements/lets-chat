@@ -48,6 +48,10 @@ MessageManager.prototype.create = function(options, cb) {
 MessageManager.prototype.list = function(options, cb) {
     options = options || {};
 
+    if (!options.room) {
+        return cb(null, []);
+    }
+
     options = helpers.sanitizeQuery(options, {
         defaults: {
             reverse: true,
@@ -59,11 +63,9 @@ MessageManager.prototype.list = function(options, cb) {
     var Message = mongoose.model('Message'),
         User = mongoose.model('User');
 
-    var find = Message.find();
-
-    if (options.room) {
-        find.where('room', options.room);
-    }
+    var find = Message.find({
+        room: options.room
+    });
 
     if (options.since_id) {
         find.where('_id').gt(options.since_id);

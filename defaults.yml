@@ -6,10 +6,12 @@ env: development # development / production
 
 http:
   enable: true
+  host:
   port: 5000
 
 https:
   enable: false
+  host:
   port: 5001
   key: key.pem
   cert: certificate.pem
@@ -42,7 +44,6 @@ files:
     - 'image/jpeg'
     - 'image/png'
     - 'image/gif'
-
   local:
     dir: uploads
 
@@ -50,10 +51,10 @@ auth:
   throttling:
     enable: true
     threshold: 3
-
   providers: [local] # [local, kerberos, ldap] - You can specify the order
-
   local:
     enableRegistration: true
     passwordRegex: ^.{8,64}$
     salt: secretsauce # Required when upgrading from version < 0.3
+
+noRobots: true # Serve robots.txt with disallow

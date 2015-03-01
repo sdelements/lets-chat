@@ -3,6 +3,9 @@
 var settings = require('./../config');
 
 function getUserJid(username) {
+    if (username.indexOf('@' + settings.xmpp.host) !== -1) {
+        return username;
+    }
     return username + '@' + settings.xmpp.host;
 }
 

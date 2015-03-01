@@ -23,6 +23,12 @@ RoomCollection.prototype.get = function(roomId) {
     return this.rooms[roomId];
 };
 
+RoomCollection.prototype.slug = function(slug) {
+    return _.find(this.rooms, function(room) {
+        return room.roomSlug === slug;
+    });
+};
+
 RoomCollection.prototype.getOrAdd = function(roomId, roomSlug) {
     roomId = roomId.toString();
     roomSlug = roomSlug && roomSlug.toString() || roomId.toString();

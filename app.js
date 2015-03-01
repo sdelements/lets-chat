@@ -130,14 +130,30 @@ var nun = nunjucks.configure('templates', {
         }
     });
 
-nun.addFilter('js', bundles.js);
-nun.addFilter('css', bundles.css);
+function wrapBundler(func) {
+    // This method ensures all assets paths start with "./"
+    // Making them relative, and not absolute
+    return function() {
+        return func.apply(func, arguments)
+                   .replace(/href="\//g, 'href="./')
+                   .replace(/src="\//g, 'src="./');
+    };
+}
+
+nun.addFilter('js', wrapBundler(bundles.js));
+nun.addFilter('css', wrapBundler(bundles.css));
 
 // HTTP Middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+// IE header
+app.use(function(req, res, next) {
+    res.setHeader('X-UA-Compatible', 'IE=Edge,chrome=1');
+    next();
+});
 
 //
 // Controllers
@@ -173,6 +189,11 @@ function startApp() {
     var port = httpsEnabled && settings.https.port ||
                httpEnabled && settings.http.port;
 
+    var host = httpsEnabled && settings.https.host ||
+               httpEnabled && settings.http.host || '0.0.0.0';
+
+
+
     if (httpsEnabled && httpEnabled) {
         // Create an HTTP -> HTTPS redirect server
         var redirectServer = express();
@@ -180,10 +201,11 @@ function startApp() {
             var urlPort = port === 80 ? '' : ':' + port;
             res.redirect('https://' + req.hostname + urlPort + req.path);
         });
-        http.createServer(redirectServer).listen(settings.http.port || 5000);
+        http.createServer(redirectServer)
+            .listen(settings.http.port || 5000, host);
     }
 
-    app.listen(port);
+    app.listen(port, host);
 
     //
     // XMPP
@@ -208,7 +230,7 @@ mongoose.connect(settings.database.uri, function(err) {
             console.log('Ensure you backup your database first.');
             console.log('');
             console.log(
-                'Run the following command: ' + 'npm run-script migrate'.yellow
+                'Run the following command: ' + 'npm run migrate'.yellow
             );
 
             return process.exit();

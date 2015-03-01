@@ -20,7 +20,7 @@ cd lets-chat
 git checkout #{LCB_BRANCH}
 npm install
 cp settings.yml.sample settings.yml
-npm start
+LCB_HTTP_HOST=0.0.0.0 npm start
 EOF
 
 

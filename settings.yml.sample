@@ -4,10 +4,11 @@
 # See defaults.yml for all available options
 #
 
-env: development # development / production
+env: production # development / production
 
 http:
   enable: true
+  host: 'localhost'
   port: 5000
 
 https:
@@ -33,18 +34,8 @@ database:
 secrets:
   cookie: secretsauce
 
-  local:
-    dir: uploads
-
-  s3:
-    accessKeyId:
-    secretAccessKey:
-    bucket:
-    region:
-
 auth:
   providers: [local]
-
   local:
     enableRegistration: true
     salt: secretsauce # Required when upgrading from version < 0.3

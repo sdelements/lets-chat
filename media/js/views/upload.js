@@ -20,6 +20,7 @@ Dropzone && (Dropzone.autoDiscover = false);
             this.rooms = options.rooms;
             this.rooms.current.on('change:id', this.setRoom, this);
             this.rooms.on('add remove', this.populateRooms, this);
+            this.rooms.on('change:joined', this.populateRooms, this);
             this.rooms.on('upload:show', this.show, this);
             this.render();
         },
@@ -27,7 +28,8 @@ Dropzone && (Dropzone.autoDiscover = false);
             //
             // Dropzone
             //
-            this.dropzone = new Dropzone(this.$el.closest('.lcb-client').get(0), {
+            var $ele = this.$el.closest('.lcb-client').get(0);
+            this.dropzone = new Dropzone($ele, {
                 url: './files',
                 autoProcessQueue: false,
                 clickable: [this.$('.lcb-upload-target').get(0)],
@@ -68,7 +70,7 @@ Dropzone && (Dropzone.autoDiscover = false);
         },
         complete: function(e) {
             var remaining = _.some(this.dropzone.files, function(file) {
-                return file.status !== 'success'
+                return file.status !== 'success';
             });
             if (remaining) {
                 swal('Woops!', 'There were some issues uploading your files.', 'warning');
@@ -90,15 +92,17 @@ Dropzone && (Dropzone.autoDiscover = false);
             this.dropzone.processQueue();
         },
         setRoom: function() {
-            this.selectize.setValue(this.rooms.current.id)
+            this.selectize.setValue(this.rooms.current.id);
         },
         populateRooms: function() {
             this.selectize.clearOptions();
             this.rooms.each(function(room) {
-                this.selectize.addOption({
-                    id: room.id,
-                    name: room.get('name')
-                })
+                if (room.get('joined')) {
+                    this.selectize.addOption({
+                        id: room.id,
+                        name: room.get('name')
+                    });
+                }
             }, this);
         }
     });

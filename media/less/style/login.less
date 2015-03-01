@@ -30,7 +30,6 @@
 .lcb-login-main {
     max-width: 420px;
     text-align: center;
-    margin: 0 auto;
     padding: 20px;
     padding-bottom: 60px;
     position: relative;
@@ -61,6 +60,17 @@
     .box-shadow(0 0 20px 3px rgba(0,0,0,.1));
     .response:empty {
         display: none;
+    }
+
+    @media (min-width: @screen-sm-min) {
+        .row {
+            .col-sm-9:first-child {
+                padding-right: 10px;
+            }
+            .col-sm-9:last-child {
+                padding-left: 10px;
+            }
+        }
     }
 }
 

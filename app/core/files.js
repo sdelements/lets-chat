@@ -4,6 +4,7 @@ var fs = require('fs'),
     _ = require('lodash'),
     mongoose = require('mongoose'),
     helpers = require('./helpers'),
+    plugins = require('./../plugins'),
     settings = require('./../config').files,
     enabled = settings.enable;
 
@@ -19,11 +20,7 @@ function FileManager(options) {
     if (settings.provider === 'local') {
         Provider = require('./files/local');
     } else {
-        var pkg = require('lets-chat-' + settings.provider);
-        Provider = pkg && pkg.files;
-        if (!Provider) {
-            throw 'Module "' + pkgName + '"" is not a files provider';
-        }
+        Provider = plugins.getPlugin(settings.provider, 'files');
     }
 
     this.provider = new Provider(settings[settings.provider]);
@@ -102,6 +99,10 @@ FileManager.prototype.list = function(options, cb) {
 
     options = options || {};
 
+    if (!options.room) {
+        return cb(null, []);
+    }
+
     options = helpers.sanitizeQuery(options, {
         defaults: {
             reverse: true,
@@ -113,11 +114,9 @@ FileManager.prototype.list = function(options, cb) {
     var File = mongoose.model('File'),
         User = mongoose.model('User');
 
-    var find = File.find();
-
-    if (options.room) {
-        find.where('room', options.room);
-    }
+    var find = File.find({
+        room: options.room
+    });
 
     if (options.from) {
         find.where('uploaded').gt(options.from);

@@ -74,7 +74,7 @@ RoomManager.prototype.archive = function(roomId, cb) {
                 return cb(err);
             }
             cb(null, room);
-            this.core.emit('rooms:archived', room);
+            this.core.emit('rooms:archive', room);
 
         }.bind(this));
     }.bind(this));
