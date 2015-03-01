@@ -4,9 +4,10 @@
 
 $(function() {
     var transcript = new window.LCB.TranscriptView({
+        el: '.lcb-transcript',
         room: {
-            id: $('#room_id').val(),
-            name: $('#room_name').val()
+            id: $('[name="room-id"]').val(),
+            name: $('[name="room-name"]').val()
         }
     });
 });
