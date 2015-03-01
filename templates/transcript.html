@@ -24,7 +24,9 @@
                     <span class="lcb-transcript-daterange-range"></span>
                     <b class="caret"></b>
                 </div>
-                <input type="search" class="lcb-search-entry form-control" placeholder="Search..." />
+                <% if text_search %>
+                    <input type="search" class="lcb-search-entry form-control" placeholder="Search..." />
+                <% endif %>
             </div>
         </div>
         <ul class="lcb-transcript-messages"></ul>
