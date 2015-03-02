@@ -47,8 +47,10 @@
                 el: this.$el.find('.lcb-account-button'),
                 model: this.client.user
             });
-            this.notifications = new window.LCB.NotificationsView();
-
+            this.desktopNotifications = new window.LCB.DesktopNotificationsView({
+                rooms: this.client.rooms,
+                client: this.client
+            });
             if (this.client.options.filesEnabled) {
                 this.upload = new window.LCB.UploadView({
                     el: this.$el.find('#lcb-upload'),
@@ -69,6 +71,7 @@
             this.tokenModal = new window.LCB.AuthTokensModalView({
                 el: this.$el.find('#lcb-tokens')
             });
+            this.notifications = new window.LCB.NotificationsView();
             //
             // Misc
             //

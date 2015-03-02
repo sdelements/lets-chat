@@ -144,12 +144,11 @@
                 room: room.id,
                 since_id: room.lastMessage.get('id'),
                 take: 200,
-                expand: 'owner',
+                expand: 'owner, room',
                 reverse: true
             }, function(messages) {
                 messages.reverse();
-                that.addMessages(messages, !room.get('loaded'));
-                room.set('loaded', true);
+                that.addMessages(messages, !room.lastMessage);
             });
             if (that.options.filesEnabled) {
                 that.getFiles({
