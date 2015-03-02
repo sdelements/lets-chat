@@ -42,9 +42,7 @@ AvatarCache.prototype.add = function(user) {
                 sha1: crypto.createHash('sha1').update(buffer).digest('hex')
             };
 
-            this.core.emit('avatar-cache:update', {
-                userId: userId
-            });
+            this.core.emit('avatar-cache:update', user);
         }.bind(this));
     }.bind(this));
 };
