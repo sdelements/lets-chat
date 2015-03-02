@@ -19,13 +19,11 @@ module.exports = function() {
     //
     app.get('/transcript', middlewares.requireLogin, function(req, res) {
         var roomId = req.param('room');
-
         core.rooms.get(roomId, function(err, room) {
-            if (err) {
-                console.error(err);
-                return req.io.respond(err, 400);
+            if (err || !room) {
+                err && console.error(err)
+                return res.sendStatus(404);
             }
-
             res.render('transcript.html', {
                 room: {
                     id: roomId,
