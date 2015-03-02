@@ -199,7 +199,7 @@ module.exports = MessageProcessor.extend({
                 });
 
             // TODO: Add avatar for each room user
-            // helper.populateVcard(presence, user);
+            // helper.populateVcard(presence, user, this.core);
 
             return presence;
 

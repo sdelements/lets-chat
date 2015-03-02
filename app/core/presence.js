@@ -12,17 +12,13 @@ function PresenceManager(options) {
     this.system = new Room({ system: true });
     this.connections = new ConnectionCollection();
     this.rooms = new RoomCollection();
-    this.users = new UserCollection();
+    this.users = new UserCollection({ core: this.core });
     this.rooms.on('user_join', this.onJoin.bind(this));
     this.rooms.on('user_leave', this.onLeave.bind(this));
 
     this.connect = this.connect.bind(this);
     this.getUserCountForRoom = this.getUserCountForRoom.bind(this);
     this.getUsersForRoom = this.getUsersForRoom.bind(this);
-
-    this.users.on('xmpp:avatar_ready', function(user) {
-        this.emit('xmpp:avatar_ready', user);
-    }.bind(options.core));
 }
 
 PresenceManager.prototype.getUserCountForRoom = function(roomId) {

@@ -17,11 +17,13 @@ function getRoomJid(roomId, username) {
     return jid;
 }
 
-function populateVcard(presence, user) {
+function populateVcard(presence, user, core) {
     var vcard = presence.c('x', { xmlns: 'vcard-temp:x:update' });
     var photo = vcard.c('photo');
-    if (user._image) {
-        photo.t(user._image.sha1);
+
+    var avatar = core.avatars.get(user.id);
+    if (avatar) {
+        photo.t(avatar.sha1);
     }
 }
 

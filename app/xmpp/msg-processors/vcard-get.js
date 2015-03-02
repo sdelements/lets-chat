@@ -52,10 +52,13 @@ module.exports = MessageProcessor.extend({
 
         vcard.c('JABBERID').t(helper.getUserJid(user.username));
 
-        if (user._image) {
+        var userId = (user.id || user._id).toString();
+
+        var avatar = this.core.avatars.get(userId);
+        if (avatar) {
             var photo = vcard.c('PHOTO');
             photo.c('TYPE').t('image/jpeg');
-            photo.c('BINVAL').t(user._image.base64);
+            photo.c('BINVAL').t(avatar.base64);
         }
 
         cb(null, stanza);

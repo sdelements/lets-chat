@@ -6,8 +6,9 @@ var EventEmitter = require('events').EventEmitter,
     util = require('util'),
     _ = require('lodash');
 
-function UserCollection() {
+function UserCollection(options) {
     EventEmitter.call(this);
+    this.core = options.core;
     this.users = {};
 
     this.get = this.get.bind(this);
@@ -33,7 +34,7 @@ UserCollection.prototype.getOrAdd = function(user) {
     if (!this.users[userId]) {
         _.assign(user2, { id: userId });
         this.users[userId] = user2;
-        this.getAvatarFile(user, user2);
+        this.core.avatars.add(user);
     }
     return this.users[userId];
 };
@@ -42,35 +43,6 @@ UserCollection.prototype.remove = function(user) {
     user = typeof user.toJSON === 'function' ? user.toJSON() : user;
     var userId = typeof user === 'object' ? user.id.toString() : user;
     delete this.users[userId];
-};
-
-UserCollection.prototype.getAvatarFile = function(user, target) {
-    var fs = require('fs');
-    var url = 'http://www.gravatar.com/avatar/' + user.avatar + '?s=64';
-
-    var request = http.get(url, function(response) {
-        if (response.statusCode !== 200) {
-            return;
-        }
-
-        var buffers = [];
-
-        response.on('data', function(buffer) {
-            buffers.push(buffer);
-        });
-
-        response.on('end', function() {
-            var buffer = Buffer.concat(buffers);
-            var image = buffer.toString('base64');
-
-            target._image = {
-                base64: buffer.toString('base64'),
-                sha1: crypto.createHash('sha1').update(buffer).digest('hex')
-            };
-
-            this.emit('xmpp:avatar_ready', target);
-        }.bind(this));
-    }.bind(this));
 };
 
 module.exports = UserCollection;

@@ -37,7 +37,7 @@ module.exports = MessageProcessor.extend({
                 type: undefined
             });
 
-            helper.populateVcard(presence, user);
+            helper.populateVcard(presence, user, this.core);
 
             msgs.push(presence);
 

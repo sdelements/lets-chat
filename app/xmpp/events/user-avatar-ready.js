@@ -8,7 +8,7 @@ var _ = require('lodash'),
 
 module.exports = EventListener.extend({
 
-    on: 'xmpp:avatar_ready',
+    on: 'avatar-cache:update',
 
     then: function(user) {
         if (!settings.private.enable) {
@@ -39,7 +39,7 @@ module.exports = EventListener.extend({
                 from: helper.getUserJid(user.username)
             });
 
-            helper.populateVcard(presence, user);
+            helper.populateVcard(presence, user, this.core);
 
             this.send(x, presence);
         }, this);
