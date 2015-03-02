@@ -3,6 +3,29 @@
 //
 
 (function(window, $, _) {
+
+    var RoomStore = {
+        add: function(id) {
+            var rooms = store.get('openrooms') || [];
+            if (!_.contains(rooms, id)) {
+                rooms.push(id);
+                store.set('openrooms', rooms);
+            }
+        },
+        remove: function(id) {
+            var rooms = store.get('openrooms') || [];
+            if (_.contains(rooms, id)) {
+                store.set('openrooms', _.without(rooms, id));
+            }
+        },
+        get: function() {
+            var rooms = store.get('openrooms') || [];
+            rooms = _.uniq(rooms);
+            store.set('openrooms', rooms);
+            return rooms;
+        }
+    };
+
     //
     // Base
     //
@@ -103,15 +126,7 @@
     };
     Client.prototype.updateRoom = function(room) {
         this.socket.emit('rooms:update', room);
-        //
-        // update room to localstorage so we can reopen it on refresh
-        //
-        var savedRooms = store.get('openrooms');
-        _.remove(savedRooms, function(r) {
-            return r.id === room.id;
-        });
-        savedRooms.push({id: room.id, password: room.password});
-        store.set('openrooms', savedRooms);
+        RoomStore.add(room.id);
     };
     Client.prototype.roomUpdate = function(resRoom) {
         var room = this.rooms.get(resRoom.id);
@@ -216,16 +231,7 @@
             //
             // Add room id to localstorage so we can reopen it on refresh
             //
-            var openRooms = store.get('openrooms');
-            if (openRooms instanceof Array) {
-                // Check for duplicates
-                if (!_.find(openRooms, function(room) { return room.id === id; })) {
-                    openRooms.push({id: id, password: password});
-                    store.set('openrooms', openRooms);
-                }
-            } else {
-                store.set('openrooms', [room]);
-            }
+            RoomStore.add(id);
             //
             // If this function is called by UI, callback permit to hide modals
             //
@@ -251,11 +257,7 @@
             this.switchRoom(room && room.get('joined') ? room.id : '');
         }
         // Remove room id from localstorage
-        var savedRooms = store.get('openrooms');
-        _.remove(savedRooms, function(room) {
-            return room.id === id;
-        })
-        store.set('openrooms', savedRooms);
+        RoomStore.remove(id);
     };
     Client.prototype.getRoomUsers = function(id, callback) {
         this.socket.emit('rooms:users', {
@@ -440,21 +442,16 @@
                 return room.id;
             });
 
-            var openRooms = store.get('openrooms');
-            if (openRooms instanceof Array) {
-                // Flush the stored array
-                store.set('openrooms', []);
-
-                openRooms = _.uniq(openRooms);
-                // Let's open some rooms!
-                _.defer(function() {//slow down because router can start a join with no password
-                    _.each(openRooms, function(id) {
-                        if (roomIds.indexOf(id) !== -1) {
-                            that.joinRoom(id);
-                        }
-                    });
-                }.bind(this));
-            }
+            var openRooms = RoomStore.get();
+            // Let's open some rooms!
+            _.defer(function() {
+                //slow down because router can start a join with no password
+                _.each(openRooms, function(id) {
+                    if (_.contains(roomIds, id)) {
+                        that.joinRoom({ id: id });
+                    }
+                });
+            }.bind(this));
         }
 
         //
