@@ -149,11 +149,10 @@
                 }
 
                 swal({
-                    title: 'Are you sure?',
-                    text: 'Users can share this password with other users (who were not invited by you).',
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, I know it!'
+                    title: 'Password-protected room',
+                    text: 'You\'re creating a room with a shared password.\n' +
+                          'Anyone who obtains the password may enter the room.',
+                    showCancelButton: true
                 }, function(){
                     that.client.events.trigger('rooms:create', data);
                 });
