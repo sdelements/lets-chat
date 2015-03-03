@@ -36,12 +36,6 @@
         this.users = new UsersCollection();
         this.rooms = new RoomsCollection();
         this.events = _.extend({}, Backbone.Events);
-
-
-        this.passwordModal = new window.LCB.RoomPasswordModalView({
-            el: $('#lcb-password')
-        });
-
         return this;
     };
     //
@@ -126,7 +120,6 @@
     };
     Client.prototype.updateRoom = function(room) {
         this.socket.emit('rooms:update', room);
-        RoomStore.add(room.id);
     };
     Client.prototype.roomUpdate = function(resRoom) {
         var room = this.rooms.get(resRoom.id);
@@ -159,16 +152,29 @@
     Client.prototype.rejoinRoom = function(room) {
         this.joinRoom(room, undefined, true);
     };
-    Client.prototype.joinRoom = function(room, switchRoom, rejoin) {
-        var that = this;
-        var id = room !== undefined ? room.id : undefined;
-        var password = room !== undefined ? room.password : undefined;
+    Client.prototype.lockJoin = function(id) {
+        if (_.contains(this.joining, id)) {
+            return false;
+        }
 
-        // We need an id and unlocked joining
-        if (!id || _.contains(this.joining, id)) {
-            // Nothing to do
+        this.joining = this.joining || [];
+        this.joining.push(id);
+        return true;
+    };
+    Client.prototype.unlockJoin = function(id) {
+        var that = this;
+        _.defer(function() {
+            that.joining = _.without(that.joining, id);
+        });
+    };
+    Client.prototype.joinRoom = function(room, switchRoom, rejoin) {
+        if (!room || !room.id) {
             return;
         }
+
+        var that = this;
+        var id = room.id;
+        var password = room.password;
 
         if (!rejoin) {
             // Must not have already joined
@@ -178,11 +184,9 @@
             }
         }
 
-        //
-        // Setup joining lock
-        //
-        this.joining = this.joining || [];
-        this.joining.push(id);
+        if (!this.lockJoin(id)) {
+            return;
+        }
 
         var passwordCB = function(password) {
             room.password = password;
@@ -202,10 +206,12 @@
                     callback: passwordCB
                 });
 
+                that.unlockJoin(id);
                 return;
             }
 
             if (resRoom && resRoom.errors) {
+                that.unlockJoin(id);
                 return;
             }
 
@@ -249,10 +255,7 @@
             //
             RoomStore.add(id);
 
-            // Remove joining lock
-            _.defer(function() {
-                that.joining = _.without(that.joining, id);
-            });
+            that.unlockJoin(id);
         });
     };
     Client.prototype.leaveRoom = function(id) {
@@ -530,6 +533,9 @@
         this.route();
         this.view = new window.LCB.ClientView({
             client: this
+        });
+        this.passwordModal = new window.LCB.RoomPasswordModalView({
+            el: $('#lcb-password')
         });
         return this;
     };
