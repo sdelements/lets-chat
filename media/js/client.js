@@ -78,7 +78,7 @@
                      "Room slugs can only contain lower case letters, numbers or underscores!",
                      "error");
             } else if (room && room.id) {
-                that.rooms.add(room);
+                that.addRoom(room);
                 that.switchRoom(room.id);
             }
             callback && callback(room);
@@ -137,7 +137,11 @@
         room.set(resRoom);
     };
     Client.prototype.addRoom = function(room) {
-        this.rooms.add(room);
+        var r = this.rooms.get(room.id);
+        if (r) {
+            return r;
+        }
+        return this.rooms.add(room);
     };
     Client.prototype.archiveRoom = function(options) {
         this.socket.emit('rooms:archive', options, function(data) {
@@ -152,7 +156,10 @@
         this.leaveRoom(room.id);
         this.rooms.remove(room.id);
     };
-    Client.prototype.joinRoom = function(room, switchRoom, callback) {
+    Client.prototype.rejoinRoom = function(room) {
+        this.joinRoom(room, undefined, true);
+    };
+    Client.prototype.joinRoom = function(room, switchRoom, rejoin) {
         var that = this;
         var id = room !== undefined ? room.id : undefined;
         var password = room !== undefined ? room.password : undefined;
@@ -163,10 +170,12 @@
             return;
         }
 
-        // Room needs to exist, and must nt have already joined
-        var room = that.rooms.get(id);
-        if (room && room.get('joined')) {
-            return;
+        if (!rejoin) {
+            // Must not have already joined
+            var room1 = that.rooms.get(id);
+            if (room1 && room1.get('joined')) {
+                return;
+            }
         }
 
         //
@@ -177,7 +186,7 @@
 
         var passwordCB = function(password) {
             room.password = password;
-            that.joinRoom(room, switchRoom, callback);
+            that.joinRoom(room, switchRoom, rejoin);
         };
 
         this.socket.emit('rooms:join', {roomId: id, password: password}, function(resRoom) {
@@ -200,8 +209,7 @@
                 return;
             }
 
-            var room = that.rooms.get(id);
-            room = that.rooms.add(resRoom);
+            var room = that.addRoom(resRoom);
             room.set('joined', true);
 
             if (room.get('hasPassword')) {
@@ -240,16 +248,11 @@
             // Add room id to localstorage so we can reopen it on refresh
             //
             RoomStore.add(id);
-            //
-            // If this function is called by UI, callback permit to hide modals
-            //
-            if(callback) {
-                callback();
-            }
-        });
-        // Remove joining lock
-        _.defer(function() {
-            that.joining = _.without(that.joining, id);
+
+            // Remove joining lock
+            _.defer(function() {
+                that.joining = _.without(that.joining, id);
+            });
         });
     };
     Client.prototype.leaveRoom = function(id) {
@@ -475,7 +478,7 @@
         });
         this.socket.on('reconnect', function() {
             _.each(that.rooms.where({ joined: true }), function(room) {
-                that.joinRoom(room);
+                that.rejoinRoom(room);
             });
         });
         this.socket.on('messages:new', function(message) {
