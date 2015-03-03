@@ -128,12 +128,6 @@
             return;
         }
 
-        // Room needs to exist, and must nt have already joined
-        var room = that.rooms.get(id);
-        if (room && room.get('joined')) {
-            return;
-        }
-
         //
         // Setup joining lock
         //
