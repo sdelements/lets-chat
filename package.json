@@ -1,6 +1,6 @@
 {
   "name": "lets-chat",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "A chat app for small teams.",
   "private": true,
   "main": "app.js",
