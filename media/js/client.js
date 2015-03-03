@@ -121,11 +121,19 @@
     };
     Client.prototype.joinRoom = function(id, switchRoom) {
         var that = this;
+
         // We need an id and unlocked joining
         if (!id || _.contains(this.joining, id)) {
             // Nothing to do
             return;
         }
+
+        // Room needs to exist, and must nt have already joined
+        var room = that.rooms.get(id);
+        if (room && room.get('joined')) {
+            return;
+        }
+
         //
         // Setup joining lock
         //
