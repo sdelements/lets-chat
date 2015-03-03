@@ -48,7 +48,7 @@
                      "Room slugs can only contain lower case letters, numbers or underscores!",
                      "error");
             } else if (room && room.id) {
-                that.rooms.add(room);
+                that.addRoom(room);
                 that.switchRoom(room.id);
             }
             callback && callback(room);
@@ -104,7 +104,11 @@
         room.set(resRoom);
     };
     Client.prototype.addRoom = function(room) {
-        this.rooms.add(room);
+        var r = this.rooms.get(room.id);
+        if (r) {
+            return r;
+        }
+        return this.rooms.add(room);
     };
     Client.prototype.archiveRoom = function(options) {
         this.socket.emit('rooms:archive', options, function(data) {
@@ -119,13 +123,24 @@
         this.leaveRoom(room.id);
         this.rooms.remove(room.id);
     };
-    Client.prototype.joinRoom = function(id, switchRoom) {
+    Client.prototype.rejoinRoom = function(id) {
+        this.joinRoom(id, undefined, true);
+    };
+    Client.prototype.joinRoom = function(id, switchRoom, rejoin) {
         var that = this;
 
         // We need an id and unlocked joining
         if (!id || _.contains(this.joining, id)) {
             // Nothing to do
             return;
+        }
+
+        if (!rejoin) {
+            // Must not have already joined
+            var room = that.rooms.get(id);
+            if (room && room.get('joined')) {
+                return;
+            }
         }
 
         //
@@ -138,8 +153,7 @@
             if (!resRoom) {
                 return;
             }
-            var room = that.rooms.get(id);
-            room = that.rooms.add(resRoom);
+            var room = that.addRoom(resRoom);
             room.set('joined', true);
             // Get room history
             that.getMessages({
@@ -179,10 +193,11 @@
             } else {
                 store.set('openrooms', [id]);
             }
-        });
-        // Remove joining lock
-        _.defer(function() {
-            that.joining = _.without(that.joining, id);
+            
+            // Remove joining lock
+            _.defer(function() {
+                that.joining = _.without(that.joining, id);
+            });
         });
     };
     Client.prototype.leaveRoom = function(id) {
@@ -410,7 +425,7 @@
         });
         this.socket.on('reconnect', function() {
             _.each(that.rooms.where({ joined: true }), function(room) {
-                that.joinRoom(room.id);
+                that.rejoinRoom(room.id);
             });
         });
         this.socket.on('messages:new', function(message) {
