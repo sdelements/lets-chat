@@ -100,6 +100,20 @@ app.use(helmet.contentSecurityPolicy({
 // Disable cross-origin request sharing
 if(settings.security.serverAuthority){
     app.use(function(req, res, next){
+        res.header('Access-Control-Allow-Origin', settings.security.serverAuthority);
+        res.header('Access-Control-Allow-Credentials', true);
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.header("Access-Control-Max-Age", 86400);
+
+        if (req.method=='OPTIONS'){
+            res.send(200);
+        }
+        else{
+            next();
+        } // Continue with the process
+    });
+    app.use(function(req, res, next){
         if(req.headers.origin && req.headers.origin !== settings.security.serverAuthority){
             res.status(403).send({
                 status: 'error',
