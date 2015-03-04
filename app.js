@@ -98,9 +98,9 @@ app.use(helmet.contentSecurityPolicy({
 }));
 
 // Disable cross-origin request sharing
-if(settings.security.serverAuthority){
+if(settings.security.allowOrigin){
     app.use(function(req, res, next){
-        res.header('Access-Control-Allow-Origin', settings.security.serverAuthority);
+        res.header('Access-Control-Allow-Origin', settings.security.allowOrigin);
         res.header('Access-Control-Allow-Credentials', true);
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -114,7 +114,7 @@ if(settings.security.serverAuthority){
         } // Continue with the process
     });
     app.use(function(req, res, next){
-        if(req.headers.origin && req.headers.origin !== settings.security.serverAuthority){
+        if(req.headers.origin && req.headers.origin !== settings.security.allowOrigin){
             res.status(403).send({
                 status: 'error',
                 message: 'Requests not allowed from this origin'
