@@ -83,10 +83,16 @@
             }
         },
         getAtwhoUserFilter: function(collection) {
+            var currentUser = this.client.user;
+
             return function filter(query, data, searchKey) {
                 var q = query.toLowerCase();
                 var results = collection.filter(function(user) {
                     var attr = user.attributes;
+
+                    if (user.id === currentUser.id) {
+                        return false;
+                    }
 
                     if (!attr.safeName) {
                         attr.safeName = attr.displayName.replace(/\W/g, '');
