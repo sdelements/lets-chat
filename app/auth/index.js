@@ -36,7 +36,7 @@ function setup(app, session, core) {
     enabledProviders = getProviders(core);
 
     enabledProviders.forEach(function(p) {
-        p.provider.setup();
+        p.provider.setup(app, session, core);
         providerSettings[p.key] = p.provider.options;
     });
 
