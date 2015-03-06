@@ -263,7 +263,9 @@
         if (room) {
             room.set('joined', false);
             room.lastMessage.clear();
-            room.users.set([]);
+            if (room.get('hasPassword')) {
+                room.users.set([]);
+            }
         }
         this.socket.emit('rooms:leave', id);
         if (id === this.rooms.current.get('id')) {
