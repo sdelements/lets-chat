@@ -1,4 +1,4 @@
-### Support / Issues
+# Support / Issues
 
 Please use our [mailing list][mailing-list] for support issues and questions.
 
@@ -17,6 +17,8 @@ patches and features.
 
 
 ## Using the issue tracker
+
+Having trouble getting Lets Chat installed? Search for similar issues or post your problem on the [mailing list][mailing-list].
 
 The [issue tracker][tracker] is the preferred channel for [bug reports](#bug-reports),
 [features requests](#feature-requests) and [submitting pull requests](#pull-requests),
