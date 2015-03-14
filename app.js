@@ -97,6 +97,35 @@ app.use(helmet.contentSecurityPolicy({
     imgSrc: ['*']
 }));
 
+// Disable cross-origin request sharing
+if(settings.security.allowOrigin){
+    app.use(function(req, res, next){
+        res.header('Access-Control-Allow-Origin', settings.security.allowOrigin);
+        res.header('Access-Control-Allow-Credentials', true);
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.header("Access-Control-Max-Age", 86400);
+
+        if (req.method=='OPTIONS'){
+            res.send(200);
+        }
+        else{
+            next();
+        } // Continue with the process
+    });
+    app.use(function(req, res, next){
+        if(req.headers.origin && req.headers.origin !== settings.security.allowOrigin){
+            res.status(403).send({
+                status: 'error',
+                message: 'Requests not allowed from this origin'
+            });
+        }
+        else {
+            next();
+        }
+    });
+}
+
 var bundles = {};
 app.use(require('connect-assets')({
     paths: [
