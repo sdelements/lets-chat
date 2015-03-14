@@ -1,8 +1,11 @@
 //
-// Messages Controller
+// UserMessages Controller
 //
 
 'use strict';
+
+var _ = require('lodash'),
+    settings = require('./../config');
 
 module.exports = function() {
 
@@ -12,48 +15,48 @@ module.exports = function() {
         models = this.models,
         Room = models.room;
 
-    core.on('messages:new', function(message, room, user) {
-        var msg = message.toJSON();
-        msg.owner = user;
-        msg.room = room;
 
-        app.io.to(room._id)
-              .emit('messages:new', msg);
+    if (!settings.private.enable) {
+        return;
+    }
+
+    core.on('user-messages:new', function(message, user, owner) {
+        _.each(message.users, function(userId) {
+            var connections = core.presence.system.connections.query({
+                type: 'socket.io', userId: userId.toString()
+            });
+
+            _.each(connections, function(connection) {
+                connection.socket.emit('user-messages:new', message);
+            });
+        });
     });
 
     //
     // Routes
     //
-    app.route('/messages')
+
+    app.route('/users/:user/messages')
         .all(middlewares.requireLogin)
         .get(function(req, res) {
-            req.io.route('messages:list');
+            req.io.route('user-messages:list');
         })
         .post(function(req, res) {
-            req.io.route('messages:create');
-        });
-
-    app.route('/rooms/:room/messages')
-        .all(middlewares.requireLogin, middlewares.roomRoute)
-        .get(function(req, res) {
-            req.io.route('messages:list');
-        })
-        .post(function(req, res) {
-            req.io.route('messages:create');
+            req.io.route('user-messages:create');
         });
 
     //
     // Sockets
     //
-    app.io.route('messages', {
+    app.io.route('user-messages', {
         create: function(req, res) {
             var options = {
                     owner: req.user._id,
-                    room: req.param('room'),
+                    user: req.param('user'),
                     text: req.param('text')
                 };
 
-            core.messages.create(options, function(err, message) {
+            core.usermessages.create(options, function(err, message) {
                 if (err) {
                     return res.sendStatus(400);
                 }
@@ -62,21 +65,18 @@ module.exports = function() {
         },
         list: function(req, res) {
             var options = {
-                    userId: req.user._id,
-                    password: req.param('password'),
-
-                    room: req.param('room'),
+                    currentUser: req.user._id,
+                    user: req.param('user'),
                     since_id: req.param('since_id'),
                     from: req.param('from'),
                     to: req.param('to'),
-                    query: req.param("query"),
                     reverse: req.param('reverse'),
                     skip: req.param('skip'),
                     take: req.param('take'),
                     expand: req.param('expand')
                 };
 
-            core.messages.list(options, function(err, messages) {
+            core.usermessages.list(options, function(err, messages) {
                 if (err) {
                     return res.sendStatus(400);
                 }

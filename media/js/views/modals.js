@@ -86,6 +86,29 @@
         }
     });
 
+    window.LCB.RoomPasswordModalView = Backbone.View.extend({
+        events: {
+            'click .btn-primary': 'enterRoom'
+        },
+        initialize: function(options) {
+            this.render();
+            this.$password = this.$('input.lcb-room-password-required');
+        },
+        render: function() {
+            // this.$el.on('shown.bs.modal hidden.bs.modal',
+            //             _.bind(this.refresh, this));
+        },
+        show: function(options) {
+            this.callback = options.callback;
+            this.$password.val('');
+            this.$el.modal('show');
+        },
+        enterRoom: function() {
+            this.$el.modal('hide');
+            this.callback(this.$password.val());
+        }
+    });
+
     window.LCB.AuthTokensModalView = Backbone.View.extend({
         events: {
             'click .generate-token': 'generateToken',

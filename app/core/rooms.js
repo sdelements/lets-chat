@@ -1,11 +1,32 @@
 'use strict';
 
 var mongoose = require('mongoose'),
+    _ = require('lodash'),
+    bcrypt = require('bcryptjs'),
     helpers = require('./helpers');
 
 function RoomManager(options) {
     this.core = options.core;
 }
+
+RoomManager.prototype.canJoin = function(options, cb) {
+    var method = options.id ? 'get' : 'slug',
+        roomId = options.id ? options.id : options.slug;
+
+    this[method](roomId, function(err, room) {
+        if (err) {
+            return cb(err);
+        }
+
+        if (!room) {
+            return cb();
+        }
+
+        room.canJoin(options, function(err, canJoin) {
+            cb(err, room, canJoin);
+        });
+    });
+};
 
 RoomManager.prototype.create = function(options, cb) {
     var Room = mongoose.model('Room');
@@ -36,10 +57,19 @@ RoomManager.prototype.update = function(roomId, options, cb) {
             return cb('Room does not exist.');
         }
 
+        if(room.hasPassword && !room.owner.equals(options.user.id)) {
+            return cb('Only owner can change password-protected room.');
+        }
+
         room.name = options.name;
         // DO NOT UPDATE SLUG
         // room.slug = options.slug;
         room.description = options.description;
+
+        if (room.hasPassword && options.password) {
+            room.password = options.password;
+        }
+
         room.save(function(err, room) {
             if (err) {
                 console.error(err);
@@ -105,9 +135,43 @@ RoomManager.prototype.list = function(options, cb) {
     if (options.sort) {
         var sort = options.sort.replace(',', ' ');
         find.sort(sort);
+    } else {
+        find.sort('-lastActive');
     }
 
-    find.exec(cb);
+    find.exec(function(err, rooms) {
+        if (err) {
+            return cb(err);
+        }
+
+        if (options.users) {
+            rooms = _.map(rooms, function(room) {
+                var users = [];
+
+                // Better approach would be this,
+                // but need to fix join/leave events:
+                // var auth = room.isAuthorized(options.userId);
+
+                if (!room.password) {
+                    users = this.core.presence
+                                .getUsersForRoom(room.id.toString());
+                }
+
+                room = room.toJSON();
+                room.users = users || [];
+                room.userCount = room.users.length;
+                return room;
+            }, this);
+
+            if (!options.sort) {
+                rooms = _.sortByAll(rooms, ['userCount', 'lastActive'])
+                         .reverse();
+            }
+        }
+
+        cb(null, rooms);
+
+    }.bind(this));
 };
 
 RoomManager.prototype.get = function(identifier, cb) {

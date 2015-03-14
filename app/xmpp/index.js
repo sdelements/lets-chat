@@ -27,7 +27,11 @@ function xmppStart(core) {
     if (settings.xmpp.tls && settings.xmpp.tls.enable) {
         options.tls = {
             keyPath: settings.xmpp.tls.key,
-            certPath: settings.xmpp.tls.cert
+            certPath: settings.xmpp.tls.cert,
+            honorCipherOrder: settings.xmpp.tls.honorCipherOrder || true,
+            ciphers: settings.xmpp.tls.ciphers || 'AES128-GCM-SHA256',
+            handshakeTimeout: settings.xmpp.tls.handshakeTimeout || 5000,
+            secureOptions: settings.xmpp.tls.options || 'SSL_OP_NO_SSLv2:SSL_OP_NO_SSLv3:SSL_OP_NO_TLSv1'
         };
     }
 
@@ -47,7 +51,7 @@ function xmppStart(core) {
 
                 var conn = new XmppConnection(user, client);
                 core.presence.connect(conn);
-
+                
                 cb(null, opts);
             });
         });
@@ -61,11 +65,40 @@ function xmppStart(core) {
                 return processor.run();
             });
 
-            if (!handled && settings.xmpp.debug.unhandled) {
+            if (handled) {
+                return;
+            }
+
+            if (settings.xmpp.debug.unhandled) {
                 // Print unhandled request
                 console.log(' ');
                 console.log(stanza.root().toString().red);
             }
+
+            if (stanza.name !== 'iq') {
+                return;
+            }
+
+            var msg = new Stanza.Iq({
+                type: 'error',
+                id: stanza.attrs.id,
+                to: stanza.attrs.from,
+                from: stanza.attrs.to
+            });
+
+            msg.c('not-implemented', {
+                code: 501,
+                type: 'CANCEL'
+            }).c('feature-not-implemented', {
+                xmlns: 'urn:ietf:params:xml:n:xmpp-stanzas'
+            });
+
+
+            if (settings.xmpp.debug.unhandled) {
+                console.log(msg.root().toString().green);
+            }
+
+            client.send(msg);
         });
 
         // On Disconnect event. When a client disconnects
