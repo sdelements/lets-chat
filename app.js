@@ -37,7 +37,11 @@ var auth = require('./app/auth/index'),
 if (httpsEnabled) {
      app = express().https({
         key: fs.readFileSync(settings.https.key),
-        cert: fs.readFileSync(settings.https.cert)
+        cert: fs.readFileSync(settings.https.cert),
+        honorCipherOrder: settings.https.honorCipherOrder || true,
+        ciphers: settings.https.ciphers || 'AES128-GCM-SHA256',
+        handshakeTimeout: settings.https.handshakeTimeout || 5000,
+        secureOptions: settings.https.options || 'SSL_OP_NO_SSLv2:SSL_OP_NO_SSLv3:SSL_OP_NO_TLSv1'
     }).io();
 } else {
     app = express().http().io();

@@ -27,7 +27,11 @@ function xmppStart(core) {
     if (settings.xmpp.tls && settings.xmpp.tls.enable) {
         options.tls = {
             keyPath: settings.xmpp.tls.key,
-            certPath: settings.xmpp.tls.cert
+            certPath: settings.xmpp.tls.cert,
+            honorCipherOrder: settings.xmpp.tls.honorCipherOrder || true,
+            ciphers: settings.xmpp.tls.ciphers || 'AES128-GCM-SHA256',
+            handshakeTimeout: settings.xmpp.tls.handshakeTimeout || 5000,
+            secureOptions: settings.xmpp.tls.options || 'SSL_OP_NO_SSLv2:SSL_OP_NO_SSLv3:SSL_OP_NO_TLSv1'
         };
     }
 
