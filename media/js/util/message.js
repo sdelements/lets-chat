@@ -74,7 +74,7 @@ if (typeof exports !== 'undefined') {
         });
     }
 
-    function links(text) {
+    function links(text, data) {
         var imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
         linkPattern = /((https?|ftp):\/\/[-A-Z0-9+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|])/ig;
 
@@ -82,8 +82,8 @@ if (typeof exports !== 'undefined') {
             return text.replace(imagePattern, function(url) {
                 var uri = encodeURI(_.unescape(url));
                 return '<a class="thumbnail" href="' + uri +
-                       '" target="_blank"><img src="' + uri +
-                       '" alt="Pasted Image" /></a>';
+                       '" target="_blank"><img id="obj' + data.message.id + '" src="' + uri +
+                       '" alt="Pasted Image" ></a><span data-id="obj' + data.message.id +'" class="lcb-object-delete">X</span>';
             });
         } else {
             return text.replace(linkPattern, function(url) {

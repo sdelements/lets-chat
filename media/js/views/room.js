@@ -21,10 +21,18 @@
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
             'click .lcb-room-poke': 'poke',
-            'click .lcb-upload-trigger': 'upload'
+            'click .lcb-upload-trigger': 'upload',
+            'click .lcb-object-delete': 'deleteObject'
         },
         initialize: function(options) {
             this.client = options.client;
+
+            var iAmOwner = this.model.get('owner') === this.client.user.id;
+            var iCanEdit = iAmOwner || !this.model.get('hasPassword');
+
+            this.model.set('iAmOwner', iAmOwner);
+            this.model.set('iCanEdit', iCanEdit);
+
             this.template = options.template;
             this.messageTemplate =
                 Handlebars.compile($('#template-message').html());
@@ -76,10 +84,16 @@
             }
         },
         getAtwhoUserFilter: function(collection) {
+            var currentUser = this.client.user;
+
             return function filter(query, data, searchKey) {
                 var q = query.toLowerCase();
                 var results = collection.filter(function(user) {
                     var attr = user.attributes;
+
+                    if (user.id === currentUser.id) {
+                        return false;
+                    }
 
                     if (!attr.safeName) {
                         attr.safeName = attr.displayName.replace(/\W/g, '');
@@ -213,7 +227,19 @@
             if (e) {
                 e.preventDefault();
             }
-            this.$('.lcb-room-edit').modal();
+
+            var $modal = this.$('.lcb-room-edit'),
+                $name = $modal.find('input[name="name"]'),
+                $description = $modal.find('textarea[name="description"]'),
+                $password = $modal.find('input[name="password"]'),
+                $confirmPassword = $modal.find('input[name="confirmPassword"]');
+
+            $name.val(this.model.get('name'));
+            $description.val(this.model.get('description'));
+            $password.val('');
+            $confirmPassword.val('');
+
+            $modal.modal();
         },
         hideEditRoom: function(e) {
             if (e) {
@@ -225,14 +251,34 @@
             if (e) {
                 e.preventDefault();
             }
-            var name = this.$('.edit-room input[name="name"]').val();
-            var description = this.$('.edit-room textarea[name="description"]').val();
+
+            var $modal = this.$('.lcb-room-edit'),
+                $name = $modal.find('input[name="name"]'),
+                $description = $modal.find('textarea[name="description"]'),
+                $password = $modal.find('input[name="password"]'),
+                $confirmPassword = $modal.find('input[name="confirmPassword"]');
+
+            $name.parent().removeClass('has-error');
+            $confirmPassword.parent().removeClass('has-error');
+
+            if (!$name.val()) {
+                $name.parent().addClass('has-error');
+                return;
+            }
+
+            if ($password.val() && $password.val() !== $confirmPassword.val()) {
+                $confirmPassword.parent().addClass('has-error');
+                return;
+            }
+
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
-                name: name,
-                description: description
+                name: $name.val(),
+                description: $description.val(),
+                password: $password.val()
             });
-            this.$('.lcb-room-edit').modal('hide');
+
+            $modal.modal('hide');
         },
         archiveRoom: function(e) {
             var that = this;
@@ -288,7 +334,7 @@
             var $text = $html.find('.lcb-message-text');
 
             var that = this;
-            this.formatMessage($text.html(), function(text) {
+            this.formatMessage($text.html(), message, function(text) {
                 $text.html(text);
                 $html.find('time').updateTimeStamp();
                 that.$messages.append($html);
@@ -302,14 +348,15 @@
             });
 
         },
-        formatMessage: function(text, cb) {
+        formatMessage: function(text, message, cb) {
             var client = this.client;
             client.getEmotes(function(emotes) {
                 client.getReplacements(function(replacements) {
                     var data = {
                         emotes: emotes,
                         replacements: replacements,
-                        rooms: client.rooms
+                        rooms: client.rooms,
+                        message: message
                     };
 
                     var msg = window.utils.message.format(text, data);
@@ -344,6 +391,15 @@
             this.$el.removeData().unbind();
             this.remove();
             Backbone.View.prototype.remove.call(this);
+        },
+        deleteObject: function(e) {
+            var target = $(e.currentTarget),
+                objectId = target.data('id'),
+                object = this.$('#' + objectId);
+
+            if (!object) return;
+
+            object.remove();
         },
         poke: function(e) {
             var $target = $(e.currentTarget),
