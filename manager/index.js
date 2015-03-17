@@ -3,7 +3,8 @@
 var _ = require('lodash'),
     program = require('commander'),
     all = require('require-tree'),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    prompt = require('prompt');
 
 var settings = require('../app/config'),
     models = all('../app/models'),
@@ -17,6 +18,10 @@ function Manager() {
 
     this.program
       .version('0.0.1');
+
+    this.prompt = prompt;
+
+    this.prompt.start();
 
     this.commands = {};
 
@@ -44,7 +49,8 @@ function Manager() {
             that.commands[id] = new Command({
                 program: program,
                 models: models,
-                core: core
+                core: core,
+                prompt: prompt
             });
 
         });
