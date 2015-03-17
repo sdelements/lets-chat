@@ -24,9 +24,12 @@ var MessageSchema = new mongoose.Schema({
     },
     posted: {
         type: Date,
-        default: Date.now,
-        index: true
+        default: Date.now
     }
+});
+
+MessageSchema.index({ posted: 1 }, {
+    expireAfterSeconds: 6 * 60 * 60 // 6 hours
 });
 
 MessageSchema.index({ users: 1, posted: -1, _id: 1 });
