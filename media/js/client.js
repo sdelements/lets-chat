@@ -418,7 +418,10 @@
         // Socket
         //
         this.socket = io.connect(null, {
-            reconnect: true
+            reconnection: true,
+            reconnectionDelay: 500,
+            reconnectionDelayMax: 1000,
+            timeout: 3000
         });
         this.socket.on('connect', function() {
             that.getUser();
