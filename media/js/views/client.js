@@ -71,7 +71,7 @@
             this.tokenModal = new window.LCB.AuthTokensModalView({
                 el: this.$el.find('#lcb-tokens')
             });
-            this.notifications = new window.LCB.NotificationsView();
+            this.notificationsModal = new window.LCB.NotificationsModalView();
             //
             // Misc
             //

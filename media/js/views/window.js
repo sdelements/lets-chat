@@ -5,7 +5,7 @@
 
 'use strict';
 
-+function(window, $, _) {
++function(window, $, _, notify) {
 
     window.LCB = window.LCB || {};
 
@@ -39,4 +39,81 @@
         }
     });
 
-}(window, $, _);
+    window.LCB.DesktopNotificationsView = Backbone.View.extend({
+        count: 0,
+        mentions: 0,
+        focus: true,
+        openNotifications: [],
+        openMentions: [],
+        initialize: function(options) {
+            this.client = options.client;
+            this.rooms = options.rooms;
+            $(window).on('focus blur', _.bind(this.onFocusBlur, this));
+            this.rooms.on('messages:new', this.onNewMessage, this);
+        },
+        onFocusBlur: function(e) {
+            this.focus = (e.type === 'focus');
+            _.each(_.merge(this.openNotifications, this.openMentions), function(notification) {
+                notification.close && notification.close();
+            });
+        },
+        onNewMessage: function(message) {
+            if (this.focus || message.historical) {
+                return;
+            }
+            this.createDesktopNotification(message);
+        },
+        createDesktopNotification: function(message) {
+
+            var that = this;
+
+            if (!notify.isSupported ||
+                notify.permissionLevel() != notify.PERMISSION_GRANTED) {
+                return;
+            }
+
+            var roomID = message.room.id,
+                avatar = message.owner.avatar,
+                icon = 'https://www.gravatar.com/avatar/' + avatar + '?s=50',
+                title = message.owner.displayName + ' in ' + message.room.name,
+                mention = message.mentioned;
+
+            var notification = notify.createNotification(title, {
+                body: message.text,
+                icon: icon,
+                tag: message.id,
+                autoClose: 1000,
+                onclick: function() {
+                    window.focus();
+                    that.client.events.trigger('rooms:switch', roomID);
+                }
+            });
+            //
+            // Mentions
+            //
+            if (mention) {
+                if (this.openMentions.length > 2) {
+                    this.openMentions[0].close();
+                    this.openMentions.shift();
+                }
+                this.openMentions.push(notification);
+                // Quit early!
+                return;
+            }
+            //
+            // Everything else
+            //
+            if (this.openNotifications.length > 2) {
+                this.openNotifications[0].close();
+                this.openNotifications.shift();
+            }
+            this.openNotifications.push(notification);
+
+            setTimeout(function() {
+                notification.close();
+            }, 1 * 4000);
+
+        }
+    });
+
+}(window, $, _, notify);
