@@ -141,9 +141,6 @@
     });
 
     window.LCB.NotificationsModalView = Backbone.View.extend({
-        el: '#lcb-notifications',
-        focus: true,
-        count: 0,
         events: {
             'click [name=desktop-notifications]': 'toggleDesktopNotifications'
         },
@@ -169,12 +166,12 @@
             }
         },
         toggleDesktopNotifications: function() {
-            var self = this;
+            var that = this;
             if (!notify.isSupported) {
                 return;
             }
             notify.requestPermission(function() {
-                self.render();
+                that.render();
             });
         }
     });

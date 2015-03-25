@@ -39,6 +39,10 @@
                 rooms: this.client.rooms,
                 client: this.client
             });
+            this.hotKeys = new window.LCB.HotKeysView({
+                rooms: this.client.rooms,
+                client: this.client
+            });
             this.status = new window.LCB.StatusView({
                 el: this.$el.find('.lcb-status-indicators'),
                 client: this.client
@@ -71,7 +75,9 @@
             this.tokenModal = new window.LCB.AuthTokensModalView({
                 el: this.$el.find('#lcb-tokens')
             });
-            this.notificationsModal = new window.LCB.NotificationsModalView();
+            this.notificationsModal = new window.LCB.NotificationsModalView({
+                el: this.$el.find('#lcb-notifications')
+            });
             //
             // Misc
             //
