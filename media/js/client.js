@@ -164,8 +164,8 @@
                 reverse: true
             }, function(messages) {
                 messages.reverse();
-                that.addMessages(messages, !room.lastMessage.get('id'));
-                room.lastMessage.set(messages[messages.length - 1]);
+                that.addMessages(messages, !rejoin && !room.lastMessage.get('id'));
+                !rejoin && room.lastMessage.set(messages[messages.length - 1]);
             });
             if (that.options.filesEnabled) {
                 that.getFiles({
