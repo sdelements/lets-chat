@@ -96,7 +96,7 @@ module.exports = function() {
                     owner: req.user._id,
                     room: req.param('room'),
                     file: req.files.file[0],
-                    post: req.param('post') && true
+                    post: (req.param('post') === 'true') && true
                 };
 
             core.files.create(options, function(err, file) {

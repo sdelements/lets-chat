@@ -53,12 +53,13 @@
         margin-bottom: 3px;
     }
     .thumbnail {
-        height: 200px;
+        max-width: 100%;
         overflow: hidden;
         display: inline-block;
         margin: 0;
         img {
-            .size(100%);
+            height: 200px;
+            width: auto;
             object-fit: cover;
         }
     }

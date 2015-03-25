@@ -1,3 +1,10 @@
+## 0.3.8 (2015-03-02)
+
+Fixes
+
+* Fixed error when passing an invalid room ID to transcript page
+* Fixed problem where client would join a room twice
+
 ## 0.3.7 (2015-03-01)
 
 Fixes
