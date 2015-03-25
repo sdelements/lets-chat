@@ -148,7 +148,8 @@
                 reverse: true
             }, function(messages) {
                 messages.reverse();
-                that.addMessages(messages, !room.lastMessage);
+                that.addMessages(messages, !room.lastMessage.get('id'));
+                room.lastMessage.set(messages[messages.length - 1]);
             });
             if (that.options.filesEnabled) {
                 that.getFiles({
@@ -210,8 +211,10 @@
             // Unknown room, nothing to do!
             return;
         }
-        room.set('lastActive', message.posted)
-        room.lastMessage.set(message);
+        room.set('lastActive', message.posted);
+        if (!message.historical) {
+            room.lastMessage.set(message);
+        }
         room.trigger('messages:new', message);
     };
     Client.prototype.addMessages = function(messages, historical) {
