@@ -142,7 +142,7 @@
         initialize: function(options) {
             this.client = options.client;
             this.rooms = options.rooms;
-            $(window).on('focus blur', _.bind(this.onFocusBlur, this));
+            $(window).on('focus blur unload', _.bind(this.onFocusBlur, this));
             this.rooms.on('messages:new', this.onNewMessage, this);
         },
         onFocusBlur: function(e) {
