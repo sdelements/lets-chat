@@ -201,6 +201,7 @@
 
     window.LCB.GiphyModalView = Backbone.View.extend({
         events: {
+            'keypress .search-giphy': 'stopReturn',
             'keyup .search-giphy': 'loadGifs'
         },
         initialize: function(options) {
@@ -213,6 +214,11 @@
         refresh: function() {
             this.$el.find('.giphy-results ul').empty();
             this.$('.search-giphy').val('').focus();
+        },
+        stopReturn: function(e) {
+            if(e.keyCode == 13) {
+                return false;
+            }
         },
         loadGifs: function() {
             var that = this;
