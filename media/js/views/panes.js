@@ -12,6 +12,7 @@
         events: {
             'click .lcb-tab-close': 'leave'
         },
+        focus: true,
         initialize: function(options) {
             this.client = options.client;
             this.template = Handlebars.compile($('#template-room-tab').html());
@@ -35,6 +36,8 @@
             this.rooms.on('messages:new', this.alert, this);
             // Initial switch since router runs before view is loaded
             this.switch(this.rooms.current.get('id'));
+            // Blur/Focus events
+            $(window).on('focus blur', _.bind(this.onFocusBlur, this));
             this.render();
         },
         add: function(room) {
@@ -62,7 +65,8 @@
             var $tab = this.$('.lcb-tab[data-id=' + message.room.id + ']'),
                 $total = $tab.find('.lcb-tab-alerts-total'),
                 $mentions = $tab.find('.lcb-tab-alerts-mentions');
-            if (message.historical || this.rooms.current.get('id') === message.room.id || $tab.length === 0) {
+            if (message.historical || $tab.length === 0
+                    || ((this.rooms.current.get('id') === message.room.id) && this.focus)) {
                 // Nothing to do here!
                 return;
             }
@@ -84,6 +88,18 @@
             $tab.data('count-total', 0).data('count-mentions', 0);
             $total.text('');
             $mentions.text('');
+        },
+        onFocusBlur: function(e) {
+            var that = this;
+            this.focus = (e.type === 'focus');
+            clearTimeout(this.clearTimer);
+            if (this.focus) {
+                this.clearTimer = setTimeout(function() {
+                    that.clearAlerts(that.rooms.current.get('id'));
+                }, 9 * 1000);
+                return;
+            }
+            that.clearAlerts(that.rooms.current.get('id'));
         }
     });
 

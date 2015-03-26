@@ -1,7 +1,6 @@
 //= require util/eggs.js
 //= require util/message.js
 //= require models.js
-//= require views/notifications.js
 //= require views/browser.js
 //= require views/room.js
 //= require views/status.js
@@ -13,8 +12,8 @@
 //= require client.js
 
 $(function() {
-    var client = new window.LCB.Client({
+    window.client = new window.LCB.Client({
         filesEnabled: $('#lcb-upload').length > 0
     });
-    client.start();
+    window.client.start();
 });

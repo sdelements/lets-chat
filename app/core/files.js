@@ -129,7 +129,7 @@ FileManager.prototype.list = function(options, cb) {
     }
 
     if (options.expand) {
-        var includes = options.expand.split(',');
+        var includes = options.expand.replace(/\s/, '').split(',');
 
         if (_.includes(includes, 'owner')) {
             find.populate('owner', 'id username displayName email avatar');

@@ -5,33 +5,29 @@
 
 'use strict';
 
-+function(window, $, _) {
++function(window, $, _, notify) {
 
     window.LCB = window.LCB || {};
 
     window.LCB.WindowView = Backbone.View.extend({
         el: 'html',
-        keys: {
-            'up+shift+alt down+shift+alt': 'nextRoom',
-            's+shift+alt': 'toggleRoomSidebar',
-            'space+shift+alt': 'recallRoom'
-        },
+        focus: true,
+        count: 0,
+        mentions: 0,
         initialize: function(options) {
+
+            var that = this;
+
             this.client = options.client;
             this.rooms = options.rooms;
             this.originalTitle = this.$('title').text();
             this.title = this.originalTitle;
-            this.focus = true;
-            this.count = 0;
-            this.mentions = 0;
-            this.activeDesktopNotifications = [];
-            this.activeDesktopNotificationMentions = [];
 
-            $(window).on('focus blur', _.bind(this.focusBlur, this));
+            $(window).on('focus blur', _.bind(this.onFocusBlur, this));
 
             this.rooms.current.on('change:id', function(current, id) {
-                var room = this.rooms.get(id);
-                var title = room ? room.get('name') : 'Rooms';
+                var room = this.rooms.get(id),
+                    title = room ? room.get('name') : 'Rooms';
                 this.updateTitle(title);
             }, this);
 
@@ -43,8 +39,62 @@
             }, this);
 
             this.rooms.on('messages:new', this.onNewMessage, this);
+
+            // Last man standing
+            _.defer(function() {
+                that.updateTitle();
+            });
+
+        },
+        onFocusBlur: function(e) {
+            this.focus = (e.type === 'focus');
+            if (this.focus) {
+                clearInterval(this.titleTimer);
+                this.count = 0;
+                this.mentions = 0;
+                this.titleTimer = false;
+                this.titleTimerFlip = false;
+                this.updateTitle();
+            }
+        },
+        onNewMessage: function(message) {
+            if (this.focus || message.historical) {
+                return;
+            }
+            this.countMessage(message);
+            this.flashTitle()
+        },
+        countMessage: function(message) {
+            var username = this.client.user.get('username'),
+                regex = new RegExp('\\B@(' + username + ')(?!@)\\b', 'i');
+            ++this.count;
+            regex.test(message.text) && ++this.mentions;
+        },
+        flashTitle: function() {
+            if (!this.titleTimer) {
+                this._flashTitle();
+                var flashTitle = _.bind(this._flashTitle, this);
+                this.titleTimer = setInterval(flashTitle, 1 * 1000);
+            }
+        },
+        _flashTitle: function() {
+            var titlePrefix = '';
+            if (this.count > 0) {
+                titlePrefix += '(' + parseInt(this.count);
+                if (this.mentions > 0) {
+                    titlePrefix += '/' + parseInt(this.mentions) + '@';
+                }
+                titlePrefix += ') ';
+            }
+            var title = this.titleTimerFlip ? this.title : titlePrefix + this.title;
+            this.$('title').html(title);
+            this.titleTimerFlip = !this.titleTimerFlip;
         },
         updateTitle: function(name) {
+            if (!name) {
+                var room = this.rooms.get(this.rooms.current.get('id'));
+                name = (room && room.get('name')) || 'Rooms';
+            }
             if (name) {
                 this.title = $('<pre />').text(name).html() +
                 ' &middot; ' + this.originalTitle;
@@ -53,15 +103,26 @@
             }
             this.$('title').html(this.title);
         },
+    });
+
+    window.LCB.HotKeysView = Backbone.View.extend({
+        el: 'html',
+        keys: {
+            'up+shift+alt down+shift+alt': 'nextRoom',
+            's+shift+alt': 'toggleRoomSidebar',
+            'space+shift+alt': 'recallRoom'
+        },
+        initialize: function(options) {
+            this.client = options.client;
+            this.rooms = options.rooms;
+        },
         nextRoom: function(e) {
             var method = e.keyCode === 40 ? 'next' : 'prev',
                 selector = e.keyCode === 40 ? 'first' : 'last',
                 $next = this.$('.lcb-tabs').find('[data-id].selected')[method]();
-
             if ($next.length === 0) {
                 $next = this.$('.lcb-tabs').find('[data-id]:' + selector);
             }
-
             this.client.events.trigger('rooms:switch', $next.data('id'));
         },
         recallRoom: function() {
@@ -71,110 +132,82 @@
             e.preventDefault();
             var view = this.client.view.panes.views[this.rooms.current.get('id')];
             view && view.toggleSidebar && view.toggleSidebar();
-        },
-        focusBlur: function(e) {
-            this.focus = e.type === 'focus';
+        }
+    });
 
-            if (this.focus) {
-                clearInterval(this.titleTimer);
-                this.count = 0;
-                this.mentions = 0;
-                this.focus = true;
-                this.$('title').html(this.title);
-                this.titleTimer = false;
-                this.titleTimerFlip = false;
-            }
+    window.LCB.DesktopNotificationsView = Backbone.View.extend({
+        focus: true,
+        openNotifications: [],
+        openMentions: [],
+        initialize: function(options) {
+            this.client = options.client;
+            this.rooms = options.rooms;
+            $(window).on('focus blur unload', _.bind(this.onFocusBlur, this));
+            this.rooms.on('messages:new', this.onNewMessage, this);
+        },
+        onFocusBlur: function(e) {
+            this.focus = (e.type === 'focus');
+            _.each(_.merge(this.openNotifications, this.openMentions), function(notification) {
+                notification.close && notification.close();
+            });
         },
         onNewMessage: function(message) {
-            this.countMessage(message);
-            this.flashTitle(message);
+            if (this.focus || message.historical) {
+                return;
+            }
             this.createDesktopNotification(message);
         },
-        countMessage: function(message) {
-            if (this.focus || message.historical) {
-                return;
-            }
-
-            ++this.count;
-
-            var username = this.client.user.get('username');
-            var regex = new RegExp('\\B@(' + username + ')(?!@)\\b', 'i');
-            if (regex.test(message.text)) {
-                ++this.mentions;
-            }
-        },
-        flashTitle: function(message) {
-            if (this.focus || message.historical) {
-                return;
-            }
-
-            if (!this.titleTimer) {
-                this._flashTitle();
-                var flashTitle = _.bind(this._flashTitle, this);
-                this.titleTimer = setInterval(flashTitle, 1 * 1000);
-            }
-        },
-        _flashTitle: function() {
-            var titlePrefix = '';
-
-            if (this.count > 0) {
-                titlePrefix += '(' + parseInt(this.count);
-                if (this.mentions > 0) {
-                    titlePrefix += '/' + parseInt(this.mentions) + '@';
-                }
-                titlePrefix += ') ';
-            }
-
-            var title = this.titleTimerFlip ? this.title : titlePrefix + this.title;
-            this.$('title').html(title);
-            this.titleTimerFlip = !this.titleTimerFlip;
-        },
         createDesktopNotification: function(message) {
-            if (this.focus || message.historical) {
-                return;
-            }
+
+            var that = this;
 
             if (!notify.isSupported ||
                 notify.permissionLevel() != notify.PERMISSION_GRANTED) {
                 return;
             }
 
-            var self = this;
-            var roomId = message.room.id;
-
-            var avatar = message.owner.avatar;
-            var icon = 'https://www.gravatar.com/avatar/' + avatar + '?s=50';
-            var title = message.owner.displayName + ' in ' + message.room.name;
-            var mention = message.mentioned;
+            var roomID = message.room.id,
+                avatar = message.owner.avatar,
+                icon = 'https://www.gravatar.com/avatar/' + avatar + '?s=50',
+                title = message.owner.displayName + ' in ' + message.room.name,
+                mention = message.mentioned;
 
             var notification = notify.createNotification(title, {
                 body: message.text,
                 icon: icon,
                 tag: message.id,
+                autoClose: 1000,
                 onclick: function() {
                     window.focus();
-                    self.client.events.trigger('rooms:switch', roomId);
+                    that.client.events.trigger('rooms:switch', roomID);
                 }
             });
-
-            // If it's a mention, keep it sticky
+            //
+            // Mentions
+            //
             if (mention) {
-                this.activeDesktopNotificationMentions.push(notification);
+                if (this.openMentions.length > 2) {
+                    this.openMentions[0].close();
+                    this.openMentions.shift();
+                }
+                this.openMentions.push(notification);
+                // Quit early!
                 return;
             }
-
-            // Clear excessive notifications
-            if (this.activeDesktopNotifications.length > 2) {
-                this.activeDesktopNotifications[0].close();
-                this.activeDesktopNotifications.shift();
+            //
+            // Everything else
+            //
+            if (this.openNotifications.length > 2) {
+                this.openNotifications[0].close();
+                this.openNotifications.shift();
             }
-            this.activeDesktopNotifications.push(notification);
+            this.openNotifications.push(notification);
 
-            // Close after a few seconds
             setTimeout(function() {
                 notification.close();
-            }, 5 * 1000);
+            }, 1 * 4000);
+
         }
     });
 
-}(window, $, _);
+}(window, $, _, notify);
