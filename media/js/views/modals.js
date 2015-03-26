@@ -199,4 +199,61 @@
         }
     });
 
+    window.LCB.GiphyModalView = Backbone.View.extend({
+        events: {
+            'keyup .search-giphy': 'loadGifs'
+        },
+        initialize: function(options) {
+            this.render();
+        },
+        render: function() {
+            this.$el.on('shown.bs.modal hidden.bs.modal',
+                        _.bind(this.refresh, this));
+        },
+        refresh: function() {
+            this.$el.find('.giphy-results ul').empty();
+            this.$('.search-giphy').val('').focus();
+        },
+        loadGifs: function() {
+            var that = this;
+            var search = this.$el.find('.search-giphy').val();
+
+            $.get('http://api.giphy.com/v1/gifs/search?limit=12&q=' + search +
+                  '&api_key=dc6zaTOxFJmzC')
+            .done(function(result) {
+                var images = result.data.filter(function(entry) {
+                    return entry.images.fixed_width.url;
+                }).map(function(entry) {
+                    return entry.images.fixed_width.url;
+                });
+
+                that.appendGifs(images);
+            });
+        },
+        appendGifs: function(images) {
+            var eles = images.map(function(url) {
+                var that = this;
+                var $img = $('<img src="' + url +
+                       '" alt="gif" data-dismiss="modal"/></li>');
+
+                $img.click(function() {
+                    var src = $(this).attr('src');
+                    $('.lcb-entry-input:visible').val(src);
+                    $('.lcb-entry-button:visible').click();
+                    that.$el.modal('hide');
+                });
+
+                return $("<li>").append($img);
+            }, this);
+
+            var $div = this.$el.find('.giphy-results ul');
+
+            $div.empty();
+
+            eles.forEach(function($ele) {
+                $div.append($ele);
+            });
+        }
+    });
+
 }(window, $, _);

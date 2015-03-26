@@ -193,3 +193,26 @@
 .lcb-avatar {
     border-radius: 100%;
 }
+
+.lcb-giphy .giphy-results {
+    max-height: 350px;
+    overflow: auto;
+
+    ul {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        text-align: center;
+
+        li {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            margin:5px;
+
+            img {
+                cursor: pointer;
+            }
+        }
+    }
+}
