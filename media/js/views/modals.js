@@ -216,11 +216,12 @@
             this.$('.search-giphy').val('').focus();
         },
         stopReturn: function(e) {
-            if(e.keyCode == 13) {
+            if(e.keyCode === 13) {
                 return false;
             }
         },
-        loadGifs: function() {
+        loadGifs: _.throttle(function() {
+            console.log(1)
             var that = this;
             var search = this.$el.find('.search-giphy').val();
 
@@ -235,7 +236,7 @@
 
                 that.appendGifs(images);
             });
-        },
+        }, 400, {leading: false}),
         appendGifs: function(images) {
             var eles = images.map(function(url) {
                 var that = this;
