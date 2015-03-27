@@ -215,4 +215,27 @@
         }
     });
 
+    window.LCB.PremiumView = Backbone.View.extend({
+        initialize: function(options) {
+            this.rooms = options.rooms;
+            this.rooms.on('messages:new', this.chaChing, this);
+            this.set(store.get('aprilfools_balance'));
+        },
+        set: function(amount) {
+            amount = amount || 0.00;
+            this.$('.lcb-premium-amount').text(amount.toFixed(2));
+        },
+        chaChing: function(moneyMaker) {
+            if (moneyMaker.historical) {
+                // Doubble texation is wrong. lol.
+                return;
+            }
+            var cost = 0.02 * moneyMaker.text.length,
+                balance = store.get('aprilfools_balance');
+            balance += cost;
+            store.set('aprilfools_balance', balance);
+            this.set(balance);
+        }
+    });
+
 }(window, $, _, notify);
