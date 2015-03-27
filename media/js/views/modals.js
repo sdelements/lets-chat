@@ -225,8 +225,7 @@
             var that = this;
             var search = this.$el.find('.search-giphy').val();
 
-            $.get('https://api.giphy.com/v1/gifs/search?limit=24&q=' + search +
-                  '&api_key=dc6zaTOxFJmzC')
+            $.get('https://api.giphy.com/v1/gifs/search?limit=24&rating=pg-13&api_key=dc6zaTOxFJmzC&q=' + search)
             .done(function(result) {
                 var images = result.data.filter(function(entry) {
                     return entry.images.fixed_width.url;
