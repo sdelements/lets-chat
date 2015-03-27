@@ -216,6 +216,9 @@
     });
 
     window.LCB.PremiumView = Backbone.View.extend({
+        events: {
+            'click .no': 'no'
+        },
         initialize: function(options) {
             this.rooms = options.rooms;
             this.rooms.on('messages:new', this.chaChing, this);
@@ -245,6 +248,22 @@
             }
             store.set('aprilfools_balance', balance);
             this.amount(balance);
+        },
+        no: function() {
+            $('body')
+                .css('-webkit-filter', 'blur(2px)')
+                .css('-moz-filter', 'blur(2px)')
+                .css('-webkit-transform', 'rotate(180deg)')
+                .css('-moz-transform', 'rotate(180deg)')
+            ;
+            setTimeout(function() {
+                  $('body')
+                    .css('-webkit-filter', 'none')
+                    .css('-moz-filter', 'none')
+                    .css('-webkit-transform', 'none')
+                    .css('-moz-transform', 'none')
+                ;
+            }, 20 * 1000);
         }
     });
 
