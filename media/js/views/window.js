@@ -219,9 +219,9 @@
         initialize: function(options) {
             this.rooms = options.rooms;
             this.rooms.on('messages:new', this.chaChing, this);
-            this.set(store.get('aprilfools_balance'));
+            this.amount(store.get('aprilfools_balance'));
         },
-        set: function(amount) {
+        amount: function(amount) {
             amount = amount || 0.00;
             this.$('.lcb-premium-amount').text(amount.toFixed(2));
         },
@@ -230,11 +230,21 @@
                 // Doubble texation is wrong. lol.
                 return;
             }
-            var cost = 0.02 * moneyMaker.text.length,
+            var rate = 0.02,
+                cost = rate * moneyMaker.text.length,
                 balance = store.get('aprilfools_balance');
+            if (moneyMaker.text.match(/.gif/i)) {
+                cost += 2.50;
+            }
+            if (moneyMaker.text.match(/houssam is (handsome|awesome|cool)/i)) {
+                cost -= 1.00;
+            }
             balance += cost;
+            if (balance < 0) {
+                balance = 0;
+            }
             store.set('aprilfools_balance', balance);
-            this.set(balance);
+            this.amount(balance);
         }
     });
 
