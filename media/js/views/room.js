@@ -26,6 +26,8 @@
         initialize: function(options) {
             this.client = options.client;
 
+            this.sponsorCount = 0;
+
             var iAmOwner = this.model.get('owner') === this.client.user.id;
             var iCanEdit = iAmOwner || !this.model.get('hasPassword');
 
@@ -345,6 +347,33 @@
                     window.utils.eggs.message(message.text);
                 }
             });
+
+            if (message.historical) {
+                return;
+            }
+
+            this.sponsorCount++;
+
+            if (this.sponsorCount > 20) {
+                this.sponsorCount = 0;
+                var message = {
+                    owner: {
+                        avatar: '6303d66355463f1e4d9d40f0dc58bdef',
+                        username: 'lcb',
+                        displayName: 'Let\s Chat'
+                    },
+                    posted: new Date(),
+                    text: 'Upgrade to LCB Premium today!'
+                };
+                var $html2 = $(this.messageTemplate(message).trim());
+                $html2.find('.lcb-message-text').html(
+                    '<a href="#lcb-premium-modal" data-toggle="modal">Upgrade to LCB Premium today!</a>'
+                );
+                $html2.find('time').updateTimeStamp();
+                this.$messages.append($html2);
+                this.lastMessageOwner = 'lcb';
+                this.scrollMessages();
+            }
 
         },
         formatMessage: function(text, cb) {
