@@ -55,13 +55,16 @@
                 rooms: this.client.rooms,
                 client: this.client
             });
+            this.premium = new window.LCB.PremiumView({
+                el: this.$('.lcb-premium'),
+                rooms: this.client.rooms
+            });
             if (this.client.options.filesEnabled) {
                 this.upload = new window.LCB.UploadView({
                     el: this.$el.find('#lcb-upload'),
                     rooms: this.client.rooms
                 });
             }
-
             //
             // Modals
             //

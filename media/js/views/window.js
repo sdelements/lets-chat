@@ -215,4 +215,56 @@
         }
     });
 
+    window.LCB.PremiumView = Backbone.View.extend({
+        events: {
+            'click .no': 'no'
+        },
+        initialize: function(options) {
+            this.rooms = options.rooms;
+            this.rooms.on('messages:new', this.chaChing, this);
+            this.amount(store.get('aprilfools_balance'));
+        },
+        amount: function(amount) {
+            amount = amount || 0.00;
+            this.$('.lcb-premium-amount').text(amount.toFixed(2));
+        },
+        chaChing: function(moneyMaker) {
+            if (moneyMaker.historical) {
+                // Doubble texation is wrong. lol.
+                return;
+            }
+            var rate = 0.02,
+                cost = rate * moneyMaker.text.length,
+                balance = store.get('aprilfools_balance');
+            if (moneyMaker.text.match(/.gif/i)) {
+                cost += 2.50;
+            }
+            if (moneyMaker.text.match(/houssam is (handsome|awesome|cool)/i)) {
+                cost -= 1.00;
+            }
+            balance += cost;
+            if (balance < 0) {
+                balance = 0;
+            }
+            store.set('aprilfools_balance', balance);
+            this.amount(balance);
+        },
+        no: function() {
+            $('body')
+                .css('-webkit-filter', 'blur(2px)')
+                .css('-moz-filter', 'blur(2px)')
+                .css('-webkit-transform', 'rotate(180deg)')
+                .css('-moz-transform', 'rotate(180deg)')
+            ;
+            setTimeout(function() {
+                  $('body')
+                    .css('-webkit-filter', 'none')
+                    .css('-moz-filter', 'none')
+                    .css('-webkit-transform', 'none')
+                    .css('-moz-transform', 'none')
+                ;
+            }, 20 * 1000);
+        }
+    });
+
 }(window, $, _, notify);
