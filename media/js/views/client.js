@@ -57,7 +57,8 @@
             });
             this.premium = new window.LCB.PremiumView({
                 el: this.$('.lcb-premium'),
-                rooms: this.client.rooms
+                rooms: this.client.rooms,
+                client: this.client
             });
             if (this.client.options.filesEnabled) {
                 this.upload = new window.LCB.UploadView({

@@ -220,6 +220,7 @@
             'click .no': 'no'
         },
         initialize: function(options) {
+            this.client = options.client;
             this.rooms = options.rooms;
             this.rooms.on('messages:new', this.chaChing, this);
             this.amount(store.get('aprilfools_balance'));
@@ -229,7 +230,7 @@
             this.$('.lcb-premium-amount').text(amount.toFixed(2));
         },
         chaChing: function(moneyMaker) {
-            if (moneyMaker.historical) {
+            if (moneyMaker.historical || this.client.user.id !== moneyMaker.owner.id) {
                 // Doubble texation is wrong. lol.
                 return;
             }
