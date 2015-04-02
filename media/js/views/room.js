@@ -313,9 +313,6 @@
             $textarea.val('');
         },
         addMessage: function(message) {
-            // Smells like pasta
-            message.paste = /\n/i.test(message.text);
-
             var posted = moment(message.posted);
 
             // Fragment or new message?
@@ -333,7 +330,7 @@
             var $text = $html.find('.lcb-message-text');
 
             var that = this;
-            this.formatMessage($text.html(), function(text) {
+            this.formatMessage(message.text, function(text) {
                 $text.html(text);
                 $html.find('time').updateTimeStamp();
                 that.$messages.append($html);

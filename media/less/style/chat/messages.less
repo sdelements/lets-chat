@@ -45,13 +45,6 @@
         top: 0;
         left: 0;
     }
-    pre {
-        background: none;
-        border-width: 3px;
-        border-top: none;
-        border-bottom: none;
-        margin-bottom: 3px;
-    }
     .thumbnail {
         max-width: 100%;
         overflow: hidden;
@@ -93,13 +86,25 @@
 
 .lcb-message-text {
     word-wrap: break-word;
+    code {
+        background-color: #eee;
+        font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        padding: 2px;
+    }
     pre {
-        padding: 10px;
-        margin: 0;
+        background-color: #eee;
         border: 3px solid #cccccc;
         border-top: none;
         border-bottom: none;
         border-radius: 4px;
+        font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        margin: 0;
+        margin-bottom: 3px;
+        padding: 10px;
+    }
+
+    & > p:last-child {
+        margin-bottom: 0;
     }
 }
 
