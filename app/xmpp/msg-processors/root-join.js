@@ -4,8 +4,7 @@ var _ = require('lodash'),
     moment = require('moment'),
     Stanza = require('node-xmpp-core').Stanza,
     MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config'),
-    helper = require('./../helper');
+    settings = require('./../../config');
 
 module.exports = MessageProcessor.extend({
 
@@ -33,11 +32,11 @@ module.exports = MessageProcessor.extend({
 
 
             var presence = this.Presence({
-                from: helper.getUserJid(user.username),
+                from: this.connection.getUserJid(user.username),
                 type: undefined
             });
 
-            helper.populateVcard(presence, user, this.core);
+            this.connection.populateVcard(presence, user, this.core);
 
             msgs.push(presence);
 

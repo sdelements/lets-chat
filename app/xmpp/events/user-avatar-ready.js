@@ -3,7 +3,6 @@
 var _ = require('lodash'),
     Stanza = require('node-xmpp-core').Stanza,
     settings = require('./../../config'),
-    helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
 module.exports = EventListener.extend({
@@ -29,19 +28,19 @@ module.exports = EventListener.extend({
             type: 'xmpp'
         });
 
-        _.each(connections, function(x) {
-            if (x.user.id === user.id) {
+        _.each(connections, function(connection) {
+            if (connection.user.id === user.id) {
                 return;
             }
 
             // Reannounce presence
             var presence = new Stanza.Presence({
-                from: helper.getUserJid(user.username)
+                from: connection.getUserJid(user.username)
             });
 
-            helper.populateVcard(presence, user, this.core);
+            connection.populateVcard(presence, user, this.core);
 
-            this.send(x, presence);
+            this.send(connection, presence);
         }, this);
     }
 

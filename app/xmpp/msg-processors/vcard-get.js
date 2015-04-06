@@ -49,7 +49,7 @@ module.exports = MessageProcessor.extend({
 
         vcard.c('NICKNAME').t(user.username);
 
-        vcard.c('JABBERID').t(helper.getUserJid(user.username));
+        vcard.c('JABBERID').t(this.connection.getUserJid(user.username));
 
         var userId = (user.id || user._id).toString();
 

@@ -158,7 +158,7 @@ module.exports = MessageProcessor.extend({
         presence
             .c('error', {
                 type: 'auth',
-                by: helper.getRoomJid(room.slug)
+                by: this.connection.getRoomJid(room.slug)
             })
             .c('not-authorized', {
                 xmlns: 'urn:ietf:params:xml:ns:xmpp-stanzas'

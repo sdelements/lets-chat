@@ -3,7 +3,6 @@
 var _ = require('lodash'),
     Stanza = require('node-xmpp-core').Stanza,
     settings = require('./../../config'),
-    helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
 module.exports = EventListener.extend({
@@ -14,7 +13,7 @@ module.exports = EventListener.extend({
         if (!settings.private.enable) {
             return;
         }
-        
+
         if (connection.type !== 'xmpp') {
             return;
         }
@@ -39,8 +38,8 @@ module.exports = EventListener.extend({
             }
 
             var presence = new Stanza.Presence({
-                to: helper.getUserJid(x.user.username),
-                from: helper.getUserJid(connection.user.username),
+                to: x.jid(),
+                from: x.getUserJid(connection.user.username),
                 type: 'unavailable'
             });
 

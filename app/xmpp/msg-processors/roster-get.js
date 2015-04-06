@@ -2,8 +2,7 @@
 
 var _ = require('lodash'),
     MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config'),
-    helper = require('./../helper');
+    settings = require('./../../config');
 
 module.exports = MessageProcessor.extend({
 
@@ -57,7 +56,7 @@ module.exports = MessageProcessor.extend({
             }
 
             v.c('item', {
-                jid: helper.getUserJid(user.username),
+                jid: this.connection.getUserJid(user.username),
                 name: user.displayName,
                 subscription: 'both'
             }).c('group').t('Let\'s Chat');

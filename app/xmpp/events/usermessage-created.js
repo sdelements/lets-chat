@@ -2,7 +2,6 @@
 
 var Stanza = require('node-xmpp-core').Stanza,
     settings = require('./../../config'),
-    helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
 var mentionPattern = /\B@(\w+)(?!@)\b/g;
@@ -26,8 +25,8 @@ module.exports = EventListener.extend({
             var stanza = new Stanza.Message({
                 id: msg._id,
                 type: 'chat',
-                to: helper.getUserJid(user.username),
-                from: helper.getUserJid(owner.username)
+                to: connection.getUserJid(user.username),
+                from: connection.getUserJid(owner.username)
             });
 
             stanza.c('active', {
