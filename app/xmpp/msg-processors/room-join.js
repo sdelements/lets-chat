@@ -109,8 +109,7 @@ module.exports = MessageProcessor.extend({
         var presences = usernames.map(function(username) {
 
             var presence = this.Presence({
-                from: this.connection.getRoomJid(room.slug, username),
-                type: undefined
+                from: this.connection.getRoomJid(room.slug, username)
             });
 
             presence
