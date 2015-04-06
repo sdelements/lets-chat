@@ -1,4 +1,4 @@
-## 0.3.9 (Next release)
+## 0.3.9 (2015-04-06)
 
 Deprecated:
 
