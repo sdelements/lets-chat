@@ -26,7 +26,7 @@ files:
 xmpp:
   enable: false
   port: 5222
-  host: localhost
+  domain: example.com
 
 database:
   uri: mongodb://localhost/letschat
