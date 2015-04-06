@@ -2,8 +2,7 @@
 
 var mongoose = require('mongoose'),
     MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config'),
-    helper = require('./../helper');
+    settings = require('./../../config');
 
 module.exports = MessageProcessor.extend({
 
@@ -12,7 +11,7 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
-        var jid = helper.getUserJid(this.connection.user.username);
+        var jid = this.connection.jid();
         var other = this.to && this.to !== jid;
 
         if (!other) {

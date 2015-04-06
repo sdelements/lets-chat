@@ -16,9 +16,9 @@
                             <dt>Username</dt>
                             <dd>
                                 <% if account.local %>
-                                    <$ account.username $>@<$ settings.xmpp.host $>
+                                    <$ account.username $>@<$ settings.xmpp.domain $>
                                 <% else %>
-                                    <$ account.uid $>@<$ settings.xmpp.host $>
+                                    <$ account.uid $>@<$ settings.xmpp.domain $>
                                 <% endif %></dd>
                             <% if settings.xmpp.port != 5222 %>
                             <dt>Port</dt>
@@ -28,20 +28,20 @@
 
                         <dl class="">
                             <dt>Host</dt>
-                            <dd><$ settings.xmpp.host $></dd>
+                            <dd><$ settings.xmpp.domain $></dd>
                             <% if settings.xmpp.port == 5222 %>
                             <dt>Port</dt>
                             <dd><$ settings.xmpp.port $></dd>
                             <% endif %>
                             <dt>Conference Host</dt>
-                            <dd><$ settings.xmpp.confhost $></dd>
+                            <dd><$ settings.xmpp.confdomain $></dd>
                         </dl>
 
                     </div>
                     <div class="col-sm-6">
 
                         <h4>Supported Clients</h4>
-                        
+
                         <h6>Desktop</h6>
 
                         <ul class="list-unstyled">

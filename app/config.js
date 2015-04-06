@@ -118,9 +118,14 @@ var pipeline = [
     },
 
     function addXmppConfHost(context) {
-        if (context.result.xmpp.host) {
-            context.result.xmpp.confhost = 'conference.' +
-                                            context.result.xmpp.host;
+        // Deprecating xmpp.host in favour of xmpp.domain
+        if (!context.result.xmpp.domain && context.result.xmpp.host) {
+            context.result.xmpp.domain = context.result.xmpp.host;
+        }
+
+        if (context.result.xmpp.domain) {
+            context.result.xmpp.confdomain = 'conference.' +
+                                             context.result.xmpp.domain;
         }
     },
 

@@ -1,7 +1,6 @@
 'use strict';
 
 var Stanza = require('node-xmpp-core').Stanza,
-    helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
 module.exports = EventListener.extend({
@@ -14,8 +13,8 @@ module.exports = EventListener.extend({
         connections.forEach(function(connection) {
 
             var message = new Stanza.Message({
-                to: helper.getRoomJid(room.slug, connection.user.username),
-                from: helper.getRoomJid(room.slug, connection.user.username),
+                to: connection.jid(room.slug),
+                from: connection.jid(room.slug),
                 type: 'groupchat'
             });
 
