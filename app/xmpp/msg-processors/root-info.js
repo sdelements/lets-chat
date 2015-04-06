@@ -6,8 +6,10 @@ var MessageProcessor = require('./../msg-processor'),
 module.exports = MessageProcessor.extend({
 
     if: function() {
-        return this.to === settings.xmpp.host &&
-               this.ns['http://jabber.org/protocol/disco#info'];
+        return this.ns['http://jabber.org/protocol/disco#info'] && (
+            this.to === this.connection.getDomain() ||
+            this.to === settings.xmpp.domain
+        );
     },
 
     then: function(cb) {

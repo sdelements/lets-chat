@@ -1,7 +1,6 @@
 'use strict';
 
 var Stanza = require('node-xmpp-core').Stanza,
-    helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
 module.exports = EventListener.extend({
@@ -13,8 +12,8 @@ module.exports = EventListener.extend({
 
         connections.forEach(function(connection) {
             var presence = new Stanza.Presence({
-                to: helper.getRoomJid(data.roomSlug, connection.user.username),
-                from: helper.getRoomJid(data.roomSlug, data.username),
+                to: connection.jid(data.roomSlug),
+                from: connection.getRoomJid(data.roomSlug, data.username),
                 type: 'unavailable'
             });
 
@@ -22,7 +21,7 @@ module.exports = EventListener.extend({
                 xmlns: 'http://jabber.org/protocol/muc#user'
             });
             x.c('item', {
-                jid: helper.getUserJid(data.username),
+                jid: connection.getUserJid(data.username),
                 role: 'none',
                 affiliation: 'none'
             });

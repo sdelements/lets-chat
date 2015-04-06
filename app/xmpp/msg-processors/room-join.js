@@ -4,8 +4,7 @@ var _ = require('lodash'),
     moment = require('moment'),
     Stanza = require('node-xmpp-core').Stanza,
     MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config'),
-    helper = require('./../helper');
+    settings = require('./../../config');
 
 module.exports = MessageProcessor.extend({
 
@@ -40,8 +39,7 @@ module.exports = MessageProcessor.extend({
             roomSlug = roomUrl.split('@')[0],
             connection = this.client.conn;
 
-        // TODO: Do we need to track nickname for each individual room?
-        this.connection.nickname = nickname;
+        this.connection.nickname(roomSlug, nickname);
 
         this.core.rooms.slug(roomSlug, function(err, room) {
             if (err) {
@@ -77,7 +75,7 @@ module.exports = MessageProcessor.extend({
 
     cantCreateRoom: function(roomSlug, cb) {
         var presence = this.Presence({
-            from: helper.getRoomJid(roomSlug, 'admin'),
+            from: this.connection.getRoomJid(roomSlug, 'admin'),
             type: 'error'
         });
 
@@ -86,7 +84,7 @@ module.exports = MessageProcessor.extend({
         });
 
         presence.c('error', {
-            by: helper.getRoomJid(roomSlug),
+            by: this.connection.getRoomJid(roomSlug),
             type: 'cancel'
         }).c('not-allowed', {
             xmlns: 'urn:ietf:params:xml:ns:xmpp-stanzas'
@@ -106,12 +104,12 @@ module.exports = MessageProcessor.extend({
         if (i > -1) {
             usernames.splice(i, 1);
         }
-        usernames.push(this.connection.nickname);
+        usernames.push(this.connection.user.username);
 
         var presences = usernames.map(function(username) {
 
             var presence = this.Presence({
-                from: helper.getRoomJid(room.slug, username)
+                from: this.connection.getRoomJid(room.slug, username)
             });
 
             presence
@@ -119,7 +117,7 @@ module.exports = MessageProcessor.extend({
                     xmlns:'http://jabber.org/protocol/muc#user'
                 })
                 .c('item', {
-                    jid: helper.getUserJid(username),
+                    jid: this.connection.getUserJid(username),
                     affiliation: 'none',
                     role: 'participant'
                 });
@@ -182,15 +180,15 @@ module.exports = MessageProcessor.extend({
                 var stanza = new Stanza.Message({
                     id: msg._id,
                     type: 'groupchat',
-                    to: helper.getRoomJid(room.slug),
-                    from: helper.getRoomJid(room.slug, msg.owner.username)
+                    to: this.connection.getRoomJid(room.slug),
+                    from: this.connection.getRoomJid(room.slug, msg.owner.username)
                 });
 
                 stanza.c('body').t(msg.text);
 
                 stanza.c('delay', {
                     xmlns: 'urn:xmpp:delay',
-                    from: helper.getRoomJid(room.slug),
+                    from: this.connection.getRoomJid(room.slug),
                     stamp: msg.posted.toISOString()
                 });
 
@@ -198,7 +196,7 @@ module.exports = MessageProcessor.extend({
                     xmlns: 'http://jabber.org/protocol/address'
                 }).c('address', {
                     type: 'ofrom',
-                    jid: helper.getUserJid(msg.owner.username)
+                    jid: this.connection.getUserJid(msg.owner.username)
                 });
 
                 return stanza;

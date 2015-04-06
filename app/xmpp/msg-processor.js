@@ -48,8 +48,9 @@ MessageProcessor.prototype.Message = function(attr) {
 MessageProcessor.prototype.preRun = function() {
     this.to = this.request.attrs.to || '';
 
-    this.toConfRoot = this.to.indexOf(settings.xmpp.confhost) === 0;
-    this.toARoom = this.to.indexOf('@' + settings.xmpp.confhost) !== -1;
+    var confDomain = this.connection.getConfDomain();
+    this.toConfRoot = this.to.indexOf(confDomain) === 0;
+    this.toARoom = this.to.indexOf('@' + confDomain) !== -1;
 
     this.ns = this.ns || {};
 
