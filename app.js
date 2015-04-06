@@ -4,6 +4,8 @@
 
 'use strict';
 
+process.title = "letschat";
+
 var _ = require('lodash'),
     fs = require('fs'),
     colors = require('colors'),

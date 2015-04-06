@@ -24,7 +24,6 @@ function MessageProcessor(client, request, core) {
 
 MessageProcessor.prototype.Stanza = function(name, attr) {
     attr = _.extend({
-        type: 'result',
         id: this.request.attrs.id,
         to: this.request.attrs.from,
         from: this.request.attrs.to
@@ -34,6 +33,10 @@ MessageProcessor.prototype.Stanza = function(name, attr) {
 };
 
 MessageProcessor.prototype.Iq = function(attr) {
+    attr = _.extend({
+        type: 'result'
+    }, attr || {});
+
     return this.Stanza('iq', attr);
 };
 
