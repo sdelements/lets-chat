@@ -47,7 +47,7 @@ module.exports = EventListener.extend({
             roster.c('query', {
                 xmlns: 'jabber:iq:roster'
             }).c('item', {
-                jid: x.jid(),
+                jid: x.getUserJid(connection.user.username),
                 name: connection.user.displayName,
                 subscription: 'both'
             }).c('group').t('Let\'s Chat');
