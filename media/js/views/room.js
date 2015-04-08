@@ -21,7 +21,8 @@
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
             'click .lcb-room-poke': 'poke',
-            'click .lcb-upload-trigger': 'upload'
+            'click .lcb-upload-trigger': 'upload',
+            'click .lcb-object-delete': 'deleteObject'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -333,7 +334,7 @@
             var $text = $html.find('.lcb-message-text');
 
             var that = this;
-            this.formatMessage($text.html(), function(text) {
+            this.formatMessage($text.html(), message, function(text) {
                 $text.html(text);
                 $html.find('time').updateTimeStamp();
                 that.$messages.append($html);
@@ -347,14 +348,15 @@
             });
 
         },
-        formatMessage: function(text, cb) {
+        formatMessage: function(text, message, cb) {
             var client = this.client;
             client.getEmotes(function(emotes) {
                 client.getReplacements(function(replacements) {
                     var data = {
                         emotes: emotes,
                         replacements: replacements,
-                        rooms: client.rooms
+                        rooms: client.rooms,
+                        message: message
                     };
 
                     var msg = window.utils.message.format(text, data);
@@ -389,6 +391,15 @@
             this.$el.removeData().unbind();
             this.remove();
             Backbone.View.prototype.remove.call(this);
+        },
+        deleteObject: function(e) {
+            var target = $(e.currentTarget),
+                objectId = target.data('id'),
+                object = this.$('#' + objectId);
+
+            if (!object) return;
+
+            object.remove();
         },
         poke: function(e) {
             var $target = $(e.currentTarget),
