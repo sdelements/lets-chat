@@ -136,6 +136,10 @@ if (typeof exports !== 'undefined') {
             text = func(text, data);
         });
 
+        if (data.format === 'markdown') {
+            text = window.markdownit().render(text);
+        }
+
         return text;
     };
 
