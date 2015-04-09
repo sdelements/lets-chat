@@ -8,60 +8,57 @@
     margin: 0;
 }
 
-.lcb-tabs {
-    border: 1px #333 solid;
-    border-top-color: #111;
-    border-left: none;
-    border-right: none;
+.lcb-tabs-group {
+    margin: 30px 0;
+    margin-bottom: 40px;
+}
+
+.lcb-tabs-group-heading {
+    color: #8f8f8f;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin: 0;
+    margin-left: 15px;
+    margin-bottom: 10px;
 }
 
 .lcb-tab {
-    height: 36px;
-    line-height: 36px;
-    font-size: 14px;
-    border: 1px #111 solid;
-    border-top-color: #333;
+    height: 34px;
+    line-height: 34px;
+    font-size: 13px;
     display: block;
     position: relative;
-    z-index: 1;
-    .box-sizing(content-box);
-    .opacity(.7);
-    &:after {
-        background-color: transparent;
-        width: 1px;
-        height: 100%;
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        .transition(background .02s linear);
-    }
+    .opacity(.8);
     a {
         height: inherit;
-        color: #999;
+        color: #246b9b;
         text-decoration: none;
-        padding-left: 10px;
+        padding-left: 15px;
         border-bottom: none;
         display: block;
         position: relative;
         .transition(color .07s linear);
+        .lcb-tabs-alt & {
+            color: #916f98;
+        }
     }
     &:hover {
-        .opacity(.8);
+        .opacity(.9);
         a {
-            color: #bbb;
+            color: #3e9ddd;
+            .lcb-tabs-alt & {
+                color: lighten(#916f98, 10%);
+            }
         }
     }
     &.selected {
-        background: #222;
-        padding-right: 1px;
-        margin-right: -1px;
-        border-right-color: transparent;
-        &:after {
-            background: rgba(255, 255, 255, .9);
-        }
+        background: #323232;
         a {
-            color: #fff;
+            color: #3e9ddd;
+            .lcb-tabs-alt & {
+                color: lighten(#916f98, 10%);
+            }
         }
         .opacity(1);
     }
@@ -81,14 +78,14 @@
     line-height: 100%;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     position: absolute;
-    top: 10px;
+    top: 8px;
     right: 24px;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 .lcb-tab-alerts-mentions,
 .lcb-tab-alerts-total {
-    padding: 2px 5px;
+    padding: 3px 5px;
     float: left;
     border-radius: 3px;
     &:empty {
@@ -105,7 +102,7 @@
 }
 
 .lcb-tab-close {
-    line-height: 32px;
+    line-height: 30px;
     font-size: 20px;
     color: #ccc;
     position: absolute;
