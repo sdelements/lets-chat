@@ -9,11 +9,11 @@
         <% block css %><% endblock %>
         <$ 'vendor' | css | safe $>
         <$ 'style' | css | safe $>
-        <$ 'vendor' | js | safe $>
-        <% block js %><% endblock %>
     </head>
     <body class="<% block class %><% endblock %>" <% block attributes %><% endblock %>>
         <% block body %><% endblock %>
         <% block templates %><% endblock %>
+        <$ 'vendor' | js | safe $>
+        <% block js %><% endblock %>
     </body>
 </html>
