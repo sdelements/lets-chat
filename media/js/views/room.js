@@ -45,13 +45,17 @@
             // Subviews
             //
             this.usersList = new window.LCB.RoomUsersView({
-                el: this.$('.lcb-room-sidebar-users'),
                 collection: this.model.users
             });
             this.filesList = new window.LCB.RoomFilesView({
-                el: this.$('.lcb-room-sidebar-files'),
                 collection: this.model.files
             });
+            
+            this.usersList.render();
+            this.filesList.render();
+
+            this.$('.lcb-room-sidebar').append(this.usersList.el);
+            this.$('.lcb-room-sidebar').append(this.filesList.el);
         },
         render: function() {
             this.$el = $(this.template(_.extend(this.model.toJSON(), {
@@ -414,50 +418,56 @@
         }
     });
 
-    window.LCB.RoomSidebarListView = Backbone.View.extend({
-        initialize: function(options) {
-            this.template = Handlebars.compile($(this.templateSelector).html());
-            this.collection.on('add remove', function() {
-                this.count();
-            }, this);
-            this.collection.on('add', function(model) {
-                this.add(model.toJSON());
-            }, this);
-            this.collection.on('change', function(model) {
-                this.update(model.toJSON());
-            }, this);
-            this.collection.on('remove', function(model) {
-                this.remove(model.id);
-            }, this);
-            this.render();
-        },
-        render: function() {
-            this.collection.each(function(model) {
-                this.add(model.toJSON());
-            }, this);
-            this.count();
-        },
-        add: function(model) {
-            this.$('.lcb-room-sidebar-list').prepend(this.template(model));
-        },
-        remove: function(id) {
-            this.$('.lcb-room-sidebar-item[data-id=' + id + ']').remove();
-        },
-        count: function(models) {
-            this.$('.lcb-room-sidebar-items-count').text(this.collection.length);
-        },
-        update: function(model){
-            this.$('.lcb-room-sidebar-item[data-id=' + model.id + ']')
-                .replaceWith(this.template(model));
+    var UserView = Marionette.ItemView.extend({
+        template: Handlebars.compile($('#template-user').html()),
+        tagName: 'li',
+        attributes: function(model) {
+            return {
+                'class': 'lcb-room-sidebar-item lcb-room-sidebar-user',
+                'data-id': this.model.get('id')
+            };
         }
     });
 
-    window.LCB.RoomUsersView = window.LCB.RoomSidebarListView.extend({
-        templateSelector: '#template-user'
+    var FileView = Marionette.ItemView.extend({
+        template: Handlebars.compile($('#template-file').html()),
+        tagName: 'li',
+        attributes: function(model) {
+            return {
+                'class': 'lcb-room-sidebar-item lcb-room-sidebar-file',
+                'data-id': this.model.get('id')
+            };
+        }
     });
 
-    window.LCB.RoomFilesView = window.LCB.RoomSidebarListView.extend({
-        templateSelector: '#template-file'
+    window.LCB.RoomUsersView = Backbone.Marionette.CompositeView.extend({
+        tagName: 'div',
+        attributes: {
+            'class': 'lcb-room-sidebar-group lcb-room-sidebar-users'
+        },
+        template: Handlebars.compile($('#template-users').html()),
+        childView: UserView,
+        childViewContainer: 'ul',
+
+        onRender: function() {
+            this.$('.lcb-room-sidebar-items-count')
+                .text(this.collection.length);
+        },
+
+        collectionEvents: {
+            'add': 'onRender',
+            'remove': 'onRender'
+        }
+    });
+
+    window.LCB.RoomFilesView = Backbone.Marionette.CompositeView.extend({
+        tagName: 'div',
+        attributes: {
+            'class': 'lcb-room-sidebar-group lcb-room-sidebar-files'
+        },
+        template: Handlebars.compile($('#template-files').html()),
+        childView: FileView,
+        childViewContainer: 'ul'
     });
 
 }(window, $, _);

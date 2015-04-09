@@ -45,29 +45,7 @@
                 <button type="submit" class="btn btn-info lcb-entry-button">Send</button>
             </form>
         </div><!-- lcb-chat end -->
-        <div class="lcb-room-sidebar">
-            <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
-                <header class="lcb-room-sidebar-header">
-                    <h3 class="lcb-room-sidebar-heading">
-                        <i class="fa fa-users"></i> Who's Here (<span class="lcb-room-sidebar-items-count"></span>)
-                    </h3>
-                </header>
-                <ul class="lcb-room-sidebar-list"></ul>
-            </div>
-            <% if settings.files.enable %>
-            <div class="lcb-room-sidebar-group lcb-room-sidebar-files">
-                <header class="lcb-room-sidebar-header">
-                    <h3 class="lcb-room-sidebar-heading">
-                        <i class="fa fa-file-text"></i> Files
-                    </h3>
-                    <button class="btn lcb-room-sidebar-files-add lcb-upload-trigger">
-                        <i class="fa fa-plus"></i>
-                    </button>
-                </header>
-                <ul class="lcb-room-sidebar-list"></ul>
-            </div>
-            <% endif %>
-        </div><!-- lcb-room-sidebar end -->
+        <div class="lcb-room-sidebar"></div>
         <div class="edit-room modal fade lcb-room-edit">
         <div class="modal-dialog">
             <div class="modal-content">
