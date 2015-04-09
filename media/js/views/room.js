@@ -11,7 +11,6 @@
 
     window.LCB.RoomView = Backbone.View.extend({
         events: {
-            'scroll .lcb-messages': 'updateScrollLock',
             'keypress .lcb-entry-input': 'sendMessage',
             'click .lcb-entry-button': 'sendMessage',
             'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta',
@@ -33,10 +32,8 @@
             this.model.set('iCanEdit', iCanEdit);
 
             this.template = options.template;
-            this.messageTemplate =
-                Handlebars.compile($('#template-message').html());
             this.render();
-            this.model.on('messages:new', this.addMessage, this);
+
             this.model.on('change', this.updateMeta, this);
             this.model.on('remove', this.goodbye, this);
             this.model.users.on('change', this.updateUser, this);
@@ -44,16 +41,22 @@
             //
             // Subviews
             //
+            this.messageView = new window.LCB.MessagesView({
+                collection: this.model.messages,
+                el: this.$('.lcb-messages')
+            });
             this.usersList = new window.LCB.RoomUsersView({
                 collection: this.model.users
             });
             this.filesList = new window.LCB.RoomFilesView({
                 collection: this.model.files
             });
-            
+
+            this.messageView.render();
             this.usersList.render();
             this.filesList.render();
 
+            // this.$('.lcb-messages').append(this.messageView.el);
             this.$('.lcb-room-sidebar').append(this.usersList.el);
             this.$('.lcb-room-sidebar').append(this.filesList.el);
         },
@@ -61,10 +64,6 @@
             this.$el = $(this.template(_.extend(this.model.toJSON(), {
                 sidebar: store.get('sidebar')
             })));
-            this.$messages = this.$('.lcb-messages');
-            // Scroll Locking
-            this.scrollLocked = true;
-            this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));
             this.atwhoMentions();
             this.atwhoAllMentions();
             this.atwhoRooms();
@@ -316,67 +315,6 @@
             });
             $textarea.val('');
         },
-        addMessage: function(message) {
-            // Smells like pasta
-            message.paste = /\n/i.test(message.text);
-
-            var posted = moment(message.posted);
-
-            // Fragment or new message?
-            message.fragment = this.lastMessageOwner === message.owner.id &&
-                            posted.diff(this.lastMessagePosted, 'minutes') < 5;
-
-            // Mine? Mine? Mine? Mine?
-            message.own = this.client.user.id === message.owner.id;
-
-            // WHATS MY NAME
-            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + ')(?!@)\\b', 'i').test(message.text);
-
-            // Templatin' time
-            var $html = $(this.messageTemplate(message).trim());
-            var $text = $html.find('.lcb-message-text');
-
-            var that = this;
-            this.formatMessage($text.html(), function(text) {
-                $text.html(text);
-                $html.find('time').updateTimeStamp();
-                that.$messages.append($html);
-                that.lastMessageOwner = message.owner.id;
-                that.lastMessagePosted = posted;
-                that.scrollMessages();
-
-                if (!message.historical) {
-                    window.utils.eggs.message(message.text);
-                }
-            });
-
-        },
-        formatMessage: function(text, cb) {
-            var client = this.client;
-            client.getEmotes(function(emotes) {
-                client.getReplacements(function(replacements) {
-                    var data = {
-                        emotes: emotes,
-                        replacements: replacements,
-                        rooms: client.rooms
-                    };
-
-                    var msg = window.utils.message.format(text, data);
-                    cb(msg);
-                });
-            });
-        },
-        updateScrollLock: function() {
-            this.scrollLocked = this.$messages[0].scrollHeight -
-              this.$messages.scrollTop() - 5 <= this.$messages.outerHeight();
-            return this.scrollLocked;
-        },
-        scrollMessages: function(force) {
-            if ((!force && !this.scrollLocked) || this.$el.hasClass('hide')) {
-                return;
-            }
-            this.$messages[0].scrollTop = this.$messages[0].scrollHeight;
-        },
         toggleSidebar: function(e) {
             e && e.preventDefault && e.preventDefault();
             // Target siblings too!
@@ -415,6 +353,91 @@
             var $messages = this.$('.lcb-message[data-owner="' + user.id + '"]');
             $messages.find('.lcb-message-username').text('@' + user.get('username'));
             $messages.find('.lcb-message-displayname').text(user.get('displayName'));
+        }
+    });
+
+    var MessageView = Marionette.ItemView.extend({
+        template: Handlebars.compile($('#template-message').html()),
+        tagName: 'li',
+        attributes: function() {
+            var attrs = {
+                'class': 'lcb-message',
+                'data-owner': this.model.get('owner').id
+            };
+
+            if (this.model.get('mentioned')) {
+                attrs['class'] += ' lcb-message-mentioned';
+            }
+
+            if (this.model.get('fragment')) {
+                attrs['class'] += ' lcb-message-fragment';
+            }
+
+            if (this.model.get('own')) {
+                attrs['class'] += ' lcb-message-own';
+            }
+
+            if (this.model.get('paste')) {
+                attrs['class'] += ' lcb-message-paste';
+            }
+
+            return attrs;  
+        },
+        onRender: function() {
+            var $text = this.$('.lcb-message-text');
+            var $time = this.$('time');
+
+            var that = this;
+            this.formatMessage($text.html(), function(text) {
+                $text.html(text);
+                $time.updateTimeStamp();
+            });
+        },
+        formatMessage: function(text, cb) {
+            var client = window.client; // TODO: Don't use global
+            client.getEmotes(function(emotes) {
+                client.getReplacements(function(replacements) {
+                    var data = {
+                        emotes: emotes,
+                        replacements: replacements,
+                        rooms: client.rooms
+                    };
+
+                    var msg = window.utils.message.format(text, data);
+                    cb(msg);
+                });
+            });
+        }
+    });
+
+    window.LCB.MessagesView = Marionette.CollectionView.extend({
+        tagName: 'ul',
+        childView: MessageView,
+        events: {
+            'scroll .lcb-messages': 'updateScrollLock',
+        },
+
+        onRender: function() {
+            // Scroll Locking
+            this.scrollLocked = true;
+            this.$el.on('scroll',  _.bind(this.updateScrollLock, this));
+        },
+
+        onAddChild: function(childView) {
+            this.scrollMessages();
+        },
+
+        updateScrollLock: function() {
+            this.scrollLocked = this.el.scrollHeight -
+              this.$el.scrollTop() - 5 <= this.$el.outerHeight();
+            return this.scrollLocked;
+        },
+
+        scrollMessages: function(force) {
+            // if ((!force && !this.scrollLocked) || this.$el.hasClass('hide')) {
+            //     return;
+            // }
+            this.el.scrollTop = this.el.scrollHeight;
         }
     });
 

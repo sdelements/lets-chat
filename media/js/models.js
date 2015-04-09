@@ -21,6 +21,11 @@ var FilesCollection = Backbone.Collection.extend({
 });
 
 var RoomModel = Backbone.Model.extend({
+    defaults: {
+        lastMessageOwner: null,
+        lastMessagePosted: null
+    },
+
     initialize: function() {
         this.messages = new MessagesCollection();
         this.users = new UsersCollection();

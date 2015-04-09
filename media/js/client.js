@@ -293,6 +293,27 @@
         if (!message.historical) {
             room.lastMessage.set(message);
         }
+
+        var posted = moment(message.posted);
+        var lastMessageOwner = room.get('lastMessageOwner');
+        var lastMessagePosted = room.get('lastMessagePosted');
+
+        var msg = new MessageModel(_.extend(message, {
+
+            paste: /\n/i.test(message.text),
+
+            own: this.user.id === message.owner.id,
+
+            mentioned: new RegExp('\\B@(' + this.user.get('username') + ')(?!@)\\b', 'i').test(message.text),
+
+            fragment: lastMessageOwner === message.owner.id &&
+                      posted.diff(lastMessagePosted, 'minutes') < 5
+        }));
+
+        room.messages.add(msg);
+        room.set('lastMessageOwner', message.owner.id);
+        room.set('lastMessagePosted', posted);
+
         room.trigger('messages:new', message);
     };
     Client.prototype.addMessages = function(messages, historical) {

@@ -130,7 +130,7 @@
             var $pane = this.$el.find('.lcb-pane[data-id=' + id + ']');
             $pane.removeClass('hide').siblings().addClass('hide');
             $(window).width() > 767 && $pane.find('[autofocus]').focus();
-            this.views[id] && this.views[id].scrollMessages(true);
+            // this.views[id] && this.views[id].scrollMessages(true);
         },
         add: function(room) {
             if (this.views[room.id]) {
