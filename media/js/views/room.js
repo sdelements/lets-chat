@@ -210,7 +210,7 @@
         },
         upload: function(e) {
             e.preventDefault();
-            this.room.trigger('upload:show', this.model);
+            this.model.trigger('upload:show', this.model);
         },
         updateUser: function(user) {
             var $messages = this.$('.lcb-message[data-owner="' + user.id + '"]');
