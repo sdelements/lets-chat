@@ -65,7 +65,7 @@
             };
         },
 
-        template: Handlebars.compile($('#template-room-tab').html()),
+        template: '#template-room-tab',
 
         events: {
             'click .lcb-tab-close': 'leave'
@@ -126,7 +126,7 @@
         tagName: 'div',
         childViewContainer: 'ul',
 
-        template: Handlebars.compile($('#template-tabs').html()),
+        template: '#template-tabs',
 
         buildChildView: function(child, ChildViewClass, childViewOptions) {
             return new TabView({

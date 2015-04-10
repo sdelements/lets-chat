@@ -16,7 +16,7 @@
             'class': 'lcb-client'
         },
 
-        template: Handlebars.compile($('#template-chat').html()),
+        template: '#template-chat',
 
         events: {
             // 'click .lcb-tab': 'toggleSideBar',

@@ -1,3 +1,21 @@
+Marionette.Renderer.render = function(template, data) {
+    if (typeof template === 'function') {
+        return template(data);
+    }
+
+    var self = Marionette.Renderer.render;
+
+    if (!self.cache) {
+        self.cache = {};
+    }
+
+    if (!self.cache[template]) {
+        self.cache[template] = Handlebars.compile($(template).html());
+    }
+
+    return self.cache[template](data);
+};
+
 
 // Validator defaults
 $.validator.setDefaults({

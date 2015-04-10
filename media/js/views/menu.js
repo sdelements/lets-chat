@@ -16,7 +16,7 @@
             'class': 'lcb-menu-inner'
         },
 
-        template: Handlebars.compile($('#template-menu').html()),
+        template: '#template-menu',
 
         onRender: function() {
             this.model.on('change', this.update, this);

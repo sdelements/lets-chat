@@ -11,7 +11,7 @@
 
     var BrowserItemUser = Marionette.ItemView.extend({
         tagName: 'li',
-        template: Handlebars.compile($('#template-room-browser-item-user').html()),
+        template:'#template-room-browser-item-user',
         attributes: function() {
             return {
                 'class': 'lcb-rooms-list-user',
@@ -23,7 +23,7 @@
 
     var BrowserItem = Marionette.CompositeView.extend({
         tagName: 'li',
-        template: Handlebars.compile($('#template-room-browser-item').html()),
+        template: '#template-room-browser-item',
         attributes: function() {
             return {
                 'class': 'lcb-rooms-list-item',
@@ -65,7 +65,7 @@
 
     window.LCB.BrowserView = Marionette.CompositeView.extend({
         tagName: 'div',
-        template: Handlebars.compile($('#template-room-browser').html()),
+        template: '#template-room-browser',
 
         attributes: function() {
             return {

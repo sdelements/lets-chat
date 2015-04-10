@@ -19,7 +19,7 @@
             };
         },
 
-        template: Handlebars.compile($('#template-room').html()),
+        template: '#template-room',
 
         events: {
             'click .lcb-room-toggle-sidebar': 'toggleSidebar',
@@ -208,7 +208,7 @@
     });
 
     window.LCB.ComposeView = Marionette.ItemView.extend({
-        template: Handlebars.compile($('#template-compose').html()),
+        template: '#template-compose',
         tagName: 'form',
         attributes: {
             'class': 'lcb-entry'
@@ -384,7 +384,7 @@
     });
 
     var MessageView = Marionette.ItemView.extend({
-        template: Handlebars.compile($('#template-message').html()),
+        template: '#template-message',
         tagName: 'li',
         attributes: function() {
             var attrs = {
@@ -469,7 +469,7 @@
     });
 
     var UserView = Marionette.ItemView.extend({
-        template: Handlebars.compile($('#template-user').html()),
+        template: '#template-user',
         tagName: 'li',
         attributes: function(model) {
             return {
@@ -480,7 +480,7 @@
     });
 
     var FileView = Marionette.ItemView.extend({
-        template: Handlebars.compile($('#template-file').html()),
+        template: '#template-file',
         tagName: 'li',
         attributes: function(model) {
             return {
@@ -495,7 +495,7 @@
         attributes: {
             'class': 'lcb-room-sidebar-group lcb-room-sidebar-users'
         },
-        template: Handlebars.compile($('#template-users').html()),
+        template: '#template-users',
         childView: UserView,
         childViewContainer: 'ul',
 
@@ -515,7 +515,7 @@
         attributes: {
             'class': 'lcb-room-sidebar-group lcb-room-sidebar-files'
         },
-        template: Handlebars.compile($('#template-files').html()),
+        template: '#template-files',
         childView: FileView,
         childViewContainer: 'ul'
     });

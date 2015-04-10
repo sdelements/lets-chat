@@ -15,7 +15,7 @@
             'class': 'lcb-status-inner'
         },
 
-        template: Handlebars.compile($('#template-status').html()),
+        template: '#template-status',
 
         onRender: function () {
             this.options.client.status.on('change:connected',
