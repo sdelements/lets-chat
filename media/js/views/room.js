@@ -57,7 +57,8 @@
             // })));
             this.messageView = new window.LCB.MessagesView({
                 collection: this.model.messages,
-                el: this.$('.lcb-messages')
+                el: this.$('.lcb-messages'),
+                tab: this.options.tab
             });
             this.composeView = new window.LCB.ComposeView({
                 el: this.$('.lcb-compose'),
@@ -444,10 +445,15 @@
             'scroll .lcb-messages': 'updateScrollLock',
         },
 
+        scrollLocked: false,
+
         onRender: function() {
-            // Scroll Locking
-            this.scrollLocked = true;
             this.$el.on('scroll',  _.bind(this.updateScrollLock, this));
+            this.options.tab.on('change:selected', function(tab, selected) {
+                if (selected) {
+                    this.scrollMessages();
+                }
+            }, this);
         },
 
         onAddChild: function(childView) {
@@ -456,14 +462,19 @@
 
         updateScrollLock: function() {
             this.scrollLocked = this.el.scrollHeight -
-              this.$el.scrollTop() - 5 <= this.$el.outerHeight();
+              this.$el.scrollTop() - 5 > this.$el.outerHeight();
             return this.scrollLocked;
         },
 
-        scrollMessages: function(force) {
-            // if ((!force && !this.scrollLocked) || this.$el.hasClass('hide')) {
-            //     return;
-            // }
+        scrollMessages: function() {
+            if (this.scrollLocked) {
+                return;
+            }
+
+            if (!this.options.tab.get('selected')) {
+                return;
+            }
+
             this.el.scrollTop = this.el.scrollHeight;
         }
     });
