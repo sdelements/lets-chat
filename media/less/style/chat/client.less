@@ -25,6 +25,7 @@
 }
 
 .lcb-header {
+    background: #222;
     width: 100%;
     height: 43px;
     text-align: center;
@@ -67,7 +68,7 @@
 }
 
 .lcb-sidebar {
-    background: #222;
+    background: #272727;
     width: 200px;
     min-width: 200px;
     height: 100%;
@@ -81,70 +82,53 @@
     }
 }
 
-.lcb-panes {
+.lcb-panes, .lcb-panes-inner {
     .flex(1);
     .flex-display;
 }
 
 .lcb-account-button {
-    height: 42px;
-    line-height: 45px;
-    color: #bbb;
-    padding: 0 6px;
+    background: #222;
+    height: 45px;
+    line-height: 100%;
+    color: #fff;
+    padding: 9px 0 0 50px;
     display: block;
     position: relative;
-    .user-select(none);
-    .transition(color .2s linear);
-    &:hover,
-    &:focus {
+    .box-sizing(border-box);
+    &:focus,
+    &:active,
+    &:hover {
         color: #fff;
         cursor: pointer;
         text-decoration: none;
     }
-    &:active {
-        background: #222;
+    .dropdown-menu {
+        right: 5px;
     }
 }
 
 .lcb-account-button-avatar {
-    .size(32px);
+    .square(30px);
+    border-radius: 100%;
+    top: 7px;
+    left: 10px;
     position: absolute;
-    top: 5px;
-    left: 5px;
 }
 
 .lcb-account-button-name {
     display: block;
-    margin-left: 40px;
-    margin-right: 15px;
-    .text-overflow;
-    line-height: 18px;
-    padding-top: 5px;
-    font-size: 18px;
 }
 
 .lcb-account-button-username {
-    display: block;
-    margin-left: 40px;
-    margin-right: 15px;
-    .text-overflow;
-    line-height: 15px;
+    color: #a6a6a6;
     font-size: 12px;
 }
 
 .lcb-account-button-chevron {
-    height: 100%;
-    line-height: inherit;
-    color: rgba(255, 255, 255, .8);
-    font-size: 80%;
     position: absolute;
-    top: 0;
-    right: 10px;
-    .transition(opacity .2s linear);
-    .opacity(.4);
-    .lcb-account-button:hover & {
-        .opacity(1);
-    }
+    top: 16px;
+    right: 15px;
 }
 
 .lcb-status-indicators {
