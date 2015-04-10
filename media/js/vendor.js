@@ -17,4 +17,5 @@
 //= require vendor/at/jquery.caret.js
 //= require vendor/at/jquery.atwho.js
 //= require vendor/raptorize/jquery.raptorize.js
+//= require vendor/markdown-it/markdown-it.js
 //= require common.js

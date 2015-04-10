@@ -14,7 +14,28 @@ if (typeof exports !== 'undefined') {
     //
     // Message Text Formatting
     //
+    var markdownFormatter = window.markdownit('zero', {
+        html: false,
+        breaks: true,
+        linkify: true
+    }).enable([
+        'backticks',
+        'emphasis',
+        'link',
+        'linkify',
+        'newline',
 
+        'blockquote',
+        'code',
+        'fence',
+        'list'
+    ]);
+
+    function markdownFormat(text) {
+        return markdownFormatter
+            .render(text)
+            .replace(/<a\s/g, '<a target="_blank" ');
+    }
 
     function getBaseUrl() {
         var parts = window.location.pathname.split('/');
@@ -74,23 +95,21 @@ if (typeof exports !== 'undefined') {
         });
     }
 
-    function links(text) {
-        var imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
-        linkPattern = /((https?|ftp):\/\/[-A-Z0-9+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    function embeds(text) {
+        text = uploads(text);
 
-        if (imagePattern.test(text)) {
-            return text.replace(imagePattern, function(url) {
-                var uri = encodeURI(_.unescape(url));
-                return '<a class="thumbnail" href="' + uri +
-                       '" target="_blank"><img src="' + uri +
-                       '" alt="Pasted Image" /></a>';
-            });
-        } else {
-            return text.replace(linkPattern, function(url) {
-                var uri = encodeURI(_.unescape(url));
-                return '<a href="' + uri + '" target="_blank">' + url + '</a>';
-            });
+        var imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i;
+
+        if (!text.match(imagePattern)) {
+            return false;
         }
+
+        return text.replace(imagePattern, function(url) {
+            var uri = encodeURI(_.unescape(url));
+            return '<a class="thumbnail" href="' + uri +
+                   '" target="_blank"><img src="' + uri +
+                   '" alt="Pasted Image" /></a>';
+        });
     }
 
     function emotes(text, data) {
@@ -122,12 +141,15 @@ if (typeof exports !== 'undefined') {
     }
 
     exports.format = function(text, data) {
+        var embed = embeds(text);
+        if (embed) {
+            return embed;
+        }
+
         var pipeline = [
-            trim,
+            markdownFormat,
             mentions,
             roomLinks,
-            uploads,
-            links,
             emotes,
             replacements
         ];

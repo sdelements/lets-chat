@@ -415,8 +415,7 @@
             var $text = this.$('.lcb-message-text');
             var $time = this.$('time');
 
-            var that = this;
-            this.formatMessage($text.html(), function(text) {
+            this.formatMessage(this.model.get('text'), function(text) {
                 $text.html(text);
                 $time.updateTimeStamp();
             });
@@ -445,25 +444,43 @@
             'scroll .lcb-messages': 'updateScrollLock',
         },
 
-        scrollLocked: false,
+        initialize: function() {
+            this.scrollLocked = false;
+            this.messageQueue = [];
+        },
 
         onRender: function() {
-            this.$el.on('scroll',  _.bind(this.updateScrollLock, this));
-            this.options.tab.on('change:selected', function(tab, selected) {
-                if (selected) {
-                    this.scrollMessages();
-                }
-            }, this);
+            this.$el.on('scroll',  _.bind(this.onScroll, this));
+            this.options.tab.on('change:selected', this.onSelected, this);
+        },
+
+        addChild: function(child, ChildView, index) {
+            if (!this.options.tab.get('selected')) {
+                this.messageQueue.push(arguments);
+                return;
+            }
+
+            Marionette.CollectionView.prototype.addChild.apply(this, arguments);
         },
 
         onAddChild: function(childView) {
             this.scrollMessages();
         },
 
-        updateScrollLock: function() {
-            this.scrollLocked = this.el.scrollHeight -
-              this.$el.scrollTop() - 5 > this.$el.outerHeight();
-            return this.scrollLocked;
+        onSelected: function(tab, selected) {
+            if (selected) {
+                this.scrollMessages();
+
+                var msgs = this.messageQueue.splice(0);
+                _.each(msgs, function(x) {
+                    Marionette.CollectionView.prototype.addChild.apply(this, x);
+                }, this);
+            }
+        },
+
+        onScroll: function() {
+            this.scrollLocked = this.$el.outerHeight() <
+                                this.el.scrollHeight - this.$el.scrollTop() - 5;
         },
 
         scrollMessages: function() {
@@ -475,8 +492,12 @@
                 return;
             }
 
+            this.applyScroll();
+        },
+
+        applyScroll: _.throttle(function() {
             this.el.scrollTop = this.el.scrollHeight;
-        }
+        }, 100)
     });
 
     var UserView = Marionette.ItemView.extend({
