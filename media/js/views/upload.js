@@ -16,6 +16,7 @@ Dropzone && (Dropzone.autoDiscover = false);
             'submit form': 'submit'
         },
         initialize: function(options) {
+            this.dropZone = options.dropZone;
             this.template = $('#template-upload').html();
             this.rooms = options.client.rooms;
             this.tabs = options.client.tabs;
@@ -30,8 +31,7 @@ Dropzone && (Dropzone.autoDiscover = false);
             //
             // Dropzone
             //
-            var $ele = this.$el.closest('.lcb-client').get(0);
-            this.dropzone = new Dropzone($ele, {
+            this.dropzone = new Dropzone(this.dropZone.get(0), {
                 url: './files',
                 autoProcessQueue: false,
                 clickable: [this.$('.lcb-upload-target').get(0)],

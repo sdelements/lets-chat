@@ -6,10 +6,35 @@ var Tab = Backbone.Model.extend({
     defaults: {
         id: 'list',
         type: 'list',
+        name: 'Rooms',
         model: null
+    },
+
+    initialize: function() {
+        var type = this.get('type');
+
+        if (type === 'room') {
+            var room = this.get('model');
+            this.set('name', room.get('name'));
+            room.on('change:name', function(name) {
+                this.set('name', name);
+            }, this);
+        }
     }
 
 });
+
+Tab.roomList = function(room) {
+    return new Tab();
+};
+
+Tab.room = function(room) {
+    return new Tab({
+        id: room.id,
+        type: 'room',
+        model: room
+    });
+};
 
 var TabCollection = Backbone.Collection.extend({
     model: Tab,
@@ -78,8 +103,6 @@ var RoomModel = Backbone.Model.extend({
 var RoomsCollection = Backbone.Collection.extend({
     model: RoomModel,
     initialize: function() {
-        this.current = new Backbone.Model();
-        this.last = new Backbone.Model();
         this.on('users:add users:remove', this.sort);
     },
     comparator: function(a, b) {

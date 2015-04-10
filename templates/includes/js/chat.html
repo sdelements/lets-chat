@@ -1,0 +1,28 @@
+<script type="text/x-handlebars-template" id="template-chat">
+    <div class="lcb-header">
+        <button type="button" class="btn lcb-header-toggle">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="lcb-header-logo">Let's Chat</div>
+    </div>
+    <section class="lcb-sidebar">
+        <div class="lcb-menu"></div>
+        <div class="lcb-status-indicators">
+            <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection" data-status="disconnected" style="display: none;">
+                <i class="fa fa-plug"></i> Disconnected
+            </span>
+            <span class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
+                <i class="fa fa-refresh"></i> Connected
+            </span>
+            <span class="lcb-status-indicator lcb-status-connection" style="display: none;">
+                <i class="fa fa-bell-slash"></i>
+            </span>
+        </div>
+        <div class="lcb-tabs">
+        </div>
+    </section>
+    <section class="lcb-panes"></section>
+    <div class="lcb-loading lcb-client-loading">
+        <img class="lcb-loading-indicator" src="./media/img/loading.svg" alt="Loading..." />
+    </div>
+</script>

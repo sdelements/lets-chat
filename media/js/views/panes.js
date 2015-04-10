@@ -121,9 +121,12 @@
 
     });
 
-    window.LCB.TabsView = Marionette.CollectionView.extend({
+    window.LCB.TabsView = Marionette.CompositeView.extend({
 
-        tagName: 'ul',
+        tagName: 'div',
+        childViewContainer: 'ul',
+
+        template: Handlebars.compile($('#template-tabs').html()),
 
         buildChildView: function(child, ChildViewClass, childViewOptions) {
             return new TabView({
@@ -150,6 +153,11 @@
     });
 
     window.LCB.PanesView = Marionette.CollectionView.extend({
+
+        attributes: {
+            'class': 'lcb-panes-inner'
+        },
+
         getChildView: function(model) {
             if (model.get('type') === 'list') {
                 return window.LCB.BrowserView;

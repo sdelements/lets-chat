@@ -8,6 +8,7 @@
 //= require views/panes.js
 //= require views/modals.js
 //= require views/upload.js
+//= require views/menu.js
 //= require views/client.js
 //= require client.js
 

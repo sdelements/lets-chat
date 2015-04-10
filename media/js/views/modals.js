@@ -221,7 +221,6 @@
             }
         },
         loadGifs: _.throttle(function() {
-            console.log(1)
             var that = this;
             var search = this.$el.find('.search-giphy').val();
 

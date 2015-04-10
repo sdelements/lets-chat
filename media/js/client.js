@@ -38,18 +38,11 @@
         this.tabs = new TabCollection();
         this.events = _.extend({}, Backbone.Events);
 
-        this.tabs.add(new Tab({
-            id: 'list',
-            type: 'list'
-        }));
+        this.tabs.add(Tab.roomList());
 
         this.rooms.on('change:joined', function(room, joined) {
             if (joined) {
-                return this.tabs.add(new Tab({
-                    id: room.id,
-                    type: 'room',
-                    model: room
-                }));
+                return this.tabs.add(Tab.room(room));
             }
             this.tabs.remove(room.id);
         }, this);
@@ -312,7 +305,7 @@
         var lastMessageOwner = room.get('lastMessageOwner');
         var lastMessagePosted = room.get('lastMessagePosted');
 
-        var msg = new MessageModel(_.extend(message, {
+        var model = new MessageModel(_.extend(message, {
 
             paste: /\n/i.test(message.text),
 
@@ -324,11 +317,11 @@
                       posted.diff(lastMessagePosted, 'minutes') < 5
         }));
 
-        room.messages.add(msg);
+        room.messages.add(model);
         room.set('lastMessageOwner', message.owner.id);
         room.set('lastMessagePosted', posted);
 
-        room.trigger('messages:new', message);
+        room.trigger('messages:new', model);
     };
     Client.prototype.addMessages = function(messages, historical) {
         _.each(messages, function(message) {
@@ -573,9 +566,14 @@
         this.getReplacements();
         this.listen();
         this.route();
-        this.view = new window.LCB.ClientView({
-            client: this
+
+        this.view = new window.LCB.RootView({
+            client: this,
+            childView: window.LCB.ClientView
         });
+
+        this.view.render();
+
         this.passwordModal = new window.LCB.RoomPasswordModalView({
             el: $('#lcb-password')
         });

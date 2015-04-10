@@ -7,6 +7,9 @@
 <% endblock %>
 
 <% block templates %>
+    <% include 'includes/js/status.html' %>
+    <% include 'includes/js/menu.html' %>
+    <% include 'includes/js/chat.html' %>
     <% include 'includes/js/room.html' %>
     <% include 'includes/js/compose.html' %>
     <% include 'includes/js/user.html' %>
@@ -14,6 +17,7 @@
     <% include 'includes/js/file.html' %>
     <% include 'includes/js/files.html' %>
     <% include 'includes/js/message.html' %>
+    <% include 'includes/js/tabs.html' %>
     <% include 'includes/js/tab.html' %>
     <% include 'includes/js/browser.html' %>
     <% include 'includes/js/browser-item.html' %>
@@ -23,83 +27,14 @@
 
 <% block body %>
     <div id="lcb-client" class="lcb-client">
-        <div class="lcb-header">
-            <button type="button" class="btn lcb-header-toggle">
-                <i class="fa fa-bars"></i>
-            </button>
-            <div class="lcb-header-logo">Let's Chat</div>
-        </div>
-        <section class="lcb-sidebar">
-            <div class="dropdown">
-                <a class="lcb-account-button dropdown-toggle" data-toggle="dropdown" href="3">
-                    <img class="lcb-account-button-avatar lcb-avatar" src="https://www.gravatar.com/avatar/<$ account.avatar $>?s=50" />
-                    <span class="lcb-account-button-name"><$ account.displayName $></span>
-                    <span class="lcb-account-button-username">@<$ account.username $></span>
-                    <i class="lcb-account-button-chevron fa fa-chevron-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                        <a data-toggle="modal" href="#lcb-profile">
-                            <i class="fa fa-fw fa-edit"></i> Edit Profile
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="modal" href="#lcb-account">
-                            <i class="fa fa-fw fa-cogs"></i> Account Settings
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="modal" href="#lcb-notifications">
-                            <i class="fa fa-fw fa-bell"></i> Notifications
-                        </a>
-                    </li>
-                    <% if settings.xmpp.enable %>
-                        <li>
-                            <a data-toggle="modal" href="#lcb-xmpp">
-                                <i class="fa fa-fw fa-comments"></i> XMPP/Jabber
-                            </a>
-                        </li>
-                    <% endif %>
-                    <li>
-                        <a data-toggle="modal" href="#lcb-tokens">
-                            <i class="fa fa-fw fa-lock"></i> Auth tokens
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="./logout"><i class="fa fa-fw fa-sign-out"></i> Logout</a></li>
-                </ul>
-            </div>
-            <div class="lcb-status-indicators">
-                <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection" data-status="disconnected" style="display: none;">
-                    <i class="fa fa-plug"></i> Disconnected
-                </span>
-                <span class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
-                    <i class="fa fa-refresh"></i> Connected
-                </span>
-                <span class="lcb-status-indicator lcb-status-connection" style="display: none;">
-                    <i class="fa fa-bell-slash"></i>
-                </span>
-            </div>
-            <div class="lcb-tabs-group">
-                <h3 class="lcb-tabs-group-heading">Rooms</h3>
-                <ul class="lcb-tabs">
-                </ul>
-            </div>
-        </section>
-        <section class="lcb-panes">
-
-        </section>
-        <div class="lcb-loading lcb-client-loading">
-            <img class="lcb-loading-indicator" src="./media/img/loading.svg" alt="Loading..." />
-        </div>
-        <% include 'includes/modals/add-room.html' %>
-        <% include 'includes/modals/password.html' %>
-        <% include 'includes/modals/notifications.html' %>
-        <% include 'includes/modals/profile.html' %>
-        <% include 'includes/modals/account.html' %>
-        <% include 'includes/modals/xmpp.html' %>
-        <% include 'includes/modals/tokens.html' %>
-        <% include 'includes/modals/upload.html' %>
-        <% include 'includes/modals/giphy.html' %>
     </div><!-- lcb-client end -->
+    <% include 'includes/modals/add-room.html' %>
+    <% include 'includes/modals/password.html' %>
+    <% include 'includes/modals/notifications.html' %>
+    <% include 'includes/modals/profile.html' %>
+    <% include 'includes/modals/account.html' %>
+    <% include 'includes/modals/xmpp.html' %>
+    <% include 'includes/modals/tokens.html' %>
+    <% include 'includes/modals/upload.html' %>
+    <% include 'includes/modals/giphy.html' %>
 <% endblock %>
