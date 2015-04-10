@@ -35,7 +35,18 @@
         this.user = new UserModel();
         this.users = new UsersCollection();
         this.rooms = new RoomsCollection();
+        this.tabs = new TabCollection();
         this.events = _.extend({}, Backbone.Events);
+
+        this.tabs.add(Tab.roomList());
+
+        this.rooms.on('change:joined', function(room, joined) {
+            if (joined) {
+                return this.tabs.add(Tab.room(room));
+            }
+            this.tabs.remove(room.id);
+        }, this);
+
         return this;
     };
     //
@@ -97,9 +108,8 @@
     };
     Client.prototype.switchRoom = function(id) {
         // Make sure we have a last known room ID
-        this.rooms.last.set('id', this.rooms.current.get('id'));
         if (!id || id === 'list') {
-            this.rooms.current.set('id', 'list');
+            this.tabs.selectTab('list');
             this.router.navigate('!/', {
                 replace: true
             });
@@ -107,7 +117,7 @@
         }
         var room = this.rooms.get(id);
         if (room && room.get('joined')) {
-            this.rooms.current.set('id', id);
+            this.tabs.selectTab(id);
             this.router.navigate('!/room/' + room.id, {
                 replace: true
             });
@@ -268,10 +278,7 @@
             }
         }
         this.socket.emit('rooms:leave', id);
-        if (id === this.rooms.current.get('id')) {
-            var room = this.rooms.get(this.rooms.last.get('id'));
-            this.switchRoom(room && room.get('joined') ? room.id : '');
-        }
+
         // Remove room id from localstorage
         RoomStore.remove(id);
     };
@@ -298,7 +305,7 @@
         var lastMessageOwner = room.get('lastMessageOwner');
         var lastMessagePosted = room.get('lastMessagePosted');
 
-        var msg = new MessageModel(_.extend(message, {
+        var model = new MessageModel(_.extend(message, {
 
             paste: /\n/i.test(message.text),
 
@@ -310,11 +317,11 @@
                       posted.diff(lastMessagePosted, 'minutes') < 5
         }));
 
-        room.messages.add(msg);
+        room.messages.add(model);
         room.set('lastMessageOwner', message.owner.id);
         room.set('lastMessagePosted', posted);
 
-        room.trigger('messages:new', message);
+        room.trigger('messages:new', model);
     };
     Client.prototype.addMessages = function(messages, historical) {
         _.each(messages, function(message) {
@@ -559,9 +566,14 @@
         this.getReplacements();
         this.listen();
         this.route();
-        this.view = new window.LCB.ClientView({
-            client: this
+
+        this.view = new window.LCB.RootView({
+            client: this,
+            childView: window.LCB.ClientView
         });
+
+        this.view.render();
+
         this.passwordModal = new window.LCB.RoomPasswordModalView({
             el: $('#lcb-password')
         });

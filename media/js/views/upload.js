@@ -16,20 +16,22 @@ Dropzone && (Dropzone.autoDiscover = false);
             'submit form': 'submit'
         },
         initialize: function(options) {
+            this.dropZone = options.dropZone;
             this.template = $('#template-upload').html();
-            this.rooms = options.rooms;
-            this.rooms.current.on('change:id', this.setRoom, this);
+            this.rooms = options.client.rooms;
+            this.tabs = options.client.tabs;
+
             this.rooms.on('add remove', this.populateRooms, this);
             this.rooms.on('change:joined', this.populateRooms, this);
             this.rooms.on('upload:show', this.show, this);
+            this.tabs.on('change:selected', this.setRoom, this);
             this.render();
         },
         render: function() {
             //
             // Dropzone
             //
-            var $ele = this.$el.closest('.lcb-client').get(0);
-            this.dropzone = new Dropzone($ele, {
+            this.dropzone = new Dropzone(this.dropZone.get(0), {
                 url: './files',
                 autoProcessQueue: false,
                 clickable: [this.$('.lcb-upload-target').get(0)],
@@ -91,8 +93,12 @@ Dropzone && (Dropzone.autoDiscover = false);
             }
             this.dropzone.processQueue();
         },
-        setRoom: function() {
-            this.selectize.setValue(this.rooms.current.id);
+        setRoom: function(tab, selected) {
+            if (!selected) {
+                return;
+            }
+
+            this.selectize.setValue(tab.id);
         },
         populateRooms: function() {
             this.selectize.clearOptions();

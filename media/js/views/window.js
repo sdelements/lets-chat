@@ -9,43 +9,78 @@
 
     window.LCB = window.LCB || {};
 
-    window.LCB.WindowView = Backbone.View.extend({
+    window.LCB.RootView = Backbone.View.extend({
         el: 'html',
+
         focus: true,
         count: 0,
         mentions: 0,
+
+        modals: {
+
+        },
+
         initialize: function(options) {
-
-            var that = this;
-
             this.client = options.client;
-            this.rooms = options.rooms;
+            this.rooms = options.client.rooms;
+            this.tabs = options.client.tabs;
+
             this.originalTitle = this.$('title').text();
             this.title = this.originalTitle;
-
             $(window).on('focus blur', _.bind(this.onFocusBlur, this));
 
-            this.rooms.current.on('change:id', function(current, id) {
-                var room = this.rooms.get(id),
-                    title = room ? room.get('name') : 'Rooms';
-                this.updateTitle(title);
-            }, this);
+            var view = new options.childView({
+                client: options.client,
+                el: this.$el.find('#lcb-client')
+            });
 
-            this.rooms.on('change:name', function(room) {
-                if (room.id !== this.rooms.current.get('id')) {
-                    return;
-                }
-                this.updateTitle(room.get('name'));
-            }, this);
+            view.render();
+
+            this.initializeModals(options);
+
+            this.notifications = new window.LCB.DesktopNotificationsView({
+                rooms: options.client.rooms,
+                client: options.client
+            });
 
             this.rooms.on('messages:new', this.onNewMessage, this);
 
-            // Last man standing
-            _.defer(function() {
-                that.updateTitle();
-            });
-
+            this.tabs.on('change:selected', function(tab, selected) {
+                if (!selected) {
+                    return;
+                }
+                this.updateTitle(tab.get('name'));
+            }, this);
         },
+
+        initializeModals: function(options) {
+            if (options.client.options.filesEnabled) {
+                this.modals.upload = new window.LCB.UploadView({
+                    el: this.$el.find('#lcb-upload'),
+                    dropZone: this.$el.find('#lcb-client'),
+                    client: options.client
+                });
+            }
+
+            this.modals.profile = new window.LCB.ProfileModalView({
+                el: this.$el.find('#lcb-profile'),
+                model: options.client.user
+            });
+            this.modals.account = new window.LCB.AccountModalView({
+                el: this.$el.find('#lcb-account'),
+                model: options.client.user
+            });
+            this.modals.token = new window.LCB.AuthTokensModalView({
+                el: this.$el.find('#lcb-tokens')
+            });
+            this.modals.notifications = new window.LCB.NotificationsModalView({
+                el: this.$el.find('#lcb-notifications')
+            });
+            this.modals.giphy = new window.LCB.GiphyModalView({
+                el: this.$el.find('#lcb-giphy')
+            });
+        },
+
         onFocusBlur: function(e) {
             this.focus = (e.type === 'focus');
             if (this.focus) {
@@ -57,19 +92,23 @@
                 this.updateTitle();
             }
         },
+
         onNewMessage: function(message) {
-            if (this.focus || message.historical) {
+            if (this.focus || message.get('historical')) {
                 return;
             }
+
             this.countMessage(message);
-            this.flashTitle()
+            this.flashTitle();
         },
+
         countMessage: function(message) {
-            var username = this.client.user.get('username'),
-                regex = new RegExp('\\B@(' + username + ')(?!@)\\b', 'i');
-            ++this.count;
-            regex.test(message.text) && ++this.mentions;
+            this.count++;
+            if (message.get('mentioned')) {
+                this.mentions++;
+            }
         },
+
         flashTitle: function() {
             if (!this.titleTimer) {
                 this._flashTitle();
@@ -77,6 +116,7 @@
                 this.titleTimer = setInterval(flashTitle, 1 * 1000);
             }
         },
+
         _flashTitle: function() {
             var titlePrefix = '';
             if (this.count > 0) {
@@ -90,11 +130,8 @@
             this.$('title').html(title);
             this.titleTimerFlip = !this.titleTimerFlip;
         },
+
         updateTitle: function(name) {
-            if (!name) {
-                var room = this.rooms.get(this.rooms.current.get('id'));
-                name = (room && room.get('name')) || 'Rooms';
-            }
             if (name) {
                 this.title = $('<pre />').text(name).html() +
                 ' &middot; ' + this.originalTitle;
@@ -102,7 +139,7 @@
                 this.title = this.originalTitle;
             }
             this.$('title').html(this.title);
-        },
+        }
     });
 
     window.LCB.HotKeysView = Backbone.View.extend({
@@ -157,7 +194,7 @@
             });
         },
         onNewMessage: function(message) {
-            if (this.focus || message.historical) {
+            if (this.focus || message.get('historical')) {
                 return;
             }
             this.createDesktopNotification(message);
@@ -171,26 +208,27 @@
                 return;
             }
 
-            var roomID = message.room.id,
-                avatar = message.owner.avatar,
-                icon = 'https://www.gravatar.com/avatar/' + avatar + '?s=50',
-                title = message.owner.displayName + ' in ' + message.room.name,
-                mention = message.mentioned;
+            var owner = message.get('owner'),
+                room = message.get('room');
+
+            var icon = 'https://www.gravatar.com/avatar/' + owner.avatar + '?s=50';
+
+            var title = owner.displayName + ' in ' + room.name;
 
             var notification = notify.createNotification(title, {
-                body: message.text,
-                icon: icon,
+                body: message.get('text'),
+                icon: 'https://www.gravatar.com/avatar/' + owner.avatar + '?s=50',
                 tag: message.id,
                 autoClose: 1000,
                 onclick: function() {
                     window.focus();
-                    that.client.events.trigger('rooms:switch', roomID);
+                    that.client.events.trigger('rooms:switch', room.id);
                 }
             });
             //
             // Mentions
             //
-            if (mention) {
+            if (message.get('mentioned')) {
                 if (this.openMentions.length > 2) {
                     this.openMentions[0].close();
                     this.openMentions.shift();

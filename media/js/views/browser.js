@@ -9,101 +9,120 @@
 
     window.LCB = window.LCB || {};
 
-    window.LCB.BrowserView = Backbone.View.extend({
+    var BrowserItemUser = Marionette.ItemView.extend({
+        tagName: 'li',
+        template:'#template-room-browser-item-user',
+        attributes: function() {
+            return {
+                'class': 'lcb-rooms-list-user',
+                'data-id': this.model.get('id'),
+                'title': this.model.get('displayName')
+            };
+        }
+    });
+
+    var BrowserItem = Marionette.CompositeView.extend({
+        tagName: 'li',
+        template: '#template-room-browser-item',
+        attributes: function() {
+            return {
+                'class': 'lcb-rooms-list-item',
+                'data-id': this.model.get('id')
+            };
+        },
+
         events: {
-            'submit .lcb-rooms-add': 'create',
-            'keyup .lcb-rooms-browser-filter-input': 'filter',
             'change .lcb-rooms-switch': 'toggle',
             'click .lcb-rooms-switch-label': 'toggle'
         },
-        initialize: function(options) {
-            this.client = options.client;
-            this.template = Handlebars.compile($('#template-room-browser-item').html());
-            this.userTemplate = Handlebars.compile($('#template-room-browser-item-user').html());
-            this.rooms = options.rooms;
-            this.rooms.on('add', this.add, this);
-            this.rooms.on('remove', this.remove, this);
-            this.rooms.on('change:description change:name', this.update, this);
-            this.rooms.on('change:lastActive', _.debounce(this.updateLastActive, 200), this);
-            this.rooms.on('change:joined', this.updateToggles, this);
-            this.rooms.on('users:add', this.addUser, this);
-            this.rooms.on('users:remove', this.removeUser, this);
-            this.rooms.on('users:add users:remove add remove', this.sort, this);
-            this.rooms.current.on('change:id', function(current, id) {
-                // We only care about the list pane
-                if (id !== 'list') return;
-                this.sort();
-            }, this);
+
+        childView: BrowserItemUser,
+        childViewContainer: 'ul',
+        onRender: function() {
+            this.update();
+            this.model.on('change', this.update, this);
         },
-        updateToggles: function(room, joined) {
-            this.$('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
+        update: function() {
+            var room = this.model;
+            this.$('.lcb-rooms-list-item-name')
+                .text(room.get('name'));
+            this.$('.lcb-rooms-list-item-description')
+                .text(room.get('description'));
+            this.$('.lcb-rooms-list-item-last-active .value')
+                .text(moment(room.get('lastActive')).calendar());
+            this.$('.lcb-rooms-switch').prop('checked', room.get('joined'));
         },
         toggle: function(e) {
             e.preventDefault();
-            var $target = $(e.currentTarget),
-                $input = $target.is(':checkbox') && $target || $target.siblings('[type="checkbox"]'),
-                id = $input.data('id'),
-                room = this.rooms.get(id);
 
-            if (!room) {
-                return;
-            }
-
-            if (room.get('joined')) {
-                this.client.leaveRoom(room.id);
+            if (this.model.get('joined')) {
+                window.client.leaveRoom(this.model.id);
             } else {
-                this.client.joinRoom(room);
+                window.client.joinRoom(this.model);
             }
+        }
+    });
+
+    window.LCB.BrowserView = Marionette.CompositeView.extend({
+        tagName: 'div',
+        template: '#template-room-browser',
+
+        attributes: function() {
+            return {
+                'class': 'lcb-rooms-browser lcb-pane',
+                'data-id': 'list'
+            };
         },
-        add: function(room) {
-            var room = room.toJSON ? room.toJSON() : room,
-                context = _.extend(room, {
-                    lastActive: moment(room.lastActive).calendar()
-                });
-            this.$('.lcb-rooms-list').append(this.template(context));
+
+        events: {
+            'submit .lcb-rooms-add': 'create',
+            'keyup .lcb-rooms-browser-filter-input': 'search'
         },
-        remove: function(room) {
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + ']').remove();
+
+        ui: {
+            filter: '.lcb-rooms-browser-filter-input'
         },
-        update: function(room) {
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+
+        childView: BrowserItem,
+        childViewContainer: 'ul',
+
+        childViewOptions: function(model, index) {
+            return {
+                model: model,
+                collection: model.users
+            };
         },
-        updateLastActive: function(room) {
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).calendar());
-        },
-        sort: function(model) {
-            var that = this,
-                $items = this.$('.lcb-rooms-list-item');
-            // We only care about other users
-            if (this.$el.hasClass('hide') && model && model.id === this.client.user.id)
-                return;
-            $items.sort(function(a, b){
-                var ar = that.rooms.get($(a).data('id')),
-                    br = that.rooms.get($(b).data('id')),
-                    au = ar.users.length,
-                    bu = br.users.length,
-                    aj = ar.get('joined'),
-                    bj = br.get('joined')
-                if ((aj && bj) || (!aj && !bj)) {
-                    if (au > bu) return -1;
-                    if (au < bu) return 1;
+
+        initialize: function(options) {
+            options.tab.on('change:selected', function(current, selected) {
+                if (selected) {
+                    this.$el.show();
+                } else {
+                    this.$el.hide();
                 }
-                if (aj) return -1;
-                if (bj) return 1;
-                return 0;
-            });
-            $items.detach().appendTo(this.$('.lcb-rooms-list'));
+            }, this);
         },
-        filter: function(e) {
+
+        search: function(e) {
             e.preventDefault();
-            var $input = $(e.currentTarget),
-                needle = $input.val().toLowerCase();
-            this.$('.lcb-rooms-list-item').each(function () {
-                var haystack = $(this).find('.lcb-rooms-list-item-name').text().toLowerCase();
-                $(this).toggle(haystack.indexOf(needle) >= 0);
-            });
+            this._renderChildren();
         },
+
+        addChild: function (item, ItemView, index) {
+            var val = this.ui.filter.val(); // ????
+
+            if (val) {
+                var needle = val.toLowerCase();
+                var haystack = item.get('name').toLowerCase();
+
+                if (haystack.indexOf(needle) === -1) {
+                    return;
+                }
+            }
+
+            Marionette.CollectionView.prototype.addChild.apply(this, arguments);
+        },
+
         create: function(e) {
             var that = this;
             e.preventDefault();
@@ -160,16 +179,7 @@
             }
 
             this.client.events.trigger('rooms:create', data);
-        },
-        addUser: function(user, room) {
-            this.$('.lcb-rooms-list-item[data-id="' + room.id + '"]')
-                .find('.lcb-rooms-list-users').prepend(this.userTemplate(user.toJSON()));
-        },
-        removeUser: function(user, room) {
-            this.$('.lcb-rooms-list-item[data-id="' + room.id + '"]')
-                .find('.lcb-rooms-list-user[data-id="' + user.id + '"]').remove();
         }
-
     });
 
 }(window, $, _);

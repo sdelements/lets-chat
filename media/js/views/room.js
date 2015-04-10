@@ -9,9 +9,19 @@
 
     window.LCB = window.LCB || {};
 
-    window.LCB.RoomView = Backbone.View.extend({
+    window.LCB.RoomView = Marionette.ItemView.extend({
+
+        attributes: function() {
+            return {
+                'class': 'lcb-room lcb-pane lcb-pane-' + this.model.id,
+                'data-id': this.model.id,
+                style: 'display: none;'
+            };
+        },
+
+        template: '#template-room',
+
         events: {
-            'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta',
             'click .lcb-room-toggle-sidebar': 'toggleSidebar',
             'click .show-edit-room': 'showEditRoom',
             'click .hide-edit-room': 'hideEditRoom',
@@ -23,25 +33,32 @@
         initialize: function(options) {
             this.client = options.client;
 
+            options.tab.on('change:selected', function(tab, selected) {
+                if (selected) {
+                    this.$el.show();
+                } else {
+                    this.$el.hide();
+                }
+            }, this);
+
             var iAmOwner = this.model.get('owner') === this.client.user.id;
             var iCanEdit = iAmOwner || !this.model.get('hasPassword');
 
             this.model.set('iAmOwner', iAmOwner);
             this.model.set('iCanEdit', iCanEdit);
 
-            this.template = options.template;
-            this.render();
-
             this.model.on('change', this.updateMeta, this);
             this.model.on('remove', this.goodbye, this);
             this.model.users.on('change', this.updateUser, this);
-
-            //
-            // Subviews
-            //
+        },
+        onRender: function() {
+            // this.$el = $(this.template(_.extend(this.model.toJSON(), {
+            //     sidebar: store.get('sidebar')
+            // })));
             this.messageView = new window.LCB.MessagesView({
                 collection: this.model.messages,
-                el: this.$('.lcb-messages')
+                el: this.$('.lcb-messages'),
+                tab: this.options.tab
             });
             this.composeView = new window.LCB.ComposeView({
                 el: this.$('.lcb-compose'),
@@ -64,11 +81,6 @@
             this.$('.lcb-room-sidebar').append(this.usersList.el);
             this.$('.lcb-room-sidebar').append(this.filesList.el);
         },
-        render: function() {
-            this.$el = $(this.template(_.extend(this.model.toJSON(), {
-                sidebar: store.get('sidebar')
-            })));
-        },
         goodbye: function() {
             swal('Archived!', '"' + this.model.get('name') + '" has been archived.', 'warning');
         },
@@ -76,17 +88,6 @@
             this.$('.lcb-room-heading .name').text(this.model.get('name'));
             this.$('.lcb-room-heading .slug').text('#' + this.model.get('slug'));
             this.$('.lcb-room-description').text(this.model.get('description'));
-        },
-        sendMeta: function(e) {
-            this.model.set({
-                name: this.$('.lcb-room-heading').text(),
-                description: this.$('.lcb-room-description').text()
-            });
-            this.client.events.trigger('rooms:update', {
-                id: this.model.id,
-                name: this.model.get('name'),
-                description: this.model.get('description')
-            });
         },
         showEditRoom: function(e) {
             if (e) {
@@ -172,7 +173,7 @@
             this.$el.siblings('.lcb-room').andSelf().toggleClass('lcb-room-sidebar-opened');
             // Save to localstorage
             if ($(window).width() > 767) {
-                this.scrollMessages();
+                // this.scrollMessages();
                 store.set('sidebar',
                           this.$el.hasClass('lcb-room-sidebar-opened'));
             }
@@ -208,7 +209,7 @@
     });
 
     window.LCB.ComposeView = Marionette.ItemView.extend({
-        template: Handlebars.compile($('#template-compose').html()),
+        template: '#template-compose',
         tagName: 'form',
         attributes: {
             'class': 'lcb-entry'
@@ -384,7 +385,7 @@
     });
 
     var MessageView = Marionette.ItemView.extend({
-        template: Handlebars.compile($('#template-message').html()),
+        template: '#template-message',
         tagName: 'li',
         attributes: function() {
             var attrs = {
@@ -444,10 +445,15 @@
             'scroll .lcb-messages': 'updateScrollLock',
         },
 
+        scrollLocked: false,
+
         onRender: function() {
-            // Scroll Locking
-            this.scrollLocked = true;
             this.$el.on('scroll',  _.bind(this.updateScrollLock, this));
+            this.options.tab.on('change:selected', function(tab, selected) {
+                if (selected) {
+                    this.scrollMessages();
+                }
+            }, this);
         },
 
         onAddChild: function(childView) {
@@ -456,20 +462,25 @@
 
         updateScrollLock: function() {
             this.scrollLocked = this.el.scrollHeight -
-              this.$el.scrollTop() - 5 <= this.$el.outerHeight();
+              this.$el.scrollTop() - 5 > this.$el.outerHeight();
             return this.scrollLocked;
         },
 
-        scrollMessages: function(force) {
-            // if ((!force && !this.scrollLocked) || this.$el.hasClass('hide')) {
-            //     return;
-            // }
+        scrollMessages: function() {
+            if (this.scrollLocked) {
+                return;
+            }
+
+            if (!this.options.tab.get('selected')) {
+                return;
+            }
+
             this.el.scrollTop = this.el.scrollHeight;
         }
     });
 
     var UserView = Marionette.ItemView.extend({
-        template: Handlebars.compile($('#template-user').html()),
+        template: '#template-user',
         tagName: 'li',
         attributes: function(model) {
             return {
@@ -480,7 +491,7 @@
     });
 
     var FileView = Marionette.ItemView.extend({
-        template: Handlebars.compile($('#template-file').html()),
+        template: '#template-file',
         tagName: 'li',
         attributes: function(model) {
             return {
@@ -495,7 +506,7 @@
         attributes: {
             'class': 'lcb-room-sidebar-group lcb-room-sidebar-users'
         },
-        template: Handlebars.compile($('#template-users').html()),
+        template: '#template-users',
         childView: UserView,
         childViewContainer: 'ul',
 
@@ -515,7 +526,7 @@
         attributes: {
             'class': 'lcb-room-sidebar-group lcb-room-sidebar-files'
         },
-        template: Handlebars.compile($('#template-files').html()),
+        template: '#template-files',
         childView: FileView,
         childViewContainer: 'ul'
     });

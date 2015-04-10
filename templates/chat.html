@@ -7,6 +7,9 @@
 <% endblock %>
 
 <% block templates %>
+    <% include 'includes/js/status.html' %>
+    <% include 'includes/js/menu.html' %>
+    <% include 'includes/js/chat.html' %>
     <% include 'includes/js/room.html' %>
     <% include 'includes/js/compose.html' %>
     <% include 'includes/js/user.html' %>
@@ -14,7 +17,9 @@
     <% include 'includes/js/file.html' %>
     <% include 'includes/js/files.html' %>
     <% include 'includes/js/message.html' %>
+    <% include 'includes/js/tabs.html' %>
     <% include 'includes/js/tab.html' %>
+    <% include 'includes/js/browser.html' %>
     <% include 'includes/js/browser-item.html' %>
     <% include 'includes/js/browser-item-user.html' %>
     <% include 'includes/js/upload.html' %>
@@ -114,12 +119,14 @@
         <div class="lcb-loading lcb-client-loading">
             <img class="lcb-loading-indicator" src="./media/img/loading.svg" alt="Loading..." />
         </div>
-        <% include 'includes/modals/notifications.html' %>
-        <% include 'includes/modals/profile.html' %>
-        <% include 'includes/modals/account.html' %>
-        <% include 'includes/modals/xmpp.html' %>
-        <% include 'includes/modals/tokens.html' %>
-        <% include 'includes/modals/upload.html' %>
-        <% include 'includes/modals/giphy.html' %>
     </div><!-- lcb-client end -->
+    <% include 'includes/modals/add-room.html' %>
+    <% include 'includes/modals/password.html' %>
+    <% include 'includes/modals/notifications.html' %>
+    <% include 'includes/modals/profile.html' %>
+    <% include 'includes/modals/account.html' %>
+    <% include 'includes/modals/xmpp.html' %>
+    <% include 'includes/modals/tokens.html' %>
+    <% include 'includes/modals/upload.html' %>
+    <% include 'includes/modals/giphy.html' %>
 <% endblock %>

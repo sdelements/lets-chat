@@ -9,99 +9,62 @@
 
     window.LCB = window.LCB || {};
 
-    window.LCB.ClientView = Backbone.View.extend({
-        el: '#lcb-client',
+    window.LCB.ClientView = Marionette.LayoutView.extend({
+
+        attributes: {
+            'id': 'lcb-client',
+            'class': 'lcb-client'
+        },
+
+        template: '#template-chat',
+
         events: {
-            'click .lcb-tab': 'toggleSideBar',
+            // 'click .lcb-tab': 'toggleSideBar',
             'click .lcb-header-toggle': 'toggleSideBar'
         },
-        initialize: function(options) {
-            this.client = options.client;
-            //
-            // Subviews
-            //
-            this.browser = new window.LCB.BrowserView({
-                el: this.$el.find('.lcb-rooms-browser'),
-                rooms: this.client.rooms,
-                client: this.client
-            });
-            this.tabs = new window.LCB.TabsView({
-                el: this.$el.find('.lcb-tabs'),
-                rooms: this.client.rooms,
-                client: this.client
-            });
-            this.panes = new window.LCB.PanesView({
-                el: this.$el.find('.lcb-panes'),
-                rooms: this.client.rooms,
-                client: this.client
-            });
-            this.window = new window.LCB.WindowView({
-                rooms: this.client.rooms,
-                client: this.client
-            });
-            this.hotKeys = new window.LCB.HotKeysView({
-                rooms: this.client.rooms,
-                client: this.client
-            });
-            this.status = new window.LCB.StatusView({
-                el: this.$el.find('.lcb-status-indicators'),
-                client: this.client
-            });
-            this.accountButton = new window.LCB.AccountButtonView({
-                el: this.$el.find('.lcb-account-button'),
-                model: this.client.user
-            });
-            this.desktopNotifications = new window.LCB.DesktopNotificationsView({
-                rooms: this.client.rooms,
-                client: this.client
-            });
-            if (this.client.options.filesEnabled) {
-                this.upload = new window.LCB.UploadView({
-                    el: this.$el.find('#lcb-upload'),
-                    rooms: this.client.rooms
-                });
-            }
 
-            //
-            // Modals
-            //
-            this.profileModal = new window.LCB.ProfileModalView({
-                el: this.$el.find('#lcb-profile'),
-                model: this.client.user
-            });
-            this.accountModal = new window.LCB.AccountModalView({
-                el: this.$el.find('#lcb-account'),
-                model: this.client.user
-            });
-            this.tokenModal = new window.LCB.AuthTokensModalView({
-                el: this.$el.find('#lcb-tokens')
-            });
-            this.notificationsModal = new window.LCB.NotificationsModalView({
-                el: this.$el.find('#lcb-notifications')
-            });
-            this.giphyModal = new window.LCB.GiphyModalView({
-                el: this.$el.find('#lcb-giphy')
-            });
-            //
-            // Misc
-            //
-            this.client.status.once('change:connected', _.bind(function(status, connected) {
-                this.$el.find('.lcb-client-loading').hide(connected);
-            }, this));
-            return this;
+        regions: {
+            status: '.lcb-status-indicators',
+            menu: '.lcb-menu',
+            tabs: '.lcb-tabs',
+            panes: '.lcb-panes',
         },
+
+        onRender: function() {
+            this.options.client.status.once('change:connected',
+                                            this.hideLoadingIndicator, this);
+
+            this.getRegion('status').show(new window.LCB.StatusView({
+                client: this.options.client
+            }));
+
+            this.getRegion('menu').show(new window.LCB.MenuView({
+                model: this.options.client.user,
+                client: this.options.client
+            }));
+
+            this.getRegion('tabs').show(new window.LCB.TabsView({
+                collection: this.options.client.tabs,
+                client: this.options.client
+            }));
+
+            this.getRegion('panes').show(new window.LCB.PanesView({
+                collection: this.options.client.tabs,
+                client: this.options.client
+            }));
+
+            this.hotKeys = new window.LCB.HotKeysView({
+                rooms: this.options.client.rooms,
+                client: this.options.client
+            });
+        },
+
+        hideLoadingIndicator: function(status, connected) {
+            this.$el.find('.lcb-client-loading').hide(connected);
+        },
+
         toggleSideBar: function(e) {
             this.$el.toggleClass('lcb-sidebar-opened');
-        }
-    });
-
-    window.LCB.AccountButtonView = Backbone.View.extend({
-        initialize: function() {
-            this.model.on('change', this.update, this);
-        },
-        update: function(user){
-            this.$('.lcb-account-button-username').text('@' + user.get('username'));
-            this.$('.lcb-account-button-name').text(user.get('displayName'));
         }
     });
 

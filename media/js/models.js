@@ -2,6 +2,62 @@
 // LCB Models
 //
 
+var Tab = Backbone.Model.extend({
+    defaults: {
+        id: 'list',
+        type: 'list',
+        name: 'Rooms',
+        model: null
+    },
+
+    initialize: function() {
+        var type = this.get('type');
+
+        if (type === 'room') {
+            var room = this.get('model');
+            this.set('name', room.get('name'));
+            room.on('change:name', function(name) {
+                this.set('name', name);
+            }, this);
+        }
+    }
+
+});
+
+Tab.roomList = function(room) {
+    return new Tab();
+};
+
+Tab.room = function(room) {
+    return new Tab({
+        id: room.id,
+        type: 'room',
+        model: room
+    });
+};
+
+var TabCollection = Backbone.Collection.extend({
+    model: Tab,
+    initialize: function() {
+        this.on('remove', function(model) {
+            if (model.get('selected')) {
+                model.set('selected', false);
+                this.get('list').set('selected', true);
+            }
+        }, this);
+    },
+
+    selectTab: function(id) {
+        var tab = this.get(id);
+        if (tab) {
+            this.forEach(function(x) {
+                x.set('selected', false);
+            });
+            tab.set('selected', true);
+        }
+    }
+});
+
 var UserModel = Backbone.Model.extend();
 
 var UsersCollection = Backbone.Collection.extend({
@@ -47,7 +103,30 @@ var RoomModel = Backbone.Model.extend({
 var RoomsCollection = Backbone.Collection.extend({
     model: RoomModel,
     initialize: function() {
-        this.current = new Backbone.Model();
-        this.last = new Backbone.Model();
+        this.on('users:add users:remove', this.sort);
+    },
+    comparator: function(a, b) {
+        var au = a.users.length,
+            bu = b.users.length,
+            aj = a.get('joined'),
+            bj = b.get('joined');
+
+        if (aj && bj || !aj && !bj) {
+            if (au > bu) {
+                return -1;
+            }
+            if (au < bu) {
+                return 1;
+            }
+        }
+
+        if (aj) {
+            return -1;
+        }
+
+        if (bj) {
+            return 1;
+        }
+        return 0;
     }
 });
