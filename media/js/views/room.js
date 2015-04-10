@@ -9,7 +9,18 @@
 
     window.LCB = window.LCB || {};
 
-    window.LCB.RoomView = Backbone.View.extend({
+    window.LCB.RoomView = Marionette.ItemView.extend({
+
+        attributes: function() {
+            return {
+                'class': 'lcb-room lcb-pane lcb-pane-' + this.model.get('id'),
+                'data-id': this.model.get('id'),
+                style: 'display: none;'
+            };
+        },
+
+        template: Handlebars.compile($('#template-room').html()),
+
         events: {
             'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta',
             'click .lcb-room-toggle-sidebar': 'toggleSidebar',
@@ -23,22 +34,28 @@
         initialize: function(options) {
             this.client = options.client;
 
+            options.tab.on('change:selected', function(tab, selected) {
+                if (selected) {
+                    this.$el.show();
+                } else {
+                    this.$el.hide();
+                }
+            }, this);
+
             var iAmOwner = this.model.get('owner') === this.client.user.id;
             var iCanEdit = iAmOwner || !this.model.get('hasPassword');
 
             this.model.set('iAmOwner', iAmOwner);
             this.model.set('iCanEdit', iCanEdit);
 
-            this.template = options.template;
-            this.render();
-
             this.model.on('change', this.updateMeta, this);
             this.model.on('remove', this.goodbye, this);
             this.model.users.on('change', this.updateUser, this);
-
-            //
-            // Subviews
-            //
+        },
+        onRender: function() {
+            // this.$el = $(this.template(_.extend(this.model.toJSON(), {
+            //     sidebar: store.get('sidebar')
+            // })));
             this.messageView = new window.LCB.MessagesView({
                 collection: this.model.messages,
                 el: this.$('.lcb-messages')
@@ -63,11 +80,6 @@
             // this.$('.lcb-messages').append(this.messageView.el);
             this.$('.lcb-room-sidebar').append(this.usersList.el);
             this.$('.lcb-room-sidebar').append(this.filesList.el);
-        },
-        render: function() {
-            this.$el = $(this.template(_.extend(this.model.toJSON(), {
-                sidebar: store.get('sidebar')
-            })));
         },
         goodbye: function() {
             swal('Archived!', '"' + this.model.get('name') + '" has been archived.', 'warning');
@@ -172,7 +184,7 @@
             this.$el.siblings('.lcb-room').andSelf().toggleClass('lcb-room-sidebar-opened');
             // Save to localstorage
             if ($(window).width() > 767) {
-                this.scrollMessages();
+                // this.scrollMessages();
                 store.set('sidebar',
                           this.$el.hasClass('lcb-room-sidebar-opened'));
             }
@@ -198,7 +210,7 @@
         },
         upload: function(e) {
             e.preventDefault();
-            this.model.trigger('upload:show', this.model);
+            this.room.trigger('upload:show', this.model);
         },
         updateUser: function(user) {
             var $messages = this.$('.lcb-message[data-owner="' + user.id + '"]');

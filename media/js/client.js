@@ -35,7 +35,25 @@
         this.user = new UserModel();
         this.users = new UsersCollection();
         this.rooms = new RoomsCollection();
+        this.tabs = new TabCollection();
         this.events = _.extend({}, Backbone.Events);
+
+        this.tabs.add(new Tab({
+            id: 'list',
+            type: 'list'
+        }));
+
+        this.rooms.on('change:joined', function(room, joined) {
+            if (joined) {
+                return this.tabs.add(new Tab({
+                    id: room.id,
+                    type: 'room',
+                    model: room
+                }));
+            }
+            this.tabs.remove(room.id);
+        }, this);
+
         return this;
     };
     //
@@ -97,9 +115,8 @@
     };
     Client.prototype.switchRoom = function(id) {
         // Make sure we have a last known room ID
-        this.rooms.last.set('id', this.rooms.current.get('id'));
         if (!id || id === 'list') {
-            this.rooms.current.set('id', 'list');
+            this.tabs.selectTab('list');
             this.router.navigate('!/', {
                 replace: true
             });
@@ -107,7 +124,7 @@
         }
         var room = this.rooms.get(id);
         if (room && room.get('joined')) {
-            this.rooms.current.set('id', id);
+            this.tabs.selectTab(id);
             this.router.navigate('!/room/' + room.id, {
                 replace: true
             });
@@ -268,10 +285,7 @@
             }
         }
         this.socket.emit('rooms:leave', id);
-        if (id === this.rooms.current.get('id')) {
-            var room = this.rooms.get(this.rooms.last.get('id'));
-            this.switchRoom(room && room.get('joined') ? room.id : '');
-        }
+
         // Remove room id from localstorage
         RoomStore.remove(id);
     };

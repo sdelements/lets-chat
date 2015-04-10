@@ -12,7 +12,7 @@
     window.LCB.ClientView = Backbone.View.extend({
         el: '#lcb-client',
         events: {
-            'click .lcb-tab': 'toggleSideBar',
+            // 'click .lcb-tab': 'toggleSideBar',
             'click .lcb-header-toggle': 'toggleSideBar'
         },
         initialize: function(options) {
@@ -20,21 +20,18 @@
             //
             // Subviews
             //
-            this.browser = new window.LCB.BrowserView({
-                el: this.$el.find('.lcb-rooms-browser'),
-                rooms: this.client.rooms,
-                client: this.client
-            });
             this.tabs = new window.LCB.TabsView({
                 el: this.$el.find('.lcb-tabs'),
-                rooms: this.client.rooms,
+                collection: this.client.tabs,
                 client: this.client
             });
+            this.tabs.render();
             this.panes = new window.LCB.PanesView({
                 el: this.$el.find('.lcb-panes'),
-                rooms: this.client.rooms,
+                collection: this.client.tabs,
                 client: this.client
             });
+            this.panes.render();
             this.window = new window.LCB.WindowView({
                 rooms: this.client.rooms,
                 client: this.client
@@ -58,7 +55,7 @@
             if (this.client.options.filesEnabled) {
                 this.upload = new window.LCB.UploadView({
                     el: this.$el.find('#lcb-upload'),
-                    rooms: this.client.rooms
+                    client: this.client
                 });
             }
 
