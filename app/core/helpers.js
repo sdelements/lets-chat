@@ -1,4 +1,4 @@
-var User = require('user');
+var User = require('../models/user');
 
 module.exports = {
     sanitizeQuery: function(query, options) {
