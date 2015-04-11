@@ -1,3 +1,5 @@
+var User = require('user');
+
 module.exports = {
     sanitizeQuery: function(query, options) {
         if (options.defaults.take && !query.take) {
@@ -17,13 +19,14 @@ module.exports = {
 
         return query;
     },
+
     sanitizeOwner: function(messages) {
         for (var i = 0; messages && (i < messages.length); i++) {
-            if (!messages.owner) {
-                messages.owner = {
-                    username: '_unknown',
-                    displayName: 'Unknown'
-                };
+            if (!messages[i].owner) {
+                messages[i].owner = new User({
+                    displayName: 'Unknown',
+                    username: '_unknown'
+                });
             }
         }
     }
