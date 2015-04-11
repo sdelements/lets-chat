@@ -16,6 +16,21 @@ if (typeof exports !== 'undefined') {
     //
 
 
+    function encodeEntities(value) {
+        return value.
+            replace(/&/g, '&amp;').
+            replace(surrogatePairRegexp, function(value) {
+                var hi = value.charCodeAt(0),
+                    low = value.charCodeAt(1);
+                return '&#' + (((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000) + ';';
+            }).
+            replace(nonAlphanumericRegexp, function(value) {
+                return '&#' + value.charCodeAt(0) + ';';
+            }).
+            replace(/</g, '&lt;').
+            replace(/>/g, '&gt;');
+    }
+
     function getBaseUrl() {
         var parts = window.location.pathname.split('/');
 
@@ -75,19 +90,16 @@ if (typeof exports !== 'undefined') {
     }
 
     function links(text) {
-        var imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
-        linkPattern = /((https?|ftp):\/\/[-A-Z0-9+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|])/ig;
-
         if (imagePattern.test(text)) {
             return text.replace(imagePattern, function(url) {
-                var uri = encodeURI(_.unescape(url));
+                var uri = encodeEntities(_.unescape(url));
                 return '<a class="thumbnail" href="' + uri +
                        '" target="_blank"><img src="' + uri +
                        '" alt="Pasted Image" /></a>';
             });
         } else {
             return text.replace(linkPattern, function(url) {
-                var uri = encodeURI(_.unescape(url));
+                var uri = encodeEntities(_.unescape(url));
                 return '<a href="' + uri + '" target="_blank">' + url + '</a>';
             });
         }
@@ -120,6 +132,12 @@ if (typeof exports !== 'undefined') {
         });
         return text;
     }
+
+    var surrogatePairRegexp = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
+        // Match everything outside of normal chars and " (quote character)
+        nonAlphanumericRegexp = /([^\#-~| |!])/g,
+        imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
+        linkPattern = /((https?|ftp):\/\/[-A-Z0-9+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9+&@#\/%=~_|])/ig;
 
     exports.format = function(text, data) {
         var pipeline = [
