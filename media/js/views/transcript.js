@@ -113,7 +113,7 @@
 
             this.formatTimestamp($html.find('time'));
             this.$messages.append($html);
-            this.lastMessageOwner = message.owner.id;
+            this.lastMessageOwner = message.owner && message.owner.id ? message.owner.id : 'Unknown';
             this.lastMessagePosted = posted;
         },
         formatMessage: function(text) {
