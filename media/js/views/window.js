@@ -180,6 +180,7 @@
                 icon: icon,
                 tag: message.id,
                 autoClose: 1000,
+                audio: mention,   // Play audio for mention type notifications
                 onclick: function() {
                     window.focus();
                     that.client.events.trigger('rooms:switch', roomID);

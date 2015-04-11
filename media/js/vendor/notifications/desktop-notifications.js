@@ -69,6 +69,18 @@
         },
         noop = function () {},
         settings = defaultSetting;
+    function audioNotification() {
+        // A beep sound for notifications
+        // TODO: This needs to be initialized along with lcb client as this will be used often
+        var div = document.createElement('div');
+        var audio_notification_markup = '<audio id="audio_ping_note" preload="auto"><source src="./media/js/vendor/notifications/ping.aiff" /><source src="./media/js/vendor/notifications/ping.mp3" /></audio>';
+        div.innerHTML = audio_notification_markup;
+        var lcb_client = document.getElementById("lcb-client");
+        lcb_client.appendChild(div);
+
+        //Finally play
+        document.getElementById('audio_ping_note').play();
+    }
     function getNotification(title, options) {
         var notification;
         if (win.Notification) { /* Safari 6, Chrome (23+) */
@@ -98,7 +110,9 @@
                 "ieVerification": ieVerification + 1
             };
         }
-
+        if (options.audio) {
+            audioNotification();
+        }
         // LCB
         if (options.onclick) {
             notification.onclick = options.onclick;
