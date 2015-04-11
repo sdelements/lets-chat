@@ -274,8 +274,16 @@
             var posted = moment(message.posted);
 
             // Fragment or new message?
-            message.fragment = this.lastMessageOwner === message.owner.id &&
+            message.fragment = (this.lastMessageOwner === (message.owner ? message.owner.id : null)) &&
                             posted.diff(this.lastMessagePosted, 'minutes') < 5;
+
+            // Create 'Unknown' owner if owner is null
+            if (message.owner === null) {
+                message.owner = {
+                    displayName: 'Unknown',
+                    username: '_unknown'
+                };
+            }
 
             // Mine? Mine? Mine? Mine?
             message.own = this.client.user.id === message.owner.id;
@@ -292,7 +300,7 @@
                 $text.html(text);
                 $html.find('time').updateTimeStamp();
                 that.$messages.append($html);
-                that.lastMessageOwner = message.owner.id;
+                that.lastMessageOwner = message.owner && message.owner.id ? message.owner.id : null;
                 that.lastMessagePosted = posted;
                 that.scrollMessages();
 

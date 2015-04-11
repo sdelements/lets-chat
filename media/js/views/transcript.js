@@ -102,8 +102,16 @@
             var posted = moment(message.posted);
 
             // Fragment or new message?
-            message.fragment = this.lastMessageOwner === message.owner.id &&
+            message.fragment = (this.lastMessageOwner === (message.owner ? message.owner.id : null)) &&
                             posted.diff(this.lastMessagePosted, 'minutes') < 5;
+
+            // Create 'Unknown' owner if owner is null
+            if (message.owner === null) {
+                message.owner = {
+                    displayName: 'Unknown',
+                    username: '_unknown'
+                };
+            }
 
             // Templatin' time
             var $html = $(this.messageTemplate(message).trim());
@@ -113,7 +121,7 @@
 
             this.formatTimestamp($html.find('time'));
             this.$messages.append($html);
-            this.lastMessageOwner = message.owner.id;
+            this.lastMessageOwner = message.owner && message.owner.id ? message.owner.id : null;
             this.lastMessagePosted = posted;
         },
         formatMessage: function(text) {
