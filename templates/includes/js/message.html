@@ -3,7 +3,6 @@
         {{#unless fragment}}
             <img class="lcb-message-avatar lcb-avatar lcb-room-poke" src="https://www.gravatar.com/avatar/{{owner.avatar}}?s=30" />
         {{/unless}}
-        
         <div class="lcb-message-meta">
             {{#unless fragment}}
                 <span class="lcb-message-name">
@@ -12,14 +11,13 @@
                             {{owner.displayName}}
                         </span>
                         <span class="lcb-message-username">
-                            @{{owner.username}}
-                            {{#if mentioned}} <font color="red">  @{{owner.username}} </font> {{/if}}
+                            @{{owner.username}} 
+                            {{#if mentioned}}<font color="red"><strong>ACTIVITY ! ! </strong></font> {{/if}}
                         </span>
                     </span>
                 </span>
                 <time class="lcb-message-time" title="{{posted}}"></time>
             {{/unless}}
-            {{#if mentioned}}<em><strong><font color="red">ACTIVITY !</font></strong> </em>{{/if}}
             <div class="lcb-message-text">
                 {{#unless paste}}
                     {{text}}
