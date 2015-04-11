@@ -102,7 +102,7 @@
             var posted = moment(message.posted);
 
             // Fragment or new message?
-            message.fragment = this.lastMessageOwner === message.owner.id &&
+            message.fragment = this.lastMessageOwner === message.owner && message.owner.id &&
                             posted.diff(this.lastMessagePosted, 'minutes') < 5;
 
             // Templatin' time
