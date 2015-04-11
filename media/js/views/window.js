@@ -171,7 +171,10 @@
                 icon = 'https://www.gravatar.com/avatar/' + avatar + '?s=50',
                 title = message.owner.displayName + ' in ' + message.room.name,
                 mention = message.mentioned;
-
+            
+            if (mention) {
+                title = message.owner.displayName + ' has mentioned you in ' + message.room.name;
+            }
             var notification = notify.createNotification(title, {
                 body: message.text,
                 icon: icon,
