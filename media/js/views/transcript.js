@@ -105,6 +105,14 @@
             message.fragment = this.lastMessageOwner === message.owner && message.owner.id &&
                             posted.diff(this.lastMessagePosted, 'minutes') < 5;
 
+            // Create 'Unknown' owner if owner is null
+            if (message.owner === null) {
+                message.owner = {
+                    displayName: 'Unknown',
+                    username: '_unknown'
+                }
+            }
+
             // Templatin' time
             var $html = $(this.messageTemplate(message).trim());
             var $text = $html.find('.lcb-message-text');
@@ -113,7 +121,7 @@
 
             this.formatTimestamp($html.find('time'));
             this.$messages.append($html);
-            this.lastMessageOwner = message.owner && message.owner.id ? message.owner.id : 'Unknown';
+            this.lastMessageOwner = message.owner && message.owner.id ? message.owner.id : null;
             this.lastMessagePosted = posted;
         },
         formatMessage: function(text) {
