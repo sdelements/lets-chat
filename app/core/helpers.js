@@ -16,5 +16,15 @@ module.exports = {
         }
 
         return query;
+    },
+    sanitizeOwner: function(messages) {
+        for (var i = 0; messages && (i < messages.length); i++) {
+            if (!messages.owner) {
+                messages.owner = {
+                    username: '_unknown',
+                    displayName: 'Unknown'
+                };
+            }
+        }
     }
 };

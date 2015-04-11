@@ -67,6 +67,8 @@ MessageManager.prototype.list = function(options, cb) {
         room: options.room
     });
 
+    var includesOwner = false;
+
     if (options.since_id) {
         find.where('_id').gt(options.since_id);
     }
@@ -87,6 +89,7 @@ MessageManager.prototype.list = function(options, cb) {
         var includes = options.expand.replace(/\s/, '').split(',');
 
         if (_.includes(includes, 'owner')) {
+            includesOwner = true;
             find.populate('owner', 'id username displayName email avatar');
         }
 
@@ -111,6 +114,11 @@ MessageManager.prototype.list = function(options, cb) {
                 console.error(err);
                 return cb(err);
             }
+
+            if (includesOwner) {
+                messages = helpers.sanitizeOwner(messages);
+            }
+
             cb(null, messages);
         });
 };
