@@ -116,7 +116,7 @@ MessageManager.prototype.list = function(options, cb) {
             }
 
             if (includesOwner) {
-                messages = helpers.sanitizeOwner(messages);
+                helpers.sanitizeOwner(messages);
             }
 
             cb(null, messages);
