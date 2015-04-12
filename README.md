@@ -62,12 +62,6 @@ Editor preferences are available in the [editor config][editorconfig] for easy
 use in common text editors. Read more and download plugins at
 <http://editorconfig.org>.
 
-## Note for ubuntu developers 
-You should use sudo npm start instead of npm start. Similarly for other bash commands 
-```
-sudo npm start
-```
-
 ## Upgrading from 0.2.x
 
 Release 0.3.0+ uses a new settings file called ```settings.yml```, just move
