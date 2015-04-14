@@ -36,6 +36,12 @@ MessageSchema.index({ text: 'text', room: 1, posted: -1, _id: 1 });
 // This helps ensure that the client gets
 // data that can be digested properly
 MessageSchema.method('toJSON', function() {
+    // owner will be null if populate('owner') is called and it's been deleted
+    // otherwise it will be an id or undefined
+    this.owner === null && (this.owner = {
+        displayName: 'Unknown',
+        username: '_unknown'
+    });
     return {
         id: this._id,
         room: this.room,
