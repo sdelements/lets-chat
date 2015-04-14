@@ -39,9 +39,15 @@ MessageSchema.method('toJSON', function() {
     return {
         id: this._id,
         room: this.room,
-        owner: this.owner,
         text: this.text,
-        posted: this.posted
+        posted: this.posted,
+
+        // if populate('owner') and user's been deleted - owner will be null
+        // otherwise it will be an id or undefined
+        owner: this.owner || {
+            displayName: '[Deleted User]',
+            username: '_deleted_user_'
+        }
     };
 });
 
