@@ -417,7 +417,8 @@
         //
         // Socket
         //
-        this.socket = io.connect(null, {
+        this.socket = io.connect({
+            path: '/' + _.compact(window.location.pathname.split('/').concat(['socket.io'])).join('/')
             reconnection: true,
             reconnectionDelay: 500,
             reconnectionDelayMax: 1000,
