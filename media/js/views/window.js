@@ -14,6 +14,9 @@
         focus: true,
         count: 0,
         mentions: 0,
+        favicon: new Favico({
+          animation: 'none'
+        }),
         initialize: function(options) {
 
             var that = this;
@@ -55,6 +58,7 @@
                 this.titleTimer = false;
                 this.titleTimerFlip = false;
                 this.updateTitle();
+                this.updateFaviconBadge();
             }
         },
         onNewMessage: function(message) {
@@ -63,6 +67,7 @@
             }
             this.countMessage(message);
             this.flashTitle()
+            this.updateFaviconBadge();
         },
         countMessage: function(message) {
             var username = this.client.user.get('username'),
@@ -102,6 +107,13 @@
                 this.title = this.originalTitle;
             }
             this.$('title').html(this.title);
+        },
+        updateFaviconBadge: function() {
+            if (this.mentions == 0) {
+                this.favicon.reset();
+            } else {
+                this.favicon.badge(this.mentions);
+            }
         },
     });
 
