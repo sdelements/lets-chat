@@ -22,7 +22,7 @@ EventListener.prototype.getConnectionsForRoom = function(roomId) {
         return [];
     }
 
-    return room.connections.byType('xmpp');
+    return room.connections.query({ type: 'xmpp' });
 };
 
 EventListener.prototype.send = function() {
