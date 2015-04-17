@@ -118,7 +118,7 @@ RoomManager.prototype.list = function(options, cb) {
 
     var find = Room.find(
         { archived: { $ne: true }, 
-        $or: [{owner: options.user}, {members: options.user}, {members: {$exists: false}}]
+        $or: [{owner: options.user}, {members: options.user}, {members: {$exists: false}}, {members: []}]
     });
 
     if (options.skip) {
