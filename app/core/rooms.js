@@ -11,7 +11,10 @@ RoomManager.prototype.create = function(options, cb) {
     var Room = mongoose.model('Room');
     var User = mongoose.model('User');
 
-    User.find({username: options.members}, function(err, members) {
+    options.members = options.members.replace(/@/g, '');
+    options.members = options.members.split(' ');
+
+    User.find({username: { $in: options.members } }, function(err, members) {
         if (err) {
             // Oh noes, a bad thing happened!
             console.error(err);
@@ -38,13 +41,15 @@ RoomManager.prototype.update = function(roomId, options, cb) {
     var Room = mongoose.model('Room');
     var User = mongoose.model('User');
 
-    User.find({username: options.members}, function(err, members) {
+    options.members = options.members.replace(/@/g, '');
+    options.members = options.members.split(' ');
+
+    User.find({username: { $in: options.members } }, function(err, members) {
         if (err) {
             // Oh noes, a bad thing happened!
             console.error(err);
             return cb(err);
         }
-
 
         Room.findById(roomId, function(err, room) {
             if (err) {
