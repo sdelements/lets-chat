@@ -126,7 +126,9 @@
 
             this.$('.lcb-entry-input').atwho(options);
 
-            this.$('.members').atwho(options);
+            this.$('.lcb-entry-members').atwho(options);
+
+            this.$('.lcb-room-members').atwho(options);
         },
         atwhoAllMentions: function () {
             var that = this;
