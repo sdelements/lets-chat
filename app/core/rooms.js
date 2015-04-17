@@ -24,33 +24,44 @@ RoomManager.prototype.create = function(options, cb) {
 
 RoomManager.prototype.update = function(roomId, options, cb) {
     var Room = mongoose.model('Room');
+    var User = mongoose.model('User');
 
-    Room.findById(roomId, function(err, room) {
+    User.find({username: options.users}, function(err, users) {
         if (err) {
             // Oh noes, a bad thing happened!
             console.error(err);
             return cb(err);
         }
 
-        if (!room) {
-            return cb('Room does not exist.');
-        }
-
-        room.name = options.name;
-        // DO NOT UPDATE SLUG
-        // room.slug = options.slug;
-        room.description = options.description;
-        room.save(function(err, room) {
+        Room.findById(roomId, function(err, room) {
             if (err) {
+                // Oh noes, a bad thing happened!
                 console.error(err);
                 return cb(err);
             }
-            room = room;
-            cb(null, room);
-            this.core.emit('rooms:update', room);
 
+            if (!room) {
+                return cb('Room does not exist.');
+            }
+
+            room.name = options.name;
+            // DO NOT UPDATE SLUG
+            // room.slug = options.slug;
+            room.description = options.description;
+            room.users = users;
+            room.save(function(err, room) {
+                if (err) {
+                    console.error(err);
+                    return cb(err);
+                }
+                room = room;
+                cb(null, room);
+                this.core.emit('rooms:update', room);
+
+            }.bind(this));
         }.bind(this));
     }.bind(this));
+
 };
 
 RoomManager.prototype.archive = function(roomId, cb) {
@@ -92,7 +103,10 @@ RoomManager.prototype.list = function(options, cb) {
 
     var Room = mongoose.model('Room');
 
-    var find = Room.find({ archived: { $ne: true }});
+    var find = Room.find(
+        { archived: { $ne: true }, 
+        $or: [{owner: options.user}, {users: options.user}, {users: {$exists: false}}]
+    });
 
     if (options.skip) {
         find.skip(options.skip);

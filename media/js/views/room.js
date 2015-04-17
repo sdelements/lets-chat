@@ -199,16 +199,19 @@
             this.$('.lcb-room-heading .name').text(this.model.get('name'));
             this.$('.lcb-room-heading .slug').text('#' + this.model.get('slug'));
             this.$('.lcb-room-description').text(this.model.get('description'));
+            this.$('.lcb-room-members').text(this.model.get('members'));
         },
         sendMeta: function(e) {
             this.model.set({
                 name: this.$('.lcb-room-heading').text(),
-                description: this.$('.lcb-room-description').text()
+                description: this.$('.lcb-room-description').text(),
+                members: this.$('.lcb-room-members').text()
             });
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
                 name: this.model.get('name'),
-                description: this.model.get('description')
+                description: this.model.get('description'),
+                members: this.model.get('members')
             });
         },
         showEditRoom: function(e) {
@@ -229,10 +232,13 @@
             }
             var name = this.$('.edit-room input[name="name"]').val();
             var description = this.$('.edit-room textarea[name="description"]').val();
+            var members = this.$('.edit-room textarea[name="members"]').val();
+
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
                 name: name,
-                description: description
+                description: description,
+                members: members
             });
             this.$('.lcb-room-edit').modal('hide');
         },
