@@ -63,6 +63,7 @@
         update: function(room) {
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-members').text(room.get('members'));
         },
         updateLastActive: function(room) {
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).calendar());
@@ -79,7 +80,7 @@
                     au = ar.users.length,
                     bu = br.users.length,
                     aj = ar.get('joined'),
-                    bj = br.get('joined')
+                    bj = br.get('joined');
                 if ((aj && bj) || (!aj && !bj)) {
                     if (au > bu) return -1;
                     if (au < bu) return 1;
@@ -107,6 +108,7 @@
                     name: this.$('.lcb-room-name').val().trim(),
                     slug: this.$('.lcb-room-slug').val().trim(),
                     description: this.$('.lcb-room-description').val(),
+                    members: this.$('.lcb-room-members').val(),
                     callback: function success() {
                         $modal.modal('hide');
                         $form.trigger('reset');
