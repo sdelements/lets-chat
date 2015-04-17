@@ -9,16 +9,28 @@ function RoomManager(options) {
 
 RoomManager.prototype.create = function(options, cb) {
     var Room = mongoose.model('Room');
-    Room.create(options, function(err, room) {
+    var User = mongoose.model('User');
+
+    User.find({username: options.members}, function(err, members) {
         if (err) {
+            // Oh noes, a bad thing happened!
+            console.error(err);
             return cb(err);
         }
 
-        if (cb) {
-            room = room;
-            cb(null, room);
-            this.core.emit('rooms:new', room);
-        }
+        options.members = members;
+
+        Room.create(options, function(err, room) {
+            if (err) {
+                return cb(err);
+            }
+
+            if (cb) {
+                room = room;
+                cb(null, room);
+                this.core.emit('rooms:new', room);
+            }
+        }.bind(this));
     }.bind(this));
 };
 
@@ -26,12 +38,13 @@ RoomManager.prototype.update = function(roomId, options, cb) {
     var Room = mongoose.model('Room');
     var User = mongoose.model('User');
 
-    User.find({username: options.users}, function(err, users) {
+    User.find({username: options.members}, function(err, members) {
         if (err) {
             // Oh noes, a bad thing happened!
             console.error(err);
             return cb(err);
         }
+
 
         Room.findById(roomId, function(err, room) {
             if (err) {
@@ -48,7 +61,7 @@ RoomManager.prototype.update = function(roomId, options, cb) {
             // DO NOT UPDATE SLUG
             // room.slug = options.slug;
             room.description = options.description;
-            room.users = users;
+            room.members = members;
             room.save(function(err, room) {
                 if (err) {
                     console.error(err);
