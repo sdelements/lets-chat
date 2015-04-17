@@ -114,9 +114,7 @@
                     return a.atwho_order - b.atwho_order;
                 });
             }
-
-            this.$('.lcb-entry-input')
-            .atwho({
+            var options = {
                 at: '@',
                 tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
@@ -124,7 +122,11 @@
                     sorter: sorter,
                     tpl_eval: this.atwhoTplEval
                 }
-            });
+            };
+
+            this.$('.lcb-entry-input').atwho(options);
+
+            this.$('.members').atwho(options);
         },
         atwhoAllMentions: function () {
             var that = this;
