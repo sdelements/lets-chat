@@ -31,7 +31,10 @@ module.exports = function() {
     });
 
     core.on('rooms:new', function(room) {
-        app.io.emit('rooms:new', room);
+        // publish only public rooms ( rooms without a member list )
+        if (room.members.length == 0) {
+            app.io.emit('rooms:new', room);
+        }
     });
 
     core.on('rooms:update', function(room) {
