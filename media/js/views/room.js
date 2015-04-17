@@ -125,9 +125,7 @@
             };
 
             this.$('.lcb-entry-input').atwho(options);
-
             this.$('.lcb-entry-members').atwho(options);
-
             this.$('.lcb-room-members').atwho(options);
         },
         atwhoAllMentions: function () {
@@ -145,8 +143,7 @@
                 });
             }
 
-            this.$('.lcb-entry-input')
-            .atwho({
+            var options = {
                 at: '@@',
                 tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
@@ -154,7 +151,11 @@
                     sorter: sorter,
                     tpl_eval: that.atwhoTplEval
                 }
-            });
+            };
+
+            this.$('.lcb-entry-input').atwho(options);
+            this.$('.lcb-entry-members').atwho(options);
+            this.$('.lcb-room-members').atwho(options);
         },
         atwhoRooms: function() {
             var rooms = this.client.rooms;
