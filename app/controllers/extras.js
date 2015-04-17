@@ -55,7 +55,7 @@ module.exports = function() {
                         fileName
                     );
 
-                    var imgDir = '/extras/emotes/' +
+                    var imgDir = 'extras/emotes/' +
                         fileName.replace('.yml', '') + '/';
 
                     var file = fs.readFileSync(fullpath, 'utf8');
