@@ -1,6 +1,13 @@
+## 0.3.10 (2015-04-14)
+
+Fixes
+
+* Fixed Hyperlink parsing
+* Fixed issue whereby a deleted user's messages would not display
+
 ## 0.3.9 (2015-04-06)
 
-Deprecated:
+Deprecated
 
 * `xmpp.host` configuration setting - use `xmpp.domain` instead
 

@@ -25,7 +25,7 @@ ConnectionCollection.prototype.contains = function(connection) {
     if (!connection) {
         return false;
     }
-    
+
     return !!this.connections[connection.id];
 };
 
@@ -77,12 +77,12 @@ ConnectionCollection.prototype.query = function(options) {
 
         if (options.user) {
             var u = options.user;
-            if (conn.user.id !== u && conn.user.username !== u) {
+            if (conn.user && conn.user.id !== u && conn.user.username !== u) {
                 result = false;
             }
         }
 
-        if (options.userId && conn.user.id !== options.userId) {
+        if (options.userId && conn.user && conn.user.id !== options.userId) {
             result = false;
         }
 
@@ -91,15 +91,6 @@ ConnectionCollection.prototype.query = function(options) {
         }
 
         return result;
-
-    });
-};
-
-ConnectionCollection.prototype.byType = function(type) {
-    return _.map(this.connections, function(value, key) {
-        return value;
-    }).filter(function(conn) {
-        return conn.type === type;
     });
 };
 

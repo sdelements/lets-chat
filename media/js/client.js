@@ -472,10 +472,15 @@
             }.bind(this));
         }
 
+        var path = '/' + _.compact(
+            window.location.pathname.split('/').concat(['socket.io'])
+        ).join('/');
+
         //
         // Socket
         //
-        this.socket = io.connect(null, {
+        this.socket = io.connect({
+            path: path,
             reconnection: true,
             reconnectionDelay: 500,
             reconnectionDelayMax: 1000,
