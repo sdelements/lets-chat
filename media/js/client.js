@@ -174,6 +174,7 @@
 
         var that = this;
         var id = room.id;
+        var passwordPrompt = room.passwordPrompt === false ? false : true;
         var password = room.password;
 
         if (!rejoin) {
@@ -199,7 +200,7 @@
                 return;
             }
 
-            if (resRoom && resRoom.errors &&
+            if (passwordPrompt && resRoom && resRoom.errors &&
                 resRoom.errors === 'password required') {
 
                 that.passwordModal.show({
@@ -466,7 +467,7 @@
                 //slow down because router can start a join with no password
                 _.each(openRooms, function(id) {
                     if (_.contains(roomIds, id)) {
-                        that.joinRoom({ id: id });
+                        that.joinRoom({ id: id, passwordPrompt: false });
                     }
                 });
             }.bind(this));
