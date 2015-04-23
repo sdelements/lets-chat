@@ -46,6 +46,12 @@ problem or idea is not addressed yet, [please open a new issue][new-issue].
 Let's Chat documentation is hosted in the [wiki]. If there is an inaccuracy in
 the documentation, [please open a new issue][new-issue].
 
+## Update package 
+
+```
+npm update <package-name>
+```
+
 
 ## Contributing
 
@@ -55,7 +61,6 @@ directions for opening issues, coding standards, and notes on development.
 Editor preferences are available in the [editor config][editorconfig] for easy
 use in common text editors. Read more and download plugins at
 <http://editorconfig.org>.
-
 
 ## Upgrading from 0.2.x
 
