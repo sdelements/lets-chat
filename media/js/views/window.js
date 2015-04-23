@@ -14,6 +14,16 @@
         focus: true,
         count: 0,
         mentions: 0,
+        countFavicon: new Favico({
+            position: 'down',
+            animation: 'none',
+            bgColor: '#b94a48'
+        }),
+        mentionsFavicon: new Favico({
+            position: 'left',
+            animation: 'none',
+            bgColor: '#f22472'
+        }),
         initialize: function(options) {
 
             var that = this;
@@ -50,11 +60,15 @@
             this.focus = (e.type === 'focus');
             if (this.focus) {
                 clearInterval(this.titleTimer);
+                clearInterval(this.faviconBadgeTimer);
                 this.count = 0;
                 this.mentions = 0;
                 this.titleTimer = false;
                 this.titleTimerFlip = false;
+                this.faviconBadgeTimer = false;
+                this.faviconBadgeTimerFlip = false;
                 this.updateTitle();
+                this.mentionsFavicon.reset();
             }
         },
         onNewMessage: function(message) {
@@ -63,6 +77,7 @@
             }
             this.countMessage(message);
             this.flashTitle()
+            this.flashFaviconBadge();
         },
         countMessage: function(message) {
             var username = this.client.user.get('username'),
@@ -90,6 +105,21 @@
             this.$('title').html(title);
             this.titleTimerFlip = !this.titleTimerFlip;
         },
+        flashFaviconBadge: function() {
+            if (!this.faviconBadgeTimer) {
+                this._flashFaviconBadge();
+                var flashFaviconBadge = _.bind(this._flashFaviconBadge, this);
+                this.faviconBadgeTimer = setInterval(flashFaviconBadge, 1 * 2000);
+            }
+        },
+        _flashFaviconBadge: function() {
+            if (this.mentions > 0 && this.faviconBadgeTimerFlip) {
+                this.mentionsFavicon.badge(this.mentions);
+            } else {
+                this.countFavicon.badge(this.count);
+            }
+            this.faviconBadgeTimerFlip = !this.faviconBadgeTimerFlip;
+        },
         updateTitle: function(name) {
             if (!name) {
                 var room = this.rooms.get(this.rooms.current.get('id'));
@@ -102,7 +132,7 @@
                 this.title = this.originalTitle;
             }
             this.$('title').html(this.title);
-        },
+        }
     });
 
     window.LCB.HotKeysView = Backbone.View.extend({
