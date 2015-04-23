@@ -140,6 +140,10 @@
         openNotifications: [],
         openMentions: [],
         initialize: function(options) {
+            notify.config({
+                pageVisibility: false,
+                autoClose: 4000
+            });
             this.client = options.client;
             this.rooms = options.rooms;
             $(window).on('focus blur unload', _.bind(this.onFocusBlur, this));
@@ -202,10 +206,6 @@
                 this.openNotifications.shift();
             }
             this.openNotifications.push(notification);
-
-            setTimeout(function() {
-                notification.close();
-            }, 1 * 4000);
 
         }
     });
