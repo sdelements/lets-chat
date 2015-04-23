@@ -205,12 +205,16 @@
                 icon = 'https://www.gravatar.com/avatar/' + avatar + '?s=50',
                 title = message.owner.displayName + ' in ' + message.room.name,
                 mention = message.mentioned;
-
+            
+            if (mention) {
+                title = message.owner.displayName + ' has mentioned you in ' + message.room.name;
+            }
             var notification = notify.createNotification(title, {
                 body: message.text,
                 icon: icon,
                 tag: message.id,
                 autoClose: 1000,
+                audio: mention,   // Play audio for mention type notifications
                 onclick: function() {
                     window.focus();
                     that.client.events.trigger('rooms:switch', roomID);
