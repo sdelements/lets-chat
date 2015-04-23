@@ -96,7 +96,7 @@
             if (this.focus) {
                 this.clearTimer = setTimeout(function() {
                     that.clearAlerts(that.rooms.current.get('id'));
-                }, 9 * 1000);
+                }, 1000);
                 return;
             }
             that.clearAlerts(that.rooms.current.get('id'));
