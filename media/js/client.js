@@ -193,7 +193,7 @@
             } else {
                 store.set('openrooms', [id]);
             }
-            
+
             // Remove joining lock
             _.defer(function() {
                 that.joining = _.without(that.joining, id);
@@ -414,10 +414,15 @@
             }
         }
 
+        var path = '/' + _.compact(
+            window.location.pathname.split('/').concat(['socket.io'])
+        ).join('/');
+
         //
         // Socket
         //
-        this.socket = io.connect(null, {
+        this.socket = io.connect({
+            path: path,
             reconnection: true,
             reconnectionDelay: 500,
             reconnectionDelayMax: 1000,
