@@ -45,6 +45,23 @@ body {
     }
 }
 
+.btn-lc-alt {
+    background: rgba(0, 0, 0, 0.1);
+    border: 3px rgba(255, 255, 255, .4) solid;
+    color: #f7f7f7;
+    text-transform: uppercase;
+    .transition(all .2s ease-in);
+    &:hover {
+        color: #fff;
+        border-color: #fff;
+    }
+    &:focus,
+    &:active {
+        color: #f2f2f2;
+        outline: none !important;
+    }
+}
+
 .lc-section {
     background-position: center center;
     background-attachment: fixed;

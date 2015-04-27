@@ -9076,6 +9076,26 @@ a.lc-love:hover {
   color: #f2f2f2;
   outline: none !important;
 }
+.btn-lc-alt {
+  background: rgba(0, 0, 0, 0.1);
+  border: 3px rgba(255, 255, 255, 0.4) solid;
+  color: #f7f7f7;
+  text-transform: uppercase;
+  -ms-transition: all 0.2s ease-in;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+.btn-lc-alt:hover {
+  color: #fff;
+  border-color: #fff;
+}
+.btn-lc-alt:focus,
+.btn-lc-alt:active {
+  color: #f2f2f2;
+  outline: none !important;
+}
 .lc-section {
   background-position: center center;
   background-attachment: fixed;
