@@ -162,8 +162,7 @@
         openMentions: [],
         initialize: function(options) {
             notify.config({
-                pageVisibility: false,
-                autoClose: 4000
+                pageVisibility: false
             });
             this.client = options.client;
             this.rooms = options.rooms;
@@ -201,12 +200,12 @@
                 body: message.text,
                 icon: icon,
                 tag: message.id,
-                autoClose: 1000,
                 onclick: function() {
                     window.focus();
                     that.client.events.trigger('rooms:switch', roomID);
                 }
             });
+
             //
             // Mentions
             //
@@ -227,6 +226,10 @@
                 this.openNotifications.shift();
             }
             this.openNotifications.push(notification);
+
+            setTimeout(function() {
+                notification.close && notification.close();
+            }, 3000);
 
         }
     });
