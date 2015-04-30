@@ -86,13 +86,6 @@
             regex.test(message.text) && ++this.mentions;
         },
         flashTitle: function() {
-            if (!this.titleTimer) {
-                this._flashTitle();
-                var flashTitle = _.bind(this._flashTitle, this);
-                this.titleTimer = setInterval(flashTitle, 1 * 1000);
-            }
-        },
-        _flashTitle: function() {
             var titlePrefix = '';
             if (this.count > 0) {
                 titlePrefix += '(' + parseInt(this.count);
@@ -101,9 +94,7 @@
                 }
                 titlePrefix += ') ';
             }
-            var title = this.titleTimerFlip ? this.title : titlePrefix + this.title;
-            this.$('title').html(title);
-            this.titleTimerFlip = !this.titleTimerFlip;
+            this.$('title').html(titlePrefix + this.title);
         },
         flashFaviconBadge: function() {
             if (!this.faviconBadgeTimer) {
