@@ -86,13 +86,6 @@
             regex.test(message.text) && ++this.mentions;
         },
         flashTitle: function() {
-            if (!this.titleTimer) {
-                this._flashTitle();
-                var flashTitle = _.bind(this._flashTitle, this);
-                this.titleTimer = setInterval(flashTitle, 1 * 1000);
-            }
-        },
-        _flashTitle: function() {
             var titlePrefix = '';
             if (this.count > 0) {
                 titlePrefix += '(' + parseInt(this.count);
@@ -101,9 +94,7 @@
                 }
                 titlePrefix += ') ';
             }
-            var title = this.titleTimerFlip ? this.title : titlePrefix + this.title;
-            this.$('title').html(title);
-            this.titleTimerFlip = !this.titleTimerFlip;
+            this.$('title').html(titlePrefix + this.title);
         },
         flashFaviconBadge: function() {
             if (!this.faviconBadgeTimer) {
@@ -176,8 +167,7 @@
         openMentions: [],
         initialize: function(options) {
             notify.config({
-                pageVisibility: false,
-                autoClose: 4000
+                pageVisibility: false
             });
             this.client = options.client;
             this.rooms = options.rooms;
@@ -215,12 +205,12 @@
                 body: message.text,
                 icon: icon,
                 tag: message.id,
-                autoClose: 1000,
                 onclick: function() {
                     window.focus();
                     that.client.events.trigger('rooms:switch', roomID);
                 }
             });
+
             //
             // Mentions
             //
@@ -241,6 +231,10 @@
                 this.openNotifications.shift();
             }
             this.openNotifications.push(notification);
+
+            setTimeout(function() {
+                notification.close && notification.close();
+            }, 3000);
 
         }
     });
