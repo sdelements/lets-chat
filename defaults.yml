@@ -52,6 +52,7 @@ auth:
   throttling:
     enable: true
     threshold: 3
+  usernameRegex: ^[^\.][a-z0-9_\.]+[^\.]$
   providers: [local] # [local, kerberos, ldap] - You can specify the order
   local:
     enableRegistration: true

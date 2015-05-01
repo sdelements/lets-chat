@@ -72,7 +72,7 @@ var UserSchema = new mongoose.Schema({
         trim: true,
         lowercase: true,
         unique: true,
-        match: /^[^\.][a-z0-9_\.]+[^\.]$/i
+        match: new RegExp(settings.auth.usernameRegex)
     },
     displayName: {
         type: String,
