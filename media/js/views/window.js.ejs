@@ -192,7 +192,7 @@
 
             var roomID = message.room.id,
                 avatar = message.owner.avatar,
-                icon = 'https://www.gravatar.com/avatar/' + avatar + '?s=50',
+                icon = '<%= locals.settings.avatar.gravatar.url %>' + avatar + '?s=50<%- locals.settings.avatar.gravatar.default ? '&d=' + locals.settings.avatar.gravatar.default : '' %>',
                 title = message.owner.displayName + ' in ' + message.room.name,
                 mention = message.mentioned;
 

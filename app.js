@@ -111,6 +111,8 @@ app.use(require('connect-assets')({
     build: settings.env === 'production',
     fingerprinting: settings.env === 'production',
     servePath: 'media/dist'
+}, function(instance){
+    instance.environment.registerHelper('settings', settings);
 }));
 
 // Public
