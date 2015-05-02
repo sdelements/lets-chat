@@ -76,7 +76,7 @@
             var valid = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(email);
             if (valid) {
                 $('.lcb-login-avatar')
-                    .attr('src', 'https://www.gravatar.com/avatar/' + md5(email) + '?s=100?d=mm')
+                    .attr('src', '<%= locals.settings.avatar.gravatar.url %>' + md5(email) + '?s=100<%- locals.settings.avatar.gravatar.default ? '&d=' + locals.settings.avatar.gravatar.default : '' %>')
                     .addClass('show');
             } else {
                 $('.lcb-login-avatar').removeClass('show');

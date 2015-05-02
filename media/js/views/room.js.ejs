@@ -118,7 +118,7 @@
             this.$('.lcb-entry-input')
             .atwho({
                 at: '@',
-                tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
+                tpl: '<li data-value="@${username}"><img src="<%= locals.settings.avatar.gravatar.url %>${avatar}?s=20<%- locals.settings.avatar.gravatar.default ? '&d=' + locals.settings.avatar.gravatar.default : '' %>" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
                     filter: this.getAtwhoUserFilter(this.model.users),
                     sorter: sorter,
@@ -144,7 +144,7 @@
             this.$('.lcb-entry-input')
             .atwho({
                 at: '@@',
-                tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
+                tpl: '<li data-value="@${username}"><img src="<%= locals.settings.avatar.gravatar.url %>${avatar}?s=20<%- locals.settings.avatar.gravatar.default ? '&d=' + locals.settings.avatar.gravatar.default : '' %>" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
                     filter: filter,
                     sorter: sorter,
