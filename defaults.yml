@@ -59,3 +59,9 @@ auth:
     salt: secretsauce # Required when upgrading from version < 0.3
 
 noRobots: true # Serve robots.txt with disallow
+
+avatar:
+  provider: gravatar # gravatar is only supported provider on current version.
+  gravatar:
+    url: https://www.gravatar.com/avatar/ # gravatar-like service(gravatar, libravatar, surrogator) URL
+    default: identicon # fallback image supported only gravatar.
