@@ -1,6 +1,6 @@
 <script type="text/x-handlebars-template" id="template-user">
     <li class="lcb-room-sidebar-item lcb-room-sidebar-user" data-id="{{id}}">
-        <img class="lcb-avatar lcb-room-sidebar-user-avatar lcb-room-poke" src="https://www.gravatar.com/avatar/{{avatar}}?s=30" />
+        <img class="lcb-avatar lcb-room-sidebar-user-avatar lcb-room-poke" src="<$ settings.avatar.gravatar.url $>{{avatar}}?s=30<$ '&d=' + settings.avatar.gravatar.default if settings.avatar.gravatar.default else '' $>" />
         <div class="lcb-room-sidebar-user-meta lcb-room-poke">
             <span class="lcb-room-sidebar-user-name">
                 {{displayName}}
