@@ -73,6 +73,12 @@ module.exports = function() {
             req.io.route('rooms:users');
         });
 
+    app.route('/rooms/:room/invite')
+        .all(middlewares.requireLogin, middlewares.roomRoute)
+        .post(function(req, res) {
+            req.io.route('rooms:invite');
+        });
+
 
     //
     // Sockets
@@ -237,6 +243,9 @@ module.exports = function() {
 
                 res.json(users);
             });
+        },
+        invite: function(req, res) {
+            app.io.emit('rooms:invite', req.data);
         }
     });
 };
