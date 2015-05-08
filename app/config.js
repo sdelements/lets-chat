@@ -66,6 +66,9 @@ var pipeline = [
             if (key === 'local') {
                 return;
             }
+            if (key === 'mongodb') {
+                return;
+            }
 
             var plugin = plugins.getPlugin(key, 'files');
 
