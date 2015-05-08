@@ -8,7 +8,23 @@ var fs = require('fs'),
     _ = require('lodash'),
     async = require('async'),
     multer = require('multer'),
+    mongoose = require('mongoose'),
     settings = require('./../config').files;
+
+function mongodbGet(id, fn) {
+    var db = mongoose.connection.db;
+    var id = new mongoose.mongo.ObjectID(id);
+    var store = new mongoose.mongo.GridStore(db, id, "r", {root: "fs"});
+    store.open(function(err, store) {
+        if(err) {
+            return fn(err);
+        }
+        if(store.filename === store.fileId && store.metadata && store.metadata.filename) {
+            store.filename = store.metadata.filename;
+        }
+        fn(null, store);
+    });
+}
 
 module.exports = function() {
 
@@ -75,6 +91,12 @@ module.exports = function() {
                         headers: {
                             'Content-Type': file.type
                         }
+                    });
+                } else if (settings.provider === 'mongodb') {
+                    mongodbGet(req.params.id, function(err, file) {
+                        res.header("Content-Type", file.contentType);
+                        res.header("Content-Length", file.length);
+                        file.stream(true).pipe(res);
                     });
                 } else {
                     res.redirect(url);

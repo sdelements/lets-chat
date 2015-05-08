@@ -19,6 +19,8 @@ function FileManager(options) {
 
     if (settings.provider === 'local') {
         Provider = require('./files/local');
+    } else if (settings.provider === 'mongodb') {
+        Provider = require('./files/mongodb');
     } else {
         Provider = plugins.getPlugin(settings.provider, 'files');
     }
