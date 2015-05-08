@@ -3,7 +3,7 @@ var fs = require('fs'),
     mongoose = require('mongoose');
 
 function mongodbParse(options) {
-    opts = options
+    var opts = options;
     if(!opts.metadata) {
         opts.metadata = {};
     }
@@ -11,7 +11,7 @@ function mongodbParse(options) {
 }
 
 function mongodbPutFile(path, name, options, fn) {
-    db = mongoose.connection.db;
+    var db = mongoose.connection.db;
     options = mongodbParse(options);
     options.metadata.filename = name;
     return new mongoose.mongo.GridStore(db, name, "w", options).open(function(err, file) {
