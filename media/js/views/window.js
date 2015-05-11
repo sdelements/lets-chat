@@ -158,19 +158,28 @@
 
     window.LCB.AudioNotificationsView = Backbone.View.extend({
         initialize: function (options) {
+            var that = this;
             this.rooms = options.client.rooms;
             this.user = options.client.user;
-            this.messageAudio = new Howl({urls: ['media/audio/bell.mp3']});
+            this.audioEnabled = false;
+            this.audioNotification = null;
             this.loadTime = new Date().getTime();
+            $.get('./audio/notification', function(data) {
+                that.audioEnabled = data.enabled
+                if (data.enabled) {
+                    that.audioNotification = new Howl({urls: [data.file]});
+                }
+            });
 
             this.rooms.on('messages:new', this.onNewMessage, this);
         },
         onNewMessage: function(message) {
             var messageTimestamp = new Date(message.posted).getTime();
 
-            if (this.loadTime < messageTimestamp
+            if (this.audioEnabled
+                && this.loadTime < messageTimestamp
                 && message.mentioned) {
-                this.messageAudio.play(); 
+                this.audioNotification.play(); 
             }
         }
 
