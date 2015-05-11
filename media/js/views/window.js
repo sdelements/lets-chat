@@ -156,6 +156,26 @@
         }
     });
 
+    window.LCB.AudioNotificationsView = Backbone.View.extend({
+        initialize: function (options) {
+            this.rooms = options.client.rooms;
+            this.user = options.client.user;
+            this.messageAudio = new Howl({urls: ['media/audio/bell.mp3']});
+            this.loadTime = new Date().getTime();
+
+            this.rooms.on('messages:new', this.onNewMessage, this);
+        },
+        onNewMessage: function(message) {
+            var messageTimestamp = new Date(message.posted).getTime();
+
+            if (this.loadTime < messageTimestamp
+                && message.mentioned) {
+                this.messageAudio.play(); 
+            }
+        }
+
+    });
+
     window.LCB.DesktopNotificationsView = Backbone.View.extend({
         focus: true,
         openNotifications: [],
