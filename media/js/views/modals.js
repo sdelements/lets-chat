@@ -142,7 +142,8 @@
 
     window.LCB.NotificationsModalView = Backbone.View.extend({
         events: {
-            'click [name=desktop-notifications]': 'toggleDesktopNotifications'
+            'click [name=desktop-notifications]': 'toggleDesktopNotifications',
+            'click [name=audio-notifications]': 'toggleAudioNotifications'
         },
         initialize: function() {
             this.render();
@@ -151,19 +152,39 @@
             var $input = this.$('[name=desktop-notifications]');
             $input.find('.disabled').show()
               .siblings().hide();
+
             if (!notify.isSupported) {
                 $input.attr('disabled', true);
-                // Welp we're done here
-                return;
             }
-            if (notify.permissionLevel() === notify.PERMISSION_GRANTED) {
+            else if (notify.permissionLevel() === notify.PERMISSION_GRANTED) {
                 $input.find('.enabled').show()
                   .siblings().hide();
             }
-            if (notify.permissionLevel() === notify.PERMISSION_DENIED) {
+            else if (notify.permissionLevel() === notify.PERMISSION_DENIED) {
                 $input.find('.blocked').show()
                   .siblings().hide();
             }
+            
+            var $input = this.$('[name=audio-notifications]');
+            $input.find('.disabled').show()
+              .siblings().hide();
+            
+            $.get('./audio/notification', function(data) {
+              console.log(data);
+                if (data.status == 'error') {
+                    $input.find('.disabled').show()
+                      .siblings().hide();
+                    return; 
+                }
+
+                if (data.enabled) {
+                    $input.find('.enabled').show()
+                      .siblings().hide();
+                    return;
+                }
+                $input.find('.disabled').show()
+                  .siblings().hide();
+            });
         },
         toggleDesktopNotifications: function() {
             var that = this;
@@ -171,6 +192,15 @@
                 return;
             }
             notify.requestPermission(function() {
+                that.render();
+            });
+        },
+        toggleAudioNotifications: function(options) {
+            var that = this;
+            $.post('./audio/notification/toggle', function(data) {
+                if (data.status == 'error') {
+                    return;
+                }
                 that.render();
             });
         }

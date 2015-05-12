@@ -10,23 +10,43 @@ var path = require('path'),
 module.exports = function() {
 
     var app = this.app,
+        core = this.core,
         middlewares = this.middlewares;
 
     app.get('/audio/notification', middlewares.requireLogin, function(req, res) {
-        req.io.route('audio:notification');
+        req.io.route('audio:notification:settings');
+    });
+
+    app.post('/audio/notification/toggle', middlewares.requireLogin, function(req, res) {
+        req.io.route('audio:notification:toggle');
     });
 
     //
     // Sockets
     //
     app.io.route('audio', {
-        'notification': function(req, res) {
+        'notification:settings': function(req, res) {
+            var enabled = settings.audio.notifications.enabled && req.user.audioNotifications;
             res.json({ 
-                enabled: settings.audio.notifications.enabled,
+                enabled: enabled,
                 file: settings.audio.notifications.file
             })
+        },
+        'notification:toggle': function(req, res) {
+            core.account.update(req.user._id, { audioNotifications: !req.user.audioNotifications }, function (err, user) {
+                if (err) {
+                    res.json({
+                        status: 'error',
+                        message: err
+                    });
+                }
+                res.json({
+                    status: 'success'
+                });
+            });
         }
     });
+
     
 
 };
