@@ -39,6 +39,9 @@ AccountManager.prototype.update = function(id, options, cb) {
         if (options.email) {
             user.email = options.email;
         }
+        if (options.hasOwnProperty('audioNotifications')) {
+            user.audioNotifications = options.audioNotifications;
+        }
 
         if (options.username && options.username !== user.username) {
             var xmppConns = this.core.presence.connections.query({

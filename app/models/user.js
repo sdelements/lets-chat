@@ -87,6 +87,10 @@ var UserSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    audioNotifications: {
+        type: Boolean,
+        default: false
+    },
     rooms: [{
 		type: ObjectId,
 		ref: 'Room'
@@ -259,7 +263,8 @@ UserSchema.method('toJSON', function() {
         lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
-        avatar: this.avatar
+        avatar: this.avatar,
+        audioNotifications: this.audioNotifications
     };
 });
 
