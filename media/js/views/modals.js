@@ -170,7 +170,6 @@
               .siblings().hide();
             
             $.get('./audio/notification', function(data) {
-              console.log(data);
                 if (data.status == 'error') {
                     $input.find('.disabled').show()
                       .siblings().hide();
