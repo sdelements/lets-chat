@@ -52,7 +52,7 @@ var pipeline = [
         var providers = [];
         var env = process.env.LCB_AUTH_PROVIDERS;
         if (env) {
-            providers = parseEnvValue(env);
+            providers = parseEnvValue(env, true);
         } else {
             providers = context.file.auth && context.file.auth.providers ||
                     context.defaults.auth && context.defaults.auth.providers;
