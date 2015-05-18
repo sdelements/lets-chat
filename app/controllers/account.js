@@ -51,7 +51,15 @@ module.exports = function() {
         req.io.route('account:login');
     });
 
-    app.post('/account/register', function(req) {
+    app.get('/account/login', function(req, res) {
+        req.io.route('account:login');
+    });
+
+    app.get('/account/:provider/callback', function(req, res) {
+        req.io.route('account:callback');
+    });
+
+    app.post('/account/register', function(req, res) {
         req.io.route('account:register');
     });
 
@@ -126,8 +134,7 @@ module.exports = function() {
                         form.confirmPassword
                 };
 
-            auth.authenticate(req, req.user.uid || req.user.username,
-                              data.currentPassword, function(err, user) {
+            auth.authenticate(req, res, function(err, user) {
                 if (err) {
                     return res.status(400).json({
                         status: 'error',
@@ -269,8 +276,51 @@ module.exports = function() {
                 });
             });
         },
+        callback: function(req, res) {
+            auth.authenticate(req, res, function(err, user, info) {
+                if (!user && info && info.locked) {
+                    return res.status(403).json({
+                        status: 'error',
+                        message: info.message || 'Account is locked.'
+                    });
+                }
+
+                if (!user) {
+                    return res.status(401).json({
+                        status: 'error',
+                        message: info && info.message ||
+                                 'Incorrect login credentials.'
+                    });
+                }
+
+                req.login(user, function(err) {
+                    if (err) {
+                        return res.status(400).json({
+                            status: 'error',
+                            message: 'There were problems logging you in.',
+                            errors: err
+                        });
+                    }
+                    var temp = req.session.passport;
+                    req.session.regenerate(function(err) {
+                        if (err) {
+                            return res.status(400).json({
+                                status: 'error',
+                                message: 'There were problems logging you in.',
+                                errors: err
+                            });
+                        }
+                        req.session.passport = temp;
+                        res.json({
+                            status: 'success',
+                            message: 'Logging you in...'
+                        });
+                    });
+                });
+            });
+        },
         login: function(req, res) {
-            auth.authenticate(req, function(err, user, info) {
+            auth.authenticate(req, res, function(err, user, info) {
                 if (err) {
                     return res.status(400).json({
                         status: 'error',

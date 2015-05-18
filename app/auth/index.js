@@ -144,44 +144,11 @@ function wrapAuthCallback(username, cb) {
     };
 }
 
-function authenticate() {
-    var req, username, cb;
-
-    if (arguments.length === 4) {
-        username = arguments[1];
-
-    } else if (arguments.length === 3) {
-        username = arguments[0];
-
-    } else {
-        username = arguments[0].body.username;
-    }
-
+function authenticate(req, res, cb) {
+    var username;
+    username = req.body.username || '';
     username = username.toLowerCase();
-
-    if (arguments.length === 4) {
-        req = _.extend({}, arguments[0], {
-            body: {
-                username: username,
-                password: arguments[2]
-            }
-        });
-        cb = arguments[3];
-
-    } else if (arguments.length === 3) {
-        req = {
-            body: {
-                username: username,
-                password: arguments[1]
-            }
-        };
-        cb = arguments[2];
-
-    } else {
-        req = _.extend({}, arguments[0]);
-        req.body.username = username;
-        cb = arguments[1];
-    }
+    req.body.username = username;
 
     checkIfAccountLocked(username, function(locked) {
         if (locked) {
@@ -206,7 +173,7 @@ function authenticate() {
                     return callback(null, args[0]);
                 }
 
-                provider.authenticate(req, function(err, user) {
+                provider.authenticate(req, res, function(err, user, info) {
                     if (err) {
                         return callback(err);
                     }
