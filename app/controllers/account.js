@@ -56,7 +56,7 @@ module.exports = function() {
     });
 
     app.get('/account/:provider/callback', function(req, res) {
-        req.io.route('account:callback');
+        req.io.route('account:login');
     });
 
     app.post('/account/register', function(req, res) {
@@ -273,49 +273,6 @@ module.exports = function() {
                     status: 'success',
                     message: 'You\'ve been registered, ' +
                              'please try logging in now!'
-                });
-            });
-        },
-        callback: function(req, res) {
-            auth.authenticate(req, res, function(err, user, info) {
-                if (!user && info && info.locked) {
-                    return res.status(403).json({
-                        status: 'error',
-                        message: info.message || 'Account is locked.'
-                    });
-                }
-
-                if (!user) {
-                    return res.status(401).json({
-                        status: 'error',
-                        message: info && info.message ||
-                                 'Incorrect login credentials.'
-                    });
-                }
-
-                req.login(user, function(err) {
-                    if (err) {
-                        return res.status(400).json({
-                            status: 'error',
-                            message: 'There were problems logging you in.',
-                            errors: err
-                        });
-                    }
-                    var temp = req.session.passport;
-                    req.session.regenerate(function(err) {
-                        if (err) {
-                            return res.status(400).json({
-                                status: 'error',
-                                message: 'There were problems logging you in.',
-                                errors: err
-                            });
-                        }
-                        req.session.passport = temp;
-                        res.json({
-                            status: 'success',
-                            message: 'Logging you in...'
-                        });
-                    });
                 });
             });
         },
