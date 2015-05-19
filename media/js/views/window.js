@@ -72,7 +72,7 @@
             }
         },
         onNewMessage: function(message) {
-            if (this.focus || message.historical) {
+            if (this.focus || message.historical || message.owner.id === this.client.user.id) {
                 return;
             }
             this.countMessage(message);
@@ -176,7 +176,7 @@
             });
         },
         onNewMessage: function(message) {
-            if (this.focus || message.historical) {
+            if (this.focus || message.historical || message.owner.id === this.client.user.id) {
                 return;
             }
             this.createDesktopNotification(message);
