@@ -14,6 +14,16 @@
         focus: true,
         count: 0,
         mentions: 0,
+        countFavicon: new Favico({
+            position: 'down',
+            animation: 'none',
+            bgColor: '#b94a48'
+        }),
+        mentionsFavicon: new Favico({
+            position: 'left',
+            animation: 'none',
+            bgColor: '#f22472'
+        }),
         initialize: function(options) {
 
             var that = this;
@@ -50,11 +60,15 @@
             this.focus = (e.type === 'focus');
             if (this.focus) {
                 clearInterval(this.titleTimer);
+                clearInterval(this.faviconBadgeTimer);
                 this.count = 0;
                 this.mentions = 0;
                 this.titleTimer = false;
                 this.titleTimerFlip = false;
+                this.faviconBadgeTimer = false;
+                this.faviconBadgeTimerFlip = false;
                 this.updateTitle();
+                this.mentionsFavicon.reset();
             }
         },
         onNewMessage: function(message) {
@@ -63,6 +77,7 @@
             }
             this.countMessage(message);
             this.flashTitle()
+            this.flashFaviconBadge();
         },
         countMessage: function(message) {
             var username = this.client.user.get('username'),
@@ -71,13 +86,6 @@
             regex.test(message.text) && ++this.mentions;
         },
         flashTitle: function() {
-            if (!this.titleTimer) {
-                this._flashTitle();
-                var flashTitle = _.bind(this._flashTitle, this);
-                this.titleTimer = setInterval(flashTitle, 1 * 1000);
-            }
-        },
-        _flashTitle: function() {
             var titlePrefix = '';
             if (this.count > 0) {
                 titlePrefix += '(' + parseInt(this.count);
@@ -86,9 +94,22 @@
                 }
                 titlePrefix += ') ';
             }
-            var title = this.titleTimerFlip ? this.title : titlePrefix + this.title;
-            this.$('title').html(title);
-            this.titleTimerFlip = !this.titleTimerFlip;
+            this.$('title').html(titlePrefix + this.title);
+        },
+        flashFaviconBadge: function() {
+            if (!this.faviconBadgeTimer) {
+                this._flashFaviconBadge();
+                var flashFaviconBadge = _.bind(this._flashFaviconBadge, this);
+                this.faviconBadgeTimer = setInterval(flashFaviconBadge, 1 * 2000);
+            }
+        },
+        _flashFaviconBadge: function() {
+            if (this.mentions > 0 && this.faviconBadgeTimerFlip) {
+                this.mentionsFavicon.badge(this.mentions);
+            } else {
+                this.countFavicon.badge(this.count);
+            }
+            this.faviconBadgeTimerFlip = !this.faviconBadgeTimerFlip;
         },
         updateTitle: function(name) {
             if (!name) {
@@ -102,7 +123,7 @@
                 this.title = this.originalTitle;
             }
             this.$('title').html(this.title);
-        },
+        }
     });
 
     window.LCB.HotKeysView = Backbone.View.extend({
@@ -140,6 +161,9 @@
         openNotifications: [],
         openMentions: [],
         initialize: function(options) {
+            notify.config({
+                pageVisibility: false
+            });
             this.client = options.client;
             this.rooms = options.rooms;
             $(window).on('focus blur unload', _.bind(this.onFocusBlur, this));
@@ -176,12 +200,12 @@
                 body: message.text,
                 icon: icon,
                 tag: message.id,
-                autoClose: 1000,
                 onclick: function() {
                     window.focus();
                     that.client.events.trigger('rooms:switch', roomID);
                 }
             });
+
             //
             // Mentions
             //
@@ -204,8 +228,8 @@
             this.openNotifications.push(notification);
 
             setTimeout(function() {
-                notification.close();
-            }, 1 * 4000);
+                notification.close && notification.close();
+            }, 3000);
 
         }
     });

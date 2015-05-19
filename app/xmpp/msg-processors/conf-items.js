@@ -1,8 +1,7 @@
 'use strict';
 
 var MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config'),
-    helper = require('./../helper');
+    settings = require('./../../config');
 
 module.exports = MessageProcessor.extend({
 
@@ -25,10 +24,10 @@ module.exports = MessageProcessor.extend({
 
             rooms.forEach(function(room) {
                 query.c('item', {
-                    jid: helper.getRoomJid(room.slug),
+                    jid: this.connection.getRoomJid(room.slug),
                     name: room.name
                 });
-            });
+            }, this);
 
             cb(null, stanza);
 

@@ -1,3 +1,30 @@
+## 0.3.10 (2015-04-14)
+
+Fixes
+
+* Fixed Hyperlink parsing
+* Fixed issue whereby a deleted user's messages would not display
+
+## 0.3.9 (2015-04-06)
+
+Deprecated
+
+* `xmpp.host` configuration setting - use `xmpp.domain` instead
+
+Enhancements
+
+* Thumbnails are improved
+* Support multiple XMPP domains being used between clients
+* XMPP can be configured to authenticate using full JID - instead of only node
+* Added process title
+
+Fixes
+
+* Fixed "express deprecated req.host: Use req.hostname instead"
+* Fixed File Uploads "Post" checkbox
+* Fixed issues with desktop notifications
+* Fixed XMPP MUC nickname not being reflected to user
+
 ## 0.3.8 (2015-03-02)
 
 Fixes

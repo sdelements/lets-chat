@@ -6,8 +6,10 @@ var MessageProcessor = require('./../msg-processor'),
 module.exports = MessageProcessor.extend({
 
     if: function() {
-        return this.to === settings.xmpp.host &&
-               this.ns['http://jabber.org/protocol/disco#items'];
+        return this.ns['http://jabber.org/protocol/disco#items'] && (
+            this.to === this.connection.getDomain() ||
+            this.to === settings.xmpp.domain
+        );
     },
 
     then: function(cb) {
@@ -18,7 +20,7 @@ module.exports = MessageProcessor.extend({
         });
 
         query.c('item', {
-            jid: settings.xmpp.confhost,
+            jid: this.connection.getConfDomain(),
             name: 'Let\'s Chat Conference Service'
         });
 

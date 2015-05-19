@@ -1,7 +1,6 @@
 'use strict';
 
 var Stanza = require('node-xmpp-core').Stanza,
-    helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
 module.exports = EventListener.extend({
@@ -15,8 +14,8 @@ module.exports = EventListener.extend({
             // Kick connection from room!
 
             var presence = new Stanza.Presence({
-                to: helper.getRoomJid(room.slug, connection.user.username),
-                from: helper.getRoomJid(room.slug, connection.user.username),
+                to: connection.jid(room.slug),
+                from: connection.jid(room.slug),
                 type: 'unavailable'
             });
 
@@ -26,7 +25,7 @@ module.exports = EventListener.extend({
             });
 
             x.c('item', {
-                jid: helper.getRoomJid(room.slug, connection.user.username),
+                jid: connection.jid(),
                 affiliation: 'none',
                 role: 'none'
             });
