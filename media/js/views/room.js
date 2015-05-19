@@ -302,6 +302,7 @@
         },
         sendMessage: function(e) {
             if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
+            if (e.type === 'keypress' && e.keyCode === 13 && e.shiftKey) return;
             e.preventDefault();
             if (!this.client.status.get('connected')) return;
             var $textarea = this.$('.lcb-entry-input');

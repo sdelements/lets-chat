@@ -1,3 +1,17 @@
+## 0.3.11 (2015-05-19)
+
+Fixes
+
+* Env variable loading
+* Various notification adjustments
+
+Enhancements
+
+* Usernames may now contain underscores and dashes
+* Unicode character support for links in messages
+* Unread message counts in the favicon
+* Newlines with `shift+enter`
+
 ## 0.3.10 (2015-04-14)
 
 Fixes
