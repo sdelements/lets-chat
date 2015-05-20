@@ -80,10 +80,8 @@
             this.flashFaviconBadge();
         },
         countMessage: function(message) {
-            var username = this.client.user.get('username'),
-                regex = new RegExp('\\B@(' + username + ')(?!@)\\b', 'i');
             ++this.count;
-            regex.test(message.text) && ++this.mentions;
+            message.mentioned && ++this.mentions;
         },
         flashTitle: function() {
             var titlePrefix = '';
@@ -131,6 +129,7 @@
         keys: {
             'up+shift+alt down+shift+alt': 'nextRoom',
             's+shift+alt': 'toggleRoomSidebar',
+            'g+shift+alt': 'openGiphyModal',
             'space+shift+alt': 'recallRoom'
         },
         initialize: function(options) {
@@ -153,6 +152,10 @@
             e.preventDefault();
             var view = this.client.view.panes.views[this.rooms.current.get('id')];
             view && view.toggleSidebar && view.toggleSidebar();
+        },
+        openGiphyModal: function(e) {
+            e.preventDefault();
+            $('.lcb-giphy').modal('show');
         }
     });
 

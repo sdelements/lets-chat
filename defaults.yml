@@ -58,4 +58,12 @@ auth:
     passwordRegex: ^.{8,64}$
     salt: secretsauce # Required when upgrading from version < 0.3
 
+private:
+  enable: false
+  roster: online # online / all
+  expire: 360 # false or number of minutes
+
 noRobots: true # Serve robots.txt with disallow
+
+rooms:
+  passwordProtected: false

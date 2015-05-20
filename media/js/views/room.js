@@ -25,6 +25,13 @@
         },
         initialize: function(options) {
             this.client = options.client;
+
+            var iAmOwner = this.model.get('owner') === this.client.user.id;
+            var iCanEdit = iAmOwner || !this.model.get('hasPassword');
+
+            this.model.set('iAmOwner', iAmOwner);
+            this.model.set('iCanEdit', iCanEdit);
+
             this.template = options.template;
             this.messageTemplate =
                 Handlebars.compile($('#template-message').html());
@@ -76,10 +83,16 @@
             }
         },
         getAtwhoUserFilter: function(collection) {
+            var currentUser = this.client.user;
+
             return function filter(query, data, searchKey) {
                 var q = query.toLowerCase();
                 var results = collection.filter(function(user) {
                     var attr = user.attributes;
+
+                    if (user.id === currentUser.id) {
+                        return false;
+                    }
 
                     if (!attr.safeName) {
                         attr.safeName = attr.displayName.replace(/\W/g, '');
@@ -213,7 +226,19 @@
             if (e) {
                 e.preventDefault();
             }
-            this.$('.lcb-room-edit').modal();
+
+            var $modal = this.$('.lcb-room-edit'),
+                $name = $modal.find('input[name="name"]'),
+                $description = $modal.find('textarea[name="description"]'),
+                $password = $modal.find('input[name="password"]'),
+                $confirmPassword = $modal.find('input[name="confirmPassword"]');
+
+            $name.val(this.model.get('name'));
+            $description.val(this.model.get('description'));
+            $password.val('');
+            $confirmPassword.val('');
+
+            $modal.modal();
         },
         hideEditRoom: function(e) {
             if (e) {
@@ -225,14 +250,34 @@
             if (e) {
                 e.preventDefault();
             }
-            var name = this.$('.edit-room input[name="name"]').val();
-            var description = this.$('.edit-room textarea[name="description"]').val();
+
+            var $modal = this.$('.lcb-room-edit'),
+                $name = $modal.find('input[name="name"]'),
+                $description = $modal.find('textarea[name="description"]'),
+                $password = $modal.find('input[name="password"]'),
+                $confirmPassword = $modal.find('input[name="confirmPassword"]');
+
+            $name.parent().removeClass('has-error');
+            $confirmPassword.parent().removeClass('has-error');
+
+            if (!$name.val()) {
+                $name.parent().addClass('has-error');
+                return;
+            }
+
+            if ($password.val() && $password.val() !== $confirmPassword.val()) {
+                $confirmPassword.parent().addClass('has-error');
+                return;
+            }
+
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
-                name: name,
-                description: description
+                name: $name.val(),
+                description: $description.val(),
+                password: $password.val()
             });
-            this.$('.lcb-room-edit').modal('hide');
+
+            $modal.modal('hide');
         },
         archiveRoom: function(e) {
             var that = this;
@@ -282,7 +327,7 @@
             message.own = this.client.user.id === message.owner.id;
 
             // WHATS MY NAME
-            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + ')(?!@)\\b', 'i').test(message.text);
+            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + '|all)(?!@)\\b', 'i').test(message.text);
 
             // Templatin' time
             var $html = $(this.messageTemplate(message).trim());
