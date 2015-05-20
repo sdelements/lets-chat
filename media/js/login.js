@@ -25,7 +25,13 @@
                     });
                     if ($form.data('refresh')) {
                         setTimeout(function() {
-                            window.location = './';
+                            if(window.location.hash != undefined){
+                                var hash = window.location.hash;
+                                window.location = './'+hash;
+                            }
+                            else{
+                                window.location = './';
+                            }
                         }, 1000);
                         return;
                     }
