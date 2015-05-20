@@ -38,6 +38,8 @@
             this.switch(this.rooms.current.get('id'));
             // Blur/Focus events
             $(window).on('focus blur', _.bind(this.onFocusBlur, this));
+            $(window).on('resize', _.bind(this.updateHeight, this));
+            this.updateHeight();
             this.render();
         },
         add: function(room) {
@@ -48,6 +50,12 @@
         },
         update: function(room) {
             this.$el.find('.lcb-tab[data-id=' + room.id + '] .lcb-tab-title').text(room.get('name'));
+        },
+        updateHeight: function(){
+          var padding = $('.lcb-account-button').height() +
+                        $('.lcb-status-indicators').height() +
+                        $('.lcb-tab').height() * 2;
+          this.$el.height($(window).height() - padding);
         },
         switch: function(id) {
             if (!id) {
