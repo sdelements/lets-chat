@@ -21,8 +21,7 @@ var MessageSchema = new mongoose.Schema({
     },
     text: {
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
     posted: {
         type: Date,
