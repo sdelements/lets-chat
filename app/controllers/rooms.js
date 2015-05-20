@@ -34,7 +34,10 @@ module.exports = function() {
     });
 
     core.on('rooms:new', function(room) {
-        app.io.emit('rooms:new', room);
+        // publish only public rooms ( rooms without a member list )
+        if (room.members.length == 0) {
+            app.io.emit('rooms:new', room);
+        }
     });
 
     core.on('rooms:update', function(room) {
@@ -84,7 +87,8 @@ module.exports = function() {
         list: function(req, res) {
             var options = {
                     skip: req.param('skip'),
-                    take: req.param('take')
+                    take: req.param('take'),
+                    user: req.user._id
                 };
 
             core.rooms.list(options, function(err, rooms) {
@@ -137,7 +141,8 @@ module.exports = function() {
                     owner: req.user._id,
                     name: req.param('name'),
                     slug: req.param('slug'),
-                    description: req.param('description')
+                    description: req.param('description'),
+                    members: req.param('members')
                 };
 
             core.rooms.create(options, function(err, room) {
@@ -155,7 +160,8 @@ module.exports = function() {
             var options = {
                     name: req.param('name'),
                     slug: req.param('slug'),
-                    description: req.param('description')
+                    description: req.param('description'),
+                    members: req.param('members')
                 };
 
             core.rooms.update(roomId, options, function(err, room) {

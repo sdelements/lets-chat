@@ -47,7 +47,11 @@ var RoomSchema = new mongoose.Schema({
     lastActive: {
         type: Date,
         default: Date.now
-    }
+    },
+    members: [{
+        type: ObjectId,
+        ref: 'User'
+    }]
 });
 
 RoomSchema.virtual('handle').get(function() {
@@ -67,7 +71,8 @@ RoomSchema.method('toJSON', function() {
         description: room.description,
         lastActive: room.lastActive,
         created: room.created,
-        owner: room.owner
+        owner: room.owner,
+        members: room.members
     };
  });
 
