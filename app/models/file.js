@@ -1,7 +1,7 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
 var FileSchema = new Schema({
@@ -34,7 +34,7 @@ var FileSchema = new Schema({
     }
 });
 
-FileSchema.virtual('url').get(function(file) {
+FileSchema.virtual('url').get(function() {
     return 'files/' + this._id + '/' + encodeURIComponent(this.name);
 });
 

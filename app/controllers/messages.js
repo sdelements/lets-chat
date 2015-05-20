@@ -8,9 +8,7 @@ module.exports = function() {
 
     var app = this.app,
         core = this.core,
-        middlewares = this.middlewares,
-        models = this.models,
-        Room = models.room;
+        middlewares = this.middlewares;
 
     core.on('messages:new', function(message, room, user) {
         var msg = message.toJSON();
@@ -26,19 +24,19 @@ module.exports = function() {
     //
     app.route('/messages')
         .all(middlewares.requireLogin)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('messages:list');
         })
-        .post(function(req, res) {
+        .post(function(req) {
             req.io.route('messages:create');
         });
 
     app.route('/rooms/:room/messages')
         .all(middlewares.requireLogin, middlewares.roomRoute)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('messages:list');
         })
-        .post(function(req, res) {
+        .post(function(req) {
             req.io.route('messages:create');
         });
 
@@ -69,7 +67,7 @@ module.exports = function() {
                     since_id: req.param('since_id'),
                     from: req.param('from'),
                     to: req.param('to'),
-                    query: req.param("query"),
+                    query: req.param('query'),
                     reverse: req.param('reverse'),
                     skip: req.param('skip'),
                     take: req.param('take'),

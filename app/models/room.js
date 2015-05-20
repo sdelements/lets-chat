@@ -5,10 +5,10 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    ObjectId = mongoose.Schema.Types.ObjectId,
-    uniqueValidator = require('mongoose-unique-validator'),
-    bcrypt = require('bcryptjs'),
-    settings = require('./../config');
+    uniqueValidator = require('mongoose-unique-validator').
+    bcrypt = require('bcryptjs');
+
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var RoomSchema = new mongoose.Schema({
     slug: {

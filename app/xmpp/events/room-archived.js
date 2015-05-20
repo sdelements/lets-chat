@@ -21,7 +21,7 @@ module.exports = EventListener.extend({
 
             var x = presence
             .c('x', {
-                xmlns:'http://jabber.org/protocol/muc#user'
+                xmlns: 'http://jabber.org/protocol/muc#user'
             });
 
             x.c('item', {

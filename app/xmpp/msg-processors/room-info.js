@@ -1,7 +1,6 @@
 'use strict';
 
-var MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config');
+var MessageProcessor = require('./../msg-processor');
 
 module.exports = MessageProcessor.extend({
 
@@ -31,7 +30,7 @@ module.exports = MessageProcessor.extend({
         var stanza = this.Iq();
 
         var query = stanza.c('query', {
-            xmlns:'http://jabber.org/protocol/disco#info'
+            xmlns: 'http://jabber.org/protocol/disco#info'
         });
 
         query.c('identity', {
@@ -71,7 +70,7 @@ module.exports = MessageProcessor.extend({
         var stanza = this.Iq();
 
         var query = stanza.c('query', {
-            xmlns:'http://jabber.org/protocol/disco#info'
+            xmlns: 'http://jabber.org/protocol/disco#info'
         });
 
         query.c('error', {

@@ -38,7 +38,11 @@ MessageManager.prototype.create = function(options, cb) {
                     console.error(err);
                     return cb(err);
                 }
-                typeof cb === 'function' && cb(null, message, room, user);
+
+                if (typeof cb === 'function') {
+                    cb(null, message, room, user);
+                }
+
                 this.core.emit('messages:new', message, room, user);
             }.bind(this));
         }.bind(this));
@@ -62,8 +66,7 @@ MessageManager.prototype.list = function(options, cb) {
         maxTake: 5000
     });
 
-    var Message = mongoose.model('Message'),
-        User = mongoose.model('User');
+    var Message = mongoose.model('Message');
 
     var find = Message.find({
         room: options.room

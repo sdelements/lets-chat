@@ -13,23 +13,22 @@ module.exports = function() {
         express = require('express.oi');
 
     var app = this.app,
-        core = this.core,
         middlewares = this.middlewares;
 
     //
     // Routes
     //
-    app.get('/extras/emotes', middlewares.requireLogin, function(req, res) {
+    app.get('/extras/emotes', middlewares.requireLogin, function(req) {
         req.io.route('extras:emotes:list');
     });
 
     app.use('/extras/emotes/',
-            express.static(path.join(process.cwd(), 'extras/emotes/public'), {
-                maxage: '364d'
-            })
+        express.static(path.join(process.cwd(), 'extras/emotes/public'), {
+            maxage: '364d'
+        })
     );
 
-    app.get('/extras/replacements', middlewares.requireLogin, function(req, res) {
+    app.get('/extras/replacements', middlewares.requireLogin, function(req) {
         req.io.route('extras:replacements:list');
     });
 
@@ -42,6 +41,10 @@ module.exports = function() {
 
             var dir = path.join(process.cwd(), 'extras/emotes');
             fs.readdir(dir, function(err, files) {
+                if (err) {
+                    return res.json(emotes);
+                }
+
                 var regex = new RegExp('\\.yml$');
 
                 files = files.filter(function(fileName) {

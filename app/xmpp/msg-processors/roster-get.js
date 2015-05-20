@@ -43,7 +43,7 @@ module.exports = MessageProcessor.extend({
     sendRoster: function(users, cb) {
         var stanza = this.Iq();
 
-        var v = stanza.c('query', {
+        stanza.c('query', {
             xmlns: 'jabber:iq:roster'
         });
 

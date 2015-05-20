@@ -1,7 +1,6 @@
 'use strict';
 
-var _ = require('lodash'),
-    Connection = require('./presence/connection'),
+var Connection = require('./presence/connection'),
     Room = require('./presence/room'),
     ConnectionCollection = require('./presence/connection-collection'),
     RoomCollection = require('./presence/room-collection'),

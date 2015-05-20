@@ -1,8 +1,6 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter,
-    util = require('util'),
-    _ = require('lodash');
+var _ = require('lodash');
 
 function ConnectionCollection() {
     this.connections = {};
@@ -70,7 +68,7 @@ ConnectionCollection.prototype.query = function(options) {
         options.userId = options.userId.toString();
     }
 
-    return _.map(this.connections, function(value, key) {
+    return _.map(this.connections, function(value) {
         return value;
     }).filter(function(conn) {
         var result = true;
