@@ -327,7 +327,7 @@
             message.own = this.client.user.id === message.owner.id;
 
             // WHATS MY NAME
-            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + ')(?!@)\\b', 'i').test(message.text);
+            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + '|all)(?!@)\\b', 'i').test(message.text);
 
             // Templatin' time
             var $html = $(this.messageTemplate(message).trim());
