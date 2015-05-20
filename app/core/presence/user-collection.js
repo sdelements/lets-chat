@@ -1,8 +1,6 @@
 'use strict';
 
 var EventEmitter = require('events').EventEmitter,
-    crypto = require('crypto'),
-    http = require('http'),
     util = require('util'),
     _ = require('lodash');
 

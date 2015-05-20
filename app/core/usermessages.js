@@ -78,8 +78,7 @@ UserMessageManager.prototype.list = function(options, cb) {
         maxTake: 5000
     });
 
-    var UserMessage = mongoose.model('Message'),
-        User = mongoose.model('User');
+    var UserMessage = mongoose.model('Message');
 
     var find = UserMessage.find({
         users: { $all: [options.currentUser, options.user] }

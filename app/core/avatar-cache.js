@@ -1,10 +1,7 @@
 'use strict';
 
 var crypto = require('crypto'),
-    fs = require('fs'),
-    http = require('http'),
-    util = require('util'),
-    _ = require('lodash');
+    http = require('http');
 
 function AvatarCache(options) {
     this.core = options.core;
@@ -22,7 +19,7 @@ AvatarCache.prototype.add = function(user) {
     var userId = (user.id || user._id).toString();
     var url = 'http://www.gravatar.com/avatar/' + user.avatar + '?s=64';
 
-    var request = http.get(url, function(response) {
+    http.get(url, function(response) {
         if (response.statusCode !== 200) {
             return;
         }
@@ -35,7 +32,6 @@ AvatarCache.prototype.add = function(user) {
 
         response.on('end', function() {
             var buffer = Buffer.concat(buffers);
-            var image = buffer.toString('base64');
 
             this.avatars[userId] = {
                 base64: buffer.toString('base64'),

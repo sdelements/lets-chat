@@ -1,8 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config');
+    MessageProcessor = require('./../msg-processor');
 
 module.exports = MessageProcessor.extend({
 
@@ -27,7 +26,7 @@ module.exports = MessageProcessor.extend({
 
         var User = mongoose.model('User');
         User.findByIdentifier(username, function(err, user) {
-            if (user) {
+            if (!err && user) {
                 this.sendVcard(user, cb);
             }
         });

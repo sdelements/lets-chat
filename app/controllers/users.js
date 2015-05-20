@@ -6,9 +6,8 @@
 
 module.exports = function() {
 
-    var helpers = require('./../core/helpers');
-
     var app = this.app,
+        core = this.core,
         middlewares = this.middlewares,
         models = this.models,
         User = models.user;

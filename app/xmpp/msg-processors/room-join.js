@@ -142,9 +142,6 @@ module.exports = MessageProcessor.extend({
     },
 
     sendErrorPassword: function(room, cb) {
-        var connection = this.client.conn;
-        var username = connection.user.username;
-
         //from http://xmpp.org/extensions/xep-0045.html#enter-pw
         var presence = this.Presence({
             type: 'error'
@@ -152,7 +149,7 @@ module.exports = MessageProcessor.extend({
 
         presence
             .c('x', {
-                xmlns:'http://jabber.org/protocol/muc'
+                xmlns: 'http://jabber.org/protocol/muc'
             });
         presence
             .c('error', {

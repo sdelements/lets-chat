@@ -1,8 +1,6 @@
 'use strict';
 
 var _ = require('lodash'),
-    moment = require('moment'),
-    Stanza = require('node-xmpp-core').Stanza,
     MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config');
 

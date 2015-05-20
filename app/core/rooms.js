@@ -2,7 +2,6 @@
 
 var mongoose = require('mongoose'),
     _ = require('lodash'),
-    bcrypt = require('bcryptjs'),
     helpers = require('./helpers');
 
 function RoomManager(options) {

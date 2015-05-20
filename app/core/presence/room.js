@@ -13,12 +13,12 @@ function Room(options) {
         this.system = true;
         this.roomId = undefined;
         this.roomSlug = undefined;
-    	this.hasPassword = false;
+        this.hasPassword = false;
     } else {
         this.system = false;
         this.roomId = options.room._id.toString();
         this.roomSlug = options.room.slug;
-    	this.hasPassword = options.room.hasPassword;
+        this.hasPassword = options.room.hasPassword;
     }
 
     this.connections = new ConnectionCollection();
@@ -37,15 +37,15 @@ function Room(options) {
 
 util.inherits(Room, EventEmitter);
 
-Room.prototype.getUsers = function(filter) {
+Room.prototype.getUsers = function() {
     return this.connections.getUsers();
 };
 
-Room.prototype.getUserIds = function(filter) {
+Room.prototype.getUserIds = function() {
     return this.connections.getUserIds();
 };
 
-Room.prototype.getUsernames = function(filter) {
+Room.prototype.getUsernames = function() {
     return this.connections.getUsernames();
 };
 

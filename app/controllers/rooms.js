@@ -4,8 +4,7 @@
 
 'use strict';
 
-var _ = require('lodash'),
-    settings = require('./../config').rooms;
+var settings = require('./../config').rooms;
 
 module.exports = function() {
     var app = this.app,

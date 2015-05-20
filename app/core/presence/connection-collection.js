@@ -35,10 +35,10 @@ ConnectionCollection.prototype.getUsers = function(filter) {
     }
 
     var users = _.chain(connections)
-                .filter(function(value, key) {
+                .filter(function(value) {
                     return !!value.user;
                 })
-                .map(function(value, key) {
+                .map(function(value) {
                     return value.user;
                 })
                 .uniq('id')

@@ -4,8 +4,6 @@ var _ = require('lodash'),
     MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config');
 
-var mentionPattern = /^([a-z0-9_]+\:)\B/;
-
 module.exports = MessageProcessor.extend({
 
     if: function() {

@@ -5,8 +5,9 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    ObjectId = mongoose.Schema.Types.ObjectId,
     settings = require('./../config');
+
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var MessageSchema = new mongoose.Schema({
     users: [{

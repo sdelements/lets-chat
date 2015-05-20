@@ -31,7 +31,7 @@ module.exports = MessageProcessor.extend({
     },
 
     sendAllUsers: function(cb) {
-        var users = this.core.users.list({}, function(err, users) {
+        this.core.users.list({}, function(err, users) {
             if (err) {
                 return cb(err);
             }
@@ -43,7 +43,7 @@ module.exports = MessageProcessor.extend({
     sendRoster: function(users, cb) {
         var stanza = this.Iq();
 
-        stanza.c('query', {
+        var v = stanza.c('query', {
             xmlns: 'jabber:iq:roster'
         });
 

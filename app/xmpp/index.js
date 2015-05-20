@@ -4,6 +4,7 @@ var xmpp = require('node-xmpp-server'),
     settings = require('./../config'),
     auth = require('./../auth/index'),
     all = require('require-tree'),
+    Stanza = require('node-xmpp-core').Stanza,
     XmppConnection = require('./xmpp-connection');
 
 var allArray = function(path) {
@@ -46,7 +47,7 @@ function xmppStart(core) {
 
                 var conn = new XmppConnection(user, client, opts.jid);
                 core.presence.connect(conn);
-                
+
                 cb(null, opts);
             });
         });

@@ -4,8 +4,6 @@ var Stanza = require('node-xmpp-core').Stanza,
     settings = require('./../../config'),
     EventListener = require('./../event-listener');
 
-var mentionPattern = /\B@(\w+)(?!@)\b/g;
-
 module.exports = EventListener.extend({
 
     on: 'user-messages:new',

@@ -5,7 +5,7 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    uniqueValidator = require('mongoose-unique-validator').
+    uniqueValidator = require('mongoose-unique-validator'),
     bcrypt = require('bcryptjs');
 
 var ObjectId = mongoose.Schema.Types.ObjectId;

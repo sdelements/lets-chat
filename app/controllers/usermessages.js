@@ -11,16 +11,14 @@ module.exports = function() {
 
     var app = this.app,
         core = this.core,
-        middlewares = this.middlewares,
-        models = this.models,
-        Room = models.room;
+        middlewares = this.middlewares;
 
 
     if (!settings.private.enable) {
         return;
     }
 
-    core.on('user-messages:new', function(message, user, owner) {
+    core.on('user-messages:new', function(message) {
         _.each(message.users, function(userId) {
             var connections = core.presence.system.connections.query({
                 type: 'socket.io', userId: userId.toString()
@@ -38,10 +36,10 @@ module.exports = function() {
 
     app.route('/users/:user/messages')
         .all(middlewares.requireLogin)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('user-messages:list');
         })
-        .post(function(req, res) {
+        .post(function(req) {
             req.io.route('user-messages:create');
         });
 
