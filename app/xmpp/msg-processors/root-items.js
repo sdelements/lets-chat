@@ -16,7 +16,7 @@ module.exports = MessageProcessor.extend({
         var stanza = this.Iq();
 
         var query = stanza.c('query', {
-            xmlns:'http://jabber.org/protocol/disco#items'
+            xmlns: 'http://jabber.org/protocol/disco#items'
         });
 
         query.c('item', {

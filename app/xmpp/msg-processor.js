@@ -1,8 +1,6 @@
 'use strict';
 
-var xmpp = require('node-xmpp-server'),
-    Stanza = require('node-xmpp-core').Stanza,
-    mongoose = require('mongoose'),
+var Stanza = require('node-xmpp-core').Stanza,
     settings = require('./../config'),
     _ = require('lodash'),
     util = require('util');

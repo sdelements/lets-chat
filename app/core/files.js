@@ -1,12 +1,12 @@
 'use strict';
 
-var fs = require('fs'),
-    _ = require('lodash'),
+var _ = require('lodash'),
     mongoose = require('mongoose'),
     helpers = require('./helpers'),
     plugins = require('./../plugins'),
-    settings = require('./../config').files,
-    enabled = settings.enable;
+    settings = require('./../config').files;
+
+var enabled = settings.enable;
 
 function FileManager(options) {
     this.core = options.core;
@@ -32,8 +32,8 @@ FileManager.prototype.create = function(options, cb) {
     }
 
     var File = mongoose.model('File'),
-    Room = mongoose.model('Room'),
-    User = mongoose.model('User');
+        Room = mongoose.model('Room'),
+        User = mongoose.model('User');
 
     if (settings.restrictTypes &&
         settings.allowedTypes &&
@@ -63,11 +63,16 @@ FileManager.prototype.create = function(options, cb) {
             size: options.file.size,
             room: options.room
         }).save(function(err, savedFile) {
+            if (err) {
+                return cb(err);
+            }
+
             this.provider.save({file: options.file, doc: savedFile}, function(err) {
                 if (err) {
                     savedFile.remove();
                     return cb(err);
                 }
+
                 // Temporary workaround for _id until populate can do aliasing
                 User.findOne(options.owner, function(err, user) {
                     if (err) {
@@ -111,8 +116,7 @@ FileManager.prototype.list = function(options, cb) {
         maxTake: 5000
     });
 
-    var File = mongoose.model('File'),
-        User = mongoose.model('User');
+    var File = mongoose.model('File');
 
     var find = File.find({
         room: options.room

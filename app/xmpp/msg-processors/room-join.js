@@ -36,8 +36,7 @@ module.exports = MessageProcessor.extend({
         var toParts = this.request.attrs.to.split('/'),
             roomUrl = toParts[0],
             nickname = toParts[1],
-            roomSlug = roomUrl.split('@')[0],
-            connection = this.client.conn;
+            roomSlug = roomUrl.split('@')[0];
 
         this.connection.nickname(roomSlug, nickname);
 
@@ -80,7 +79,7 @@ module.exports = MessageProcessor.extend({
         });
 
         presence.c('x', {
-            xmlns:'http://jabber.org/protocol/muc'
+            xmlns: 'http://jabber.org/protocol/muc'
         });
 
         presence.c('error', {
@@ -114,7 +113,7 @@ module.exports = MessageProcessor.extend({
 
             presence
                 .c('x', {
-                    xmlns:'http://jabber.org/protocol/muc#user'
+                    xmlns: 'http://jabber.org/protocol/muc#user'
                 })
                 .c('item', {
                     jid: this.connection.getUserJid(username),
@@ -172,6 +171,9 @@ module.exports = MessageProcessor.extend({
         }
 
         this.core.messages.list(query, function(err, messages) {
+            if (err) {
+                return cb(err);
+            }
 
             messages.reverse();
 

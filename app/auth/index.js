@@ -1,6 +1,7 @@
+'use strict';
+
 var _ = require('lodash'),
     async = require('async'),
-    express = require('express.oi'),
     cookieParser = require('cookie-parser'),
     mongoose = require('mongoose'),
     passport = require('passport'),
@@ -8,8 +9,9 @@ var _ = require('lodash'),
     BearerStrategy = require('passport-http-bearer'),
     BasicStrategy = require('passport-http').BasicStrategy,
     settings = require('./../config'),
-    plugins = require('./../plugins'),
-    providerSettings = {},
+    plugins = require('./../plugins');
+
+var providerSettings = {},
     MAX_AUTH_DELAY_TIME = 24 * 60 * 60 * 1000,
     loginAttempts = {},
     enabledProviders = [];
@@ -86,8 +88,8 @@ function setup(app, session, core) {
                 }
 
                 socket.request.user = user;
-                socket.request.user.logged_in = true;
-                socket.request.user.using_token = true;
+                socket.request.user.loggedIn = true;
+                socket.request.user.usingToken = true;
                 next();
             });
         } else {
@@ -122,7 +124,7 @@ function wrapAuthCallback(username, cb) {
             attempt.attempts++;
 
             if (attempt.attempts >= settings.auth.throttling.threshold) {
-                var lock = Math.min(5000 * Math.pow(2,(attempt.attempts - settings.auth.throttling.threshold), MAX_AUTH_DELAY_TIME));
+                var lock = Math.min(5000 * Math.pow(2, (attempt.attempts - settings.auth.throttling.threshold), MAX_AUTH_DELAY_TIME));
                 attempt.lockedUntil = Date.now() + lock;
                 return cb(err, user, {
                     locked: true,
@@ -204,7 +206,7 @@ function authenticate() {
                     return callback(null, args[0]);
                 }
 
-                provider.authenticate(req, function(err, user, info) {
+                provider.authenticate(req, function(err, user) {
                     if (err) {
                         return callback(err);
                     }

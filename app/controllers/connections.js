@@ -6,26 +6,22 @@
 
 module.exports = function() {
 
-    var _ = require('lodash');
-
     var app = this.app,
         core = this.core,
-        middlewares = this.middlewares,
-        models = this.models,
-        User = models.user;
+        middlewares = this.middlewares;
 
     //
     // Routes
     //
-    app.get('/connections', middlewares.requireLogin, function(req, res) {
+    app.get('/connections', middlewares.requireLogin, function(req) {
         req.io.route('connections:list');
     });
 
-    app.get('/connections/type/:type', middlewares.requireLogin, function(req, res) {
+    app.get('/connections/type/:type', middlewares.requireLogin, function(req) {
         req.io.route('connections:list');
     });
 
-    app.get('/connections/user/:user', middlewares.requireLogin, function(req, res) {
+    app.get('/connections/user/:user', middlewares.requireLogin, function(req) {
         req.io.route('connections:list');
     });
 

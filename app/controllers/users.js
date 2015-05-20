@@ -6,11 +6,9 @@
 
 module.exports = function() {
 
-    var _ = require('lodash'),
-        helpers = require('./../core/helpers');
+    var helpers = require('./../core/helpers');
 
     var app = this.app,
-        core = this.core,
         middlewares = this.middlewares,
         models = this.models,
         User = models.user;
@@ -18,11 +16,11 @@ module.exports = function() {
     //
     // Routes
     //
-    app.get('/users', middlewares.requireLogin, function(req, res) {
+    app.get('/users', middlewares.requireLogin, function(req) {
         req.io.route('users:list');
     });
 
-    app.get('/users/:id', middlewares.requireLogin, function(req, res) {
+    app.get('/users/:id', middlewares.requireLogin, function(req) {
         req.io.route('users:get');
     });
 
