@@ -80,10 +80,8 @@
             this.flashFaviconBadge();
         },
         countMessage: function(message) {
-            var username = this.client.user.get('username'),
-                regex = new RegExp('\\B@(' + username + ')(?!@)\\b', 'i');
             ++this.count;
-            regex.test(message.text) && ++this.mentions;
+            message.mentioned && ++this.mentions;
         },
         flashTitle: function() {
             var titlePrefix = '';
