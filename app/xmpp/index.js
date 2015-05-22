@@ -36,8 +36,13 @@ function xmppStart(core) {
         client.on('authenticate', function(opts, cb) {
             var username = settings.xmpp.username === 'full' ?
                            opts.jid.toString() : opts.jid.local;
+            var req = {};
+            req.body = {
+                username: username,
+                password: opts.password
+            };
 
-            auth.authenticate(username, opts.password, function(err, user) {
+            auth.authenticate(req, null, function(err, user) {
                 if (err || !user) {
                     return cb(false);
                 }
