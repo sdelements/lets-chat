@@ -109,7 +109,7 @@
             var $html = $(this.messageTemplate(message).trim());
             var $text = $html.find('.lcb-message-text');
 
-            $text.html(this.formatMessage($text.html()));
+            $text.html(this.formatMessage($text.text()));
 
             this.formatTimestamp($html.find('time'));
             this.$messages.append($html);
