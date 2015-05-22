@@ -42,7 +42,7 @@ module.exports = function() {
     });
 
     var getEmitters = function(room) {
-        if (room.private && room.hasPassword) {
+        if (room.private && !room.hasPassword) {
             var connections = core.presence.connections.query({
                 type: 'socket.io'
             }).filter(function(connection) {
