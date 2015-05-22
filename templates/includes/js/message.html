@@ -17,12 +17,8 @@
                 </span>
                 <time class="lcb-message-time" title="{{posted}}"></time>
             {{/unless}}
-            <div class="lcb-message-text">
-                {{#unless paste}}
-                    {{text}}
-                {{else}}
-                    <pre>{{text}}</pre>
-                {{/unless}}
+            <div class="lcb-message-text {{#if paste}}lcb-message-paste{{/if}}">
+                {{text}}
             </div>
         </div>
     </li>
