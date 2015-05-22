@@ -13,6 +13,10 @@ MessageManager.prototype.create = function(options, cb) {
         Room = mongoose.model('Room'),
         User = mongoose.model('User');
 
+    if (typeof cb !== 'function') {
+        cb = function() {};
+    }
+
     Room.findById(options.room, function(err, room) {
         if (err) {
             console.error(err);
@@ -43,10 +47,7 @@ MessageManager.prototype.create = function(options, cb) {
                     return cb(err);
                 }
 
-                if (typeof cb === 'function') {
-                    cb(null, message, room, user);
-                }
-
+                cb(null, message, room, user);
                 this.core.emit('messages:new', message, room, user);
             }.bind(this));
         }.bind(this));
