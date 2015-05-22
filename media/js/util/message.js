@@ -106,7 +106,7 @@ if (typeof exports !== 'undefined') {
     }
 
     function emotes(text, data) {
-        var regex = new RegExp('\\B(:[a-z0-9_\\+\\-]+:?)[\\b]?', 'ig');
+        var regex = new RegExp('\\B(:[a-z0-9_\\+\\-]+:)[\\b]?', 'ig');
 
         return text.replace(regex, function(group) {
             var key = group.split(':')[1];
