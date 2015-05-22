@@ -222,8 +222,7 @@
                 return false;
             }
         },
-        loadGifs: _.throttle(function() {
-            console.log(1)
+        loadGifs: _.debounce(function() {
             var that = this;
             var search = this.$el.find('.search-giphy').val();
 
@@ -237,7 +236,7 @@
 
                 that.appendGifs(images);
             });
-        }, 400, {leading: false}),
+        }, 400),
         appendGifs: function(images) {
             var eles = images.map(function(url) {
                 var that = this;
