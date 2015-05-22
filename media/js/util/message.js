@@ -1,4 +1,5 @@
 //= require vendor/markdown-it/markdown-it.js
+//= require vendor/highlightjs/highlight.pack.js
 'use strict';
 
 if (typeof window !== 'undefined' && typeof exports === 'undefined') {
@@ -18,7 +19,20 @@ if (typeof exports !== 'undefined') {
 
     var md = markdownit({
         linkify: true,
-        breaks: true
+        breaks: true,
+        highlight: function (str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                try {
+                    return hljs.highlight(lang, str).value;
+                } catch (__) {}
+            }
+
+            try {
+                return hljs.highlightAuto(str).value;
+            } catch (__) {}
+
+            return ''; // use external default escaping
+        }
     });
 
     function encodeEntities(value) {
