@@ -55,6 +55,9 @@ FileManager.prototype.create = function(options, cb) {
         if (room.archived) {
             return cb('Room is archived.');
         }
+        if (!room.isAuthorized(options.owner)) {
+            return cb('Not authorized.');
+        }
 
         new File({
             owner: options.owner,

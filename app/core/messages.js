@@ -24,6 +24,10 @@ MessageManager.prototype.create = function(options, cb) {
         if (room.archived) {
             return cb('Room is archived.');
         }
+        if (!room.isAuthorized(options.owner)) {
+            return cb('Not authorized.');
+        }
+
         Message.create(options, function(err, message) {
             if (err) {
                 console.error(err);

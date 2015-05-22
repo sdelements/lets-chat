@@ -53,6 +53,10 @@ var RoomSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    private: {
+        type: Boolean,
+        default: false
+    },
     password: {
         type: String,
         required: false//only for password-protected room
@@ -87,7 +91,18 @@ RoomSchema.plugin(uniqueValidator, {
 });
 
 RoomSchema.method('isAuthorized', function(userId) {
-    if(!this.password) {
+    if (!userId) {
+        return false;
+    }
+
+    userId = userId.toString();
+
+    // Check if userId doesn't match MongoID format
+    if (!/^[a-f\d]{24}$/i.test(userId)) {
+        return false;
+    }
+
+    if (!this.password && !this.private) {
         return true;
     }
 
@@ -96,7 +111,19 @@ RoomSchema.method('isAuthorized', function(userId) {
     }
 
     return this.participants.some(function(participant) {
-        return participant.equals(userId);
+        if (participant._id) {
+            return participant._id.equals(userId);
+        }
+
+        if (participant.id) {
+            return participant.id === userId;
+        }
+
+        if (participant.equals) {
+            return participant.equals(userId);
+        }
+
+        return participant === userId;
     });
 });
 
@@ -107,6 +134,10 @@ RoomSchema.method('canJoin', function(options, cb) {
 
     if (this.isAuthorized(userId)) {
         return cb(null, true);
+    }
+
+    if (!this.password) {
+        return cb(null, false);
     }
 
     bcrypt.compare(password || '', this.password, function(err, isMatch) {
@@ -135,9 +166,17 @@ RoomSchema.method('canJoin', function(options, cb) {
     }.bind(this));
 });
 
-RoomSchema.method('toJSON', function() {
+RoomSchema.method('toJSON', function(user) {
+    var userId = user ? (user._id || user.id || user) : null;
+    var authorized = false;
+
+    if (userId) {
+        authorized = this.isAuthorized(userId);
+    }
+
     var room = this.toObject();
-    return {
+
+    var data = {
         id: room._id,
         slug: room.slug,
         name: room.name,
@@ -145,8 +184,24 @@ RoomSchema.method('toJSON', function() {
         lastActive: room.lastActive,
         created: room.created,
         owner: room.owner,
-        hasPassword: this.hasPassword
+        private: room.private,
+        hasPassword: this.hasPassword,
+        participants: []
     };
+
+    if (room.private && authorized) {
+        var participants = this.participants || [];
+        data.participants = participants.map(function(user) {
+            return user.username ? user.username : user;
+        });
+    }
+
+    if (this.users) {
+        data.users = this.users;
+        data.userCount = this.users.length;
+    }
+
+    return data;
  });
 
 RoomSchema.statics.findByIdOrSlug = function(identifier, cb) {

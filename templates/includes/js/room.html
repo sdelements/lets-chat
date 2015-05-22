@@ -93,7 +93,7 @@
                                 "description">{{description}}</textarea>
                             </div>
                         </div>
-                        {{#if hasPassword}}
+                        {{#if private}}
                             <div class="form-group">
                                 <label class=
                                 "control-label col-sm-4">Password</label>
@@ -108,6 +108,14 @@
                                 <div class="col-sm-7">
                                     <input class="form-control" name=
                                     "confirmPassword" type="password" value="{{password}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class=
+                                "control-label col-sm-4">Participants</label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control lcb-entry-participants" name=
+                                    "participants">{{participants}}</textarea>
                                 </div>
                             </div>
                         {{/if}}

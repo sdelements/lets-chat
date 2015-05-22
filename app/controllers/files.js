@@ -21,7 +21,7 @@ module.exports = function() {
     core.on('files:new', function(file, room, user) {
         var fil = file.toJSON();
         fil.owner = user;
-        fil.room = room;
+        fil.room = room.toJSON(user);
 
         app.io.to(room._id)
               .emit('files:new', fil);
@@ -119,6 +119,11 @@ module.exports = function() {
                 if (err) {
                     return res.sendStatus(400);
                 }
+
+                files = files.map(function(file) {
+                    return file.toJSON(req.user);
+                });
+
                 res.json(files);
             });
         }

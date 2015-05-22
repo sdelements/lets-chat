@@ -65,6 +65,7 @@
             this.atwhoAllMentions();
             this.atwhoRooms();
             this.atwhoEmotes();
+            this.selectizeParticipants();
         },
         atwhoTplEval: function(tpl, map) {
             var error;
@@ -127,9 +128,7 @@
                     return a.atwho_order - b.atwho_order;
                 });
             }
-
-            this.$('.lcb-entry-input')
-            .atwho({
+            var options = {
                 at: '@',
                 tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
@@ -137,7 +136,9 @@
                     sorter: sorter,
                     tpl_eval: this.atwhoTplEval
                 }
-            });
+            };
+
+            this.$('.lcb-entry-input').atwho(options);
         },
         atwhoAllMentions: function () {
             var that = this;
@@ -154,14 +155,49 @@
                 });
             }
 
-            this.$('.lcb-entry-input')
-            .atwho({
+            var options = {
                 at: '@@',
                 tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
                     filter: filter,
                     sorter: sorter,
                     tpl_eval: that.atwhoTplEval
+                }
+            };
+
+            this.$('.lcb-entry-input').atwho(options);
+
+            var opts = _.extend(options, { at: '@'});
+            this.$('.lcb-entry-participants').atwho(opts);
+            this.$('.lcb-room-participants').atwho(opts);
+        },
+        selectizeParticipants: function () {
+            var that = this;
+
+            this.$('.lcb-entry-participants').selectize({
+                delimiter: ',',
+                create: false,
+                load: function(query, callback) {
+                    if (!query.length) return callback();
+
+                    var users = that.client.getUsersSync();
+
+                    var usernames = users.map(function(user) {
+                        return user.attributes.username;
+                    });
+
+                    usernames = _.filter(usernames, function(username) {
+                        return username.indexOf(query) !== -1;
+                    });
+
+                    users = _.map(usernames, function(username) {
+                        return {
+                            value: username,
+                            text: username
+                        };
+                    });
+
+                    callback(users);
                 }
             });
         },
@@ -210,16 +246,19 @@
             this.$('.lcb-room-heading .name').text(this.model.get('name'));
             this.$('.lcb-room-heading .slug').text('#' + this.model.get('slug'));
             this.$('.lcb-room-description').text(this.model.get('description'));
+            this.$('.lcb-room-participants').text(this.model.get('participants'));
         },
         sendMeta: function(e) {
             this.model.set({
                 name: this.$('.lcb-room-heading').text(),
-                description: this.$('.lcb-room-description').text()
+                description: this.$('.lcb-room-description').text(),
+                participants: this.$('.lcb-room-participants').text()
             });
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
                 name: this.model.get('name'),
-                description: this.model.get('description')
+                description: this.model.get('description'),
+                participants: this.model.get('participants')
             });
         },
         showEditRoom: function(e) {
@@ -255,7 +294,9 @@
                 $name = $modal.find('input[name="name"]'),
                 $description = $modal.find('textarea[name="description"]'),
                 $password = $modal.find('input[name="password"]'),
-                $confirmPassword = $modal.find('input[name="confirmPassword"]');
+                $confirmPassword = $modal.find('input[name="confirmPassword"]'),
+                $participants =
+                    this.$('.edit-room textarea[name="participants"]');
 
             $name.parent().removeClass('has-error');
             $confirmPassword.parent().removeClass('has-error');
@@ -274,7 +315,8 @@
                 id: this.model.id,
                 name: $name.val(),
                 description: $description.val(),
-                password: $password.val()
+                password: $password.val(),
+                participants: $participants.val()
             });
 
             $modal.modal('hide');

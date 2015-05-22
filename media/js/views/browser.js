@@ -68,6 +68,7 @@
         update: function(room) {
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-participants').text(room.get('participants'));
         },
         updateLastActive: function(room) {
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).calendar());
@@ -84,7 +85,7 @@
                     au = ar.users.length,
                     bu = br.users.length,
                     aj = ar.get('joined'),
-                    bj = br.get('joined')
+                    bj = br.get('joined');
                 if ((aj && bj) || (!aj && !bj)) {
                     if (au > bu) return -1;
                     if (au < bu) return 1;
@@ -114,11 +115,13 @@
                 $description = this.$('.lcb-room-description'),
                 $password = this.$('.lcb-room-password'),
                 $confirmPassword = this.$('.lcb-room-confirm-password'),
+                $private = this.$('.lcb-room-private'),
                 data = {
                     name: $name.val().trim(),
                     slug: $slug.val().trim(),
                     description: $description.val(),
                     password: $password.val(),
+                    private: !!$private.prop('checked'),
                     callback: function success() {
                         $modal.modal('hide');
                         $form.trigger('reset');

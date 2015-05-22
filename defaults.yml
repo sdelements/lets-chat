@@ -66,4 +66,4 @@ private:
 noRobots: true # Serve robots.txt with disallow
 
 rooms:
-  passwordProtected: false
+  private: false

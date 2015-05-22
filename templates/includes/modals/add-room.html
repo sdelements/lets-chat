@@ -26,7 +26,13 @@
                         <input type="text" placeholder="Description"
                             class="lcb-room-description form-control">
                     </div>
-                    <% if settings.rooms.passwordProtected %>
+                    <% if settings.rooms.private %>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" class="lcb-room-private">
+                                Private?
+                            </label>
+                        </div>
                         <div class="row">
                             <div class="form-group col-sm-9">
                                 <label>Password</label>

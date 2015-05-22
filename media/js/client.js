@@ -63,7 +63,9 @@
             name: data.name,
             slug: data.slug,
             description: data.description,
-            password: data.password
+            password: data.password,
+            participants: data.participants,
+            private: data.private
         };
         var callback = data.callback;
         this.socket.emit('rooms:create', room, function(room) {
@@ -124,7 +126,7 @@
     Client.prototype.roomUpdate = function(resRoom) {
         var room = this.rooms.get(resRoom.id);
         if (!room) {
-            // Nothing to do
+            this.addRoom(resRoom);
             return;
         }
         room.set(resRoom);
@@ -144,7 +146,7 @@
                      'error');
             }
         });
-    }
+    };
     Client.prototype.roomArchive = function(room) {
         this.leaveRoom(room.id);
         this.rooms.remove(room.id);

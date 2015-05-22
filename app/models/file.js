@@ -38,10 +38,9 @@ FileSchema.virtual('url').get(function() {
     return 'files/' + this._id + '/' + encodeURIComponent(this.name);
 });
 
-FileSchema.method('toJSON', function() {
-    return {
+FileSchema.method('toJSON', function(user) {
+    var data = {
         id: this._id,
-        room: this.room,
         owner: this.owner,
         name: this.name,
         type: this.type,
@@ -49,6 +48,14 @@ FileSchema.method('toJSON', function() {
         url: this.url,
         uploaded: this.uploaded
     };
+
+    if (this.room._id) {
+        data.room = this.room.toJSON(user);
+    } else {
+        data.room = this.room;
+    }
+
+    return data;
 });
 
 module.exports = mongoose.model('File', FileSchema);
