@@ -205,6 +205,7 @@
                 resRoom.errors === 'password required') {
 
                 that.passwordModal.show({
+                    roomName: resRoom.roomName,
                     callback: passwordCB
                 });
 

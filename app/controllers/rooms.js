@@ -256,6 +256,7 @@ module.exports = function() {
                 if(!canJoin && room.password) {
                     return res.status(403).json({
                         status: 'error',
+                        roomName: room.name,
                         message: 'password required',
                         errors: 'password required'
                     });

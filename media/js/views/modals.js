@@ -92,6 +92,7 @@
         },
         initialize: function(options) {
             this.render();
+            this.$name = this.$('.lcb-room-password-name');
             this.$password = this.$('input.lcb-room-password-required');
         },
         render: function() {
@@ -101,6 +102,7 @@
         show: function(options) {
             this.callback = options.callback;
             this.$password.val('');
+            this.$name.text(options.roomName || '');
             this.$el.modal('show');
         },
         enterRoom: function() {
