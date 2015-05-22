@@ -115,12 +115,12 @@ RoomSchema.method('isAuthorized', function(userId) {
             return participant._id.equals(userId);
         }
 
-        if (participant.id) {
-            return participant.id === userId;
-        }
-
         if (participant.equals) {
             return participant.equals(userId);
+        }
+
+        if (participant.id) {
+            return participant.id === userId;
         }
 
         return participant === userId;
