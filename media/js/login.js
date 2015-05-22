@@ -25,7 +25,8 @@
                     });
                     if ($form.data('refresh')) {
                         setTimeout(function() {
-                            window.location = './';
+                            window.location =
+                                './' + (window.location.hash || '');
                         }, 1000);
                         return;
                     }
