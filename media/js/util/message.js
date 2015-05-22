@@ -1,3 +1,4 @@
+//= require vendor/markdown-it/markdown-it.js
 'use strict';
 
 if (typeof window !== 'undefined' && typeof exports === 'undefined') {
@@ -15,6 +16,10 @@ if (typeof exports !== 'undefined') {
     // Message Text Formatting
     //
 
+    var md = markdownit({
+        linkify: true,
+        breaks: true
+    });
 
     function encodeEntities(value) {
         return value.
@@ -53,6 +58,10 @@ if (typeof exports !== 'undefined') {
 
     function trim(text) {
         return text.trim();
+    }
+
+    function markdown(text) {
+        return md.render(text);
     }
 
     function mentions(text) {
@@ -98,10 +107,7 @@ if (typeof exports !== 'undefined') {
                        '" alt="Pasted Image" /></a>';
             });
         } else {
-            return text.replace(linkPattern, function(url) {
-                var uri = encodeEntities(_.unescape(url));
-                return '<a href="' + uri + '" target="_blank">' + url + '</a>';
-            });
+            return text;
         }
     }
 
@@ -142,6 +148,7 @@ if (typeof exports !== 'undefined') {
     exports.format = function(text, data) {
         var pipeline = [
             trim,
+            markdown,
             mentions,
             roomLinks,
             uploads,
