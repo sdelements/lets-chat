@@ -77,7 +77,6 @@ app.io.session(session);
 auth.setup(app, session, core);
 
 // Security protections
-app.use(helmet.crossdomain());
 app.use(helmet.frameguard());
 app.use(helmet.hidePoweredBy());
 app.use(helmet.ieNoOpen());
@@ -222,6 +221,12 @@ function startApp() {
 }
 
 function checkForMongoTextSearch() {
+    if (!mongoose.mongo || !mongoose.mongo.Admin) {
+        // MongoDB API has changed, assume text search is enabled
+        nun.addGlobal('text_search', true);
+        return;
+    }
+
     var admin = new mongoose.mongo.Admin(mongoose.connection.db);
     admin.buildInfo(function (err, info) {
         if (err || !info) {
