@@ -33,6 +33,19 @@ function getProviders(core) {
     });
 }
 
+function authenticateToken(token, tokenAgain, done) {
+    if (!done) {
+        done = tokenAgain;
+    }
+
+    var User = mongoose.model('User');
+    User.findByToken(token, function(err, user) {
+        if (err) { return done(err); }
+        if (!user) { return done(null, false); }
+        return done(null, user);
+    });
+}
+
 function setup(app, session, core) {
 
     enabledProviders = getProviders(core);
@@ -42,21 +55,8 @@ function setup(app, session, core) {
         providerSettings[p.key] = p.provider.options;
     });
 
-    function tokenAuth(username, password, done) {
-        if (!done) {
-            done = password;
-        }
-
-        var User = mongoose.model('User');
-        User.findByToken(username, function(err, user) {
-            if (err) { return done(err); }
-            if (!user) { return done(null, false); }
-            return done(null, user);
-        });
-    }
-
-    passport.use(new BearerStrategy(tokenAuth));
-    passport.use(new BasicStrategy(tokenAuth));
+    passport.use(new BearerStrategy(authenticateToken));
+    passport.use(new BasicStrategy(authenticateToken));
 
     passport.serializeUser(function(user, done) {
         done(null, user._id);
@@ -191,5 +191,6 @@ function authenticate(req, res, cb) {
 module.exports = {
     setup: setup,
     authenticate: authenticate,
+    authenticateToken: authenticateToken,
     providers: providerSettings
 };

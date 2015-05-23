@@ -36,17 +36,14 @@ function xmppStart(core) {
         client.on('authenticate', function(opts, cb) {
             var username = settings.xmpp.username === 'full' ?
                            opts.jid.toString() : opts.jid.local;
+            var token = opts.password;
             var req = {};
             req.body = {
                 username: username,
                 password: opts.password
             };
 
-            auth.authenticate(req, null, function(err, user) {
-                if (err || !user) {
-                    return cb(false);
-                }
-
+            function authenticated(user) {
                 // TODO: remove?
                 client.user = user;
 
@@ -54,7 +51,24 @@ function xmppStart(core) {
                 core.presence.connect(conn);
 
                 cb(null, opts);
-            });
+            }
+
+            function providerAuthenticate(err, user) {
+                if (err || !user) {
+                    auth.authenticate(req, null, function(err, user) {
+                        if (err || !user) {
+                            return cb(false);
+                        }
+
+                        authenticated(user);
+                    });
+                }
+                else {
+                    authenticated(user);
+                }
+            }
+
+            auth.authenticateToken(token, providerAuthenticate);
         });
 
         client.on('online', function() {

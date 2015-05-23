@@ -176,7 +176,7 @@ UserSchema.statics.findByToken = function(token, cb) {
         hash = tokenParts[1];
 
     if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
-        cb(null, null);
+        return cb(null, null);
     }
 
     this.findById(userId, function(err, user) {
