@@ -46,6 +46,21 @@ function authenticateToken(token, tokenAgain, done) {
     });
 }
 
+function authenticateProvider(provider, req, res, cb) {
+    var p = _.findWhere(enabledProviders, { key: provider });
+
+    if (!p) {
+        cb(null, null);
+    }
+
+    p.provider.authenticate(req, res, function(err, user, info) {
+        if (err) {
+            return cb(err);
+        }
+        return cb(null, user);
+    });
+}
+
 function setup(app, session, core) {
 
     enabledProviders = getProviders(core);
@@ -192,5 +207,6 @@ module.exports = {
     setup: setup,
     authenticate: authenticate,
     authenticateToken: authenticateToken,
+    authenticateProvider: authenticateProvider,
     providers: providerSettings
 };

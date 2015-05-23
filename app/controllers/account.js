@@ -51,7 +51,7 @@ module.exports = function() {
         req.io.route('account:login');
     });
 
-    app.get('/account/login', function(req, res) {
+    app.get('/account/:provider/login', function(req, res) {
         req.io.route('account:login');
     });
 
@@ -81,6 +81,19 @@ module.exports = function() {
 
     app.post('/account/token/revoke', middlewares.requireLogin, function(req) {
         req.io.route('account:revoke_token');
+    });
+
+    // Validate provider
+    app.param('provider', function(req, res, next, provider) {
+        if (provider in auth.providers) {
+            next();
+        }
+        else {
+            return res.status(400).json({
+                status: 'error',
+                message: 'provider is not supported'
+            });
+        }
     });
 
     //
@@ -277,7 +290,14 @@ module.exports = function() {
             });
         },
         login: function(req, res) {
-            auth.authenticate(req, res, function(err, user, info) {
+            var isSSO = false;
+            var provider = req.params.provider;
+
+            if (provider) {
+                isSSO = true;
+            }
+
+            function authCallback(err, user, info) {
                 if (err) {
                     return res.status(400).json({
                         status: 'error',
@@ -319,13 +339,27 @@ module.exports = function() {
                             });
                         }
                         req.session.passport = temp;
-                        res.json({
-                            status: 'success',
-                            message: 'Logging you in...'
-                        });
+
+                        if (isSSO) {
+                            res.redirect('/');
+                        }
+                        else {
+                            res.json({
+                                status: 'success',
+                                message: 'Logging you in...'
+                            });
+                        }
+
                     });
                 });
-            });
+            }
+
+            if (provider) {
+                auth.authenticateProvider(provider, req, res, authCallback);
+            }
+            else {
+                auth.authenticate(req, res, authCallback);
+            }
         }
     });
 };
