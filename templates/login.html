@@ -27,7 +27,7 @@
                     <% endfor %>
                 </div>
                 <% for provider, options in auth %>
-                    <% if not options.isSSO %>
+                    <% if not options.isSSO and not loginDrawn %>
                         <div class="form-group">
                             <input class="required form-control" placeholder="<$ __('Username or Email') $>" name="username" type="text" autofocus />
                         </div>
@@ -47,6 +47,7 @@
                                 <i class="fa fa-sign-in"></i>
                             </button>
                         </div>
+                        <% set loginDrawn = true %>
                     <% endif %>
                 <% endfor %>
             </form>
