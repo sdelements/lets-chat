@@ -23,9 +23,10 @@ xmpp:
     handled: false
     unhandled: false
   port: 5222
-  host: localhost
+  domain: jappix.com
+
   tls:
-    enable: false
+    enable: true
     key: ./server.key
     cert: ./server.crt
 

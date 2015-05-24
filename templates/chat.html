@@ -23,7 +23,7 @@
             <button type="button" class="btn lcb-header-toggle">
                 <i class="fa fa-bars"></i>
             </button>
-            <div class="lcb-header-logo">Let's Chat</div>
+            <div class="lcb-header-logo">Blug's Chat</div>
         </div>
         <section class="lcb-sidebar">
             <div class="dropdown">
@@ -43,6 +43,10 @@
                         <a data-toggle="modal" href="#lcb-account">
                             <i class="fa fa-fw fa-cogs"></i> Account Settings
                         </a>
+                    </li>
+                    <li>
+                    <a data-toggle="modal" href="#lcb-otr">
+                    OTR messaging </a> 
                     </li>
                     <li>
                         <a data-toggle="modal" href="#lcb-notifications">
@@ -113,5 +117,6 @@
         <% include 'includes/modals/xmpp.html' %>
         <% include 'includes/modals/tokens.html' %>
         <% include 'includes/modals/upload.html' %>
+        <% include 'includes/modals/a.html' %>
     </div><!-- lcb-client end -->
 <% endblock %>
