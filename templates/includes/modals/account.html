@@ -18,7 +18,8 @@
                                 <span class="input-group-addon">@</span>
                                 <input type="text" name="username" required
                                     class="lcb-room-slug form-control"
-                                    value="<$ account.username $>" >
+                                    value="<$ account.username $>"
+                                    <% if account.isSSO %>disabled="disabled"<% endif %> />
                             </div>
                         </div>
                     </div>
@@ -27,46 +28,52 @@
                         <div class="col-sm-11">
                             <input type="text" name="email" required
                                 class="required email form-control"
-                                value="<$ account.email $>" />
+                                value="<$ account.email $>"
+                                <% if account.isSSO %>disabled="disabled"<% endif %> />
                         </div>
                     </div>
-                    <% if account.local %>
-                        <div class="form-group">
-                            <label class="control-label col-sm-6">
-                                <$ __('New Password') $>
-                            </label>
-                            <div class="col-sm-11">
-                                <input type="password" name="new-password"
-                                    class="form-control"
-                                    minlength="4" maxlength="64" autocomplete="off"
-                                    data-clear="true" />
+                    <% if not account.isSSO %>
+                        <% if account.local %>
+                            <div class="form-group">
+                                <label class="control-label col-sm-6">
+                                    <$ __('New Password') $>
+                                </label>
+                                <div class="col-sm-11">
+                                    <input type="password" name="new-password"
+                                        class="form-control"
+                                        minlength="4" maxlength="64" autocomplete="off"
+                                        data-clear="true" />
+                                </div>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-6">
+                                    <$ __('Confirm New Password') $>
+                                </label>
+                                <div class="col-sm-11">
+                                    <input type="password" name="confirm-password"
+                                    class="form-control"
+                                    minlength="4" maxlength="64" autocomplete="off"/>
+                                </div>
+                            </div>
+                        <% endif %>
                         <div class="form-group">
                             <label class="control-label col-sm-6">
-                                <$ __('Confirm New Password') $>
+                                <$ __('Current Password') $> <small><$ __('Required') $></small>
                             </label>
                             <div class="col-sm-11">
-                                <input type="password" name="confirm-password"
+                                <input type="password" name="password"
                                 class="form-control"
-                                minlength="4" maxlength="64" autocomplete="off"/>
+                                minlength="4" maxlength="64" required autocomplete="off"/>
                             </div>
                         </div>
                     <% endif %>
-                    <div class="form-group">
-                        <label class="control-label col-sm-6">
-                            <$ __('Current Password') $> <small><$ __('Required') $></small>
-                        </label>
-                        <div class="col-sm-11">
-                            <input type="password" name="password"
-                            class="form-control"
-                            minlength="4" maxlength="64" required autocomplete="off"/>
-                        </div>
-                    </div>
                     <p class="alert response" style="display: none;"></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-info indicator" name="submit"><i class="icon-ok"></i> <$ __('Save') $></button>
+                    <button type="submit" class="btn btn-info indicator" name="submit"
+                            <% if account.isSSO %>disabled="disabled"<% endif %> >
+                        <i class="icon-ok"></i> <$ __('Save') $>
+                    </button>
                 </div>
             </form>
         </div>

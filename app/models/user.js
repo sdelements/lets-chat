@@ -111,6 +111,17 @@ UserSchema.virtual('avatar').get(function() {
     return md5(this.email);
 });
 
+UserSchema.virtual('isSSO').get(function() {
+    var provider = this.provider;
+
+    if (provider in settings.auth) {
+        return settings.auth[provider].isSSO == true;
+    }
+    else {
+        return false;
+    }
+});
+
 UserSchema.pre('save', function(next) {
     var user = this;
     if (!user.isModified('password')) {
