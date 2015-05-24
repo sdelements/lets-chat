@@ -20,6 +20,10 @@
                                 <% else %>
                                     <$ account.uid $>@<$ settings.xmpp.domain $>
                                 <% endif %></dd>
+                            <% if not account.local %>
+                                <dt>Password</dt>
+                                <dd>Generate and use token</dd>
+                            <% endif %>
                             <% if settings.xmpp.port != 5222 %>
                             <dt><$ __('Port') $></dt>
                             <dd><$ settings.xmpp.port $></dd>

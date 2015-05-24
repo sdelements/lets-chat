@@ -20,24 +20,35 @@
                 <h2 class="lcb-login-box-heading"><$ __('Sign in') $></h2>
                 <img class="lcb-login-avatar" style="display: none;" />
                 <div class="form-group">
-                    <input class="required form-control" placeholder="<$ __('Username or Email') $>" name="username" type="text" autofocus />
+                    <% for provider, options in auth %>
+                        <% if options.isSSO %>
+                            <a href="./account/<$ provider $>/login" class="btn btn-info btn-lg"><$ provider | capitalize $> <i class="fa fa-sign-in"></i></a>
+                        <% endif %>
+                    <% endfor %>
                 </div>
-                <div class="form-group">
-                    <input class="required form-control" placeholder="<$ __('Password') $>" name="password" type="password" autocomplete="off" />
-                </div>
-                <div class="lcb-login-box-bottom">
-                    <% if auth.local.enableRegistration %>
-                        <div class="links pull-left">
-                            <a href="#" class="lcb-show-box" data-target=".lcb-login-box-registration">
-                                <$ __('I need an account') $>
-                            </a>
+                <% for provider, options in auth %>
+                    <% if not options.isSSO %>
+                        <div class="form-group">
+                            <input class="required form-control" placeholder="<$ __('Username or Email') $>" name="username" type="text" autofocus />
+                        </div>
+                        <div class="form-group">
+                            <input class="required form-control" placeholder="<$ __('Password') $>" name="password" type="password" autocomplete="off" />
+                        </div>
+                        <div class="lcb-login-box-bottom">
+                            <% if auth.local.enableRegistration %>
+                                <div class="links pull-left">
+                                    <a href="#" class="lcb-show-box" data-target=".lcb-login-box-registration">
+                                        <$ __('I need an account') $>
+                                    </a>
+                                </div>
+                            <% endif %>
+                            <button class="btn-info btn btn-lg pull-right" type="submit">
+                                <$ __('Sign in') $>
+                                <i class="fa fa-sign-in"></i>
+                            </button>
                         </div>
                     <% endif %>
-                    <button class="btn-info btn btn-lg pull-right" type="submit">
-                        <$ __('Sign in') $>
-                        <i class="fa fa-sign-in"></i>
-                    </button>
-                </div>
+                <% endfor %>
             </form>
             <% if auth.local.enableRegistration %>
                 <form class="lcb-login-box lcb-login-box-registration validate" action="./account/register" method="post" style="display: none;">
