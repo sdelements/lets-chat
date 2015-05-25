@@ -39,8 +39,8 @@ FileManager.prototype.create = function(options, cb) {
         settings.allowedTypes &&
         settings.allowedTypes.length &&
         !_.include(settings.allowedTypes, options.file.mimetype)) {
-            return cb('The MIME type ' + options.file.mimetype +
-                      ' is not allowed');
+        return cb('The MIME type ' + options.file.mimetype +
+                  ' is not allowed');
     }
 
     Room.findById(options.room, function(err, room) {

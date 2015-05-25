@@ -17,7 +17,7 @@ function cleanupReqFiles(req, cb) {
 
     async.each(files, function(file, callback) {
         fs.stat(file.path, function(err, stats) {
-			if (!err && stats.isFile()) {
+            if (!err && stats.isFile()) {
                 fs.unlink(file.path, function(e) {
                     if (e) {
                         console.error(e);
@@ -31,9 +31,9 @@ function cleanupReqFiles(req, cb) {
 }
 
 module.exports = function(req, res, next) {
-	res.on('error', function() {
+    res.on('error', function() {
         cleanupReqFiles(req);
-	});
+    });
 
     onFinished(res, function () {
         cleanupReqFiles(req);
