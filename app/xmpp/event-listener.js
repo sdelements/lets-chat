@@ -1,9 +1,6 @@
 'use strict';
 
-var xmpp = require('node-xmpp-server'),
-    Stanza = require('node-xmpp-core').Stanza,
-    mongoose = require('mongoose'),
-    settings = require('./../config'),
+var settings = require('./../config'),
     _ = require('lodash'),
     util = require('util');
 
@@ -22,7 +19,7 @@ EventListener.prototype.getConnectionsForRoom = function(roomId) {
         return [];
     }
 
-    return room.connections.byType('xmpp');
+    return room.connections.query({ type: 'xmpp' });
 };
 
 EventListener.prototype.send = function() {

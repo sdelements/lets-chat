@@ -1,8 +1,6 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter,
-    util = require('util'),
-    _ = require('lodash');
+var _ = require('lodash');
 
 function ConnectionCollection() {
     this.connections = {};
@@ -24,32 +22,33 @@ ConnectionCollection.prototype.contains = function(connection) {
     if (!connection) {
         return false;
     }
-    
+
     return !!this.connections[connection.id];
 };
 
 ConnectionCollection.prototype.getUsers = function() {
-    var users = _.map(this.connections, function(value, key) {
-        return value.user;
-    });
-
-    return _.uniq(users, 'id');
+    return _.chain(this.connections)
+        .filter(function(value) {
+            // User shouldn't be undefined - but sometimes it happens :/
+            return value.user;
+        })
+        .map(function(value) {
+            return value.user;
+        })
+        .uniq('id')
+        .value();
 };
 
 ConnectionCollection.prototype.getUserIds = function() {
-    var userIds = _.map(this.connections, function(value, key) {
-        return value.user.id;
+    return _.map(this.getUsers(), function(user) {
+        return user.id;
     });
-
-    return _.uniq(userIds);
 };
 
 ConnectionCollection.prototype.getUsernames = function() {
-    var usernames = _.map(this.connections, function(value, key) {
-        return value.user.username;
+    return _.map(this.getUsers(), function(user) {
+        return user.username;
     });
-
-    return _.uniq(usernames);
 };
 
 ConnectionCollection.prototype.query = function(options) {
@@ -57,19 +56,19 @@ ConnectionCollection.prototype.query = function(options) {
         options.userId = options.userId.toString();
     }
 
-    return _.map(this.connections, function(value, key) {
+    return _.map(this.connections, function(value) {
         return value;
     }).filter(function(conn) {
         var result = true;
 
         if (options.user) {
             var u = options.user;
-            if (conn.user.id !== u && conn.user.username !== u) {
+            if (conn.user && conn.user.id !== u && conn.user.username !== u) {
                 result = false;
             }
         }
 
-        if (options.userId && conn.user.id !== options.userId) {
+        if (options.userId && conn.user && conn.user.id !== options.userId) {
             result = false;
         }
 
@@ -78,15 +77,6 @@ ConnectionCollection.prototype.query = function(options) {
         }
 
         return result;
-
-    });
-};
-
-ConnectionCollection.prototype.byType = function(type) {
-    return _.map(this.connections, function(value, key) {
-        return value;
-    }).filter(function(conn) {
-        return conn.type === type;
     });
 };
 

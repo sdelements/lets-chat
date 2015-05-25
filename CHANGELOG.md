@@ -1,3 +1,51 @@
+## 0.3.12 (2015-05-19)
+
+Fixes
+
+* Multiple layout bugs due to overflowing content in Firefox
+* Layout issue introduced by Chrome 43
+
+## 0.3.11 (2015-05-19)
+
+Fixes
+
+* Env variable loading
+* Various notification adjustments
+
+Enhancements
+
+* Usernames may now contain underscores and dashes
+* Unicode character support for links in messages
+* Unread message counts in the favicon
+* Newlines with `shift+enter`
+
+## 0.3.10 (2015-04-14)
+
+Fixes
+
+* Fixed Hyperlink parsing
+* Fixed issue whereby a deleted user's messages would not display
+
+## 0.3.9 (2015-04-06)
+
+Deprecated
+
+* `xmpp.host` configuration setting - use `xmpp.domain` instead
+
+Enhancements
+
+* Thumbnails are improved
+* Support multiple XMPP domains being used between clients
+* XMPP can be configured to authenticate using full JID - instead of only node
+* Added process title
+
+Fixes
+
+* Fixed "express deprecated req.host: Use req.hostname instead"
+* Fixed File Uploads "Post" checkbox
+* Fixed issues with desktop notifications
+* Fixed XMPP MUC nickname not being reflected to user
+
 ## 0.3.8 (2015-03-02)
 
 Fixes

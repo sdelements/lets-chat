@@ -4,8 +4,8 @@
 
 'use strict';
 
-var mongoose = require('mongoose'),
-    ObjectId = mongoose.Schema.Types.ObjectId;
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var MessageSchema = new mongoose.Schema({
     room: {
@@ -20,8 +20,7 @@ var MessageSchema = new mongoose.Schema({
     },
     text: {
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
     posted: {
         type: Date,
@@ -39,9 +38,15 @@ MessageSchema.method('toJSON', function() {
     return {
         id: this._id,
         room: this.room,
-        owner: this.owner,
         text: this.text,
-        posted: this.posted
+        posted: this.posted,
+
+        // if populate('owner') and user's been deleted - owner will be null
+        // otherwise it will be an id or undefined
+        owner: this.owner || {
+            displayName: '[Deleted User]',
+            username: '_deleted_user_'
+        }
     };
 });
 

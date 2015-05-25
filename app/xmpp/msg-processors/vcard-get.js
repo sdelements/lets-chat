@@ -1,9 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config'),
-    helper = require('./../helper');
+    MessageProcessor = require('./../msg-processor');
 
 module.exports = MessageProcessor.extend({
 
@@ -12,7 +10,7 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
-        var jid = helper.getUserJid(this.client.conn.user.username);
+        var jid = this.connection.jid();
         var other = this.to && this.to !== jid;
 
         var sendVcard = function (user) {
@@ -31,7 +29,7 @@ module.exports = MessageProcessor.extend({
 
             v.c('NICKNAME').t(user.username);
 
-            v.c('JABBERID').t(helper.getUserJid(user.username));
+            v.c('JABBERID').t(this.connection.getUserJid(user.username));
 
             cb(null, stanza);
 
@@ -41,7 +39,7 @@ module.exports = MessageProcessor.extend({
             var User = mongoose.model('User');
             var username = this.to.split('@')[0];
             User.findByIdentifier(username, function(err, user) {
-                if (user) {
+                if (!err && user) {
                     sendVcard(user);
                 }
             });

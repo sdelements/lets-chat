@@ -4,10 +4,7 @@
 
 'use strict';
 
-var fs = require('fs'),
-    _ = require('lodash'),
-    async = require('async'),
-    multer = require('multer'),
+var multer = require('multer'),
     settings = require('./../config').files;
 
 module.exports = function() {
@@ -19,8 +16,7 @@ module.exports = function() {
     var app = this.app,
         core = this.core,
         middlewares = this.middlewares,
-        models = this.models,
-        Room = models.room;
+        models = this.models;
 
     core.on('files:new', function(file, room, user) {
         var fil = file.toJSON();
@@ -44,19 +40,19 @@ module.exports = function() {
     //
     app.route('/files')
         .all(middlewares.requireLogin)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('files:list');
         })
-        .post(fileUpload, middlewares.cleanupFiles, function(req, res) {
+        .post(fileUpload, middlewares.cleanupFiles, function(req) {
             req.io.route('files:create');
         });
 
     app.route('/rooms/:room/files')
         .all(middlewares.requireLogin, middlewares.roomRoute)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('files:list');
         })
-        .post(fileUpload, middlewares.cleanupFiles, function(req, res) {
+        .post(fileUpload, middlewares.cleanupFiles, function(req) {
             req.io.route('files:create');
         });
 

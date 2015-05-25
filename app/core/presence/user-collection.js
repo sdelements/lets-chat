@@ -1,8 +1,6 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter,
-    util = require('util'),
-    _ = require('lodash');
+var _ = require('lodash');
 
 function UserCollection() {
     this.users = {};

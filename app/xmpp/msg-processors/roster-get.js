@@ -1,7 +1,6 @@
 'use strict';
 
-var MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config');
+var MessageProcessor = require('./../msg-processor');
 
 module.exports = MessageProcessor.extend({
 
@@ -14,7 +13,7 @@ module.exports = MessageProcessor.extend({
     then: function(cb) {
         var stanza = this.Iq();
 
-        var v = stanza.c('query', {
+        stanza.c('query', {
             xmlns: 'jabber:iq:roster'
         });
 

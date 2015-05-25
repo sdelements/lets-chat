@@ -1,8 +1,6 @@
 'use strict';
 
-var MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config'),
-    helper = require('./../helper');
+var MessageProcessor = require('./../msg-processor');
 
 module.exports = MessageProcessor.extend({
 
@@ -20,15 +18,15 @@ module.exports = MessageProcessor.extend({
             var stanza = this.Iq();
 
             var query = stanza.c('query', {
-                xmlns:'http://jabber.org/protocol/disco#items'
+                xmlns: 'http://jabber.org/protocol/disco#items'
             });
 
             rooms.forEach(function(room) {
                 query.c('item', {
-                    jid: helper.getRoomJid(room.slug),
+                    jid: this.connection.getRoomJid(room.slug),
                     name: room.name
                 });
-            });
+            }, this);
 
             cb(null, stanza);
 

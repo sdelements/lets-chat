@@ -1,9 +1,6 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-    MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config'),
-    helper = require('./../helper');
+var MessageProcessor = require('./../msg-processor');
 
 module.exports = MessageProcessor.extend({
 
@@ -13,7 +10,7 @@ module.exports = MessageProcessor.extend({
 
     then: function(cb) {
         var stanza = this.Iq({
-            to: helper.getUserJid(this.client.conn.user.username)
+            to: this.connection.jid()
         });
 
         stanza.c('error', {

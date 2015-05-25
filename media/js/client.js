@@ -160,12 +160,12 @@
                 room: room.id,
                 since_id: room.lastMessage.get('id'),
                 take: 200,
-                expand: 'owner',
+                expand: 'owner, room',
                 reverse: true
             }, function(messages) {
                 messages.reverse();
-                that.addMessages(messages, !room.get('loaded'));
-                room.set('loaded', true);
+                that.addMessages(messages, !rejoin && !room.lastMessage.get('id'));
+                !rejoin && room.lastMessage.set(messages[messages.length - 1]);
             });
             if (that.options.filesEnabled) {
                 that.getFiles({
@@ -193,7 +193,7 @@
             } else {
                 store.set('openrooms', [id]);
             }
-            
+
             // Remove joining lock
             _.defer(function() {
                 that.joining = _.without(that.joining, id);
@@ -228,8 +228,10 @@
             // Unknown room, nothing to do!
             return;
         }
-        room.set('lastActive', message.posted)
-        room.lastMessage.set(message);
+        room.set('lastActive', message.posted);
+        if (!message.historical) {
+            room.lastMessage.set(message);
+        }
         room.trigger('messages:new', message);
     };
     Client.prototype.addMessages = function(messages, historical) {
@@ -412,11 +414,19 @@
             }
         }
 
+        var path = '/' + _.compact(
+            window.location.pathname.split('/').concat(['socket.io'])
+        ).join('/');
+
         //
         // Socket
         //
-        this.socket = io.connect(null, {
-            reconnect: true
+        this.socket = io.connect({
+            path: path,
+            reconnection: true,
+            reconnectionDelay: 500,
+            reconnectionDelayMax: 1000,
+            timeout: 3000
         });
         this.socket.on('connect', function() {
             that.getUser();

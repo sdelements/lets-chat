@@ -11,22 +11,25 @@ module.exports = function() {
         core = this.core,
         middlewares = this.middlewares,
         models = this.models,
-        Room = models.room,
         User = models.user;
 
     core.on('presence:user_join', function(data) {
         User.findById(data.userId, function (err, user) {
-            user = user.toJSON();
-            user.room = data.roomId;
-            app.io.emit('users:join', user);
+            if (!err && user) {
+                user = user.toJSON();
+                user.room = data.roomId;
+                app.io.emit('users:join', user);
+            }
         });
     });
 
     core.on('presence:user_leave', function(data) {
         User.findById(data.userId, function (err, user) {
-            user = user.toJSON();
-            user.room = data.roomId;
-            app.io.emit('users:leave', user);
+            if (!err && user) {
+                user = user.toJSON();
+                user.room = data.roomId;
+                app.io.emit('users:leave', user);
+            }
         });
     });
 
@@ -48,28 +51,28 @@ module.exports = function() {
     //
     app.route('/rooms')
         .all(middlewares.requireLogin)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('rooms:list');
         })
-        .post(function(req, res) {
+        .post(function(req) {
             req.io.route('rooms:create');
         });
 
     app.route('/rooms/:room')
         .all(middlewares.requireLogin, middlewares.roomRoute)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('rooms:get');
         })
-        .put(function(req, res) {
+        .put(function(req) {
             req.io.route('rooms:update');
         })
-        .delete(function(req, res) {
+        .delete(function(req) {
             req.io.route('rooms:archive');
         });
 
     app.route('/rooms/:room/users')
         .all(middlewares.requireLogin, middlewares.roomRoute)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('rooms:users');
         });
 

@@ -158,3 +158,12 @@
         outline: none;
     }
 }
+
+// Eugh Firefox
+@-moz-document url-prefix() {
+    .lcb-rooms-list-item {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+    }
+}

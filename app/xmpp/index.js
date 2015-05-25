@@ -1,27 +1,24 @@
 'use strict';
 
 var xmpp = require('node-xmpp-server'),
-    Stanza = require('node-xmpp-core').Stanza,
-    mongoose = require('mongoose'),
     settings = require('./../config'),
     auth = require('./../auth/index'),
     all = require('require-tree'),
-    helper = require('./helper'),
-    allArray = function(path) {
+    XmppConnection = require('./xmpp-connection');
+
+var allArray = function(path) {
         var modules = all(path);
         return Object.keys(modules).map(function(key) {
             return modules[key];
         });
-    };
-
-var XmppConnection = require('./xmpp-connection'),
+    },
     msgProcessors = allArray('./msg-processors'),
     eventListeners = allArray('./events');
 
 function xmppStart(core) {
     var options = {
         port: settings.xmpp.port,
-        domain: settings.xmpp.host
+        domain: settings.xmpp.domain
     };
 
     if (settings.xmpp.tls && settings.xmpp.tls.enable) {
@@ -36,8 +33,10 @@ function xmppStart(core) {
     c2s.on('connect', function(client) {
 
         client.on('authenticate', function(opts, cb) {
-            auth.authenticate(opts.jid.local, opts.password,
-                                              function(err, user) {
+            var username = settings.xmpp.username === 'full' ?
+                           opts.jid.toString() : opts.jid.local;
+
+            auth.authenticate(username, opts.password, function(err, user) {
                 if (err || !user) {
                     return cb(false);
                 }
@@ -45,7 +44,7 @@ function xmppStart(core) {
                 // TODO: remove?
                 client.user = user;
 
-                var conn = new XmppConnection(user, client);
+                var conn = new XmppConnection(user, client, opts.jid);
                 core.presence.connect(conn);
 
                 cb(null, opts);

@@ -1,8 +1,6 @@
 'use strict';
 
-var xmpp = require('node-xmpp-server'),
-    Stanza = require('node-xmpp-core').Stanza,
-    mongoose = require('mongoose'),
+var Stanza = require('node-xmpp-core').Stanza,
     settings = require('./../config'),
     _ = require('lodash'),
     util = require('util');
@@ -24,7 +22,6 @@ function MessageProcessor(client, request, core) {
 
 MessageProcessor.prototype.Stanza = function(name, attr) {
     attr = _.extend({
-        type: 'result',
         id: this.request.attrs.id,
         to: this.request.attrs.from,
         from: this.request.attrs.to
@@ -34,6 +31,10 @@ MessageProcessor.prototype.Stanza = function(name, attr) {
 };
 
 MessageProcessor.prototype.Iq = function(attr) {
+    attr = _.extend({
+        type: 'result'
+    }, attr || {});
+
     return this.Stanza('iq', attr);
 };
 
@@ -48,8 +49,9 @@ MessageProcessor.prototype.Message = function(attr) {
 MessageProcessor.prototype.preRun = function() {
     this.to = this.request.attrs.to || '';
 
-    this.toConfRoot = this.to.indexOf(settings.xmpp.confhost) === 0;
-    this.toARoom = this.to.indexOf('@' + settings.xmpp.confhost) !== -1;
+    var confDomain = this.connection.getConfDomain();
+    this.toConfRoot = this.to.indexOf(confDomain) === 0;
+    this.toARoom = this.to.indexOf('@' + confDomain) !== -1;
 
     this.ns = this.ns || {};
 

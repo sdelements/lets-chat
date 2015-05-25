@@ -30,7 +30,6 @@ xmpp:
     handled: false
     unhandled: false
   port: 5222
-  domain: jappix.com
 
   tls:
     enable: true
