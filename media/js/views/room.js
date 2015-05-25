@@ -257,6 +257,7 @@
         },
         sendMessage: function(e) {
             if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
+            if (e.type === 'keypress' && e.keyCode === 13 && e.shiftKey) return;
             e.preventDefault();
             if (!this.client.status.get('connected')) return;
             var $textarea = this.$('.lcb-entry-input');
@@ -281,7 +282,7 @@
             message.own = this.client.user.id === message.owner.id;
 
             // WHATS MY NAME
-            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + ')(?!@)\\b', 'i').test(message.text);
+            message.mentioned = new RegExp('\\B@(' + this.client.user.get('username') + '|all)(?!@)\\b', 'i').test(message.text);
 
             // Templatin' time
             var $html = $(this.messageTemplate(message).trim());

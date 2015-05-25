@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
     sanitizeQuery: function(query, options) {
         if (options.defaults.take && !query.take) {

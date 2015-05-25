@@ -1,19 +1,17 @@
 'use strict';
 
 var xmpp = require('node-xmpp-server'),
-    Stanza = require('node-xmpp-core').Stanza,
-    mongoose = require('mongoose'),
     settings = require('./../config'),
     auth = require('./../auth/index'),
     all = require('require-tree'),
-    allArray = function(path) {
+    XmppConnection = require('./xmpp-connection');
+
+var allArray = function(path) {
         var modules = all(path);
         return Object.keys(modules).map(function(key) {
             return modules[key];
         });
-    };
-
-var XmppConnection = require('./xmpp-connection'),
+    },
     msgProcessors = allArray('./msg-processors'),
     eventListeners = allArray('./events');
 

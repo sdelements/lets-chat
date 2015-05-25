@@ -18,7 +18,7 @@ module.exports = EventListener.extend({
 
             presence
             .c('x', {
-                xmlns:'http://jabber.org/protocol/muc#user'
+                xmlns: 'http://jabber.org/protocol/muc#user'
             })
             .c('item', {
                 jid: connection.getUserJid(data.username),

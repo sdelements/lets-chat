@@ -4,6 +4,12 @@
 
  @messagePadding: 7px;
 
+.lcb-messages-outer {
+    background: #fff;
+    position: relative;
+    .flex(1);
+}
+
 .lcb-messages {
     background: #fff;
     padding: 0;
@@ -12,6 +18,10 @@
     -webkit-overflow-scrolling: touch;
     .flex(1);
     .transform(translate3d(0,0,0));
+    .lcb-messages-outer & {
+        .size(100%);
+        position: absolute;
+    }
 }
 
 .lcb-message {
@@ -106,6 +116,9 @@
 // Eugh Firefox
 @-moz-document url-prefix() {
     .lcb-message-text {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
         word-break: break-all;
         pre {
             white-space: pre-wrap;

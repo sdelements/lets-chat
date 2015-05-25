@@ -1,3 +1,24 @@
+## 0.3.12 (2015-05-19)
+
+Fixes
+
+* Multiple layout bugs due to overflowing content in Firefox
+* Layout issue introduced by Chrome 43
+
+## 0.3.11 (2015-05-19)
+
+Fixes
+
+* Env variable loading
+* Various notification adjustments
+
+Enhancements
+
+* Usernames may now contain underscores and dashes
+* Unicode character support for links in messages
+* Unread message counts in the favicon
+* Newlines with `shift+enter`
+
 ## 0.3.10 (2015-04-14)
 
 Fixes

@@ -25,8 +25,16 @@ files:
 
 xmpp:
   enable: false
+  roomCreation: false
+  debug:
+    handled: false
+    unhandled: false
   port: 5222
-  domain: example.com
+
+  tls:
+    enable: true
+    key: ./server.key
+    cert: ./server.crt
 
 database:
   uri: mongodb://localhost/letschat

@@ -1,3 +1,5 @@
+'use strict';
+
 var fs = require('fs'),
     _ = require('lodash'),
     async = require('async'),
@@ -9,7 +11,7 @@ function cleanupReqFiles(req, cb) {
     }
 
     var files = _.chain(req.files)
-             .map(function(x) { return x;})
+             .map(function(x) { return x; })
              .flatten()
              .value();
 
@@ -29,11 +31,11 @@ function cleanupReqFiles(req, cb) {
 }
 
 module.exports = function(req, res, next) {
-	res.on('error', function(err) {
+	res.on('error', function() {
         cleanupReqFiles(req);
 	});
 
-    onFinished(res, function (err, res) {
+    onFinished(res, function () {
         cleanupReqFiles(req);
     });
 

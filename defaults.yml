@@ -23,8 +23,7 @@ xmpp:
     handled: false
     unhandled: false
   port: 5222
-  domain: example.com
-  username: node # node / full
+  host: localhost
   tls:
     enable: false
     key: ./server.key

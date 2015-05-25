@@ -4,11 +4,12 @@
 
 'use strict';
 
-process.title = "letschat";
+process.title = 'letschat';
+
+require('colors');
 
 var _ = require('lodash'),
     fs = require('fs'),
-    colors = require('colors'),
     express = require('express.oi'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
@@ -18,19 +19,19 @@ var _ = require('lodash'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
     migroose = require('./migroose'),
-    MongoStore = require('connect-mongo')(express.session),
-    all = require('require-tree');
-
-var psjon = require('./package.json'),
+    connectMongo = require('connect-mongo'),
+    all = require('require-tree'),
+    psjon = require('./package.json'),
     settings = require('./app/config'),
-    httpEnabled = settings.http && settings.http.enable,
-    httpsEnabled = settings.https && settings.https.enable;
+    auth = require('./app/auth/index'),
+    core = require('./app/core/index');
 
-var auth = require('./app/auth/index'),
+var MongoStore = connectMongo(express.session),
+    httpEnabled = settings.http && settings.http.enable,
+    httpsEnabled = settings.https && settings.https.enable,
     models = all('./app/models'),
     middlewares = all('./app/middlewares'),
     controllers = all('./app/controllers'),
-    core = require('./app/core/index'),
     app;
 
 //
@@ -103,9 +104,7 @@ var bundles = {};
 app.use(require('connect-assets')({
     paths: [
         'media/js',
-        'media/less',
-        // 'media/img',
-        // 'media/font',
+        'media/less'
     ],
     helperContext: bundles,
     build: settings.env === 'production',
@@ -115,7 +114,7 @@ app.use(require('connect-assets')({
 
 // Public
 app.use('/media', express.static(__dirname + '/media', {
-    maxAge: '364d',
+    maxAge: '364d'
 }));
 
 // Templates
@@ -253,8 +252,12 @@ mongoose.connect(settings.database.uri, function(err) {
 
     checkForMongoTextSearch();
 
-    migroose.needsMigration(function(migrationRequired) {
-        if (migrationRequired) {
+    migroose.needsMigration(function(err, migrationRequired) {
+        if (err) {
+            console.error(err);
+        }
+
+        else if (migrationRequired) {
             console.log('Database migration required'.red);
             console.log('Ensure you backup your database first.');
             console.log('');

@@ -4,8 +4,8 @@
 
 'use strict';
 
-var mongoose = require('mongoose'),
-    ObjectId = mongoose.Schema.Types.ObjectId;
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var MessageSchema = new mongoose.Schema({
     room: {
@@ -20,8 +20,7 @@ var MessageSchema = new mongoose.Schema({
     },
     text: {
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
     posted: {
         type: Date,

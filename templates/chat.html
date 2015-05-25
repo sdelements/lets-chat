@@ -23,7 +23,7 @@
             <button type="button" class="btn lcb-header-toggle">
                 <i class="fa fa-bars"></i>
             </button>
-            <div class="lcb-header-logo">Let's Chat</div>
+            <div class="lcb-header-logo">Blug's Chat</div>
         </div>
         <section class="lcb-sidebar">
             <div class="dropdown">
@@ -43,6 +43,10 @@
                         <a data-toggle="modal" href="#lcb-account">
                             <i class="fa fa-fw fa-cogs"></i> Account Settings
                         </a>
+                    </li>
+                    <li>
+                    <a data-toggle="modal" href="#lcb-otr">
+                    OTR messaging </a> 
                     </li>
                     <li>
                         <a data-toggle="modal" href="#lcb-notifications">
@@ -76,13 +80,15 @@
                     <i class="fa fa-bell-slash"></i>
                 </span>
             </div>
-            <ul class="lcb-tabs">
-                <li data-id="list" class="lcb-tab lcb-tab-home">
-                    <a href="#!/">
-                        <i class="fa fa-th"></i>
-                    </a>
-                </li>
-            </ul>
+            <div class="lcb-tabs-outer">
+                <ul class="lcb-tabs">
+                    <li data-id="list" class="lcb-tab lcb-tab-home">
+                        <a href="#!/">
+                            <i class="fa fa-th"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </section>
         <section class="lcb-panes">
             <div class="lcb-rooms-browser lcb-pane hide" data-id="list">
@@ -113,5 +119,6 @@
         <% include 'includes/modals/xmpp.html' %>
         <% include 'includes/modals/tokens.html' %>
         <% include 'includes/modals/upload.html' %>
+        <% include 'includes/modals/otr.html' %>
     </div><!-- lcb-client end -->
 <% endblock %>

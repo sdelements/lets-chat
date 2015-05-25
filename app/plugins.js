@@ -1,3 +1,5 @@
+'use strict';
+
 function PluginManager() {
     this.types = [
         'auth',
@@ -6,8 +8,8 @@ function PluginManager() {
 }
 
 PluginManager.prototype.getPlugin = function(key, type) {
-    var name = 'lets-chat-' + key,
-        plugin = require(name);
+    var name = 'lets-chat-' + key;
+    var plugin = require(name);
 
     if (!type) {
         return plugin;

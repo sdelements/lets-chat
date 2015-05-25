@@ -72,7 +72,7 @@
             }
         },
         onNewMessage: function(message) {
-            if (this.focus || message.historical) {
+            if (this.focus || message.historical || message.owner.id === this.client.user.id) {
                 return;
             }
             this.countMessage(message);
@@ -80,10 +80,8 @@
             this.flashFaviconBadge();
         },
         countMessage: function(message) {
-            var username = this.client.user.get('username'),
-                regex = new RegExp('\\B@(' + username + ')(?!@)\\b', 'i');
             ++this.count;
-            regex.test(message.text) && ++this.mentions;
+            message.mentioned && ++this.mentions;
         },
         flashTitle: function() {
             var titlePrefix = '';
@@ -176,7 +174,7 @@
             });
         },
         onNewMessage: function(message) {
-            if (this.focus || message.historical) {
+            if (this.focus || message.historical || message.owner.id === this.client.user.id) {
                 return;
             }
             this.createDesktopNotification(message);
