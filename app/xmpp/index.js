@@ -54,7 +54,7 @@ function xmppStart(core) {
             }
 
             function providerAuthenticate(err, user) {
-                if (err || !user || user.username != username) {
+                if (err || !user || user.username !== username) {
                     auth.authenticate(req, null, function(err, user) {
                         if (err || !user) {
                             return cb(false);

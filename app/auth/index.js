@@ -53,7 +53,7 @@ function authenticateProvider(provider, req, res, cb) {
         cb(null, null);
     }
 
-    p.provider.authenticate(req, res, function(err, user, info) {
+    p.provider.authenticate(req, res, function(err, user) {
         if (err) {
             return cb(err);
         }
@@ -188,7 +188,7 @@ function authenticate(req, res, cb) {
                     return callback(null, args[0]);
                 }
 
-                provider.authenticate(req, res, function(err, user, info) {
+                provider.authenticate(req, res, function(err, user) {
                     if (err) {
                         return callback(err);
                     }

@@ -51,15 +51,15 @@ module.exports = function() {
         req.io.route('account:login');
     });
 
-    app.get('/account/:provider/login', function(req, res) {
+    app.get('/account/:provider/login', function(req) {
         req.io.route('account:login');
     });
 
-    app.get('/account/:provider/callback', function(req, res) {
+    app.get('/account/:provider/callback', function(req) {
         req.io.route('account:login');
     });
 
-    app.post('/account/register', function(req, res) {
+    app.post('/account/register', function(req) {
         req.io.route('account:register');
     });
 

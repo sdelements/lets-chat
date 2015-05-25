@@ -115,7 +115,7 @@ UserSchema.virtual('isSSO').get(function() {
     var provider = this.provider;
 
     if (provider in settings.auth) {
-        return settings.auth[provider].isSSO == true;
+        return settings.auth[provider].isSSO === true;
     }
     else {
         return false;
