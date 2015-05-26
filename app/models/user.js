@@ -209,7 +209,7 @@ UserSchema.methods.comparePassword = function(password, cb) {
 
     // Legacy password hashes
     if (salt && (hash.sha256(password, salt) === this.password)) {
-        return cb(null, true)
+        return cb(null, true);
     }
 
     // Current password hashes
@@ -225,7 +225,7 @@ UserSchema.methods.comparePassword = function(password, cb) {
 
         cb(null, false);
 
-    }.bind(this));
+    });
 
 };
 
