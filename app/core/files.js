@@ -90,7 +90,7 @@ FileManager.prototype.create = function(options, cb) {
                     if (options.post) {
                         this.core.messages.create({
                             room: room,
-                            owner: user,
+                            owner: user.id,
                             text: 'upload://' + savedFile.url
                         });
                     }
