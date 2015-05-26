@@ -40,7 +40,7 @@ module.exports = function() {
                 query.user = req.param('user');
             }
 
-            var connections = core.presence.connections.query(query);
+            var connections = core.presence.system.connections.query(query);
             res.json(connections);
         }
     });

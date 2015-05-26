@@ -41,7 +41,7 @@ AccountManager.prototype.update = function(id, options, cb) {
         }
 
         if (options.username && options.username !== user.username) {
-            var xmppConns = this.core.presence.connections.query({
+            var xmppConns = this.core.presence.system.connections.query({
                 userId: user._id,
                 type: 'xmpp'
             });

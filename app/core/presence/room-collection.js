@@ -1,3 +1,4 @@
+
 'use strict';
 
 var EventEmitter = require('events').EventEmitter,
@@ -23,18 +24,15 @@ RoomCollection.prototype.get = function(roomId) {
     return this.rooms[roomId];
 };
 
-RoomCollection.prototype.slug = function(slug) {
-    return _.find(this.rooms, function(room) {
-        return room.roomSlug === slug;
-    });
-};
-
 RoomCollection.prototype.getOrAdd = function(roomId, roomSlug) {
     roomId = roomId.toString();
     roomSlug = roomSlug && roomSlug.toString() || roomId.toString();
     var room = this.rooms[roomId];
     if (!room) {
-        room = this.rooms[roomId] = new Room(roomId, roomSlug);
+        room = this.rooms[roomId] = new Room({
+            roomId: roomId,
+            roomSlug: roomSlug
+        });
         room.on('user_join', this.onJoin);
         room.on('user_leave', this.onLeave);
     }

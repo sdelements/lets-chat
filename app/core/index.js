@@ -7,7 +7,9 @@ var EventEmitter = require('events').EventEmitter,
     FileManager = require('./files'),
     MessageManager = require('./messages'),
     PresenceManager = require('./presence'),
-    RoomManager = require('./rooms');
+    RoomManager = require('./rooms'),
+    UserManager = require('./users'),
+    UserMessageManager = require('./usermessages');
 
 function Core() {
     EventEmitter.call(this);
@@ -29,6 +31,14 @@ function Core() {
     });
 
     this.rooms = new RoomManager({
+        core: this
+    });
+
+    this.users = new UserManager({
+        core: this
+    });
+
+    this.usermessages = new UserMessageManager({
         core: this
     });
 
