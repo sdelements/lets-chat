@@ -203,7 +203,18 @@ UserSchema.statics.findByToken = function(token, cb) {
 };
 
 UserSchema.methods.comparePassword = function(password, cb) {
+
+    var local = settings.auth.local,
+        salt = local && local.salt;
+
+    // Legacy password hashes
+    if (salt && (hash.sha256(password, salt) === this.password)) {
+        return cb(null, true)
+    }
+
+    // Current password hashes
     bcrypt.compare(password, this.password, function(err, isMatch) {
+
         if (err) {
             return cb(err);
         }
@@ -212,16 +223,10 @@ UserSchema.methods.comparePassword = function(password, cb) {
             return cb(null, true);
         }
 
-        var local = settings.auth.local;
-        var salt = local && local.salt;
-        if (salt) {
-            var legacyPassowrd = hash.sha256(password, salt);
-            isMatch = legacyPassowrd === this.password;
-        }
-
-        cb(null, isMatch);
+        cb(null, false);
 
     }.bind(this));
+
 };
 
 UserSchema.statics.authenticate = function(identifier, password, cb) {
