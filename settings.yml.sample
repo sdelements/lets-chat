@@ -38,4 +38,3 @@ auth:
   providers: [local]
   local:
     enableRegistration: true
-    salt: secretsauce # Required when upgrading from version < 0.3
