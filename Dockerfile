@@ -11,5 +11,6 @@ RUN	groupadd -r node \
 USER node
 
 EXPOSE 5000
+EXPOSE 5222
 
 VOLUME [ "/usr/src/app/uploads" ]
