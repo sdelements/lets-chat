@@ -10,3 +10,4 @@ RUN	groupadd -r node \
 USER node
 
 EXPOSE 5000
+EXPOSE 5222
