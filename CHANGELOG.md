@@ -1,3 +1,10 @@
+## 0.3.13 (2015-05-29)
+
+Fixes
+
+* Multiple layout bugs due to overflowing content in Firefox
+* Layout issue introduced by Chrome 43
+
 ## 0.3.12 (2015-05-19)
 
 Fixes
