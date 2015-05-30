@@ -21,8 +21,7 @@
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
             'click .lcb-room-poke': 'poke',
-            'click .lcb-upload-trigger': 'upload'
-            'click .lcb-otr-trigger': 'upload'
+            'click .lcb-upload-trigger': 'upload',
         },
         initialize: function(options) {
             this.client = options.client;
