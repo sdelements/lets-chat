@@ -139,7 +139,6 @@
             );
         }
     });
-    
      window.LCB.AuthKeyModalView = Backbone.View.extend({
  //TODO key generation here
     });
