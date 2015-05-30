@@ -61,7 +61,7 @@
                     startDate: this.startDate,
                     endDate: this.endDate,
                     dateLimit: {
-                        months: 1
+                        months: 4
                     },
                     ranges: ranges
                 }, setRange);
@@ -120,7 +120,7 @@
             return window.utils.message.format(text, this.formatData);
         },
         formatTimestamp: function($el) {
-            var time = moment($el.attr('title')).format('ddd, MMM Do YYYY, h:mm:ss a');
+             var time = moment($el.attr('title')).format('ddd, MMM Do YYYY, h:mm:ss a').toLocaleString();
             $el.text(time);
         }
     });
