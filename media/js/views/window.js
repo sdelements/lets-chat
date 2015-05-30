@@ -129,7 +129,9 @@
         keys: {
             'up+shift+alt down+shift+alt': 'nextRoom',
             's+shift+alt': 'toggleRoomSidebar',
-            'space+shift+alt': 'recallRoom'
+            'space+shift+alt': 'recallRoom',
+	    'space+shift+s' : 'prevRoom',
+	    'shift+s+down' : 'currentRoom'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -147,11 +149,23 @@
         recallRoom: function() {
             this.client.events.trigger('rooms:switch', this.rooms.last.get('id'));
         },
-        toggleRoomSidebar: function(e) {
+	toggleRoomSidebar: function(e) {
             e.preventDefault();
             var view = this.client.view.panes.views[this.rooms.current.get('id')];
             view && view.toggleSidebar && view.toggleSidebar();
-        }
+        },
+	currentRoom: function() {
+	  this.client.events.trigger('rooms:switch',this.rooms.current.get('id'));
+	},
+        prevRoom: function(e) {
+	  var method = e.keyCode === 40 ? 'prev' : 'next',
+	      selector = e.keyCode === 40 ? 'last' : 'first',
+	      $prev = this.$('.lcb-tabs').find('[data-id].selected')[method]();
+	 /* if($prev.length === 0 ) {
+	    $prev = this.$('.lcb-tabs').find('[data-id]:'+selector);
+	  }*/
+	  this.client.events.trigger('room:switch', $prev.data('id'));
+	}
     });
 
     window.LCB.DesktopNotificationsView = Backbone.View.extend({
