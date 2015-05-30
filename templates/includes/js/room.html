@@ -15,11 +15,9 @@
                             href="./transcript?room={{ id }}" target="_blank">
                             <i class="fa fa-history"></i>
                         </a>
-                        <% if settings.files.enable %>
                         <a class="btn hidden-xs lcb-upload-trigger" title="Upload Files" href="#">
                             <i class="fa fa-upload"></i>
                         </a>
-                        <% endif %>
                     </h2>
                     <div class="lcb-room-description">
                         <article>{{description}}</article>
@@ -53,9 +51,9 @@
             <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
                 <header class="lcb-room-sidebar-header">
                 <h3 class="lcb-room-sidebar-heading">
-                        <i class="fa fa-file-text"></i> OTR encryption
+                        <i class="fa fa-lock"></i> OTR
                     </h3>
-                    <a class="btn" href="../modals/otr.html" role="button">
+                    <button class="btn lcb-room-sidebar-files-add lcb-otr-trigger">
                         <i class="fa fa-plus"></i>
                     </a>
                     </header>
