@@ -131,7 +131,7 @@
             's+shift+alt': 'toggleRoomSidebar',
             'space+shift+alt': 'recallRoom',
 	    'space+shift+s' : 'prevRoom',
-	    'shift+s+down' : 'firstRoom'
+	    'shift+s+down' : 'currentRoom'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -154,7 +154,7 @@
             var view = this.client.view.panes.views[this.rooms.current.get('id')];
             view && view.toggleSidebar && view.toggleSidebar();
         },
-	firstRoom: function() {
+	currentRoom: function() {
 	  this.client.events.trigger('rooms:switch',this.rooms.current.get('id'));
 	},
         prevRoom: function(e) {
