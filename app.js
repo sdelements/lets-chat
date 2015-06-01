@@ -11,7 +11,7 @@ require('colors');
 var _ = require('lodash'),
     fs = require('fs'),
     express = require('express.oi'),
-    i18n = require("i18n"),
+    i18n = require('i18n'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     compression = require('compression'),
