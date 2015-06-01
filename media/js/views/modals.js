@@ -122,7 +122,7 @@
 	  
     
             swal({
-                title: 'Generating random number for key generation .....\n\n'+(Math.random() * (Number.MAX_VALUE - Number.MIN_VALUE) + Number.MIN_VALUE),
+                title: 'Generating random number for key generation .....\n\n'+(Math.random() * (10000 - 1) + 1),
                 text: 'This will overwrite any existing authentication token you may have.',   type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
