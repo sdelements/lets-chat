@@ -147,8 +147,8 @@ nun.addGlobal('text_search', false);
 
 // i18n
 i18n.configure({
-    locales: ['en'],
-    directory: __dirname + '/locales'
+    directory: __dirname + '/locales',
+    defaultLocale: settings.i18n && settings.i18n.locale || 'en'
 });
 app.use(i18n.init);
 
