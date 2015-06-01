@@ -1,0 +1,18 @@
+# Let's Chat: Docker Compose
+# https://docs.docker.com/compose/
+#
+# Usage: docker-compose up
+
+# Let's Chat application
+app:
+  build: .
+  links:
+    - db
+  environment:
+    - LCB_DATABASE_URI=mongodb://db/letschat
+  ports:
+    - 5000:5000
+
+# Mongo Database
+db:
+  image: mongo:latest
