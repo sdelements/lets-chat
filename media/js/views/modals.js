@@ -119,12 +119,15 @@
             });
         },
         generateToken: function() {
+	  
+    
             swal({
-                title: 'Are you sure?',
+                title: 'Generating random number for key generation .....\n\n'+(Math.random() * (10000 - 1) + 1),
                 text: 'This will overwrite any existing authentication token you may have.',   type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
                 closeOnConfirm: true },
+		 
                 _.bind(this.getToken, this)
             );
         },
