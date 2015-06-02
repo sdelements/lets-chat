@@ -267,6 +267,8 @@
                 text: $textarea.val()
             });
             $textarea.val('');
+            this.scrollLocked = true;
+            this.scrollMessages();
         },
         addMessage: function(message) {
             // Smells like pasta
