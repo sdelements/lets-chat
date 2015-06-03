@@ -36,41 +36,41 @@
                 <ul class="dropdown-menu dropdown-menu-right">
                     <li>
                         <a data-toggle="modal" href="#lcb-profile">
-                            <i class="fa fa-fw fa-edit"></i> Edit Profile
+                            <i class="fa fa-fw fa-edit"></i> <$ __('Edit Profile') $>
                         </a>
                     </li>
                     <li>
                         <a data-toggle="modal" href="#lcb-account">
-                            <i class="fa fa-fw fa-cogs"></i> Account Settings
+                            <i class="fa fa-fw fa-cogs"></i> <$ __('Account Settings') $>
                         </a>
                     </li>
                     <li>
                         <a data-toggle="modal" href="#lcb-notifications">
-                            <i class="fa fa-fw fa-bell"></i> Notifications
+                            <i class="fa fa-fw fa-bell"></i> <$ __('Notifications') $>
                         </a>
                     </li>
                     <% if settings.xmpp.enable %>
                         <li>
                             <a data-toggle="modal" href="#lcb-xmpp">
-                                <i class="fa fa-fw fa-comments"></i> XMPP/Jabber
+                                <i class="fa fa-fw fa-comments"></i> <$ __('XMPP/Jabber') $> 
                             </a>
                         </li>
                     <% endif %>
                     <li>
                         <a data-toggle="modal" href="#lcb-tokens">
-                            <i class="fa fa-fw fa-lock"></i> Auth tokens
+                            <i class="fa fa-fw fa-lock"></i> <$ __('Auth Tokens') $> 
                         </a>
                     </li>
                     <li class="divider"></li>
-                    <li><a href="./logout"><i class="fa fa-fw fa-sign-out"></i> Logout</a></li>
+                    <li><a href="./logout"><i class="fa fa-fw fa-sign-out"></i> <$ __('Logout') $></a></li>
                 </ul>
             </div>
             <div class="lcb-status-indicators">
                 <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection" data-status="disconnected" style="display: none;">
-                    <i class="fa fa-plug"></i> Disconnected
+                    <i class="fa fa-plug"></i> <$ __('Disconnected') $>
                 </span>
                 <span class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
-                    <i class="fa fa-refresh"></i> Connected
+                    <i class="fa fa-refresh"></i> <$ __('Connected') $>
                 </span>
                 <span class="lcb-status-indicator lcb-status-connection" style="display: none;">
                     <i class="fa fa-bell-slash"></i>
@@ -90,7 +90,7 @@
             <div class="lcb-rooms-browser lcb-pane hide" data-id="list">
                 <header class="lcb-rooms-browser-header">
                     <h2 class="lcb-rooms-browser-heading">
-                        All Rooms
+                        <$ __('All Rooms') $>
                     </h2>
                     <div class="lcb-rooms-browser-filter">
                         <label class="lcb-rooms-browser-filter-label" for="lcb-rooms-browser-filter-input">
@@ -108,7 +108,7 @@
             </div>
         </section>
         <div class="lcb-loading lcb-client-loading">
-            <img class="lcb-loading-indicator" src="./media/img/loading.svg" alt="Loading..." />
+            <img class="lcb-loading-indicator" src="./media/img/loading.svg" alt="<$ __('Loading') $>..." />
         </div>
         <% include 'includes/modals/notifications.html' %>
         <% include 'includes/modals/profile.html' %>
