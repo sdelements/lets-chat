@@ -111,4 +111,16 @@ AccountManager.prototype.revokeToken = function(id, cb) {
     User.update({_id: id}, {$unset: {token: 1}}, cb);
 };
 
+AccountManager.prototype.deactivate = function(id, cb) {
+    var User = mongoose.model('User');
+
+    User.findOneAndUpdate({_id: id}, {active:false}, cb);
+}
+
+AccountManager.prototype.activate = function(id, cb) {
+    var User = mongoose.model('User');
+
+    User.findOneAndUpdate({_id: id}, {active:true}, cb);
+}
+
 module.exports = AccountManager;
