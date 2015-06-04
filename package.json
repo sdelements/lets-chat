@@ -1,8 +1,8 @@
 {
   "name": "lets-chat",
-  "version": "0.3.13",
+  "version": "0.4.0",
   "description": "A chat app for small teams.",
-  "license" : "MIT",
+  "license": "MIT",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -97,6 +97,6 @@
     "grunt": "~0.4.5",
     "grunt-bower": "~0.19.0",
     "grunt-bower-task": "~0.4.0",
-    "eslint": "^0.21.2"
+    "eslint": "^0.22.1"
   }
 }
