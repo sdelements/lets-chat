@@ -1,10 +1,8 @@
- 
 'use strict';
 
 var _ = require('lodash'),
     Stanza = require('node-xmpp-core').Stanza,
     settings = require('./../../config'),
-    helper = require('./../helper'),
     EventListener = require('./../event-listener');
 
 module.exports = EventListener.extend({
@@ -43,13 +41,13 @@ module.exports = EventListener.extend({
             var roster = new Stanza.Iq({
                 id: connection.user.id,
                 type: 'set',
-                to: helper.getUserJid(x.user.username)
+                to: x.jid()
             });
 
             roster.c('query', {
                 xmlns: 'jabber:iq:roster'
             }).c('item', {
-                jid: helper.getUserJid(connection.user.username),
+                jid: x.getUserJid(connection.user.username),
                 name: connection.user.displayName,
                 subscription: 'both'
             }).c('group').t('Let\'s Chat');
@@ -59,14 +57,13 @@ module.exports = EventListener.extend({
 
             // Announce presence
             var presence = new Stanza.Presence({
-                from: helper.getUserJid(connection.user.username)
+                from: x.getUserJid(connection.user.username)
             });
 
-            helper.populateVcard(presence, connection.user);
+            x.populateVcard(presence, connection.user, this.core);
 
             this.send(x, presence);
 
         }, this);
     }
-
 });

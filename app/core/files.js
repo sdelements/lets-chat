@@ -55,6 +55,9 @@ FileManager.prototype.create = function(options, cb) {
         if (room.archived) {
             return cb('Room is archived.');
         }
+        if (!room.isAuthorized(options.owner)) {
+            return cb('Not authorized.');
+        }
 
         new File({
             owner: options.owner,
@@ -87,7 +90,7 @@ FileManager.prototype.create = function(options, cb) {
                     if (options.post) {
                         this.core.messages.create({
                             room: room,
-                            owner: user,
+                            owner: user.id,
                             text: 'upload://' + savedFile.url
                         });
                     }
@@ -98,6 +101,8 @@ FileManager.prototype.create = function(options, cb) {
 };
 
 FileManager.prototype.list = function(options, cb) {
+    var Room = mongoose.model('Room');
+
     if (!enabled) {
         return cb(null, []);
     }
@@ -148,14 +153,37 @@ FileManager.prototype.list = function(options, cb) {
         find.sort({ 'uploaded': 1 });
     }
 
-    find
-    .limit(options.take)
-    .exec(function(err, files) {
+    Room.findById(options.room, function(err, room) {
         if (err) {
             console.error(err);
             return cb(err);
         }
-        cb(null, files);
+
+        var opts = {
+            userId: options.userId,
+            password: options.password
+        };
+
+        room.canJoin(opts, function(err, canJoin) {
+            if (err) {
+                console.error(err);
+                return cb(err);
+            }
+
+            if (!canJoin) {
+                return cb(null, []);
+            }
+
+            find
+                .limit(options.take)
+                .exec(function(err, files) {
+                    if (err) {
+                        console.error(err);
+                        return cb(err);
+                    }
+                    cb(null, files);
+                });
+        });
     });
 };
 

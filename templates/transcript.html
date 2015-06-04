@@ -17,7 +17,7 @@
         <input type="hidden" name="room-id" value="<$ room.id $>" />
         <input type="hidden" name="room-name" value="<$ room.name $>" />
         <div class="lcb-transcript-header">
-            <h1 class="lcb-transcript-heading">Transcript for <strong><$ room.name $></strong></h1>
+            <h1 class="lcb-transcript-heading"><$ __('Transcript for') $> <strong><$ room.name $></strong></h1>
             <div class="lcb-transcript-filters clearfix">
                 <div class="lcb-transcript-daterange">
                     <i class="fa fa-calendar fa-lg"></i>
@@ -25,7 +25,7 @@
                     <b class="caret"></b>
                 </div>
                 <% if text_search %>
-                    <input type="search" class="lcb-search-entry form-control" placeholder="Search..." />
+                    <input type="search" class="lcb-search-entry form-control" placeholder="<$ __('Search') $>..." />
                 <% endif %>
             </div>
         </div>

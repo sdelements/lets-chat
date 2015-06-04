@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter,
     util = require('util'),
     _ = require('lodash'),
     AccountManager = require('./account'),
+    AvatarCache = require('./avatar-cache'),
     FileManager = require('./files'),
     MessageManager = require('./messages'),
     PresenceManager = require('./presence'),
@@ -39,6 +40,10 @@ function Core() {
     });
 
     this.usermessages = new UserMessageManager({
+        core: this
+    });
+
+    this.avatars = new AvatarCache({
         core: this
     });
 

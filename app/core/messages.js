@@ -13,6 +13,10 @@ MessageManager.prototype.create = function(options, cb) {
         Room = mongoose.model('Room'),
         User = mongoose.model('User');
 
+    if (typeof cb !== 'function') {
+        cb = function() {};
+    }
+
     Room.findById(options.room, function(err, room) {
         if (err) {
             console.error(err);
@@ -24,6 +28,10 @@ MessageManager.prototype.create = function(options, cb) {
         if (room.archived) {
             return cb('Room is archived.');
         }
+        if (!room.isAuthorized(options.owner)) {
+            return cb('Not authorized.');
+        }
+
         Message.create(options, function(err, message) {
             if (err) {
                 console.error(err);
@@ -39,10 +47,7 @@ MessageManager.prototype.create = function(options, cb) {
                     return cb(err);
                 }
 
-                if (typeof cb === 'function') {
-                    cb(null, message, room, user);
-                }
-
+                cb(null, message, room, user);
                 this.core.emit('messages:new', message, room, user);
             }.bind(this));
         }.bind(this));
@@ -50,6 +55,8 @@ MessageManager.prototype.create = function(options, cb) {
 };
 
 MessageManager.prototype.list = function(options, cb) {
+    var Room = mongoose.model('Room');
+
     options = options || {};
 
     if (!options.room) {
@@ -108,14 +115,37 @@ MessageManager.prototype.list = function(options, cb) {
         find.sort({ 'posted': 1 });
     }
 
-    find.limit(options.take)
-        .exec(function(err, messages) {
+    Room.findById(options.room, function(err, room) {
+        if (err) {
+            console.error(err);
+            return cb(err);
+        }
+
+        var opts = {
+            userId: options.userId,
+            password: options.password
+        };
+
+        room.canJoin(opts, function(err, canJoin) {
             if (err) {
                 console.error(err);
                 return cb(err);
             }
-            cb(null, messages);
+
+            if (!canJoin) {
+                return cb(null, []);
+            }
+
+            find.limit(options.take)
+                .exec(function(err, messages) {
+                    if (err) {
+                        console.error(err);
+                        return cb(err);
+                    }
+                    cb(null, messages);
+                });
         });
+    });
 };
 
 module.exports = MessageManager;

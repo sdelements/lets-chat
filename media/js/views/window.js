@@ -129,9 +129,8 @@
         keys: {
             'up+shift+alt down+shift+alt': 'nextRoom',
             's+shift+alt': 'toggleRoomSidebar',
-            'space+shift+alt': 'recallRoom',
-	    'space+shift+s' : 'prevRoom',
-	    'shift+s+down' : 'currentRoom'
+            'g+shift+alt': 'openGiphyModal',
+            'space+shift+alt': 'recallRoom'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -154,18 +153,10 @@
             var view = this.client.view.panes.views[this.rooms.current.get('id')];
             view && view.toggleSidebar && view.toggleSidebar();
         },
-	currentRoom: function() {
-	  this.client.events.trigger('rooms:switch',this.rooms.current.get('id'));
-	},
-        prevRoom: function(e) {
-	  var method = e.keyCode === 40 ? 'prev' : 'next',
-	      selector = e.keyCode === 40 ? 'last' : 'first',
-	      $prev = this.$('.lcb-tabs').find('[data-id].selected')[method]();
-	 /* if($prev.length === 0 ) {
-	    $prev = this.$('.lcb-tabs').find('[data-id]:'+selector);
-	  }*/
-	  this.client.events.trigger('room:switch', $prev.data('id'));
-	}
+        openGiphyModal: function(e) {
+            e.preventDefault();
+            $('.lcb-giphy').modal('show');
+        }
     });
 
     window.LCB.DesktopNotificationsView = Backbone.View.extend({

@@ -13,9 +13,9 @@ module.exports = function() {
     core.on('messages:new', function(message, room, user) {
         var msg = message.toJSON();
         msg.owner = user;
-        msg.room = room;
+        msg.room = room.toJSON(user);
 
-        app.io.to(room._id)
+        app.io.to(room.id)
               .emit('messages:new', msg);
     });
 
@@ -60,6 +60,9 @@ module.exports = function() {
         },
         list: function(req, res) {
             var options = {
+                    userId: req.user._id,
+                    password: req.param('password'),
+
                     room: req.param('room'),
                     since_id: req.param('since_id'),
                     from: req.param('from'),
@@ -75,6 +78,11 @@ module.exports = function() {
                 if (err) {
                     return res.sendStatus(400);
                 }
+
+                messages = messages.map(function(message) {
+                    return message.toJSON(req.user);
+                });
+
                 res.json(messages);
             });
         }

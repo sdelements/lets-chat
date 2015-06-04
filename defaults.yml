@@ -57,7 +57,14 @@ auth:
     passwordRegex: ^.{8,64}$
 
 private:
-  enable: true
-  roster: online
-  
+  enable: false
+  roster: online # online / all
+  expire: 360 # false or number of minutes
+
 noRobots: true # Serve robots.txt with disallow
+
+rooms:
+  private: false
+
+i18n:
+  locale: en

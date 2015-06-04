@@ -14,10 +14,12 @@ function Room(options) {
         this.system = true;
         this.roomId = undefined;
         this.roomSlug = undefined;
+        this.hasPassword = false;
     } else {
         this.system = false;
-        this.roomId = options.roomId;
-        this.roomSlug = options.roomSlug;
+        this.roomId = options.room._id.toString();
+        this.roomSlug = options.room.slug;
+        this.hasPassword = options.room.hasPassword;
     }
 
     this.connections = new ConnectionCollection();
@@ -65,6 +67,10 @@ Room.prototype.emitUserJoin = function(data) {
     } else {
         d.roomId = this.roomId;
         d.roomSlug = this.roomSlug;
+<<<<<<< HEAD
+=======
+        d.roomHasPassword = this.hasPassword;
+>>>>>>> upstream
     }
 
     this.emit('user_join', d);
@@ -84,6 +90,10 @@ Room.prototype.emitUserLeave = function(data) {
     } else {
         d.roomId = this.roomId;
         d.roomSlug = this.roomSlug;
+<<<<<<< HEAD
+=======
+        d.roomHasPassword = this.hasPassword;
+>>>>>>> upstream
     }
 
     this.emit('user_leave', d);

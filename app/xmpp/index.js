@@ -6,8 +6,10 @@ var xmpp = require('node-xmpp-server'),
     settings = require('./../config'),
     auth = require('./../auth/index'),
     all = require('require-tree'),
-    helper = require('./helper'),
-    allArray = function(path) {
+    Stanza = require('node-xmpp-core').Stanza,
+    XmppConnection = require('./xmpp-connection');
+
+var allArray = function(path) {
         var modules = all(path);
         return Object.keys(modules).map(function(key) {
             return modules[key];

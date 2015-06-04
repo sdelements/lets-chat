@@ -1,3 +1,13 @@
+## 0.4.0 (2015-06-04)
+
+Enhancements
+
+* Private and password-protected rooms
+* Private 1-to-1 chat between XMPP users
+* Giphy image search
+* @all mentions are highlighted for everyone
+* Basic server-side i18n support
+
 ## 0.3.13 (2015-05-29)
 
 Fixes

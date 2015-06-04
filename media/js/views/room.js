@@ -25,6 +25,13 @@
         },
         initialize: function(options) {
             this.client = options.client;
+
+            var iAmOwner = this.model.get('owner') === this.client.user.id;
+            var iCanEdit = iAmOwner || !this.model.get('hasPassword');
+
+            this.model.set('iAmOwner', iAmOwner);
+            this.model.set('iCanEdit', iCanEdit);
+
             this.template = options.template;
             this.messageTemplate =
                 Handlebars.compile($('#template-message').html());
@@ -58,6 +65,7 @@
             this.atwhoAllMentions();
             this.atwhoRooms();
             this.atwhoEmotes();
+            this.selectizeParticipants();
         },
         atwhoTplEval: function(tpl, map) {
             var error;
@@ -76,10 +84,16 @@
             }
         },
         getAtwhoUserFilter: function(collection) {
+            var currentUser = this.client.user;
+
             return function filter(query, data, searchKey) {
                 var q = query.toLowerCase();
                 var results = collection.filter(function(user) {
                     var attr = user.attributes;
+
+                    if (user.id === currentUser.id) {
+                        return false;
+                    }
 
                     if (!attr.safeName) {
                         attr.safeName = attr.displayName.replace(/\W/g, '');
@@ -114,9 +128,7 @@
                     return a.atwho_order - b.atwho_order;
                 });
             }
-
-            this.$('.lcb-entry-input')
-            .atwho({
+            var options = {
                 at: '@',
                 tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
@@ -124,7 +136,9 @@
                     sorter: sorter,
                     tpl_eval: this.atwhoTplEval
                 }
-            });
+            };
+
+            this.$('.lcb-entry-input').atwho(options);
         },
         atwhoAllMentions: function () {
             var that = this;
@@ -141,14 +155,49 @@
                 });
             }
 
-            this.$('.lcb-entry-input')
-            .atwho({
+            var options = {
                 at: '@@',
                 tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
                     filter: filter,
                     sorter: sorter,
                     tpl_eval: that.atwhoTplEval
+                }
+            };
+
+            this.$('.lcb-entry-input').atwho(options);
+
+            var opts = _.extend(options, { at: '@'});
+            this.$('.lcb-entry-participants').atwho(opts);
+            this.$('.lcb-room-participants').atwho(opts);
+        },
+        selectizeParticipants: function () {
+            var that = this;
+
+            this.$('.lcb-entry-participants').selectize({
+                delimiter: ',',
+                create: false,
+                load: function(query, callback) {
+                    if (!query.length) return callback();
+
+                    var users = that.client.getUsersSync();
+
+                    var usernames = users.map(function(user) {
+                        return user.attributes.username;
+                    });
+
+                    usernames = _.filter(usernames, function(username) {
+                        return username.indexOf(query) !== -1;
+                    });
+
+                    users = _.map(usernames, function(username) {
+                        return {
+                            value: username,
+                            text: username
+                        };
+                    });
+
+                    callback(users);
                 }
             });
         },
@@ -197,23 +246,38 @@
             this.$('.lcb-room-heading .name').text(this.model.get('name'));
             this.$('.lcb-room-heading .slug').text('#' + this.model.get('slug'));
             this.$('.lcb-room-description').text(this.model.get('description'));
+            this.$('.lcb-room-participants').text(this.model.get('participants'));
         },
         sendMeta: function(e) {
             this.model.set({
                 name: this.$('.lcb-room-heading').text(),
-                description: this.$('.lcb-room-description').text()
+                description: this.$('.lcb-room-description').text(),
+                participants: this.$('.lcb-room-participants').text()
             });
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
                 name: this.model.get('name'),
-                description: this.model.get('description')
+                description: this.model.get('description'),
+                participants: this.model.get('participants')
             });
         },
         showEditRoom: function(e) {
             if (e) {
                 e.preventDefault();
             }
-            this.$('.lcb-room-edit').modal();
+
+            var $modal = this.$('.lcb-room-edit'),
+                $name = $modal.find('input[name="name"]'),
+                $description = $modal.find('textarea[name="description"]'),
+                $password = $modal.find('input[name="password"]'),
+                $confirmPassword = $modal.find('input[name="confirmPassword"]');
+
+            $name.val(this.model.get('name'));
+            $description.val(this.model.get('description'));
+            $password.val('');
+            $confirmPassword.val('');
+
+            $modal.modal();
         },
         hideEditRoom: function(e) {
             if (e) {
@@ -225,14 +289,37 @@
             if (e) {
                 e.preventDefault();
             }
-            var name = this.$('.edit-room input[name="name"]').val();
-            var description = this.$('.edit-room textarea[name="description"]').val();
+
+            var $modal = this.$('.lcb-room-edit'),
+                $name = $modal.find('input[name="name"]'),
+                $description = $modal.find('textarea[name="description"]'),
+                $password = $modal.find('input[name="password"]'),
+                $confirmPassword = $modal.find('input[name="confirmPassword"]'),
+                $participants =
+                    this.$('.edit-room textarea[name="participants"]');
+
+            $name.parent().removeClass('has-error');
+            $confirmPassword.parent().removeClass('has-error');
+
+            if (!$name.val()) {
+                $name.parent().addClass('has-error');
+                return;
+            }
+
+            if ($password.val() && $password.val() !== $confirmPassword.val()) {
+                $confirmPassword.parent().addClass('has-error');
+                return;
+            }
+
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
-                name: name,
-                description: description
+                name: $name.val(),
+                description: $description.val(),
+                password: $password.val(),
+                participants: $participants.val()
             });
-            this.$('.lcb-room-edit').modal('hide');
+
+            $modal.modal('hide');
         },
         archiveRoom: function(e) {
             var that = this;
@@ -267,6 +354,8 @@
                 text: $textarea.val()
             });
             $textarea.val('');
+            this.scrollLocked = true;
+            this.scrollMessages();
         },
         addMessage: function(message) {
             // Smells like pasta
