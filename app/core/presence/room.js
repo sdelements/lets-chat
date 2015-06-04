@@ -67,10 +67,7 @@ Room.prototype.emitUserJoin = function(data) {
     } else {
         d.roomId = this.roomId;
         d.roomSlug = this.roomSlug;
-<<<<<<< HEAD
-=======
         d.roomHasPassword = this.hasPassword;
->>>>>>> upstream
     }
 
     this.emit('user_join', d);
