@@ -8,10 +8,13 @@ app:
   build: .
   links:
     - db
-  environment:
-    - LCB_DATABASE_URI=mongodb://db/letschat
   ports:
     - 5000:5000
+    - 5222:5222
+  environment:
+    - LCB_DATABASE_URI=mongodb://db/letschat
+    - LCB_XMPP_ENABLE=true
+    - LCB_XMPP_PORT=5222
 
 # Mongo Database
 db:
