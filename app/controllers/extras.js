@@ -10,6 +10,9 @@ module.exports = function() {
         fs = require('fs'),
         path = require('path'),
         yaml = require('js-yaml'),
+        url = require('url'),
+        http = require('http'),
+        https = require('https'),
         express = require('express.oi');
 
     var app = this.app,
@@ -30,6 +33,59 @@ module.exports = function() {
 
     app.get('/extras/replacements', middlewares.requireLogin, function(req) {
         req.io.route('extras:replacements:list');
+    });
+
+    app.get('/extras/ssl-proxy/:url', middlewares.requireLogin, function(req, res) {
+        var redirectionCount = 0;
+
+        var process = function(imageUrl) {
+            var options = url.parse(imageUrl);
+            options.headers = { 'User-Agent': 'lets-chat-image-proxy' };
+
+            if(redirectionCount > 5) {
+                return res.status(400).send();
+            }
+
+            var request = options.protocol === 'https:' ? https : http;
+
+            request.get(options, function(imageResponse) {
+                if((imageResponse.statusCode === 301
+                    || imageResponse.statusCode === 302)
+                    && imageResponse.headers.location) {
+
+                        var redirect = url.parse(imageResponse.headers.location);
+                        if(!redirect.protocol) {
+                            redirect.protocol = options.protocol;
+                        }
+                        if(!redirect.hostname) {
+                            redirect.hostname = options.hostname;
+                        }
+                        if(!redirect.port) {
+                            redirect.port = options.port;
+                        }
+                        if(!redirect.hash) {
+                            redirect.hash = options.hash;
+                        }
+
+                        redirectionCount++;
+                        return process(url.format(redirect));
+                }
+
+                if(imageResponse.statusCode !== 200) {
+                    return res.status(404).send('Invalid request. Got ' + imageResponse.statusCode);
+                }
+
+                res.setHeader('content-type', imageResponse.headers['content-type']);
+                res.setHeader('content-length', imageResponse.headers['content-length']);
+                res.setHeader('cache-control', 'max-age=31536000, public');
+
+                imageResponse.pipe(res);
+            }).on('error', function() {
+                return res.status(400).send();
+            });
+        };
+
+        process(req.params.url);
     });
 
     //

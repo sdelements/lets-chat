@@ -89,20 +89,40 @@ if (typeof exports !== 'undefined') {
         });
     }
 
+    function _renderInlineImage(url) {
+        var uri = encodeEntities(_.unescape(url));
+        return '<a class="thumbnail" href="' + uri +
+               '" target="_blank"><img src="' + uri +
+               '" alt="Pasted Image" /></a>';
+    }
+
     function links(text) {
-        if (imagePattern.test(text)) {
-            return text.replace(imagePattern, function(url) {
-                var uri = encodeEntities(_.unescape(url));
-                return '<a class="thumbnail" href="' + uri +
-                       '" target="_blank"><img src="' + uri +
-                       '" alt="Pasted Image" /></a>';
-            });
-        } else {
-            return text.replace(linkPattern, function(url) {
-                var uri = encodeEntities(_.unescape(url));
-                return '<a href="' + uri + '" target="_blank">' + url + '</a>';
-            });
+        var isSecureConnection = window.location.protocol === 'https:';
+
+        if(isSecureConnection) {
+            if(safeImagePattern.test(text)) {
+                return text.replace(safeImagePattern, _renderInlineImage);
+            }
+
+            if(unsafeImagePattern.test(text)) {
+                return text.replace(unsafeImagePattern, function(url) {
+                    var uri = encodeURI(_.unescape(url));
+                    return '<a class="thumbnail" href="' + uri +
+                           '" target="_blank"><img src="/extras/ssl-proxy/' + encodeURIComponent(uri) +
+                           '" alt="Pasted Image" /></a>';
+                });
+            }
         }
+        else {
+            if (imagePattern.test(text)) {
+                return text.replace(imagePattern, _renderInlineImage);
+            }
+        }
+
+        return text.replace(linkPattern, function(url) {
+            var uri = encodeEntities(_.unescape(url));
+            return '<a href="' + uri + '" target="_blank">' + url + '</a>';
+        });
     }
 
     function emotes(text, data) {
@@ -137,6 +157,8 @@ if (typeof exports !== 'undefined') {
         // Match everything outside of normal chars and " (quote character)
         nonAlphanumericRegexp = /([^\#-~| |!])/g,
         imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
+        unsafeImagePattern = /^\s*((http):\/\/[-A-Z0-9\u00a1-\uffff+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
+        safeImagePattern = /^\s*((https):\/\/[-A-Z0-9\u00a1-\uffff+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
         linkPattern = /((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|])/ig;
 
     exports.format = function(text, data) {
