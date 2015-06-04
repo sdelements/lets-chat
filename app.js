@@ -34,6 +34,8 @@ var MongoStore = connectMongo(express.session),
     controllers = all('./app/controllers'),
     app;
 
+var crypto = require('crypto');
+
 //
 // express.oi Setup
 //
