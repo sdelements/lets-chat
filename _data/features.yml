@@ -18,6 +18,9 @@
 - name: Mentions
   icon: at
 
+- name: Private / Password-protected Rooms
+  icon: eye
+
 - name: Image embeds
   icon: image
 
@@ -29,6 +32,9 @@
 
 - name: REST-like API
   icon: exchange
+
+- name: Multilingual (i18n)
+  icon: globe
 
 - name: Transcripts / Chat History
   icon: file-text
