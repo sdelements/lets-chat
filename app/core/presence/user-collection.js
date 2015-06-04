@@ -34,11 +34,7 @@ UserCollection.prototype.getOrAdd = function(user) {
     if (!this.users[userId]) {
         _.assign(user2, { id: userId });
         this.users[userId] = user2;
-<<<<<<< HEAD
-        this.getAvatarFile(user, user2);
-=======
         this.core.avatars.add(user);
->>>>>>> upstream
     }
     return this.users[userId];
 };

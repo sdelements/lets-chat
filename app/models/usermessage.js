@@ -51,8 +51,4 @@ MessageSchema.method('toJSON', function() {
     };
 });
 
-<<<<<<< HEAD
-module.exports = mongoose.model('UserMessage', MessageSchema); 
-=======
 module.exports = mongoose.model('UserMessage', MessageSchema);
->>>>>>> upstream
