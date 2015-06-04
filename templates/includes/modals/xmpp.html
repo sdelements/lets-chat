@@ -21,8 +21,8 @@
                                     <$ account.uid $>@<$ settings.xmpp.domain $>
                                 <% endif %></dd>
                             <% if account.isSSO %>
-                                <dt>Password</dt>
-                                <dd>Use Auth token as password</dd>
+                                <dt><$ __('Password') $></dt>
+                                <dd><$ __('Use Auth token as password') $></dd>
                             <% endif %>
                             <% if settings.xmpp.port != 5222 %>
                             <dt><$ __('Port') $></dt>
