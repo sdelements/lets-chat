@@ -71,5 +71,8 @@
 	"Revoke token": "Afvirkja auðkenni",
 	"Your generated token is below. It will not be shown again.": "Nýtt auðkenni birtist að neðan, auðkennið verður ekki birt aftur.",
 	"Add Room": "Nýtt herbergi",
-	"Slug": "Stutt lýsing"
+	"Slug": "Stutt lýsing",
+	"XMPP/Jabber": "XMPP/Jabber",
+	"Private?": "Private?",
+	"Empty for public room": "Empty for public room"
 }

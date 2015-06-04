@@ -2,7 +2,7 @@
   "name": "lets-chat",
   "version": "0.3.13",
   "description": "A chat app for small teams.",
-  "private": false,
+  "license" : "MIT",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
