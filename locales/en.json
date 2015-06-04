@@ -71,5 +71,8 @@
 	"Revoke token": "Revoke token",
 	"Your generated token is below. It will not be shown again.": "Your generated token is below. It will not be shown again.",
 	"Add Room": "Add Room",
-	"Slug": "Slug"
+	"Slug": "Slug",
+	"XMPP/Jabber": "XMPP/Jabber",
+	"Private?": "Private?",
+	"Empty for public room": "Empty for public room"
 }
