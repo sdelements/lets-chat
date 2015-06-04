@@ -87,10 +87,7 @@ Room.prototype.emitUserLeave = function(data) {
     } else {
         d.roomId = this.roomId;
         d.roomSlug = this.roomSlug;
-<<<<<<< HEAD
-=======
         d.roomHasPassword = this.hasPassword;
->>>>>>> upstream
     }
 
     this.emit('user_leave', d);
