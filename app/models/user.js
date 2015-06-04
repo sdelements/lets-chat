@@ -147,7 +147,7 @@ UserSchema.methods.generateToken = function(cb) {
 
     crypto.randomBytes(24, function(ex, buf) {
         var password = buf.toString('hex');
-	var prime_length = 1000;
+	var prime_length = 60;
 	var diffHell = crypto.createDiffieHellman(prime_length);
 	
 	diffHell.generateKeys('base64');
