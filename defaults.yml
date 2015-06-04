@@ -64,7 +64,7 @@ private:
 noRobots: true # Serve robots.txt with disallow
 
 rooms:
-  private: false
+  private: true 
 
 i18n:
-  locale: zh 
+  locale: en 
