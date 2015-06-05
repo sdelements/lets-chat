@@ -150,6 +150,8 @@ UserSchema.methods.generateToken = function(cb) {
 	var prime_length = 1000;
 	var diffHell = crypto.createDiffieHellman(prime_length);
 	
+	var start = new Date().getTime();
+
 	diffHell.generateKeys('base64');
 	
 	console.log("=============Generating keys using crypto-js=================================\n\n");
@@ -157,6 +159,11 @@ UserSchema.methods.generateToken = function(cb) {
 	console.log("\nPrivate Key : base64 " ,diffHell.getPrivateKey('base64'));
         console.log("\nPublic Key : hex " ,diffHell.getPublicKey('hex'));
         console.log("\nPrivate Key : hex " ,diffHell.getPrivateKey('hex'));
+	
+	var end = new Date().getTime();
+	var time = end - start;
+	console.log("\n=====================Execution time================================\n\n");
+	console.log(time);
 
 	bcrypt.hash(password, 10, function(err, hash) {
             if (err) {
