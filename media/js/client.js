@@ -426,6 +426,15 @@
             this.extras.replacements.done(callback);
         }
     };
+    Client.prototype.getSslProxyState = function(callback) {
+        this.extras = this.extras || {};
+        if(!this.extras.sslProxyState) {
+            this.extras.sslProxyState = $.get('./extras/ssl-proxy-state');
+        }
+        if(callback) {
+            this.extras.sslProxyState.done(callback);
+        }
+    }
 
     //
     // Router Setup
@@ -544,6 +553,7 @@
     Client.prototype.start = function() {
         this.getEmotes();
         this.getReplacements();
+        this.getSslProxyState();
         this.listen();
         this.route();
         this.view = new window.LCB.ClientView({

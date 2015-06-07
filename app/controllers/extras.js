@@ -13,7 +13,8 @@ module.exports = function() {
         url = require('url'),
         http = require('http'),
         https = require('https'),
-        express = require('express.oi');
+        express = require('express.oi'),
+        settings = require('./../config');
 
     var app = this.app,
         middlewares = this.middlewares;
@@ -33,6 +34,14 @@ module.exports = function() {
 
     app.get('/extras/replacements', middlewares.requireLogin, function(req) {
         req.io.route('extras:replacements:list');
+    });
+
+    app.get('/extras/ssl-proxy-state', middlewares.requireLogin, function(req, res) {
+        var isActive = settings.rooms.sslImageProxy;
+
+        res.send({
+            active: isActive
+        });
     });
 
     app.get('/extras/ssl-proxy/:url', middlewares.requireLogin, function(req, res) {

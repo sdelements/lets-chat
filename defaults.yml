@@ -66,6 +66,7 @@ noRobots: true # Serve robots.txt with disallow
 
 rooms:
   private: false
+  sslImageProxy: false
 
 i18n:
   locale: en

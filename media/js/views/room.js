@@ -394,16 +394,20 @@
         },
         formatMessage: function(text, cb) {
             var client = this.client;
+
             client.getEmotes(function(emotes) {
                 client.getReplacements(function(replacements) {
-                    var data = {
-                        emotes: emotes,
-                        replacements: replacements,
-                        rooms: client.rooms
-                    };
+                    client.getSslProxyState(function(proxyState) {
+                        var data = {
+                            emotes: emotes,
+                            replacements: replacements,
+                            rooms: client.rooms,
+                            sslProxyState: proxyState
+                        };
 
-                    var msg = window.utils.message.format(text, data);
-                    cb(msg);
+                        var msg = window.utils.message.format(text, data);
+                        cb(msg);
+                    })
                 });
             });
         },

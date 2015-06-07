@@ -96,10 +96,10 @@ if (typeof exports !== 'undefined') {
                '" alt="Pasted Image" /></a>';
     }
 
-    function links(text) {
+    function links(text, data) {
         var isSecureConnection = window.location.protocol === 'https:';
 
-        if(isSecureConnection) {
+        if(isSecureConnection && data.sslProxyState.active) {
             if(safeImagePattern.test(text)) {
                 return text.replace(safeImagePattern, _renderInlineImage);
             }
@@ -108,7 +108,7 @@ if (typeof exports !== 'undefined') {
                 return text.replace(unsafeImagePattern, function(url) {
                     var uri = encodeURI(_.unescape(url));
                     return '<a class="thumbnail" href="' + uri +
-                           '" target="_blank"><img src="/extras/ssl-proxy/' + encodeURIComponent(uri) +
+                           '" target="_blank"><img src="./extras/ssl-proxy/' + encodeURIComponent(uri) +
                            '" alt="Pasted Image" /></a>';
                 });
             }
