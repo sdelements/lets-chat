@@ -69,3 +69,6 @@ rooms:
 
 i18n:
   locale: en
+
+avatars:
+  provider: gravatar

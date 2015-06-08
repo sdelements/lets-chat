@@ -15,10 +15,9 @@ module.exports = function() {
     //
     // Routes
     //
-    app.get('/users/:id/avatar/:size?', middlewares.requireLogin, function(req, res) {
+    app.get('/users/:id/avatar', middlewares.requireLogin, function(req, res) {
 
-        var identifier = req.param('id'),
-            size = req.param('size') ? req.param('size') : 50;
+        var identifier = req.param('id');
 
         User.findByIdentifier(identifier, function (err, user) {
 
@@ -32,8 +31,7 @@ module.exports = function() {
             }
 
             core.avatars.get({
-                id: user.id,
-                size: size
+                id: user.id
             }, function(err, image) {
 
                 if (err) {
@@ -47,7 +45,7 @@ module.exports = function() {
                 }
 
                 res.sendStatus(500);
-    
+
             });
 
         });
