@@ -1,7 +1,7 @@
 <script type="text/x-handlebars-template" id="template-message">
     <li class="lcb-message {{#if mentioned}}lcb-message-mentioned{{/if}} {{#if fragment}}lcb-message-fragment{{/if}} {{#if own}}lcb-message-own{{/if}} {{#if fragment}}lcb-message-paste{{/if}}" data-owner="{{owner.id}}">
         {{#unless fragment}}
-            <img class="lcb-message-avatar lcb-avatar lcb-room-poke" src="https://www.gravatar.com/avatar/{{owner.avatar}}?s=30" />
+            <img class="lcb-message-avatar lcb-avatar lcb-room-poke" src="/users/{{owner.username}}/avatar" width="30" height="30" />
         {{/unless}}
         <div class="lcb-message-meta">
             {{#unless fragment}}

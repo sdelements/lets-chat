@@ -13,6 +13,10 @@ function AvatarManager(options) {
 
 }
 
+AvatarManager.prototype.add = function(query, cb) {
+
+}
+
 AvatarManager.prototype.get = function(query, cb) {
 
     this.fetch(query, function(err, avatar) {
@@ -44,7 +48,7 @@ AvatarManager.prototype.fetch = function(query, cb) {
 
         query.size = query.size ? parseInt(query.size) : 50;
 
-        this.provider.fetch(user.toJSON(), query, cb);
+        this.provider.fetch(user, query, cb);
 
     }.bind(this));
 
