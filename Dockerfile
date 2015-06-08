@@ -1,4 +1,4 @@
-FROM node:0.10-onbuild
+FROM node:0.12-onbuild
 MAINTAINER SD Elements
 
 ENV LCB_DATABASE_URI mongodb://db/letschat
