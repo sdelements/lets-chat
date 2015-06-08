@@ -1,0 +1,57 @@
+//
+// Users Controller
+//
+
+'use strict';
+
+module.exports = function() {
+
+    var app = this.app,
+        core = this.core,
+        middlewares = this.middlewares,
+        models = this.models,
+        User = models.user;
+
+    //
+    // Routes
+    //
+    app.get('/users/:id/avatar/:size?', middlewares.requireLogin, function(req, res) {
+
+        var identifier = req.param('id'),
+            size = req.param('size') ? req.param('size') : 50;
+
+        User.findByIdentifier(identifier, function (err, user) {
+
+            if (err) {
+                console.error(err);
+                return res.status(400).json(err);
+            }
+
+            if (!user) {
+                return res.sendStatus(404);
+            }
+
+            core.avatars.get({
+                id: user.id,
+                size: size
+            }, function(err, image) {
+
+                if (err) {
+                    res.status(400).json(err);
+                }
+
+                if (image && typeof image.pipe === 'function') {
+                    res.setHeader('Content-Type', 'image/jpeg');
+                    image.pipe(res);
+                    return;
+                }
+
+                res.sendStatus(500);
+    
+            });
+
+        });
+
+    });
+
+};
