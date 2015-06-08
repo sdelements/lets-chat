@@ -62,8 +62,8 @@
 	"Search": "Recherche",
 	"Upload": "Transférer",
 	"Select Files": "Choix des Fichiers",
-	"Room": "Salon",alon
-	"Post in room?": "Publier dans le s?",
+	"Room": "Salon",
+	"Post in room?": "Publier dans le salon ?",
 	"Authentication tokens": "Jetons d'Authentication",
 	"Auth tokens are used to access the Let's Chat API.": "Les Jetons d'Auth Sont utilisés afin d'accéder à l'API de Let's Chat.",
 	"Generate token": "Generer un jeton",
