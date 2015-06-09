@@ -4,8 +4,9 @@ MAINTAINER SD Elements
 ENV LCB_DATABASE_URI mongodb://db/letschat
 ENV LCB_HTTP_HOST 0.0.0.0
 
-RUN apt-get update
-RUN apt-get install -y libkrb5-dev
+RUN	apt-get update \
+&&	apt-get install -y libkrb5-dev --no-install-recommends \
+&&	rm -rf /var/lib/apt/lists/*
 
 RUN npm install lets-chat-ldap lets-chat-kerberos lets-chat-s3
 
