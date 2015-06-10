@@ -1,7 +1,11 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    settings = require('./../config').avatars;
+    streamifier = require('streamifier'),
+    lwip = require('lwip'),
+    colorHash = new (require('color-hash'));
+
+var settings = require('./../config').avatars;
 
 function AvatarManager(options) {
 
@@ -35,6 +39,8 @@ AvatarManager.prototype.fetch = function(query, cb) {
         cb = function() {};
     }
 
+    query.size = query.size ? parseInt(query.size) : 50;
+
     User.findByIdentifier(query.id, function(err, user) {
 
         if (err) {
@@ -46,9 +52,30 @@ AvatarManager.prototype.fetch = function(query, cb) {
             return cb('User does not exist.');
         }
 
-        query.size = query.size ? parseInt(query.size) : 50;
+        this.provider.fetch(user, query, function(err, avatar) {
 
-        this.provider.fetch(user, query, cb);
+            if (err) {
+                console.error(err);
+                return cb(err);
+            }
+
+            if (!avatar) {
+
+                var colors = colorHash.rgb(user.email || user.id);
+
+                lwip.create(query.size, query.size, colors, function(err, image) {
+                    image.toBuffer('jpg', function(err, buffer) {
+                        cb(null, streamifier.createReadStream(buffer));
+                    });
+                });
+
+                return;
+
+            }
+
+            cb(err, avatar);
+
+        });
 
     }.bind(this));
 

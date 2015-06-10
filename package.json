@@ -61,6 +61,7 @@
     "async": "^1.0.0",
     "bcryptjs": "~2.1.0",
     "body-parser": "^1.12.4",
+    "color-hash": "^1.0.3",
     "colors": "~1.1.0",
     "compression": "^1.4.4",
     "connect-assets": "^4.7.0",
@@ -93,7 +94,8 @@
     "passport.socketio": "^3.5.1",
     "request": "^2.57.0",
     "require-directory": "~2.1.0",
-    "require-tree": "0.3.3"
+    "require-tree": "0.3.3",
+    "streamifier": "^0.1.1"
   },
   "devDependencies": {
     "grunt": "~0.4.5",

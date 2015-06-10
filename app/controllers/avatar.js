@@ -30,16 +30,17 @@ module.exports = function() {
                 return res.sendStatus(404);
             }
 
-            core.avatars.get({
+            core.avatars.fetch({
                 id: user.id
             }, function(err, image) {
 
                 if (err) {
                     res.status(400).json(err);
+                    return;
                 }
 
                 if (image && typeof image.pipe === 'function') {
-                    res.setHeader('Content-Type', 'image/jpeg');
+                    res.setHeader('Content-Type', 'image/png');
                     image.pipe(res);
                     return;
                 }

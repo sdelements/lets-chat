@@ -14,7 +14,7 @@ Gravatar.prototype.fetch = function(user, query, cb) {
 
     var url = gravatar.url(user.email, {
         s: query.size || 50,
-        d: 'retro'
+        d: 404
     }, true);
 
     var stream = request({
@@ -24,7 +24,7 @@ Gravatar.prototype.fetch = function(user, query, cb) {
         cb(err);
     }).on('response', function(res) {
         if (!_.contains([200, 301, 302], res.statusCode)) {
-            cb(res.statusCode + ': Unable to fetch avatar.');
+            cb();
             return;
         }
         cb(null, res);
