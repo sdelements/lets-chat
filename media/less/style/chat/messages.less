@@ -4,24 +4,14 @@
 
  @messagePadding: 7px;
 
-.lcb-messages-outer {
-    background: #fff;
-    position: relative;
-    .flex(1);
-}
-
 .lcb-messages {
     background: #fff;
     padding: 0;
     margin: 0;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    .flex(1);
+    .flex(1 0 0);
     .transform(translate3d(0,0,0));
-    .lcb-messages-outer & {
-        .size(100%);
-        position: absolute;
-    }
 }
 
 .lcb-message {
