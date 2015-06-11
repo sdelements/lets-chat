@@ -24,6 +24,16 @@ if (typeof window !== 'undefined' && typeof exports === 'undefined') {
                 'hold on to your butts',
                 'spared no expense',
                 'life finds a way',
+		'lol',
+		'haha',
+		'rofl',
+		'good bye',
+		'hello',
+		'hi',
+		'doubt',
+		'bye',
+		'thank you',
+		'welcome',
                 'it\'s a unix system! i know this!'
             ];
 
