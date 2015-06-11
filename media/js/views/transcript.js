@@ -39,7 +39,8 @@
                 ranges = {
                     'Today': [moment(), moment()],
                     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 7 Days': [moment().subtract(7, 'days'), moment()],
+                    'Last 15 Days' : [moment().subtract(14, 'days'), moment()],
                     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
                 }
 
