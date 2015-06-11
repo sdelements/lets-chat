@@ -5,10 +5,7 @@
 'use strict';
 
 module.exports = function() {
-
-    var _ = require('lodash'),
-        helpers = require('./../core/helpers');
-
+    
     var app = this.app,
         core = this.core,
         middlewares = this.middlewares,

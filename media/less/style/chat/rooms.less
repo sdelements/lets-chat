@@ -77,6 +77,10 @@
             box-shadow: none;
         }
     }
+    .password {
+        font-size: 14px;
+        cursor: default;
+    }
     .btn:hover {
         color: #666;
     }
@@ -89,6 +93,15 @@
         font-size: 12px;
     }
 }
+
+.lcb-room-participants {
+    .text-overflow;
+    color: #777;
+    @media (max-width: @screen-xs-max) {
+        font-size: 12px;
+    }
+}
+
 
 .lcb-room-chat {
     .flex(1);
@@ -187,7 +200,7 @@
     border-bottom: 1px #ddd solid;
     .flex-display;
     .flex-direction(column);
-    .flex(1);
+    .flex(1 0 0);
 }
 
 .lcb-room-sidebar-header {

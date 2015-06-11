@@ -6,20 +6,29 @@
                 <div class="lcb-room-meta">
                     <h2 class="lcb-room-heading"><mark>
                         <span class="name">{{name}}</span>
-                        <span class="slug">#{{slug}}</span></mark>
-                        <a class="btn hidden-xs show-edit-room"
-                            title="Edit Room">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                        <a class="btn hidden-xs" title="Chat History"
+                        <span class="slug">#{{slug}}</span>
+                        {{#if hasPassword}}
+                            <span class="fa fa-lock btn password" title="<$ __('This room requires password to enter') $>"></span>
+                        {{/if}}
+                        {{#if iCanEdit}}
+                            <a class="btn hidden-xs show-edit-room"
+                                title="<$ __('Edit Room') $>">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        {{/if}}
+                        <a class="btn hidden-xs" title="<$ __('Chat History') $>"
                             href="./transcript?room={{ id }}" target="_blank">
                             <i class="fa fa-history"></i>
                         </a>
-                        <a class="btn hidden-xs lcb-upload-trigger" title="Upload Files" href="#">
+                        <% if settings.files.enable %>
+                        <a class="btn hidden-xs lcb-upload-trigger" title="<$ __('Upload Files') $>" href="#">
                             <i class="fa fa-upload"></i>
                         </a>
                         <a data-toggle="modal" href="#lcb-tokens">
                             <i class="fa fa-fw fa-lock"></i>
+                        <% endif %>
+                        <a class="btn hidden-xs lcb-giphy" href="#lcb-giphy" title="<$ __('Giphy') $>" data-toggle="modal">
+                            <i class="fa fa-gift"></i>
                         </a>
                     </h2>
                     <div class="lcb-room-description">
@@ -36,21 +45,19 @@
             <ul class="lcb-messages"></ul>
             </div>
             <form class="lcb-entry">
-                <textarea class="lcb-entry-input" placeholder="Enter your text here....." autofocus></textarea>
-                <button type="submit" class="btn btn-info lcb-entry-button">Send</button>
+                <textarea class="lcb-entry-input" placeholder="<$ __('Got something to say?') $>" autofocus></textarea>
+                <button type="submit" class="btn btn-info lcb-entry-button"><$ __('Send') $></button>
             </form>
         </div><!-- lcb-chat end -->
         <div class="lcb-room-sidebar">
             <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
                 <header class="lcb-room-sidebar-header">
                     <h3 class="lcb-room-sidebar-heading">
-                        <i class="fa fa-users"></i>
-                        Who's Here (<span class="lcb-room-sidebar-items-count"></span>)
                     </h3>
                 </header>
                 <ul class="lcb-room-sidebar-list"></ul>
             </div>
-            <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
+            <div class="lcb-room-sidebar-group lcb-room-sidebar-otr">
                 <header class="lcb-room-sidebar-header">
                 <h3 class="lcb-room-sidebar-heading">
                     <i class="fa fa-lock"></i> OTR
@@ -59,10 +66,12 @@
                     <i class="fa fa-plus"></i>
                 </button>
                 </header>
-
+                <ul class="lcb-room-sidebar-list"></ul>
+            </div>
+            <div class="lcb-room-sidebar-group lcb-room-sidebar-files">
                 <header class="lcb-room-sidebar-header">
-                <h3 class="lcb-room-sidebar-heading">
-                        <i class="fa fa-file-text"></i> Files
+                    <h3 class="lcb-room-sidebar-heading">
+                        <i class="fa fa-file-text"></i> <$ __('Files') $>
                     </h3>
                     <button class="btn lcb-room-sidebar-files-add lcb-upload-trigger">
                         <i class="fa fa-plus"></i>
@@ -78,7 +87,7 @@
                 <form action="" class="validate form-horizontal" method="post">
                     <div class="modal-header">
                         <button class="close hide-edit-room" type="button">&times;</button>
-                        <h4 class="modal-title">Edit Room</h4>
+                        <h4 class="modal-title"><$ __('Edit Room') $></h4>
                           <li>
                             <a data-toggle="modal" href="#lcb-otr">
                             Enable OTR messaging </a> 
@@ -86,7 +95,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label col-sm-4">Name</label>
+                            <label class="control-label col-sm-4"><$ __('Name') $></label>
                             <div class="col-sm-7">
                                 <input class="required name form-control" name=
                                 "name" type="text" value="{{name}}">
@@ -94,20 +103,50 @@
                         </div>
                         <div class="form-group">
                             <label class=
-                            "control-label col-sm-4">Description</label>
+                            "control-label col-sm-4"><$ __('Description') $></label>
                             <div class="col-sm-7">
                                 <textarea class="form-control" name=
                                 "description">{{description}}</textarea>
                             </div>
                         </div>
+                        {{#if private}}
+                            <div class="form-group">
+                                <label class=
+                                "control-label col-sm-4"><$ __('Password') $></label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" name=
+                                    "password" type="password" value="{{password}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class=
+                                "control-label col-sm-4"><$ __('Confirm Password') $></label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" name=
+                                    "confirmPassword" type="password" value="{{password}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class=
+                                "control-label col-sm-4"><$ __('Participants') $></label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control lcb-entry-participants" name=
+                                    "participants">{{participants}}</textarea>
+                                </div>
+                            </div>
+                        {{/if}}
                         <p class="response" style="display: none;"></p>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-success pull-right submit-edit-room" type=
-                        "submit"><i class="icon-ok"></i> Save</button>
+                        "submit">
+                            <i class="icon-ok"></i> <$ __('Save') $>
+                        </button>
                         <a class="archive-room btn btn-danger pull-left"
-                        tabindex="-1"><i class="icon-remove icon-white"></i>
-                        Archive Room</a>
+                        tabindex="-1">
+                            <i class="icon-remove icon-white"></i>
+                            <$ __('Archive Room') $>
+                        </a>
                     </div>
                 </form>
             </div>

@@ -44,4 +44,4 @@ UserManager.prototype.username = function(username, cb) {
     }, cb);
 };
 
-module.exports = UserManager; 
+module.exports = UserManager;

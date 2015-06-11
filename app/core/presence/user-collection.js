@@ -1,13 +1,14 @@
 'use strict';
 
 var EventEmitter = require('events').EventEmitter,
+    util = require('util'),
     crypto = require('crypto'),
     http = require('http'),
-    util = require('util'),
     _ = require('lodash');
 
-function UserCollection() {
+function UserCollection(options) {
     EventEmitter.call(this);
+    this.core = options.core;
     this.users = {};
 
     this.get = this.get.bind(this);
@@ -33,7 +34,7 @@ UserCollection.prototype.getOrAdd = function(user) {
     if (!this.users[userId]) {
         _.assign(user2, { id: userId });
         this.users[userId] = user2;
-        this.getAvatarFile(user, user2);
+        this.core.avatars.add(user);
     }
     return this.users[userId];
 };

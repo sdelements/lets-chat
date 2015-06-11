@@ -61,6 +61,7 @@
                     rooms: this.client.rooms
                 });
             }
+
             //
             // Modals
             //
@@ -80,6 +81,9 @@
 	    });
             this.notificationsModal = new window.LCB.NotificationsModalView({
                 el: this.$el.find('#lcb-notifications')
+            });
+            this.giphyModal = new window.LCB.GiphyModalView({
+                el: this.$el.find('#lcb-giphy')
             });
             //
             // Misc

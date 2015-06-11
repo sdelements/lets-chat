@@ -63,7 +63,7 @@ migration.step(function(data, stepComplete) {
         });
     }
 
-    var users = data.external_users.concat(data.local_users);
+    var users = data.external_users.documents.concat(data.local_users.documents);
 
     async.each(users, updateDoc, function(err) {
         stepComplete(err);

@@ -49,7 +49,7 @@ migration.step(function(data, stepComplete) {
         });
     }
 
-    async.each(data.rooms, updateDoc, function(err) {
+    async.each(data.rooms.documents, updateDoc, function(err) {
         stepComplete(err);
     });
 });

@@ -1,4 +1,3 @@
- 
 'use strict';
 
 var _ = require('lodash'),
@@ -12,7 +11,8 @@ module.exports = MessageProcessor.extend({
     if: function() {
         return this.request.name === 'message' &&
                this.request.type === 'chat' &&
-               !this.toARoom;
+               !this.toARoom &&
+               this.request.attrs.to;
     },
 
     then: function(cb) {
@@ -31,6 +31,13 @@ module.exports = MessageProcessor.extend({
         }
 
         this.core.users.username(username, function(err, user) {
+            if (err) {
+                return cb(err);
+            }
+
+            if (!user) {
+                return cb();
+            }
 
             this.core.usermessages.create({
                 owner: this.connection.user.id,

@@ -9,16 +9,19 @@ A self-hosted chat app for small teams built by [Security Compass][seccom].
 * BYOS (bring your own server)
 * Persistent messages
 * Multiple rooms
+* Private and password-protected rooms
 * New message alerts / notifications
-* Mentions (hey @you)
-* Image embeds
+* Mentions (hey @you/@all)
+* Image embeds / Giphy search
 * Code pasting
 * File uploads (Local / [Amazon S3][s3] / [Azure][azure])
 * Transcripts / chat history
 * XMPP Multi-user chat (MUC)
+* 1-to-1 chat between XMPP users
 * Local / [Kerberos][kerberos] / [LDAP][ldap] authentication
 * [Hubot Adapter][hubot]
 * REST-like API
+* Basic i18n support
 * MIT Licensed
 
 
