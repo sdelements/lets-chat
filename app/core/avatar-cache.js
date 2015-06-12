@@ -40,8 +40,7 @@ AvatarCache.prototype.add = function(user) {
 
             this.core.emit('avatar-cache:update', user);
         }.bind(this));
-    }.bind(this)).on('error', function(e){
-    });
+    }.bind(this)).on('error', function(){ });
 };
 
 module.exports = AvatarCache;
