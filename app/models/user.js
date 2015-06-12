@@ -150,7 +150,9 @@ UserSchema.methods.generateToken = function(cb) {
         var password = buf.toString('hex');
 	
 	/* Diffie Hellman */
-	var prime_length = 1000;
+	var prime_length = 1536; 
+	/*  OTR uses a combination of AES symmetric-key algorithm with 128 bits key length, the Diffie–Hellman key exchange with 1536 bits group size, and the SHA-1 hash function */
+	
 	var diffHell = crypto.createDiffieHellman(prime_length);
 	
 	var start = new Date().getTime();
