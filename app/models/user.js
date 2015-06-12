@@ -165,6 +165,34 @@ UserSchema.methods.generateToken = function(cb) {
         hash.update(test);
         var value = hash.digest('hex');
 	
+	/* AES encryption */	
+	var AESCrypt = {};
+	AESCrypt.decrypt = function(cryptkey, iv, encryptdata) {
+	  encryptdata = new Buffer(encryptdata, 'base64').toString('binary');
+	  var decipher = crypto.createDecipheriv('aes-256-cbc', cryptkey, iv),
+              decoded = decipher.update(encryptdata, 'binary', 'utf8');
+	      decoded += decipher.final('utf8');
+	      return decoded;
+	  }
+	
+	  AESCrypt.encrypt = function(cryptkey, iv, cleardata) {
+	    var encipher = crypto.createCipheriv('aes-256-cbc', cryptkey, iv),
+		encryptdata = encipher.update(cleardata, 'utf8', 'binary');
+		encryptdata += encipher.final('binary');
+		var encode_encryptdata = new Buffer(encryptdata, 'binary').toString('base64');
+		return encode_encryptdata;
+	  }
+	
+	  var cryptkey   = crypto.createHash('sha256').update('Nixnogen').digest(),
+	      iv         = 'a2xhcgAAAAAAAAAA',
+	      buf        = "Here is some data for the encrypt", // 32 chars
+	      enc        = AESCrypt.encrypt(cryptkey, iv, buf);
+	      var dec        = AESCrypt.decrypt(cryptkey, iv, enc);
+	
+	console.log("\n============================AES encryption testing ....============================\n\n");
+	console.log("\nencrypt length: ", enc.length);
+	console.log("\nencrypt in Base64:", enc);
+	console.log("\ndecrypt all: " + dec);
 	console.log("=============Generating keys using crypto-js=================================\n\n");
 	console.log("\nPublic Key : base64 " ,diffHell.getPublicKey('base64'));
 	console.log("\nPrivate Key : base64 " ,diffHell.getPrivateKey('base64'));
