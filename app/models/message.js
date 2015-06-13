@@ -4,8 +4,8 @@
 
 'use strict';
 
-var mongoose = require('mongoose'),
-    ObjectId = mongoose.Schema.Types.ObjectId;
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var MessageSchema = new mongoose.Schema({
     room: {
@@ -20,8 +20,7 @@ var MessageSchema = new mongoose.Schema({
     },
     text: {
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
     posted: {
         type: Date,
@@ -35,10 +34,9 @@ MessageSchema.index({ text: 'text', room: 1, posted: -1, _id: 1 });
 // EXPOSE ONLY CERTAIN FIELDS
 // This helps ensure that the client gets
 // data that can be digested properly
-MessageSchema.method('toJSON', function() {
-    return {
+MessageSchema.method('toJSON', function(user) {
+    var data = {
         id: this._id,
-        room: this.room,
         text: this.text,
         posted: this.posted,
 
@@ -49,6 +47,14 @@ MessageSchema.method('toJSON', function() {
             username: '_deleted_user_'
         }
     };
+
+    if (this.room._id) {
+        data.room = this.room.toJSON(user);
+    } else {
+        data.room = this.room;
+    }
+
+    return data;
 });
 
 module.exports = mongoose.model('Message', MessageSchema);

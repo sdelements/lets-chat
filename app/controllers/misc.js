@@ -18,7 +18,7 @@ module.exports = function() {
         if (!settings.noRobots) {
             return res.sendStatus(404);
         }
-        
+
         res.sendFile(path.resolve(__dirname, '../misc/robots.txt'));
     });
 

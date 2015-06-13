@@ -1,16 +1,17 @@
 'use strict';
 
-var _ = require('lodash'),
-    Connection = require('./presence/connection'),
+var Connection = require('./presence/connection'),
+    Room = require('./presence/room'),
     ConnectionCollection = require('./presence/connection-collection'),
     RoomCollection = require('./presence/room-collection'),
     UserCollection = require('./presence/user-collection');
 
 function PresenceManager(options) {
     this.core = options.core;
+    this.system = new Room({ system: true });
     this.connections = new ConnectionCollection();
     this.rooms = new RoomCollection();
-    this.users = new UserCollection();
+    this.users = new UserCollection({ core: this.core });
     this.rooms.on('user_join', this.onJoin.bind(this));
     this.rooms.on('user_leave', this.onLeave.bind(this));
 
@@ -30,7 +31,8 @@ PresenceManager.prototype.getUsersForRoom = function(roomId) {
 };
 
 PresenceManager.prototype.connect = function(connection) {
-    this.connections.add(connection);
+    this.system.addConnection(connection);
+    this.core.emit('connect', connection);
 
     connection.user = this.users.getOrAdd(connection.user);
 
@@ -40,13 +42,14 @@ PresenceManager.prototype.connect = function(connection) {
 };
 
 PresenceManager.prototype.disconnect = function(connection) {
-    this.connections.remove(connection);
+    this.system.removeConnection(connection);
+    this.core.emit('disconnect', connection);
     this.rooms.removeConnection(connection);
 };
 
-PresenceManager.prototype.join = function(connection, roomId, roomSlug) {
-    var room = this.rooms.getOrAdd(roomId, roomSlug);
-    room.addConnection(connection);
+PresenceManager.prototype.join = function(connection, room) {
+    var pRoom = this.rooms.getOrAdd(room);
+    pRoom.addConnection(connection);
 };
 
 PresenceManager.prototype.leave = function(connection, roomId) {

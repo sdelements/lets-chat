@@ -4,10 +4,7 @@
 
 'use strict';
 
-var fs = require('fs'),
-    _ = require('lodash'),
-    async = require('async'),
-    multer = require('multer'),
+var multer = require('multer'),
     settings = require('./../config').files;
 
 module.exports = function() {
@@ -19,13 +16,12 @@ module.exports = function() {
     var app = this.app,
         core = this.core,
         middlewares = this.middlewares,
-        models = this.models,
-        Room = models.room;
+        models = this.models;
 
     core.on('files:new', function(file, room, user) {
         var fil = file.toJSON();
         fil.owner = user;
-        fil.room = room;
+        fil.room = room.toJSON(user);
 
         app.io.to(room._id)
               .emit('files:new', fil);
@@ -44,19 +40,19 @@ module.exports = function() {
     //
     app.route('/files')
         .all(middlewares.requireLogin)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('files:list');
         })
-        .post(fileUpload, middlewares.cleanupFiles, function(req, res) {
+        .post(fileUpload, middlewares.cleanupFiles, function(req) {
             req.io.route('files:create');
         });
 
     app.route('/rooms/:room/files')
         .all(middlewares.requireLogin, middlewares.roomRoute)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('files:list');
         })
-        .post(fileUpload, middlewares.cleanupFiles, function(req, res) {
+        .post(fileUpload, middlewares.cleanupFiles, function(req) {
             req.io.route('files:create');
         });
 
@@ -109,6 +105,9 @@ module.exports = function() {
         },
         list: function(req, res) {
             var options = {
+                    userId: req.user._id,
+                    password: req.param('password'),
+
                     room: req.param('room'),
                     reverse: req.param('reverse'),
                     skip: req.param('skip'),
@@ -120,6 +119,11 @@ module.exports = function() {
                 if (err) {
                     return res.sendStatus(400);
                 }
+
+                files = files.map(function(file) {
+                    return file.toJSON(req.user);
+                });
+
                 res.json(files);
             });
         }

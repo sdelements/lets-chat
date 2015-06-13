@@ -44,11 +44,16 @@
                 $input = $target.is(':checkbox') && $target || $target.siblings('[type="checkbox"]'),
                 id = $input.data('id'),
                 room = this.rooms.get(id);
+
             if (!room) {
                 return;
             }
-            (!$input.is(':checked') && this.client.joinRoom(room.id)) ||
-                (this.rooms.get(room.id).get('joined') && this.client.leaveRoom(room.id));
+
+            if (room.get('joined')) {
+                this.client.leaveRoom(room.id);
+            } else {
+                this.client.joinRoom(room);
+            }
         },
         add: function(room) {
             var room = room.toJSON ? room.toJSON() : room,
@@ -63,6 +68,7 @@
         update: function(room) {
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-participants').text(room.get('participants'));
         },
         updateLastActive: function(room) {
             this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).calendar());
@@ -79,7 +85,7 @@
                     au = ar.users.length,
                     bu = br.users.length,
                     aj = ar.get('joined'),
-                    bj = br.get('joined')
+                    bj = br.get('joined');
                 if ((aj && bj) || (!aj && !bj)) {
                     if (au > bu) return -1;
                     if (au < bu) return 1;
@@ -100,28 +106,62 @@
             });
         },
         create: function(e) {
+            var that = this;
             e.preventDefault();
-            var $modal = this.$('#lcb-add-room'),
-                $form = this.$(e.target),
+            var $form = this.$(e.target),
+                $modal = this.$('#lcb-add-room'),
+                $name = this.$('.lcb-room-name'),
+                $slug = this.$('.lcb-room-slug'),
+                $description = this.$('.lcb-room-description'),
+                $password = this.$('.lcb-room-password'),
+                $confirmPassword = this.$('.lcb-room-confirm-password'),
+                $private = this.$('.lcb-room-private'),
                 data = {
-                    name: this.$('.lcb-room-name').val().trim(),
-                    slug: this.$('.lcb-room-slug').val().trim(),
-                    description: this.$('.lcb-room-description').val(),
+                    name: $name.val().trim(),
+                    slug: $slug.val().trim(),
+                    description: $description.val(),
+                    password: $password.val(),
+                    private: !!$private.prop('checked'),
                     callback: function success() {
                         $modal.modal('hide');
                         $form.trigger('reset');
                     }
                 };
+
+            $name.parent().removeClass('has-error');
+            $slug.parent().removeClass('has-error');
+            $confirmPassword.parent().removeClass('has-error');
+
             // we require name is non-empty
             if (!data.name) {
                 $name.parent().addClass('has-error');
                 return;
             }
+
             // we require slug is non-empty
             if (!data.slug) {
                 $slug.parent().addClass('has-error');
                 return;
             }
+
+            // remind the user, that users may share the password with others
+            if (data.password) {
+                if (data.password !== $confirmPassword.val()) {
+                    $confirmPassword.parent().addClass('has-error');
+                    return;
+                }
+
+                swal({
+                    title: 'Password-protected room',
+                    text: 'You\'re creating a room with a shared password.\n' +
+                          'Anyone who obtains the password may enter the room.',
+                    showCancelButton: true
+                }, function(){
+                    that.client.events.trigger('rooms:create', data);
+                });
+                return;
+            }
+
             this.client.events.trigger('rooms:create', data);
         },
         addUser: function(user, room) {

@@ -1,12 +1,12 @@
 'use strict';
 
-var fs = require('fs'),
-    _ = require('lodash'),
+var _ = require('lodash'),
     mongoose = require('mongoose'),
     helpers = require('./helpers'),
     plugins = require('./../plugins'),
-    settings = require('./../config').files,
-    enabled = settings.enable;
+    settings = require('./../config').files;
+
+var enabled = settings.enable;
 
 function FileManager(options) {
     this.core = options.core;
@@ -32,8 +32,8 @@ FileManager.prototype.create = function(options, cb) {
     }
 
     var File = mongoose.model('File'),
-    Room = mongoose.model('Room'),
-    User = mongoose.model('User');
+        Room = mongoose.model('Room'),
+        User = mongoose.model('User');
 
     if (settings.restrictTypes &&
         settings.allowedTypes &&
@@ -55,6 +55,9 @@ FileManager.prototype.create = function(options, cb) {
         if (room.archived) {
             return cb('Room is archived.');
         }
+        if (!room.isAuthorized(options.owner)) {
+            return cb('Not authorized.');
+        }
 
         new File({
             owner: options.owner,
@@ -63,11 +66,16 @@ FileManager.prototype.create = function(options, cb) {
             size: options.file.size,
             room: options.room
         }).save(function(err, savedFile) {
+            if (err) {
+                return cb(err);
+            }
+
             this.provider.save({file: options.file, doc: savedFile}, function(err) {
                 if (err) {
                     savedFile.remove();
                     return cb(err);
                 }
+
                 // Temporary workaround for _id until populate can do aliasing
                 User.findOne(options.owner, function(err, user) {
                     if (err) {
@@ -82,7 +90,7 @@ FileManager.prototype.create = function(options, cb) {
                     if (options.post) {
                         this.core.messages.create({
                             room: room,
-                            owner: user,
+                            owner: user.id,
                             text: 'upload://' + savedFile.url
                         });
                     }
@@ -93,6 +101,8 @@ FileManager.prototype.create = function(options, cb) {
 };
 
 FileManager.prototype.list = function(options, cb) {
+    var Room = mongoose.model('Room');
+
     if (!enabled) {
         return cb(null, []);
     }
@@ -111,8 +121,7 @@ FileManager.prototype.list = function(options, cb) {
         maxTake: 5000
     });
 
-    var File = mongoose.model('File'),
-        User = mongoose.model('User');
+    var File = mongoose.model('File');
 
     var find = File.find({
         room: options.room
@@ -144,14 +153,37 @@ FileManager.prototype.list = function(options, cb) {
         find.sort({ 'uploaded': 1 });
     }
 
-    find
-    .limit(options.take)
-    .exec(function(err, files) {
+    Room.findById(options.room, function(err, room) {
         if (err) {
             console.error(err);
             return cb(err);
         }
-        cb(null, files);
+
+        var opts = {
+            userId: options.userId,
+            password: options.password
+        };
+
+        room.canJoin(opts, function(err, canJoin) {
+            if (err) {
+                console.error(err);
+                return cb(err);
+            }
+
+            if (!canJoin) {
+                return cb(null, []);
+            }
+
+            find
+                .limit(options.take)
+                .exec(function(err, files) {
+                    if (err) {
+                        console.error(err);
+                        return cb(err);
+                    }
+                    cb(null, files);
+                });
+        });
     });
 };
 

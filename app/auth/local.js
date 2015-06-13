@@ -1,3 +1,5 @@
+'use strict';
+
 var mongoose = require('mongoose'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy;
@@ -17,7 +19,7 @@ Local.prototype.setup = function() {
         var User = mongoose.model('User');
         User.authenticate(identifier, password, function(err, user) {
             if (err) {
-                return done(null, false,  {
+                return done(null, false, {
                     message: 'Some fields did not validate.'
                 });
             }

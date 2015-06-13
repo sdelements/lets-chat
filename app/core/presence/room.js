@@ -2,13 +2,25 @@
 
 var EventEmitter = require('events').EventEmitter,
     util = require('util'),
-    _ = require('lodash'),
     ConnectionCollection = require('./connection-collection');
 
-function Room(roomId, roomSlug) {
+function Room(options) {
     EventEmitter.call(this);
-    this.roomId = roomId;
-    this.roomSlug = roomSlug;
+
+    if (options.system) {
+        // This is the system room
+        // Used for tracking what users are online
+        this.system = true;
+        this.roomId = undefined;
+        this.roomSlug = undefined;
+        this.hasPassword = false;
+    } else {
+        this.system = false;
+        this.roomId = options.room._id.toString();
+        this.roomSlug = options.room.slug;
+        this.hasPassword = options.room.hasPassword;
+    }
+
     this.connections = new ConnectionCollection();
     this.userCount = 0;
 
@@ -43,22 +55,41 @@ Room.prototype.containsUser = function(userId) {
 
 Room.prototype.emitUserJoin = function(data) {
     this.userCount++;
-    this.emit('user_join', {
-        roomId: this.roomId,
-        roomSlug: this.roomSlug,
+
+    var d = {
         userId: data.userId,
         username: data.username
-    });
+    };
+
+    if (this.system) {
+        d.system = true;
+    } else {
+        d.roomId = this.roomId;
+        d.roomSlug = this.roomSlug;
+        d.roomHasPassword = this.hasPassword;
+    }
+
+    this.emit('user_join', d);
 };
 
 Room.prototype.emitUserLeave = function(data) {
     this.userCount--;
-    this.emit('user_leave', {
-        roomId: this.roomId,
-        roomSlug: this.roomSlug,
+
+    var d = {
+        user: data.user,
         userId: data.userId,
         username: data.username
-    });
+    };
+
+    if (this.system) {
+        d.system = true;
+    } else {
+        d.roomId = this.roomId;
+        d.roomSlug = this.roomSlug;
+        d.roomHasPassword = this.hasPassword;
+    }
+
+    this.emit('user_leave', d);
 };
 
 Room.prototype.usernameChanged = function(data) {
@@ -86,6 +117,7 @@ Room.prototype.addConnection = function(connection) {
         !this.containsUser(connection.user.id)) {
         // User joining room
         this.emitUserJoin({
+            user: connection.user,
             userId: connection.user.id,
             username: connection.user.username
         });
@@ -104,6 +136,7 @@ Room.prototype.removeConnection = function(connection) {
             !this.containsUser(connection.user.id)) {
             // Leaving room altogether
             this.emitUserLeave({
+                user: connection.user,
                 userId: connection.user.id,
                 username: connection.user.username
             });

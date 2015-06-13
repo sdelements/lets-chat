@@ -1,3 +1,41 @@
+## 0.4.0 (2015-06-04)
+
+Enhancements
+
+* Private and password-protected rooms
+* Private 1-to-1 chat between XMPP users
+* Giphy image search
+* @all mentions are highlighted for everyone
+* Basic server-side i18n support
+
+## 0.3.13 (2015-05-29)
+
+Fixes
+
+* Multiple layout bugs due to overflowing content in Firefox
+* Layout issue introduced by Chrome 43
+
+## 0.3.12 (2015-05-19)
+
+Fixes
+
+* Multiple layout bugs due to overflowing content in Firefox
+* Layout issue introduced by Chrome 43
+
+## 0.3.11 (2015-05-19)
+
+Fixes
+
+* Env variable loading
+* Various notification adjustments
+
+Enhancements
+
+* Usernames may now contain underscores and dashes
+* Unicode character support for links in messages
+* Unread message counts in the favicon
+* Newlines with `shift+enter`
+
 ## 0.3.10 (2015-04-14)
 
 Fixes

@@ -4,42 +4,83 @@
 
 'use strict';
 
-var _ = require('lodash');
+var settings = require('./../config').rooms;
 
 module.exports = function() {
     var app = this.app,
         core = this.core,
         middlewares = this.middlewares,
         models = this.models,
-        Room = models.room,
         User = models.user;
 
     core.on('presence:user_join', function(data) {
         User.findById(data.userId, function (err, user) {
-            user = user.toJSON();
-            user.room = data.roomId;
-            app.io.emit('users:join', user);
+            if (!err && user) {
+                user = user.toJSON();
+                user.room = data.roomId;
+                if (data.roomHasPassword) {
+                    app.io.to(data.roomId).emit('users:join', user);
+                } else {
+                    app.io.emit('users:join', user);
+                }
+            }
         });
     });
 
     core.on('presence:user_leave', function(data) {
         User.findById(data.userId, function (err, user) {
-            user = user.toJSON();
-            user.room = data.roomId;
-            app.io.emit('users:leave', user);
+            if (!err && user) {
+                user = user.toJSON();
+                user.room = data.roomId;
+                if (data.roomHasPassword) {
+                    app.io.to(data.roomId).emit('users:leave', user);
+                } else {
+                    app.io.emit('users:leave', user);
+                }
+            }
         });
     });
 
+    var getEmitters = function(room) {
+        if (room.private && !room.hasPassword) {
+            var connections = core.presence.connections.query({
+                type: 'socket.io'
+            }).filter(function(connection) {
+                return room.isAuthorized(connection.user);
+            });
+
+            return connections.map(function(connection) {
+                return {
+                    emitter: connection.socket,
+                    user: connection.user
+                };
+            });
+        }
+
+        return [{
+            emitter: app.io
+        }];
+    };
+
     core.on('rooms:new', function(room) {
-        app.io.emit('rooms:new', room);
+        var emitters = getEmitters(room);
+        emitters.forEach(function(e) {
+            e.emitter.emit('rooms:new', room.toJSON(e.user));
+        });
     });
 
     core.on('rooms:update', function(room) {
-        app.io.emit('rooms:update', room);
+        var emitters = getEmitters(room);
+        emitters.forEach(function(e) {
+            e.emitter.emit('rooms:update', room.toJSON(e.user));
+        });
     });
 
     core.on('rooms:archive', function(room) {
-        app.io.emit('rooms:archive', room);
+        var emitters = getEmitters(room);
+        emitters.forEach(function(e) {
+            e.emitter.emit('rooms:archive', room.toJSON(e.user));
+        });
     });
 
 
@@ -48,28 +89,28 @@ module.exports = function() {
     //
     app.route('/rooms')
         .all(middlewares.requireLogin)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('rooms:list');
         })
-        .post(function(req, res) {
+        .post(function(req) {
             req.io.route('rooms:create');
         });
 
     app.route('/rooms/:room')
         .all(middlewares.requireLogin, middlewares.roomRoute)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('rooms:get');
         })
-        .put(function(req, res) {
+        .put(function(req) {
             req.io.route('rooms:update');
         })
-        .delete(function(req, res) {
+        .delete(function(req) {
             req.io.route('rooms:archive');
         });
 
     app.route('/rooms/:room/users')
         .all(middlewares.requireLogin, middlewares.roomRoute)
-        .get(function(req, res) {
+        .get(function(req) {
             req.io.route('rooms:users');
         });
 
@@ -80,6 +121,9 @@ module.exports = function() {
     app.io.route('rooms', {
         list: function(req, res) {
             var options = {
+                    userId: req.user._id,
+                    users: req.param('users'),
+
                     skip: req.param('skip'),
                     take: req.param('take')
                 };
@@ -90,33 +134,20 @@ module.exports = function() {
                     return res.status(400).json(err);
                 }
 
-                if (req.param('users')) {
-                    rooms = _.map(rooms, function(room) {
-                        room = room.toJSON();
-                        room.users = core.presence.getUsersForRoom(room.id.toString());
-                        room.userCount = room.users.length;
-                        return room;
-                    });
-                }
-                else if (req.param('userCounts')) {
-                    rooms = _.map(rooms, function(room) {
-                        room = room.toJSON();
-                        room.userCount =
-                            core.presence.getUserCountForRoom(room.id);
-                        return room;
-                    });
-                }
+                var results = rooms.map(function(room) {
+                    return room.toJSON(req.user);
+                });
 
-                rooms = _.sortByAll(rooms, ['userCount', 'lastActive'])
-                         .reverse();
-
-                res.json(rooms);
+                res.json(results);
             });
         },
         get: function(req, res) {
-            var roomId = req.param('room') || req.param('id');
+            var options = {
+                userId: req.user._id,
+                identifier: req.param('room') || req.param('id')
+            };
 
-            core.rooms.get(roomId, function(err, room) {
+            core.rooms.get(options, function(err, room) {
                 if (err) {
                     console.error(err);
                     return res.status(400).json(err);
@@ -126,16 +157,23 @@ module.exports = function() {
                     return res.sendStatus(404);
                 }
 
-                res.json(room);
+                res.json(room.toJSON(req.user));
             });
         },
         create: function(req, res) {
             var options = {
-                    owner: req.user._id,
-                    name: req.param('name'),
-                    slug: req.param('slug'),
-                    description: req.param('description')
-                };
+                owner: req.user._id,
+                name: req.param('name'),
+                slug: req.param('slug'),
+                description: req.param('description'),
+                private: req.param('private'),
+                password: req.param('password')
+            };
+
+            if (!settings.private) {
+                options.private = false;
+                delete options.password;
+            }
 
             core.rooms.create(options, function(err, room) {
                 if (err) {
@@ -143,7 +181,7 @@ module.exports = function() {
                     return res.status(400).json(err);
                 }
 
-                res.status(201).json(room);
+                res.status(201).json(room.toJSON(req.user));
             });
         },
         update: function(req, res) {
@@ -152,8 +190,16 @@ module.exports = function() {
             var options = {
                     name: req.param('name'),
                     slug: req.param('slug'),
-                    description: req.param('description')
+                    description: req.param('description'),
+                    password: req.param('password'),
+                    participants: req.param('participants'),
+                    user: req.user
                 };
+
+            if (!settings.private) {
+                delete options.password;
+                delete options.participants;
+            }
 
             core.rooms.update(roomId, options, function(err, room) {
                 if (err) {
@@ -165,7 +211,7 @@ module.exports = function() {
                     return res.sendStatus(404);
                 }
 
-                res.json(room);
+                res.json(room.toJSON(req.user));
             });
         },
         archive: function(req, res) {
@@ -185,23 +231,47 @@ module.exports = function() {
             });
         },
         join: function(req, res) {
-            var roomId = req.data;
-            core.rooms.get(roomId, function(err, room) {
+            var options = {
+                    userId: req.user._id,
+                    saveMembership: true
+                };
+
+            if (typeof req.data === 'string') {
+                options.id = req.data;
+            } else {
+                options.id = req.param('roomId');
+                options.password = req.param('password');
+            }
+
+            core.rooms.canJoin(options, function(err, room, canJoin) {
                 if (err) {
                     console.error(err);
                     return res.sendStatus(400);
                 }
 
                 if (!room) {
-                    return res.sendStatus(400);
+                    return res.sendStatus(404);
+                }
+
+                if(!canJoin && room.password) {
+                    return res.status(403).json({
+                        status: 'error',
+                        roomName: room.name,
+                        message: 'password required',
+                        errors: 'password required'
+                    });
+                }
+
+                if(!canJoin) {
+                    return res.sendStatus(404);
                 }
 
                 var user = req.user.toJSON();
                 user.room = room._id;
 
-                core.presence.join(req.socket.conn, room._id, room.slug);
+                core.presence.join(req.socket.conn, room);
                 req.socket.join(room._id);
-                res.json(room.toJSON());
+                res.json(room.toJSON(req.user));
             });
         },
         leave: function(req, res) {
@@ -227,7 +297,7 @@ module.exports = function() {
                 }
 
                 var users = core.presence.rooms
-                        .getOrAdd(room._id, room.slug)
+                        .getOrAdd(room)
                         .getUsers()
                         .map(function(user) {
                             // TODO: Do we need to do this?

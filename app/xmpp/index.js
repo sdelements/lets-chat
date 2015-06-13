@@ -1,19 +1,18 @@
 'use strict';
 
 var xmpp = require('node-xmpp-server'),
-    Stanza = require('node-xmpp-core').Stanza,
-    mongoose = require('mongoose'),
     settings = require('./../config'),
     auth = require('./../auth/index'),
     all = require('require-tree'),
-    allArray = function(path) {
+    Stanza = require('node-xmpp-core').Stanza,
+    XmppConnection = require('./xmpp-connection');
+
+var allArray = function(path) {
         var modules = all(path);
         return Object.keys(modules).map(function(key) {
             return modules[key];
         });
-    };
-
-var XmppConnection = require('./xmpp-connection'),
+    },
     msgProcessors = allArray('./msg-processors'),
     eventListeners = allArray('./events');
 
@@ -62,11 +61,40 @@ function xmppStart(core) {
                 return processor.run();
             });
 
-            if (!handled && settings.xmpp.debug.unhandled) {
+            if (handled) {
+                return;
+            }
+
+            if (settings.xmpp.debug.unhandled) {
                 // Print unhandled request
                 console.log(' ');
                 console.log(stanza.root().toString().red);
             }
+
+            if (stanza.name !== 'iq') {
+                return;
+            }
+
+            var msg = new Stanza.Iq({
+                type: 'error',
+                id: stanza.attrs.id,
+                to: stanza.attrs.from,
+                from: stanza.attrs.to
+            });
+
+            msg.c('not-implemented', {
+                code: 501,
+                type: 'CANCEL'
+            }).c('feature-not-implemented', {
+                xmlns: 'urn:ietf:params:xml:n:xmpp-stanzas'
+            });
+
+
+            if (settings.xmpp.debug.unhandled) {
+                console.log(msg.root().toString().green);
+            }
+
+            client.send(msg);
         });
 
         // On Disconnect event. When a client disconnects

@@ -1,8 +1,6 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter,
-    util = require('util'),
-    _ = require('lodash');
+var _ = require('lodash');
 
 function ConnectionCollection() {
     this.connections = {};
@@ -10,6 +8,7 @@ function ConnectionCollection() {
     this.get = this.get.bind(this);
     this.getUsers = this.getUsers.bind(this);
     this.getUserIds = this.getUserIds.bind(this);
+    this.getUsernames = this.getUsernames.bind(this);
 
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
@@ -28,27 +27,38 @@ ConnectionCollection.prototype.contains = function(connection) {
     return !!this.connections[connection.id];
 };
 
-ConnectionCollection.prototype.getUsers = function() {
-    return _.chain(this.connections)
-        .filter(function(value) {
-            // User shouldn't be undefined - but sometimes it happens :/
-            return value.user;
-        })
-        .map(function(value) {
-            return value.user;
-        })
-        .uniq('id')
-        .value();
+ConnectionCollection.prototype.getUsers = function(filter) {
+    var connections = this.connections;
+
+    if (filter) {
+        connections = this.query(filter);
+    }
+
+    var users = _.chain(connections)
+                .filter(function(value) {
+                    return !!value.user;
+                })
+                .map(function(value) {
+                    return value.user;
+                })
+                .uniq('id')
+                .value();
+
+    return users;
 };
 
-ConnectionCollection.prototype.getUserIds = function() {
-    return _.map(this.getUsers(), function(user) {
+ConnectionCollection.prototype.getUserIds = function(filter) {
+    var users = this.getUsers(filter);
+
+    return _.map(users, function(user) {
         return user.id;
     });
 };
 
-ConnectionCollection.prototype.getUsernames = function() {
-    return _.map(this.getUsers(), function(user) {
+ConnectionCollection.prototype.getUsernames = function(filter) {
+    var users = this.getUsers(filter);
+
+    return _.map(users, function(user) {
         return user.username;
     });
 };
@@ -58,7 +68,7 @@ ConnectionCollection.prototype.query = function(options) {
         options.userId = options.userId.toString();
     }
 
-    return _.map(this.connections, function(value, key) {
+    return _.map(this.connections, function(value) {
         return value;
     }).filter(function(conn) {
         var result = true;

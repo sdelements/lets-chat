@@ -38,10 +38,8 @@ auth:
   providers: [local]
   local:
     enableRegistration: true
-    salt: secretsauce # Required when upgrading from version < 0.3
 
 audio:
   notifications:
     enabled: true
     file: 'media/audio/bell.mp3'
-

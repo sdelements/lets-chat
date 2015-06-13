@@ -1,8 +1,6 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-    MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config');
+var MessageProcessor = require('./../msg-processor');
 
 module.exports = MessageProcessor.extend({
 
