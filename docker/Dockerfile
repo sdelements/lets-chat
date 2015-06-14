@@ -11,10 +11,9 @@ ENV buildDeps='g++ gcc git make python'
 RUN set -x \
 &&  apt-get update \
 &&  apt-get install -y $buildDeps --no-install-recommends \
-&&  apt-get install -y libkrb5-dev --no-install-recommends \
 &&  rm -rf /var/lib/apt/lists/* \
 &&  npm install --production \
-&&  npm install lets-chat-ldap lets-chat-kerberos lets-chat-s3 \
+&&  npm install lets-chat-ldap lets-chat-s3 \
 &&  npm dedupe \
 &&  npm cache clean \
 &&  rm -rf /tmp/npm*\
