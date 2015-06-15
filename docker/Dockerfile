@@ -1,25 +1,28 @@
 FROM node:0.12-slim
 MAINTAINER SD Elements
 
+ENV PKG_JSON_URL=https://raw.githubusercontent.com/sdelements/lets-chat/master/package.json \
+    TAR_GZ_URL=https://github.com/sdelements/lets-chat/archive/master.tar.gz \
+    BUILD_DEPS='g++ gcc git make python' \
+    LCB_PLUGINS='lets-chat-ldap lets-chat-s3'
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-ADD https://raw.githubusercontent.com/sdelements/lets-chat/master/package.json ./package.json
-
-ENV buildDeps='g++ gcc git make python'
+ADD $PKG_JSON_URL ./package.json
 
 RUN set -x \
 &&  apt-get update \
-&&  apt-get install -y $buildDeps --no-install-recommends \
+&&  apt-get install -y $BUILD_DEPS --no-install-recommends \
 &&  rm -rf /var/lib/apt/lists/* \
 &&  npm install --production \
-&&  npm install lets-chat-ldap lets-chat-s3 \
+&&  npm install $LCB_PLUGINS \
 &&  npm dedupe \
 &&  npm cache clean \
-&&  rm -rf /tmp/npm*\
-&&  apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
+&&  rm -rf /tmp/npm* \
+&&  apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $BUILD_DEPS
 
-ADD https://github.com/sdelements/lets-chat/archive/master.tar.gz ./master.tar.gz
+ADD $TAR_GZ_URL ./master.tar.gz
 
 RUN tar -xzvf master.tar.gz \
 &&  cp -a lets-chat-master/. . \
@@ -29,16 +32,15 @@ RUN groupadd -r node \
 &&  useradd -r -g node node \
 &&  chown node:node uploads
 
-ENV LCB_DATABASE_URI mongodb://mongo/letschat
-ENV LCB_HTTP_HOST 0.0.0.0
-ENV LCB_HTTP_PORT 8080
-ENV LCB_XMPP_ENABLE true
-ENV LCB_XMPP_PORT 5222
+ENV LCB_DATABASE_URI=mongodb://mongo/letschat \
+    LCB_HTTP_HOST=0.0.0.0 \
+    LCB_HTTP_PORT=8080 \
+    LCB_XMPP_ENABLE=true \
+    LCB_XMPP_PORT=5222
 
 USER node
 
-EXPOSE 8080
-EXPOSE 5222
+EXPOSE 8080 5222
 
 VOLUME ["/usr/src/app/uploads"]
 
