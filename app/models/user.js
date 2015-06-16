@@ -207,7 +207,7 @@ UserSchema.methods.generateToken = function(cb) {
         var value3 = hash.digest('hex');
 	
 	var secretKey4 = diffHell.getPublicKey('hex');
-	var hash = crypto.createHmac('sha1', secretKey4);
+	var hash = crypto.createHmac('sha256', secretKey4);
         hash.update(test);
         var value4 = hash.digest('hex');
 	
