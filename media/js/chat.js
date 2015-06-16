@@ -1,4 +1,3 @@
-//= require util/eggs.js
 //= require util/message.js
 //= require models.js
 //= require views/browser.js

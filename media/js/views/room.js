@@ -385,10 +385,6 @@
                 that.lastMessageOwner = message.owner.id;
                 that.lastMessagePosted = posted;
                 that.scrollMessages();
-
-                if (!message.historical) {
-                    window.utils.eggs.message(message.text);
-                }
             });
 
         },
