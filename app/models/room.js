@@ -33,18 +33,18 @@ var RoomSchema = new mongoose.Schema({
         trim: true
     },
     owner: {
-		type: ObjectId,
-		ref: 'User',
+	type: ObjectId,
+	ref: 'User',
         required: true
     },
     participants: [{ // We can have an array per role
-		type: ObjectId,
-		ref: 'User'
-	}],
-	messages: [{
-		type: ObjectId,
-		ref: 'Message'
-	}],
+	type: ObjectId,
+	ref: 'User'
+    }],
+    messages: [{
+	type: ObjectId,
+	ref: 'Message'
+    }],
     created: {
         type: Date,
         default: Date.now
@@ -59,7 +59,7 @@ var RoomSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true//only for password-protected room
+        required: true
     }
 });
 
