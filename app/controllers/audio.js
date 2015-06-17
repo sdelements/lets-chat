@@ -29,7 +29,7 @@ module.exports = function() {
             res.json({
                 enabled: enabled,
                 file: settings.audio.notifications.file
-            })
+            });
         },
         'notification:toggle': function(req, res) {
             core.account.update(req.user._id, { audioNotifications: !req.user.audioNotifications }, function (err) {
@@ -45,7 +45,4 @@ module.exports = function() {
             });
         }
     });
-
-    
-
 };
