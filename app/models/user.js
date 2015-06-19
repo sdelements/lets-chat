@@ -322,7 +322,6 @@ function initialiseDefaultUsers() {
                     if (err) {
                         console.error(err);
                         console.error(err.stack);
-                        console.error(message);
                     } else {
                         console.info('Created user ' + adminUser.displayName);
                     }
