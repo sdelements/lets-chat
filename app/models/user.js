@@ -286,7 +286,7 @@ function initialiseDefaultUsers() {
     }
 
     var createHubotUser = process.env.LETSCHAT_CREATE_HUBOT_USER;
-    if (!createHubotUser || createHubotUser !== "true") {
+    if (!createHubotUser || createHubotUser !== 'true') {
         return;
     }
     var firstName = envVarOrDefault('FIRST_NAME', 'hubot');
@@ -299,7 +299,7 @@ function initialiseDefaultUsers() {
         firstName: firstName,
         lastName: lastName,
         username: envVarOrDefault('USERNAME', 'hubot'),
-        displayName: envVarOrDefault('DISPLAY_NAME', (firstName ? firstName + " " : "") + (lastName || "")),
+        displayName: envVarOrDefault('DISPLAY_NAME', (firstName ? firstName + ' ' : '') + (lastName || '')),
         joined: Date.now(),
         status: 'ready',
         //avatar: '1234567',
@@ -315,16 +315,16 @@ function initialiseDefaultUsers() {
             console.error(err.stack);
         } else {
             if (user) {
-                console.log("Found user for username: " + username + " already so not creating a default user");
+                console.log('Found user for username: ' + username + ' already so not creating a default user');
             } else {
-                console.log("Lets create a default user for id " + username + " and email: " + adminUser.email);
+                console.log('Lets create a default user for id ' + username + ' and email: ' + adminUser.email);
                 adminUser.save(function (err, adminUser) {
                     if (err) {
                         console.error(err);
                         console.error(err.stack);
                         console.error(message);
                     } else {
-                        console.info("Created user " + adminUser.displayName);
+                        console.info('Created user ' + adminUser.displayName);
                     }
                 });
             }
