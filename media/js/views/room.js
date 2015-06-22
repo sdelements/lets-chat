@@ -365,7 +365,7 @@
 
             // Fragment or new message?
             message.fragment = this.lastMessageOwner === message.owner.id &&
-                            posted.diff(this.lastMessagePosted, 'minutes') < 5;
+                            posted.diff(this.lastMessagePosted, 'minutes') < 2;
 
             // Mine? Mine? Mine? Mine?
             message.own = this.client.user.id === message.owner.id;
@@ -382,8 +382,12 @@
                 $text.html(text);
                 $html.find('time').updateTimeStamp();
                 that.$messages.append($html);
-                that.lastMessageOwner = message.owner.id;
-                that.lastMessagePosted = posted;
+
+                if (!message.fragment) {
+                    that.lastMessagePosted = posted;
+                    that.lastMessageOwner = message.owner.id;
+                }
+
                 that.scrollMessages();
             });
 
