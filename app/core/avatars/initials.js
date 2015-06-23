@@ -1,6 +1,7 @@
 'use strict';
 
-var colorHash = new (require('color-hash'));
+var _ = require('lodash'),
+    colorHash = new (require('color-hash'));
 
 function AvatarProvider(options) {
 
@@ -18,7 +19,7 @@ AvatarProvider.prototype.fetch = function(user, query, cb) {
         'style="width: 50px; height: 50px; background-color: rgb(' + colors[0]+ ', ' + colors[1]+  ', ' + colors[2] + ');">' +
             '<text text-anchor="middle" y="50%" x="50%" dy="0.36em" pointer-events="auto" fill="#ffffff" ' + 
             'font-family="HelveticaNeue-Light,Helvetica Neue Light,Helvetica Neue,Helvetica, Arial,Lucida Grande, sans-serif" ' + 
-            'style="font-weight: 400; font-size: 22px;">' + (user.firstName[0] + user.lastName[0]).toUpperCase() + '</text>' +
+            'style="font-weight: 400; font-size: 22px;">' + _.escape(user.firstName[0] + user.lastName[0]).toUpperCase() + '</text>' +
         '</svg>';
 
     cb(null, {
