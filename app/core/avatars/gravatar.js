@@ -17,7 +17,7 @@ Gravatar.prototype.fetch = function(user, query, cb) {
         d: 404
     }, true);
 
-    var stream = request({
+    request({
         url: url,
         encoding: null
     }).on('error', function(err) {
@@ -33,6 +33,6 @@ Gravatar.prototype.fetch = function(user, query, cb) {
         });
     });
 
-}
+};
 
 module.exports = Gravatar;

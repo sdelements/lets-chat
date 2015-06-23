@@ -8,9 +8,7 @@ module.exports = function() {
 
     var app = this.app,
         core = this.core,
-        middlewares = this.middlewares,
-        models = this.models,
-        User = models.user;
+        middlewares = this.middlewares;
 
     //
     // Routes
@@ -37,7 +35,7 @@ module.exports = function() {
             }
 
             if (avatar && avatar.raw) {
-                res.setHeader("Content-Type", avatar.type  || 'image/png');
+                res.setHeader('Content-Type', avatar.type || 'image/png');
                 if (typeof avatar.raw.pipe === 'function') {
                     avatar.raw.pipe(res);
                     return;

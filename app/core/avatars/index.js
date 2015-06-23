@@ -10,9 +10,11 @@ var settings = require('./../../config').avatars;
 
 function AvatarManager(options) {
 
+    this.options = options;
+
     this.providers = settings.providers.map(function(key) {
 
-        var Provider; 
+        var Provider;
 
         if (_.includes(['gravatar', 'initials'], key)) {
             Provider = require('./' + key);
@@ -23,7 +25,7 @@ function AvatarManager(options) {
         return {
             key: key,
             provider: new Provider(settings[key])
-        }
+        };
 
     });
 
@@ -31,7 +33,9 @@ function AvatarManager(options) {
 
 AvatarManager.prototype.add = function(query, cb) {
 
-}
+    cb();
+
+};
 
 AvatarManager.prototype.fetch = function(query, cb) {
 
@@ -73,7 +77,7 @@ AvatarManager.prototype.fetch = function(query, cb) {
 
             });
 
-        }, function (err, avatar, provider) {
+        }, function(err, avatar) {
 
             if (err) {
                 console.error(err);
