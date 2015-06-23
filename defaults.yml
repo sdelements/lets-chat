@@ -71,4 +71,4 @@ i18n:
   locale: en
 
 avatars:
-  provider: gravatar
+  providers: [gravatar, initials]

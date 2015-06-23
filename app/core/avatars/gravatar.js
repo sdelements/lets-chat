@@ -27,7 +27,10 @@ Gravatar.prototype.fetch = function(user, query, cb) {
             cb();
             return;
         }
-        cb(null, res);
+        cb(null, {
+            type: 'image/jpeg',
+            raw: res
+        });
     });
 
 }

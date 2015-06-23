@@ -1,5 +1,5 @@
 //
-// Users Controller
+// Avatar Controller
 //
 
 'use strict';
@@ -17,37 +17,36 @@ module.exports = function() {
     //
     app.get('/users/:id/avatar', middlewares.requireLogin, function(req, res) {
 
-        var identifier = req.param('id');
+        var identifier = req.param('id'),
+            size = parseInt(req.param('size'), 10) || 50;
 
-        User.findByIdentifier(identifier, function (err, user) {
+        core.avatars.fetch({
+            id: identifier,
+            size: size
+        }, function(err, avatar) {
 
             if (err) {
                 console.error(err);
-                return res.status(400).json(err);
+                res.status(400).json(err);
+                return;
             }
 
-            if (!user) {
-                return res.sendStatus(404);
+            if (!avatar) {
+                res.sendStatus(404);
+                return;
             }
 
-            core.avatars.fetch({
-                id: user.id
-            }, function(err, image) {
-
-                if (err) {
-                    res.status(400).json(err);
+            if (avatar && avatar.raw) {
+                res.setHeader("Content-Type", avatar.type  || 'image/png');
+                if (typeof avatar.raw.pipe === 'function') {
+                    avatar.raw.pipe(res);
                     return;
                 }
+                res.send(avatar.raw);
+                return;
+            }
 
-                if (image && typeof image.pipe === 'function') {
-                    res.setHeader('Content-Type', 'image/png');
-                    image.pipe(res);
-                    return;
-                }
-
-                res.sendStatus(500);
-
-            });
+            res.sendStatus(500);
 
         });
 
