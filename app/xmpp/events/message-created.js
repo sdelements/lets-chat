@@ -21,11 +21,16 @@ module.exports = EventListener.extend({
                 text = connection.nickname(room.slug) + ': ' + text;
             }
 
+            var from = connection.getRoomJid(room.slug, user.username);
+            if (connection.user.username === user.username) {
+                from = connection._jid;
+            }
+
             var stanza = new Stanza.Message({
                 id: msg._id,
                 type: 'groupchat',
                 to: connection.getRoomJid(room.slug),
-                from: connection.getRoomJid(room.slug, user.username)
+                from: from
             });
 
             stanza.c('active', {
