@@ -9,7 +9,7 @@ module.exports = EventListener.extend({
 
     on: 'messages:new',
 
-    then: function(msg, room, user) {
+    then: function(msg, room, user, data) {
         var connections = this.getConnectionsForRoom(room._id);
 
         connections.forEach(function(connection) {
@@ -21,16 +21,16 @@ module.exports = EventListener.extend({
                 text = connection.nickname(room.slug) + ': ' + text;
             }
 
-            var from = connection.getRoomJid(room.slug, user.username);
+            var id = msg._id;
             if (connection.user.username === user.username) {
-                from = connection._jid;
+                id = data && data.id || id;
             }
 
             var stanza = new Stanza.Message({
                 id: msg._id,
                 type: 'groupchat',
                 to: connection.getRoomJid(room.slug),
-                from: from
+                from: connection.getRoomJid(room.slug, user.username)
             });
 
             stanza.c('active', {

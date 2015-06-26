@@ -52,7 +52,10 @@ module.exports = MessageProcessor.extend({
             var options = {
                 owner: this.client.user._id,
                 room: room._id,
-                text: text
+                text: text,
+                data: {
+                    id: this.request.attrs.id
+                }
             };
 
             this.core.messages.create(options, function(err) {
