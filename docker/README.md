@@ -38,3 +38,17 @@ mongo:
 ```
 
 Run `docker-compose up`, wait for it to initialize completely, and visit `http://localhost:8080` or `http://host-ip:8080`.
+
+# Configuration
+
+You can config your Let's Chat Docker instance using one of the following methods:
+
+## Config file
+
+Create a settings.yml file in a directory and then mount that directory as a Docker volume.
+
+`/usr/src/app/config`
+
+## Environment variables
+
+[See the Let's Chat wiki for a list of envirnoment variables](https://github.com/sdelements/lets-chat/wiki/Environment-variables)

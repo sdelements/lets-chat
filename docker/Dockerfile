@@ -42,6 +42,7 @@ USER node
 
 EXPOSE 8080 5222
 
+VOLUME ["/usr/src/app/config"]
 VOLUME ["/usr/src/app/uploads"]
 
 CMD ["npm", "start"]
