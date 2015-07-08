@@ -20,13 +20,15 @@
                             <i class="fa fa-history"></i>
                         </a>
                         <% if settings.files.enable %>
-                        <a class="btn hidden-xs lcb-upload-trigger" title="<$ __('Upload Files') $>" href="#">
-                            <i class="fa fa-upload"></i>
-                        </a>
+                            <a class="btn hidden-xs lcb-upload-trigger" title="<$ __('Upload Files') $>" href="#">
+                                <i class="fa fa-upload"></i>
+                            </a>
                         <% endif %>
-                        <a class="btn hidden-xs lcb-giphy" href="#lcb-giphy" title="<$ __('Giphy') $>" data-toggle="modal">
-                            <i class="fa fa-gift"></i>
-                        </a>
+                        <% if settings.giphy.enable %>
+                            <a class="btn hidden-xs lcb-giphy" href="#lcb-giphy" title="<$ __('Giphy') $>" data-toggle="modal">
+                                <i class="fa fa-gift"></i>
+                            </a>
+                        <% endif %>
                     </h2>
                     <div class="lcb-room-description">
                         <p>{{description}}</p>
