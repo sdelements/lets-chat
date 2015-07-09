@@ -74,5 +74,9 @@
 	"Slug": "Slug",
 	"XMPP/Jabber": "XMPP/Jabber",
 	"Private?": "Private?",
-	"Empty for public room": "Empty for public room"
+	"Empty for public room": "Empty for public room",
+	"Toggle Navigation": "Toggle Navigation",
+	"Home": "Home",
+	"Toggle Sidebar": "Toggle Sidebar",
+	"Close": "Close"
 }
