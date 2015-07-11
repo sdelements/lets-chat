@@ -19,7 +19,7 @@ A self-hosted chat app for small teams built by [Security Compass][seccom].
 * Image embeds / Giphy search
 * Code pasting
 * File uploads (Local / [Amazon S3][s3] / [Azure][azure])
-* Transcripts / chat history
+* Transcripts / Chat History (with search)
 * XMPP Multi-user chat (MUC)
 * 1-to-1 chat between XMPP users
 * Local / [Kerberos][kerberos] / [LDAP][ldap] authentication
