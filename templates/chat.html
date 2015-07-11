@@ -52,13 +52,13 @@
                     <% if settings.xmpp.enable %>
                         <li>
                             <a data-toggle="modal" href="#lcb-xmpp">
-                                <i class="fa fa-fw fa-comments"></i> <$ __('XMPP/Jabber') $> 
+                                <i class="fa fa-fw fa-comments"></i> <$ __('XMPP/Jabber') $>
                             </a>
                         </li>
                     <% endif %>
                     <li>
                         <a data-toggle="modal" href="#lcb-tokens">
-                            <i class="fa fa-fw fa-lock"></i> <$ __('Auth Tokens') $> 
+                            <i class="fa fa-fw fa-lock"></i> <$ __('Auth Tokens') $>
                         </a>
                     </li>
                     <li class="divider"></li>
@@ -75,6 +75,9 @@
                 <span class="lcb-status-indicator lcb-status-connection" style="display: none;">
                     <i class="fa fa-bell-slash"></i>
                 </span>
+            </div>
+            <div class="lcb-version">
+                <span>v <$ account.version $></span>
             </div>
             <div class="lcb-tabs-outer">
                 <ul class="lcb-tabs">
