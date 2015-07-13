@@ -25,10 +25,10 @@ module.exports = function() {
     // Routes
     //
     app.get('/', middlewares.requireLogin.redirect, function(req, res) {
-        req.user.version = psjon.version;
         res.render('chat.html', {
             account: req.user,
-            settings: settings
+            settings: settings,
+            version: psjon.version
         });
     });
 
