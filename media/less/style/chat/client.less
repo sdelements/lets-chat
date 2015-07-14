@@ -171,17 +171,21 @@
     }
 }
 
-.lcb-status-indicators {
+.lcb-status-text {
     color: rgba(255, 255, 255, .7);
-    font-size: 10px;
-    text-transform: uppercase;
-    padding: 6px;
     position: absolute;
-    bottom: 0;
-    left: 0;
+    padding: 6px;
+    font-size: 10px;
     .flex-display;
     .justify-content(center);
     .align-items(center);
+}
+
+.lcb-status-indicators {
+    text-transform: uppercase;
+    bottom: 0;
+    left: 0;
+    .lcb-status-text;
 }
 
 .lcb-status-indicator {
@@ -190,6 +194,16 @@
 
 .lcb-status-indicator-error {
     color: #ff7878;
+}
+
+.lcb-version {
+    bottom: 0;
+    right: 0;
+    .lcb-status-text;
+}
+
+lcb-version-number {
+    margin: 0 3px;
 }
 
 .lcb-avatar {
