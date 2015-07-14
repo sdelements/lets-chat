@@ -1,4 +1,15 @@
-## 0.4.0 (2015-07-08)
+## 0.4.2 (2015-07-14)
+
+Fixes
+
+* Update dependencies
+
+Enhancements
+
+* Show version in the app
+* Various accessibility additions
+
+## 0.4.1 (2015-07-08)
 
 Fixes
 
