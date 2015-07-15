@@ -74,5 +74,6 @@
 	"Slug": "Slug",
 	"XMPP/Jabber": "XMPP/Jabber",
 	"Private?": "Private?",
-	"Empty for public room": "Empty for public room"
+	"Empty for public room": "Empty for public room",
+	"Use Auth token as password": "Use Auth token as password"
 }

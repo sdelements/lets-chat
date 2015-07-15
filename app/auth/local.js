@@ -34,7 +34,7 @@ Local.prototype.setup = function() {
     }));
 };
 
-Local.prototype.authenticate = function(req, cb) {
+Local.prototype.authenticate = function(req, res, cb) {
     passport.authenticate('local', cb)(req);
 };
 

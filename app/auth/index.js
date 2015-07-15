@@ -33,6 +33,34 @@ function getProviders(core) {
     });
 }
 
+function authenticateToken(token, tokenAgain, done) {
+    if (!done) {
+        done = tokenAgain;
+    }
+
+    var User = mongoose.model('User');
+    User.findByToken(token, function(err, user) {
+        if (err) { return done(err); }
+        if (!user) { return done(null, false); }
+        return done(null, user);
+    });
+}
+
+function authenticateProvider(provider, req, res, cb) {
+    var p = _.findWhere(enabledProviders, { key: provider });
+
+    if (!p) {
+        cb(null, null);
+    }
+
+    p.provider.authenticate(req, res, function(err, user) {
+        if (err) {
+            return cb(err);
+        }
+        return cb(null, user);
+    });
+}
+
 function setup(app, session, core) {
 
     enabledProviders = getProviders(core);
@@ -42,21 +70,8 @@ function setup(app, session, core) {
         providerSettings[p.key] = p.provider.options;
     });
 
-    function tokenAuth(username, password, done) {
-        if (!done) {
-            done = password;
-        }
-
-        var User = mongoose.model('User');
-        User.findByToken(username, function(err, user) {
-            if (err) { return done(err); }
-            if (!user) { return done(null, false); }
-            return done(null, user);
-        });
-    }
-
-    passport.use(new BearerStrategy(tokenAuth));
-    passport.use(new BasicStrategy(tokenAuth));
+    passport.use(new BearerStrategy(authenticateToken));
+    passport.use(new BasicStrategy(authenticateToken));
 
     passport.serializeUser(function(user, done) {
         done(null, user._id);
@@ -144,44 +159,11 @@ function wrapAuthCallback(username, cb) {
     };
 }
 
-function authenticate() {
-    var req, username, cb;
-
-    if (arguments.length === 4) {
-        username = arguments[1];
-
-    } else if (arguments.length === 3) {
-        username = arguments[0];
-
-    } else {
-        username = arguments[0].body.username;
-    }
-
+function authenticate(req, res, cb) {
+    var username;
+    username = req.body.username || '';
     username = username.toLowerCase();
-
-    if (arguments.length === 4) {
-        req = _.extend({}, arguments[0], {
-            body: {
-                username: username,
-                password: arguments[2]
-            }
-        });
-        cb = arguments[3];
-
-    } else if (arguments.length === 3) {
-        req = {
-            body: {
-                username: username,
-                password: arguments[1]
-            }
-        };
-        cb = arguments[2];
-
-    } else {
-        req = _.extend({}, arguments[0]);
-        req.body.username = username;
-        cb = arguments[1];
-    }
+    req.body.username = username;
 
     checkIfAccountLocked(username, function(locked) {
         if (locked) {
@@ -206,7 +188,7 @@ function authenticate() {
                     return callback(null, args[0]);
                 }
 
-                provider.authenticate(req, function(err, user) {
+                provider.authenticate(req, res, function(err, user) {
                     if (err) {
                         return callback(err);
                     }
@@ -224,5 +206,7 @@ function authenticate() {
 module.exports = {
     setup: setup,
     authenticate: authenticate,
+    authenticateToken: authenticateToken,
+    authenticateProvider: authenticateProvider,
     providers: providerSettings
 };

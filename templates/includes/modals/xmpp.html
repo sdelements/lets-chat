@@ -15,11 +15,15 @@
                         <dl class="">
                             <dt><$ __('Username') $></dt>
                             <dd>
-                                <% if account.local %>
+                                <% if account.local or account.isSSO %>
                                     <$ account.username $>@<$ settings.xmpp.domain $>
                                 <% else %>
                                     <$ account.uid $>@<$ settings.xmpp.domain $>
                                 <% endif %></dd>
+                            <% if account.isSSO %>
+                                <dt><$ __('Password') $></dt>
+                                <dd><$ __('Use Auth token as password') $></dd>
+                            <% endif %>
                             <% if settings.xmpp.port != 5222 %>
                             <dt><$ __('Port') $></dt>
                             <dd><$ settings.xmpp.port $></dd>

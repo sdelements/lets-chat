@@ -111,6 +111,17 @@ UserSchema.virtual('avatar').get(function() {
     return md5(this.email);
 });
 
+UserSchema.virtual('isSSO').get(function() {
+    var provider = this.provider;
+
+    if (provider in settings.auth) {
+        return settings.auth[provider].isSSO === true;
+    }
+    else {
+        return false;
+    }
+});
+
 UserSchema.pre('save', function(next) {
     var user = this;
     if (!user.isModified('password')) {
@@ -176,7 +187,7 @@ UserSchema.statics.findByToken = function(token, cb) {
         hash = tokenParts[1];
 
     if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
-        cb(null, null);
+        return cb(null, null);
     }
 
     this.findById(userId, function(err, user) {
