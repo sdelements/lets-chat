@@ -8,6 +8,36 @@ A self-hosted chat app for small teams.
 
 # How to use this image
 
+## Enable IPv6 in Docker
+
+Modify your docker config file:
+
+CentOS: /etc/sysconfig/docker
+Debian: /etc/default/docker
+
+other_opts=--ipv6
+
+Add IPv6 to your docker0 bridge:
+
+You have two options:
+
+Remove the bridge and let Docker create a new one
+
+```
+ifconfig docker0 down
+brctl delbr docker0
+```
+
+Just set the IPv6 address manually
+
+```
+ifconfig docker0 inet6 add fe80::1/64
+```
+
+I'd recommend 2.
+
+## Running Let's Chat
+
 ```
 docker run  --name some-letschat --link some-mongo:mongo -d sdelements/lets-chat
 ```
