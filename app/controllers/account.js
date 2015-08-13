@@ -44,7 +44,7 @@ module.exports = function() {
         });
     });
 
-    app.get('/logout', function(req, res ) {
+    app.get('/logout', function(req, res) {
         req.session.destroy();
         res.redirect('/login');
     });
@@ -55,6 +55,10 @@ module.exports = function() {
 
     app.post('/account/register', function(req) {
         req.io.route('account:register');
+    });
+
+    app.post('/account/remove', function(req) {
+        req.io.route('account:remove');
     });
 
     app.get('/account', middlewares.requireLogin, function(req) {
@@ -268,6 +272,32 @@ module.exports = function() {
                     status: 'success',
                     message: 'You\'ve been registered, ' +
                              'please try logging in now!'
+                });
+            });
+        },
+        remove: function(req, res) {
+            auth.authenticate(req, req.user.uid || req.user.username,
+                              data.currentPassword, function(err, user) {
+                if (err) {
+                    return res.status(400).json({
+                        status: 'error',
+                        message: 'There were problems authenticating you.',
+                        errors: err
+                    });
+                }
+                core.account.remove(req.user._id, function(err, success) {
+                    if (err) {
+                        return res.status(400).json({
+                            status: 'error',
+                            message: 'Unable to delete your profile.',
+                            errors: err
+                        });
+                    }
+
+                    // Destory session and redirect to login ('logout' action)
+                    // QUESTION: why does this redirect to the login page?
+                    req.session.destroy();
+                    res.redirect('/login');
                 });
             });
         },

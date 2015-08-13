@@ -1,8 +1,7 @@
 <div id="lcb-account" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="./account/settings" method="post"
-                class="validate form-horizontal">
+            <form method="post" class="validate form-horizontal" action="./account/remove">
                 <div class="modal-header">
                     <button type="button" class="close"
                         data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -66,7 +65,8 @@
                     <p class="alert response" style="display: none;"></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-info indicator" name="submit"><i class="icon-ok"></i> <$ __('Save') $></button>
+                    <button type="submit" class="btn btn-danger indicator push-left" onclick="this.form.target='./account/remove'"> <$ __('Delete Account') $></button>
+                    <button type="submit" class="btn btn-info indicator" onclick="this.form.target='./account/settings'"><i class="icon-ok"></i> <$ __('Save') $></button>
                 </div>
             </form>
         </div>

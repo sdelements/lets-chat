@@ -18,6 +18,18 @@ AccountManager.prototype.create = function(provider, options, cb) {
     user.save(cb);
 };
 
+AccountManager.prototype.remove = function(id, cb) {
+    var User = mongoose.model('User');
+    User.findById(id, function(err, user) {
+        if(err) {
+            console.log('error in core/account', err)
+            return cb(err);
+        }
+        user.remove();
+        return cb(null, null);
+    }.bind(this));
+};
+
 AccountManager.prototype.update = function(id, options, cb) {
     var User = mongoose.model('User');
     var usernameChange = false;
@@ -56,7 +68,6 @@ AccountManager.prototype.update = function(id, options, cb) {
         }
 
         if (user.local) {
-
             if (options.password || options.newPassword) {
                 user.password = options.password || options.newPassword;
             }
