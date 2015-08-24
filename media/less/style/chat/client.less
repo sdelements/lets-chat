@@ -78,15 +78,6 @@
     z-index: 1;
     .flex-display;
     .flex-direction(column);
-    &:after {
-        background: #000;
-        width: 1px;
-        height: 100%;
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
     @media (max-width: @screen-xs-max) {
         height: 100%;
         position: absolute;
@@ -98,15 +89,6 @@
 .lcb-panes {
     .flex(1);
     .flex-display;
-}
-
-.lcb-pane {
-    margin: 10px;
-    border: 1px #111 solid;
-    border-radius: 2px;
-    @media (max-width: @screen-xs-max) {
-        margin: 3px;
-    }
 }
 
 .lcb-account-button {

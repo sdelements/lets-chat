@@ -22,14 +22,10 @@
     padding: 10px;
     border-bottom: 1px #ddd solid;
     position: relative;
-    border-radius: 2px 2px 0 0;
     box-shadow: 0 4px 5px -5px rgba(0, 0, 0, .1);
     z-index: 1000;
     @media (max-width: @screen-xs-max) {
         padding: 5px 8px;
-    }
-    .lcb-room-sidebar-opened & {
-        border-radius: 2px 0 0 0;
     }
 }
 
@@ -123,7 +119,6 @@
     max-height: 100%;
     padding: 15px;
     border: none;
-    border-radius: 0 0 0 2px;
     resize: none;
     .flex(1);
     &:focus {
@@ -152,10 +147,6 @@
     padding-left: 20px;
     padding-right: 20px;
     border-radius: 0;
-    border-radius: 0 0 2px 0;
-    .lcb-room-sidebar-opened & {
-        border-radius: 0;
-    }
 }
 
 .lcb-room-toggle-sidebar {
@@ -174,7 +165,6 @@
     min-width: 160px;
     max-width: 240px;
     border-left: 1px #ddd solid;
-    border-radius: 0 3px 3px 0;
     .flex-display;
     .flex-direction(column);
     @media (max-width: @screen-sm-max) {
@@ -208,7 +198,6 @@
     min-height: inherit;
     line-height: 36px;
     padding: 0 10px;
-    border-radius: 3px 3px 0 0;
     border-bottom: 1px #ddd solid;
     position: relative;
 }
