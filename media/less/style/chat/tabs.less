@@ -18,19 +18,13 @@
 }
 
 .lcb-tabs {
-    border: 1px #333 solid;
-    border-top-color: #111;
-    border-left: none;
-    border-right: none;
+    margin: 20px 0;
 }
 
 .lcb-tab {
     height: 36px;
     line-height: 36px;
-    font-size: 14px;
-    border: 1px #111 solid;
-    border-top-color: #333;
-    border-right: none;
+    font-size: 12px;
     display: block;
     position: relative;
     z-index: 1;
@@ -63,7 +57,7 @@
         }
     }
     &.selected {
-        background: #222;
+        background: #323232;
         &:after {
             background: rgba(255, 255, 255, .9);
         }
@@ -117,7 +111,7 @@
     color: #ccc;
     position: absolute;
     top: 0;
-    right: 7px;
+    right: 8px;
     .transition(opacity .07s linear);
     .opacity(0);
     &:hover {
