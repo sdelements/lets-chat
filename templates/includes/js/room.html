@@ -45,7 +45,9 @@
                 <ul class="lcb-messages" aria-live="polite"></ul>
                 <form class="lcb-entry">
                     <textarea class="lcb-entry-input" placeholder="<$ __('Got something to say?') $>" autofocus></textarea>
-                    <button type="submit" class="btn btn-info lcb-entry-button"><$ __('Send') $></button>
+                    <button type="submit" class="lcb-entry-button" aria-label="<$ __('Send') $>">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
                 </form>
             </div><!-- lcb-chat end -->
             <div class="lcb-room-sidebar">

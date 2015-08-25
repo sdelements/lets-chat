@@ -100,6 +100,7 @@
 }
 
 .lcb-entry {
+    background: #fff;
     height: 70px;
     min-height: 70px;
     border-top: 1px #eee solid;
@@ -138,12 +139,24 @@
 }
 
 .lcb-entry-button {
-    padding-left: 20px;
-    padding-right: 20px;
+    background: none;
+    color: #777;
+    border: none;
+    outline: none;
+    padding: 0 25px;
     border-radius: 0;
+    &:hover {
+        color: #999;
+    }
+    &:active {
+        color: #555;
+    }
 }
 
 .lcb-room-toggle-sidebar {
+    .lcb-room-sidebar-opened & {
+        background: #fefefe;
+    }
     .fa {
         .transition(all .2s ease-in);
         .lcb-room-sidebar-opened & {
