@@ -82,41 +82,41 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label col-sm-4"><$ __('Name') $></label>
-                            <div class="col-sm-7">
+                            <label class="control-label col-sm-6"><$ __('Name') $></label>
+                            <div class="col-sm-11">
                                 <input class="required name form-control" name=
                                 "name" type="text" value="{{name}}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class=
-                            "control-label col-sm-4"><$ __('Description') $></label>
-                            <div class="col-sm-7">
+                            "control-label col-sm-6"><$ __('Description') $></label>
+                            <div class="col-sm-11">
                                 <textarea class="form-control" name=
-                                "description">{{description}}</textarea>
+                                "description" rows="5">{{description}}</textarea>
                             </div>
                         </div>
                         {{#if private}}
                             <div class="form-group">
                                 <label class=
-                                "control-label col-sm-4"><$ __('Password') $></label>
-                                <div class="col-sm-7">
+                                "control-label col-sm-6"><$ __('Password') $></label>
+                                <div class="col-sm-11">
                                     <input class="form-control" name=
                                     "password" type="password" value="{{password}}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class=
-                                "control-label col-sm-4"><$ __('Confirm Password') $></label>
-                                <div class="col-sm-7">
+                                "control-label col-sm-6"><$ __('Confirm Password') $></label>
+                                <div class="col-sm-11">
                                     <input class="form-control" name=
                                     "confirmPassword" type="password" value="{{password}}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class=
-                                "control-label col-sm-4"><$ __('Participants') $></label>
-                                <div class="col-sm-7">
+                                "control-label col-sm-6"><$ __('Participants') $></label>
+                                <div class="col-sm-11">
                                     <textarea class="form-control lcb-entry-participants" name=
                                     "participants">{{participants}}</textarea>
                                 </div>
@@ -125,7 +125,7 @@
                         <p class="response" style="display: none;"></p>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-success pull-right submit-edit-room" type=
+                        <button class="btn btn-info pull-right submit-edit-room" type=
                         "submit">
                             <i class="icon-ok"></i> <$ __('Save') $>
                         </button>
