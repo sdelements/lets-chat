@@ -41,9 +41,6 @@
     z-index: 1000;
     .flex-display;
     .flex-direction(row);
-    @media (max-width: @screen-xs-max) {
-        padding: 5px 8px;
-    }
 }
 
 .lcb-room-meta {
@@ -69,6 +66,10 @@
     }
 }
 
+.lcb-room-heading-loud {
+    text-transform: uppercase;
+}
+
 .lcb-room-description {
     font-weight: 300;
     color: #9f9f9f;
@@ -80,7 +81,7 @@
 }
 
 .lcb-room-header-actions {
-    .btn {
+    .btn-action {
         background: #eee;
         color: #777;
         border-color: #ddd;

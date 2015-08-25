@@ -1,6 +1,6 @@
 <script type="text/x-handlebars-template" id="template-room">
     <div class="lcb-room lcb-pane lcb-pane-{{id}} {{#if sidebar}}lcb-room-sidebar-opened{{/if}} hide" data-id="{{id}}">
-        <div class="lcb-room-header">
+        <header class="lcb-room-header">
             <div class="lcb-room-meta">
                 <h2 class="lcb-room-heading">
                     <span class="slug">#{{slug}}</span>
@@ -13,33 +13,33 @@
             <div class="lcb-room-header-actions">
                 <div class="btn-group">
                     {{#if iCanEdit}}
-                        <a class="btn hidden-xs show-edit-room"
+                        <a class="btn btn-action hidden-xs show-edit-room"
                             title="<$ __('Edit Room') $>" aria-label="<$ __('Edit Room') $>">
                             <i class="fa fa-edit"></i>
                         </a>
                     {{/if}}
-                    <a class="btn hidden-xs" title="<$ __('Chat History') $>" aria-label="<$ __('Chat History') $>"
+                    <a class="btn btn-action hidden-xs" title="<$ __('Chat History') $>" aria-label="<$ __('Chat History') $>"
                         href="./transcript?room={{ id }}" target="_blank">
                         <i class="fa fa-history"></i>
                     </a>
                 </div>
                 <div class="btn-group">
                     <% if settings.files.enable %>
-                        <a class="btn hidden-xs lcb-upload-trigger" title="<$ __('Upload Files') $>" aria-label="<$ __('Upload Files') $>" href="#">
+                        <a class="btn btn-action hidden-xs lcb-upload-trigger" title="<$ __('Upload Files') $>" aria-label="<$ __('Upload Files') $>" href="#">
                             <i class="fa fa-upload"></i>
                         </a>
                     <% endif %>
                     <% if settings.giphy.enable %>
-                        <a class="btn hidden-xs lcb-giphy" href="#lcb-giphy" title="<$ __('Giphy') $>" aria-label="<$ __('Giphy') $>" data-toggle="modal">
+                        <a class="btn btn-action hidden-xs lcb-giphy" href="#lcb-giphy" title="<$ __('Giphy') $>" aria-label="<$ __('Giphy') $>" data-toggle="modal">
                             <i class="fa fa-gift"></i>
                         </a>
                     <% endif %>
                 </div>
-                <a class="btn lcb-room-toggle-sidebar" href="#">
+                <a class="btn btn-action lcb-room-toggle-sidebar" href="#">
                     <i class="fa fa-chevron-left" aria-label="<$ __('Toggle Sidebar') $>"></i>
                 </a>
             </div>
-        </div><!-- lcb-room-header end -->
+        </header><!-- lcb-room-header end -->
         <div class="lcb-room-main">
             <div class="lcb-room-chat">
                 <ul class="lcb-messages" aria-live="polite"></ul>
