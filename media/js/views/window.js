@@ -115,8 +115,7 @@
                 name = (room && room.get('name')) || 'Rooms';
             }
             if (name) {
-                this.title = $('<pre />').text(name).html() +
-                ' \u00B7 ' + this.originalTitle;
+                this.title = name + ' \u00B7 ' + this.originalTitle;
             } else {
                 this.title = this.originalTitle;
             }
