@@ -2,13 +2,15 @@
     <div class="lcb-room lcb-pane lcb-pane-{{id}} {{#if sidebar}}lcb-room-sidebar-opened{{/if}} hide" data-id="{{id}}">
         <header class="lcb-room-header">
             <div class="lcb-room-meta">
-                <h2 class="lcb-room-heading">
-                    <span class="slug">#{{slug}}</span>
-                    {{#if hasPassword}}
-                        <span class="fa fa-lock btn password" title="<$ __('This room requires password to enter') $>" aria-label="<$ __('This room requires password to enter') $>"></span>
-                    {{/if}}
-                </h2>
-                <p class="lcb-room-description">{{description}}</p>
+                <div class="lcb-room-meta-text">
+                    <h2 class="lcb-room-heading">
+                        <span class="slug">#{{slug}}</span>
+                        {{#if hasPassword}}
+                            <span class="fa fa-lock btn password" title="<$ __('This room requires password to enter') $>" aria-label="<$ __('This room requires password to enter') $>"></span>
+                        {{/if}}
+                    </h2>
+                    <p class="lcb-room-description">{{description}}</p>
+                </div>
             </div>
             <div class="lcb-room-header-actions">
                 <div class="btn-group">

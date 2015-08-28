@@ -314,8 +314,11 @@
 }
 
 @-moz-document url-prefix() {
-    .lcb-room-meta {
-        width: 0;
+    .lcb-room-meta-text {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+        .text-overflow;
     }
 }
 
