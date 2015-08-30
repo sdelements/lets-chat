@@ -375,7 +375,20 @@
             this.scrollLocked = true;
             this.scrollMessages();
         },
+        getCaretPosition: function(e, field) {
+            var caretPosition = 0;
+            if (document.selection) {
+                field.focus ();
+                var oSel = document.selection.createRange ();
+                oSel.moveStart ('character', -field.value.length);
+                caretPosition = oSel.text.length;
+            } else if (field.selectionStart || field.selectionStart == '0') {
+                caretPosition = field.selectionStart;
+            }
+            return (caretPosition);
+        },
         historyUp: function(e) {
+            var caretPosition = getCaretPosition();
             if (e.type === 'keyup' && e.keyCode === 38 && this.model.get('messageHistoryCurrent') > 0) {
                 e.preventDefault();
                 this.model.set({
@@ -383,8 +396,11 @@
                 });
                 this.model.get('setHistory')();
             }
+            console.log('event', e);
+            e.setSelectionRange(caretPosition, caretPosition);
         },
         historyDown: function(e) {
+            var caretPosition = getCaretPosition();
             if (e.type === 'keydown' && e.keyCode === 40) {
                 e.preventDefault();
                 if (this.model.get('messageHistoryCurrent') < this.model.get('messageHistory').length - 1) {
@@ -396,6 +412,8 @@
                     this.model.get('setHistory')();
                 }
             }
+            console.log('event', e);
+            e.setSelectionRange(caretPosition, caretPosition);
         },
         addMessage: function(message) {
             // Smells like pasta
