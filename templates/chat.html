@@ -21,7 +21,7 @@
     <div id="lcb-client" class="lcb-client">
         <div class="lcb-header">
             <button type="button" class="btn lcb-header-toggle">
-                <i class="fa fa-bars"></i>
+                <i class="fa fa-bars" aria-label="<$ __('Toggle Navigation') $>"></i>
             </button>
             <div class="lcb-header-logo">Let's Chat</div>
         </div>
@@ -52,13 +52,13 @@
                     <% if settings.xmpp.enable %>
                         <li>
                             <a data-toggle="modal" href="#lcb-xmpp">
-                                <i class="fa fa-fw fa-comments"></i> <$ __('XMPP/Jabber') $> 
+                                <i class="fa fa-fw fa-comments"></i> <$ __('XMPP/Jabber') $>
                             </a>
                         </li>
                     <% endif %>
                     <li>
                         <a data-toggle="modal" href="#lcb-tokens">
-                            <i class="fa fa-fw fa-lock"></i> <$ __('Auth Tokens') $> 
+                            <i class="fa fa-fw fa-lock"></i> <$ __('Auth Tokens') $>
                         </a>
                     </li>
                     <li class="divider"></li>
@@ -76,11 +76,14 @@
                     <i class="fa fa-bell-slash"></i>
                 </span>
             </div>
+            <div class="lcb-version">
+                <span>v <$ version $></span>
+            </div>
             <div class="lcb-tabs-outer">
                 <ul class="lcb-tabs">
                     <li data-id="list" class="lcb-tab lcb-tab-home">
                         <a href="#!/">
-                            <i class="fa fa-th"></i>
+                            <i class="fa fa-th" aria-label="<$ __('Home') $>"></i>
                         </a>
                     </li>
                 </ul>
@@ -94,12 +97,12 @@
                     </h2>
                     <div class="lcb-rooms-browser-filter">
                         <label class="lcb-rooms-browser-filter-label" for="lcb-rooms-browser-filter-input">
-                            <i class="fa fa-search"></i>
+                            <i class="fa fa-search" aria-label="<$ __('Search') $>"></i>
                         </label>
                         <input id="lcb-rooms-browser-filter-input" class="lcb-rooms-browser-filter-input" type="search" autofocus />
                     </div>
                     <a class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-plus" aria-label="<$ __('Add Room') $>"></i>
                     </a>
                 </header>
                 <ul class="lcb-rooms-list"></ul>

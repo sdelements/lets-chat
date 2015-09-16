@@ -4,6 +4,10 @@
 
 A self-hosted chat app for small teams built by [Security Compass][seccom].
 
+[![Build Status](https://travis-ci.org/sdelements/lets-chat.svg?branch=master)](https://travis-ci.org/sdelements/lets-chat)
+[![Dependency Status](https://david-dm.org/sdelements/lets-chat.svg)](https://david-dm.org/sdelements/lets-chat)
+[![devDependency Status](https://david-dm.org/sdelements/lets-chat/dev-status.svg)](https://david-dm.org/sdelements/lets-chat#info=devDependencies)
+
 ## Features and Stuff
 
 * BYOS (bring your own server)
@@ -15,7 +19,7 @@ A self-hosted chat app for small teams built by [Security Compass][seccom].
 * Image embeds / Giphy search
 * Code pasting
 * File uploads (Local / [Amazon S3][s3] / [Azure][azure])
-* Transcripts / chat history
+* Transcripts / Chat History (with search)
 * XMPP Multi-user chat (MUC)
 * 1-to-1 chat between XMPP users
 * Local / [Kerberos][kerberos] / [LDAP][ldap] authentication

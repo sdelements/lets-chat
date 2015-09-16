@@ -9,7 +9,7 @@ module.exports = EventListener.extend({
 
     on: 'messages:new',
 
-    then: function(msg, room, user) {
+    then: function(msg, room, user, data) {
         var connections = this.getConnectionsForRoom(room._id);
 
         connections.forEach(function(connection) {
@@ -19,6 +19,11 @@ module.exports = EventListener.extend({
 
             if (mentions && mentions.indexOf('@' + connection.user.username) > -1) {
                 text = connection.nickname(room.slug) + ': ' + text;
+            }
+
+            var id = msg._id;
+            if (connection.user.username === user.username) {
+                id = data && data.id || id;
             }
 
             var stanza = new Stanza.Message({
