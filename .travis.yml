@@ -1,5 +1,8 @@
 sudo: false
 
+env:
+  - NPM_CONFIG_OPTIONAL=false
+
 language: node_js
 
 node_js:
