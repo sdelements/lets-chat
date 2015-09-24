@@ -90,7 +90,7 @@
     "passport-http": "0.2.2",
     "passport-http-bearer": "1.0.1",
     "passport-local": "1.0.0",
-    "passport.socketio": "3.5.1",
+    "passport.socketio": "3.6.1",
     "require-directory": "~2.1.1",
     "require-tree": "^1.0.1"
   },
