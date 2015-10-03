@@ -22,7 +22,10 @@
             'click .archive-room': 'archiveRoom',
             'click .lcb-room-poke': 'poke',
             'click .lcb-upload-trigger': 'upload',
-            'keyup .lcb-entry-input': 'messageUp'
+            'keyup .lcb-entry-input': function(e) {
+                this.messageUp(e);
+                this.messageDown(e);
+            }
         },
         initialize: function(options) {
             this.client = options.client;
@@ -353,6 +356,20 @@
                 var historyCurrent = this.model.get('historyCurrent');
                 historyCurrent++;
                 if (historyCurrent < history.length) {
+                    var currentMessage = this.model.get('history')[historyCurrent]
+                    $textarea.val(currentMessage.text);
+                    this.model.set('historyCurrent', historyCurrent)
+                }
+            }
+        },
+        messageDown: function(e) {
+            if (e.type === 'keyup' && e.keyCode === 40) {
+                e.preventDefault()
+                var $textarea = this.$('.lcb-entry-input');
+                var history = this.model.get('history');
+                var historyCurrent = this.model.get('historyCurrent');
+                historyCurrent--;
+                if (0 <= historyCurrent) {
                     var currentMessage = this.model.get('history')[historyCurrent]
                     $textarea.val(currentMessage.text);
                     this.model.set('historyCurrent', historyCurrent)
