@@ -21,7 +21,8 @@
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
             'click .lcb-room-poke': 'poke',
-            'click .lcb-upload-trigger': 'upload'
+            'click .lcb-upload-trigger': 'upload',
+            'keyup .lcb-entry-input': 'messageUp'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -31,6 +32,8 @@
 
             this.model.set('iAmOwner', iAmOwner);
             this.model.set('iCanEdit', iCanEdit);
+            this.model.set('history', []);
+            this.model.set('historyCurrent', 0);
 
             this.template = options.template;
             this.messageTemplate =
@@ -342,6 +345,20 @@
                 }
             });
         },
+        messageUp: function(e) {
+            if (e.type === 'keyup' && e.keyCode === 38) {
+                e.preventDefault();
+                var $textarea = this.$('.lcb-entry-input');
+                var history = this.model.get('history');
+                var historyCurrent = this.model.get('historyCurrent');
+                historyCurrent++;
+                if (historyCurrent < history.length) {
+                    var currentMessage = this.model.get('history')[historyCurrent]
+                    $textarea.val(currentMessage.text);
+                    this.model.set('historyCurrent', historyCurrent)
+                }
+            }
+        },
         sendMessage: function(e) {
             if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
             if (e.type === 'keypress' && e.keyCode === 13 && e.shiftKey) return;
@@ -349,10 +366,17 @@
             if (!this.client.status.get('connected')) return;
             var $textarea = this.$('.lcb-entry-input');
             if (!$textarea.val()) return;
-            this.client.events.trigger('messages:send', {
+            var message = {
                 room: this.model.id,
                 text: $textarea.val()
-            });
+            };
+            this.client.events.trigger('messages:send', message);
+
+            var history = _.clone(this.model.get('history'));
+            history.unshift(message);
+            this.model.set('history', history);
+            this.model.set('historyCurrent', -1);
+
             $textarea.val('');
             this.scrollLocked = true;
             this.scrollMessages();
