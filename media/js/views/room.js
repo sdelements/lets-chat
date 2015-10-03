@@ -356,9 +356,10 @@
                 var historyCurrent = this.model.get('historyCurrent');
                 historyCurrent++;
                 if (historyCurrent < history.length) {
-                    var currentMessage = this.model.get('history')[historyCurrent]
-                    $textarea.val(currentMessage.text);
-                    this.model.set('historyCurrent', historyCurrent)
+                    var currentMessage = this.model.get('history')[historyCurrent];
+                    $textarea.val(currentMessage.message.text);
+                    this.setCaretPosition($textarea, currentMessage.selection);
+                    this.model.set('historyCurrent', historyCurrent);
                 }
             }
         },
@@ -370,11 +371,24 @@
                 var historyCurrent = this.model.get('historyCurrent');
                 historyCurrent--;
                 if (0 <= historyCurrent) {
-                    var currentMessage = this.model.get('history')[historyCurrent]
-                    $textarea.val(currentMessage.text);
-                    this.model.set('historyCurrent', historyCurrent)
+                    var currentMessage = this.model.get('history')[historyCurrent];
+                    $textarea.val(currentMessage.message.text);
+                    this.setCaretPosition($textarea, currentMessage.selection);
+                    this.model.set('historyCurrent', historyCurrent);
                 }
             }
+        },
+        getCaretPosition: function(field) {
+            var rawfield = field[0];
+            return {
+                start: rawfield.selectionStart,
+                end: rawfield.selectionEnd
+            };
+        },
+        setCaretPosition: function(field, selection) {
+            var rawfield = field[0];
+            rawfield.focus();
+            rawfield.setSelectionRange(selection.start, selection.end);
         },
         sendMessage: function(e) {
             if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
@@ -390,7 +404,10 @@
             this.client.events.trigger('messages:send', message);
 
             var history = _.clone(this.model.get('history'));
-            history.unshift(message);
+            history.unshift({
+                message: message,
+                selection: this.getCaretPosition($textarea)
+            });
             this.model.set('history', history);
             this.model.set('historyCurrent', -1);
 
