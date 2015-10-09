@@ -25,7 +25,7 @@ module.exports = EventListener.extend({
             }
 
             var stanza = new Stanza.Message({
-                id: msg._id,
+                id: id,
                 type: 'chat',
                 to: connection.getUserJid(user.username),
                 from: connection.getUserJid(owner.username)

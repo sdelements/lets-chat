@@ -27,7 +27,7 @@ module.exports = EventListener.extend({
             }
 
             var stanza = new Stanza.Message({
-                id: msg._id,
+                id: id,
                 type: 'groupchat',
                 to: connection.getRoomJid(room.slug),
                 from: connection.getRoomJid(room.slug, user.username)
