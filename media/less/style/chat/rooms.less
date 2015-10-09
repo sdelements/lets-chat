@@ -2,9 +2,15 @@
  * Rooms
  *********************/
 
-.lcb-room {
+.lcb-room,
+.lcb-room-chat,
+.lcb-room-main {
     .flex(1);
     .flex-display;
+}
+
+.lcb-room {
+    .flex-direction(column);
     -webkit-transition: -webkit-transform .1s ease;
     -moz-transition: -moz-transform .1s ease;
     -ms-transition: -ms-transform .1s ease;
@@ -16,81 +22,73 @@
     }
 }
 
-.lcb-room-header {
-    background: #fff;
-    min-height: 46px;
-    padding: 10px;
-    border-bottom: 1px #ddd solid;
-    position: relative;
-    border-radius: 2px 2px 0 0;
-    box-shadow: 0 4px 5px -5px rgba(0, 0, 0, .1);
-    z-index: 1000;
-    @media (max-width: @screen-xs-max) {
-        padding: 5px 8px;
-    }
-    .lcb-room-sidebar-opened & {
-        border-radius: 2px 0 0 0;
-    }
+.lcb-room-chat {
+    .flex-direction(column);
 }
 
-.lcb-room-header-actions {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    a {
-        color: #777;
-    }
-    @media (max-width: @screen-xs-max) {
-        top: 3px;
-    }
+.lcb-room-main {
+    .flex-direction(row);
+}
+
+.lcb-room-header {
+    background: #f3f3f3;
+    height: 60px;
+    min-height: 60px;
+    line-height: 60px;
+    padding: 0 15px;
+    border-bottom: 1px #ddd solid;
+    position: relative;
+    box-shadow: 0 4px 5px -5px rgba(0, 0, 0, .1);
+    z-index: 1;
+    .flex-display;
+    .flex-direction(row);
+}
+
+.lcb-room-meta {
+    padding-right: 15px;
+    .text-overflow;
+    .flex(1);
 }
 
 .lcb-room-heading {
-    line-height: 100%;
-    padding-right: 35px;
+    font-size: 24px;
+    font-weight: 300;
+    color: #555;
+    line-height: inherit;
     margin: 0;
-    .flex-display;
+    margin-right: 5px;
+    display: inline;
     @media (max-width: @screen-xs-max) {
         font-size: 20px;
-    }
-    .name,
-    .slug {
-        max-width: 50%;
-        .text-overflow;
-    }
-    .slug {
-        font-size: 24px;
-        font-weight: 300;
-        color: #aaa;
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-    .btn {
-        color: #aaa;
-        line-height: 30px;
-        padding-top: 0;
-        padding-bottom: 0;
-        padding-left: 5px;
-        padding-right: 5px;
-
-        &:active {
-            box-shadow: none;
-        }
     }
     .password {
         font-size: 14px;
         cursor: default;
     }
-    .btn:hover {
-        color: #666;
-    }
+}
+
+.lcb-room-heading-loud {
+    text-transform: uppercase;
 }
 
 .lcb-room-description {
-    .text-overflow;
-    color: #777;
+    font-weight: 300;
+    color: #9f9f9f;
+    margin: 0;
+    display: inline;
     @media (max-width: @screen-xs-max) {
         font-size: 12px;
+    }
+}
+
+.lcb-room-header-actions {
+    .btn-action {
+        background: #eee;
+        color: #777;
+        border-color: #ddd;
+        &:hover {
+            background: #f7f7f7;
+        }
     }
 }
 
@@ -102,14 +100,8 @@
     }
 }
 
-
-.lcb-room-chat {
-    .flex(1);
-    .flex-display;
-    .flex-direction(column);
-}
-
 .lcb-entry {
+    background: #fff;
     height: 70px;
     min-height: 70px;
     border-top: 1px #eee solid;
@@ -123,7 +115,6 @@
     max-height: 100%;
     padding: 15px;
     border: none;
-    border-radius: 0 0 0 2px;
     resize: none;
     .flex(1);
     &:focus {
@@ -149,32 +140,38 @@
 }
 
 .lcb-entry-button {
-    padding-left: 20px;
-    padding-right: 20px;
+    background: none;
+    color: #777;
+    border: none;
+    outline: none;
+    padding: 0 25px;
     border-radius: 0;
-    border-radius: 0 0 2px 0;
-    .lcb-room-sidebar-opened & {
-        border-radius: 0;
+    &:hover {
+        color: #999;
+    }
+    &:active {
+        color: #555;
     }
 }
 
 .lcb-room-toggle-sidebar {
-    min-width: 30px;
-    font-size: 30px;
-    display: block;
-    .transition(all .3s ease-in);
     .lcb-room-sidebar-opened & {
-        .rotateY(180deg);
+        background: #fefefe;
+    }
+    .fa {
+        .transition(all .2s ease-in);
+        .lcb-room-sidebar-opened & {
+            .rotateY(180deg);
+        }
     }
 }
 
 .lcb-room-sidebar {
-    background: #f2f2f2;
+    background: #f7f7f7;
     width: 20%;
     min-width: 160px;
     max-width: 240px;
     border-left: 1px #ddd solid;
-    border-radius: 0 3px 3px 0;
     .flex-display;
     .flex-direction(column);
     @media (max-width: @screen-sm-max) {
@@ -208,7 +205,6 @@
     min-height: inherit;
     line-height: 36px;
     padding: 0 10px;
-    border-radius: 3px 3px 0 0;
     border-bottom: 1px #ddd solid;
     position: relative;
 }
@@ -316,3 +312,13 @@
     display: block;
     .text-overflow;
 }
+
+@-moz-document url-prefix() {
+    .lcb-room-meta-text {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+        .text-overflow;
+    }
+}
+
