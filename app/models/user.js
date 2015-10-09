@@ -6,7 +6,7 @@
 
 var bcrypt = require('bcryptjs'),
     crypto = require('crypto'),
-    md5 = require('MD5'),
+    md5 = require('md5'),
     hash = require('node_hash'),
     mongoose = require('mongoose'),
     uniqueValidator = require('mongoose-unique-validator'),
