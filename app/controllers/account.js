@@ -6,6 +6,7 @@
 
 var _ = require('lodash'),
     fs = require('fs'),
+    psjon = require('./../../package.json'),
     auth = require('./../auth/index'),
     path = require('path'),
     settings = require('./../config');
@@ -26,7 +27,8 @@ module.exports = function() {
     app.get('/', middlewares.requireLogin.redirect, function(req, res) {
         res.render('chat.html', {
             account: req.user,
-            settings: settings
+            settings: settings,
+            version: psjon.version
         });
     });
 

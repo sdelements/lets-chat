@@ -29,7 +29,7 @@ module.exports = MessageProcessor.extend({
             if (!err && user) {
                 this.sendVcard(user, cb);
             }
-        });
+        }.bind(this));
     },
 
     sendVcard: function(user, cb) {

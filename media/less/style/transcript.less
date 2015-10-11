@@ -10,6 +10,12 @@
     bottom: 0;
     .flex-display;
     .flex-direction(column);
+    @media print {
+        & {
+            position: static;
+            display: block;
+        }
+    }
 }
 
 .lcb-transcript-header {

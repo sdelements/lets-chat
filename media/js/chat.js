@@ -1,4 +1,3 @@
-//= require util/eggs.js
 //= require util/message.js
 //= require models.js
 //= require views/browser.js
@@ -13,7 +12,8 @@
 
 $(function() {
     window.client = new window.LCB.Client({
-        filesEnabled: $('#lcb-upload').length > 0
+        filesEnabled: $('#lcb-upload').length > 0,
+        giphyEnabled: $('#lcb-giphy').length > 0
     });
     window.client.start();
 });

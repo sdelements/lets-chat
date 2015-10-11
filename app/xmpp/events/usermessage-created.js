@@ -8,7 +8,7 @@ module.exports = EventListener.extend({
 
     on: 'user-messages:new',
 
-    then: function(msg, user, owner) {
+    then: function(msg, user, owner, data) {
         if (!settings.private.enable) {
             return;
         }
@@ -19,9 +19,13 @@ module.exports = EventListener.extend({
         });
 
         connections.forEach(function(connection) {
+            var id = msg._id;
+            if (connection.user.username === user.username) {
+                id = data && data.id || id;
+            }
 
             var stanza = new Stanza.Message({
-                id: msg._id,
+                id: id,
                 type: 'chat',
                 to: connection.getUserJid(user.username),
                 from: connection.getUserJid(owner.username)

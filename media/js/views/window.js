@@ -30,7 +30,7 @@
 
             this.client = options.client;
             this.rooms = options.rooms;
-            this.originalTitle = this.$('title').text();
+            this.originalTitle = document.title;
             this.title = this.originalTitle;
 
             $(window).on('focus blur', _.bind(this.onFocusBlur, this));
@@ -92,7 +92,7 @@
                 }
                 titlePrefix += ') ';
             }
-            this.$('title').html(titlePrefix + this.title);
+            document.title = titlePrefix + this.title;
         },
         flashFaviconBadge: function() {
             if (!this.faviconBadgeTimer) {
@@ -115,12 +115,11 @@
                 name = (room && room.get('name')) || 'Rooms';
             }
             if (name) {
-                this.title = $('<pre />').text(name).html() +
-                ' &middot; ' + this.originalTitle;
+                this.title = name + ' \u00B7 ' + this.originalTitle;
             } else {
                 this.title = this.originalTitle;
             }
-            this.$('title').html(this.title);
+            document.title = this.title;
         }
     });
 
@@ -154,8 +153,10 @@
             view && view.toggleSidebar && view.toggleSidebar();
         },
         openGiphyModal: function(e) {
-            e.preventDefault();
-            $('.lcb-giphy').modal('show');
+            if (this.client.options.giphyEnabled) {
+                e.preventDefault();
+                $('.lcb-giphy').modal('show');
+            }
         }
     });
 

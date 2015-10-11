@@ -1,3 +1,40 @@
+## 0.4.3 (2015-10-09)
+
+Fixes
+
+* Issues with passport dependencies
+* XMPP message ID
+
+Enhancements
+
+* New client styling
+* Russian and Polish languages
+
+## 0.4.2 (2015-07-14)
+
+Fixes
+
+* Update dependencies
+
+Enhancements
+
+* Show version in the app
+* Various accessibility additions
+
+## 0.4.1 (2015-07-08)
+
+Fixes
+
+* [Conversations](https://github.com/siacs/Conversations) double messaging
+* Transcripts were not printable
+
+Enhancements
+
+* Giphy can be toggled in settings
+* New translations: nl, de, pt, fr, jp, etc
+* Various Docker improvements (config volume, etc)
+* Better message time groupings
+
 ## 0.4.0 (2015-06-04)
 
 Enhancements

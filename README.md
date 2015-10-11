@@ -4,6 +4,10 @@
 
 A self-hosted chat app for small teams built by [Security Compass][seccom].
 
+[![Build Status](https://travis-ci.org/sdelements/lets-chat.svg?branch=master)](https://travis-ci.org/sdelements/lets-chat)
+[![Dependency Status](https://david-dm.org/sdelements/lets-chat.svg)](https://david-dm.org/sdelements/lets-chat)
+[![devDependency Status](https://david-dm.org/sdelements/lets-chat/dev-status.svg)](https://david-dm.org/sdelements/lets-chat#info=devDependencies)
+
 ## Features and Stuff
 
 * BYOS (bring your own server)
@@ -15,7 +19,7 @@ A self-hosted chat app for small teams built by [Security Compass][seccom].
 * Image embeds / Giphy search
 * Code pasting
 * File uploads (Local / [Amazon S3][s3] / [Azure][azure])
-* Transcripts / chat history
+* Transcripts / Chat History (with search)
 * XMPP Multi-user chat (MUC)
 * 1-to-1 chat between XMPP users
 * Local / [Kerberos][kerberos] / [LDAP][ldap] authentication
@@ -27,9 +31,12 @@ A self-hosted chat app for small teams built by [Security Compass][seccom].
 
 ## Deployment
 
-See the [wiki][wiki] for instructions on deploying locally, or to Docker,
-Vagrant and Heroku.
+For installation instructions, please use the following links:
 
+* [Local installation][install-local]
+* [Docker][install-docker]
+* [Heroku][install-heroku]
+* [Vagrant][install-vagrant]
 
 ## Support & Problems
 
@@ -60,12 +67,6 @@ use in common text editors. Read more and download plugins at
 <http://editorconfig.org>.
 
 
-## Upgrading from 0.2.x
-
-Release 0.3.0+ uses a new settings file called ```settings.yml```, just move
-over your old ```settings.js``` options and run ```npm run migrate```.
-
-
 ## License
 
 Released under [the MIT license][license].
@@ -85,3 +86,7 @@ Released under [the MIT license][license].
 [seccom]: http://securitycompass.com/
 [hubot]: https://github.com/sdelements/hubot-lets-chat
 [azure]: https://github.com/maximilian-krauss/lets-chat-azure
+[install-local]: https://github.com/sdelements/lets-chat/wiki/Installation
+[install-docker]: https://registry.hub.docker.com/u/sdelements/lets-chat/
+[install-heroku]: https://github.com/sdelements/lets-chat/wiki/Heroku
+[install-vagrant]: https://github.com/sdelements/lets-chat/wiki/Vagrant
