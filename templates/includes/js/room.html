@@ -1,74 +1,81 @@
 <script type="text/x-handlebars-template" id="template-room">
     <div class="lcb-room lcb-pane lcb-pane-{{id}} {{#if sidebar}}lcb-room-sidebar-opened{{/if}} hide" data-id="{{id}}">
-        <div class="lcb-room-chat ">
-            <div class="lcb-room-header">
-                <div class="lcb-room-meta">
+        <header class="lcb-room-header">
+            <div class="lcb-room-meta">
+                <div class="lcb-room-meta-text">
                     <h2 class="lcb-room-heading">
-                        <span class="name">{{name}}</span>
                         <span class="slug">#{{slug}}</span>
                         {{#if hasPassword}}
                             <span class="fa fa-lock btn password" title="<$ __('This room requires password to enter') $>" aria-label="<$ __('This room requires password to enter') $>"></span>
                         {{/if}}
-                        {{#if iCanEdit}}
-                            <a class="btn hidden-xs show-edit-room"
-                                title="<$ __('Edit Room') $>" aria-label="<$ __('Edit Room') $>">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                        {{/if}}
-                        <a class="btn hidden-xs" title="<$ __('Chat History') $>" aria-label="<$ __('Chat History') $>"
-                            href="./transcript?room={{ id }}" target="_blank">
-                            <i class="fa fa-history"></i>
-                        </a>
-                        <% if settings.files.enable %>
-                            <a class="btn hidden-xs lcb-upload-trigger" title="<$ __('Upload Files') $>" aria-label="<$ __('Upload Files') $>" href="#">
-                                <i class="fa fa-upload"></i>
-                            </a>
-                        <% endif %>
-                        <% if settings.giphy.enable %>
-                            <a class="btn hidden-xs lcb-giphy" href="#lcb-giphy" title="<$ __('Giphy') $>" aria-label="<$ __('Giphy') $>" data-toggle="modal">
-                                <i class="fa fa-gift"></i>
-                            </a>
-                        <% endif %>
                     </h2>
-                    <div class="lcb-room-description">
-                        <p>{{description}}</p>
-                    </div>
+                    <p class="lcb-room-description">{{description}}</p>
                 </div>
-                <div class="lcb-room-header-actions">
-                    <a class="lcb-room-toggle-sidebar" href="#">
-                        <i class="fa fa-chevron-left" aria-label="<$ __('Toggle Sidebar') $>"></i>
+            </div>
+            <div class="lcb-room-header-actions">
+                <div class="btn-group">
+                    {{#if iCanEdit}}
+                        <a class="btn btn-action hidden-xs show-edit-room"
+                            title="<$ __('Edit Room') $>" aria-label="<$ __('Edit Room') $>">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    {{/if}}
+                    <a class="btn btn-action hidden-xs" title="<$ __('Chat History') $>" aria-label="<$ __('Chat History') $>"
+                        href="./transcript?room={{ id }}" target="_blank">
+                        <i class="fa fa-history"></i>
                     </a>
                 </div>
-            </div><!-- lcb-room-header end -->
-            <ul class="lcb-messages" aria-live="polite"></ul>
-            <form class="lcb-entry">
-                <textarea class="lcb-entry-input" placeholder="<$ __('Got something to say?') $>" autofocus></textarea>
-                <button type="submit" class="btn btn-info lcb-entry-button"><$ __('Send') $></button>
-            </form>
-        </div><!-- lcb-chat end -->
-        <div class="lcb-room-sidebar">
-            <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
-                <header class="lcb-room-sidebar-header">
-                    <h3 class="lcb-room-sidebar-heading">
-                        <i class="fa fa-users"></i> <$ __('Who\'s Here') $> (<span class="lcb-room-sidebar-items-count"></span>)
-                    </h3>
-                </header>
-                <ul class="lcb-room-sidebar-list"></ul>
+                <div class="btn-group">
+                    <% if settings.files.enable %>
+                        <a class="btn btn-action hidden-xs lcb-upload-trigger" title="<$ __('Upload Files') $>" aria-label="<$ __('Upload Files') $>" href="#">
+                            <i class="fa fa-upload"></i>
+                        </a>
+                    <% endif %>
+                    <% if settings.giphy.enable %>
+                        <a class="btn btn-action hidden-xs lcb-giphy" href="#lcb-giphy" title="<$ __('Giphy') $>" aria-label="<$ __('Giphy') $>" data-toggle="modal">
+                            <i class="fa fa-gift"></i>
+                        </a>
+                    <% endif %>
+                </div>
+                <a class="btn btn-action lcb-room-toggle-sidebar" href="#">
+                    <i class="fa fa-chevron-left" aria-label="<$ __('Toggle Sidebar') $>"></i>
+                </a>
             </div>
-            <% if settings.files.enable %>
-            <div class="lcb-room-sidebar-group lcb-room-sidebar-files">
-                <header class="lcb-room-sidebar-header">
-                    <h3 class="lcb-room-sidebar-heading">
-                        <i class="fa fa-file-text"></i> <$ __('Files') $>
-                    </h3>
-                    <button class="btn lcb-room-sidebar-files-add lcb-upload-trigger">
-                        <i class="fa fa-plus" aria-label="<$ __('Upload Files') $>"></i>
+        </header><!-- lcb-room-header end -->
+        <div class="lcb-room-main">
+            <div class="lcb-room-chat">
+                <ul class="lcb-messages" aria-live="polite"></ul>
+                <form class="lcb-entry">
+                    <textarea class="lcb-entry-input" placeholder="<$ __('Got something to say?') $>" autofocus></textarea>
+                    <button type="submit" class="lcb-entry-button" aria-label="<$ __('Send') $>">
+                        <i class="fa fa-paper-plane"></i>
                     </button>
-                </header>
-                <ul class="lcb-room-sidebar-list"></ul>
-            </div>
-            <% endif %>
-        </div><!-- lcb-room-sidebar end -->
+                </form>
+            </div><!-- lcb-chat end -->
+            <div class="lcb-room-sidebar">
+                <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
+                    <header class="lcb-room-sidebar-header">
+                        <h3 class="lcb-room-sidebar-heading">
+                            <i class="fa fa-users"></i> <$ __('Who\'s Here') $> (<span class="lcb-room-sidebar-items-count"></span>)
+                        </h3>
+                    </header>
+                    <ul class="lcb-room-sidebar-list"></ul>
+                </div>
+                <% if settings.files.enable %>
+                    <div class="lcb-room-sidebar-group lcb-room-sidebar-files">
+                        <header class="lcb-room-sidebar-header">
+                            <h3 class="lcb-room-sidebar-heading">
+                                <i class="fa fa-file-text"></i> <$ __('Files') $>
+                            </h3>
+                            <button class="btn lcb-room-sidebar-files-add lcb-upload-trigger">
+                                <i class="fa fa-plus" aria-label="<$ __('Upload Files') $>"></i>
+                            </button>
+                        </header>
+                        <ul class="lcb-room-sidebar-list"></ul>
+                    </div>
+                <% endif %>
+            </div><!-- lcb-room-sidebar end -->
+        </div>
         <div class="edit-room modal fade lcb-room-edit">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -79,41 +86,41 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label col-sm-4"><$ __('Name') $></label>
-                            <div class="col-sm-7">
+                            <label class="control-label col-sm-6"><$ __('Name') $></label>
+                            <div class="col-sm-11">
                                 <input class="required name form-control" name=
                                 "name" type="text" value="{{name}}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class=
-                            "control-label col-sm-4"><$ __('Description') $></label>
-                            <div class="col-sm-7">
+                            "control-label col-sm-6"><$ __('Description') $></label>
+                            <div class="col-sm-11">
                                 <textarea class="form-control" name=
-                                "description">{{description}}</textarea>
+                                "description" rows="5">{{description}}</textarea>
                             </div>
                         </div>
                         {{#if private}}
                             <div class="form-group">
                                 <label class=
-                                "control-label col-sm-4"><$ __('Password') $></label>
-                                <div class="col-sm-7">
+                                "control-label col-sm-6"><$ __('Password') $></label>
+                                <div class="col-sm-11">
                                     <input class="form-control" name=
                                     "password" type="password" value="{{password}}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class=
-                                "control-label col-sm-4"><$ __('Confirm Password') $></label>
-                                <div class="col-sm-7">
+                                "control-label col-sm-6"><$ __('Confirm Password') $></label>
+                                <div class="col-sm-11">
                                     <input class="form-control" name=
                                     "confirmPassword" type="password" value="{{password}}">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class=
-                                "control-label col-sm-4"><$ __('Participants') $></label>
-                                <div class="col-sm-7">
+                                "control-label col-sm-6"><$ __('Participants') $></label>
+                                <div class="col-sm-11">
                                     <textarea class="form-control lcb-entry-participants" name=
                                     "participants">{{participants}}</textarea>
                                 </div>
@@ -122,7 +129,7 @@
                         <p class="response" style="display: none;"></p>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-success pull-right submit-edit-room" type=
+                        <button class="btn btn-info pull-right submit-edit-room" type=
                         "submit">
                             <i class="icon-ok"></i> <$ __('Save') $>
                         </button>

@@ -69,7 +69,7 @@
 }
 
 .lcb-sidebar {
-    background: #222;
+    background: #272727;
     width: 200px;
     min-width: 200px;
     height: 100%;
@@ -78,15 +78,6 @@
     z-index: 1;
     .flex-display;
     .flex-direction(column);
-    &:after {
-        background: #000;
-        width: 1px;
-        height: 100%;
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
     @media (max-width: @screen-xs-max) {
         height: 100%;
         position: absolute;
@@ -100,19 +91,10 @@
     .flex-display;
 }
 
-.lcb-pane {
-    margin: 10px;
-    border: 1px #111 solid;
-    border-radius: 2px;
-    @media (max-width: @screen-xs-max) {
-        margin: 3px;
-    }
-}
-
 .lcb-account-button {
-    background: #222 url('../img/header.png');
-    height: 42px;
-    line-height: 45px;
+    background: #222;
+    height: 45px;
+    line-height: 48px;
     color: #bbb;
     padding: 0 6px;
     display: block;
@@ -133,7 +115,7 @@
 .lcb-account-button-avatar {
     .size(32px);
     position: absolute;
-    top: 5px;
+    top: 6px;
     left: 5px;
 }
 
@@ -143,7 +125,7 @@
     margin-right: 15px;
     .text-overflow;
     line-height: 18px;
-    padding-top: 5px;
+    padding-top: 6px;
     font-size: 18px;
 }
 
@@ -197,13 +179,10 @@
 }
 
 .lcb-version {
-    bottom: 0;
-    right: 0;
+    bottom: 1px;
+    right: 4px;
+    .opacity(0.4);
     .lcb-status-text;
-}
-
-lcb-version-number {
-    margin: 0 3px;
 }
 
 .lcb-avatar {

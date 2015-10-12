@@ -77,7 +77,7 @@
                 </span>
             </div>
             <div class="lcb-version">
-                <span>v <$ version $></span>
+                v <$ version $>
             </div>
             <div class="lcb-tabs-outer">
                 <ul class="lcb-tabs">
@@ -91,19 +91,28 @@
         </section>
         <section class="lcb-panes">
             <div class="lcb-rooms-browser lcb-pane hide" data-id="list">
-                <header class="lcb-rooms-browser-header">
-                    <h2 class="lcb-rooms-browser-heading">
-                        <$ __('All Rooms') $>
-                    </h2>
+                <header class="lcb-room-header">
+                    <div class="lcb-room-meta">
+                        <h2 class="lcb-room-heading lcb-room-heading-loud"><$ __('All Rooms') $></h2>
+                    </div>
                     <div class="lcb-rooms-browser-filter">
                         <label class="lcb-rooms-browser-filter-label" for="lcb-rooms-browser-filter-input">
                             <i class="fa fa-search" aria-label="<$ __('Search') $>"></i>
                         </label>
-                        <input id="lcb-rooms-browser-filter-input" class="lcb-rooms-browser-filter-input" type="search" autofocus />
+                        <input id="lcb-rooms-browser-filter-input" class="lcb-rooms-browser-filter-input" type="search" autofocus placeholder="Find a room..." />
                     </div>
-                    <a class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
-                        <i class="fa fa-plus" aria-label="<$ __('Add Room') $>"></i>
-                    </a>
+                    <div class="lcb-room-header-actions">
+                        <a class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
+                            <i class="fa fa-plus" aria-label="<$ __('Add Room') $>"></i>
+                        </a>
+                    </div>
+                </header>
+                <header class="lcb-rooms-browser-header hide">
+                    <h2 class="lcb-rooms-browser-heading">
+                        <$ __('All Rooms') $>
+                    </h2>
+
+                    
                 </header>
                 <ul class="lcb-rooms-list"></ul>
                 <% include 'includes/modals/add-room.html' %>

@@ -1,3 +1,15 @@
+## 0.4.3 (2015-10-09)
+
+Fixes
+
+* Issues with passport dependencies
+* XMPP message ID
+
+Enhancements
+
+* New client styling
+* Russian and Polish languages
+
 ## 0.4.2 (2015-07-14)
 
 Fixes
