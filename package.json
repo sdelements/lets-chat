@@ -6,6 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "stop": "pkill --signal SIGINT letschat",  
     "prestart": "migroose",
     "migrate": "migroose",
     "test": "eslint ."
