@@ -221,6 +221,20 @@ module.exports = function() {
 
             var fields = req.body || req.data;
 
+            var endsWith = function(str, suffix) {
+                return str.indexOf(suffix, str.length - suffix.length) !== -1;
+            };
+
+            if (!_.some(settings.domains, function (domain) {
+                return endsWith(fields.email, domain);
+            })) {
+                var message = 'Sorry, your email is not from a whitelisted domain.';
+                return res.status(400).json({
+                    status: 'error',
+                    message: message
+                });
+            }
+
             // Sanity check the password
             var passwordConfirm = fields.passwordConfirm || fields.passwordconfirm || fields['password-confirm'];
 
