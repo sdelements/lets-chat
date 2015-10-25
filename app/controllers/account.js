@@ -225,7 +225,9 @@ module.exports = function() {
                 return str.indexOf(suffix, str.length - suffix.length) !== -1;
             };
 
-            if (!_.some(settings.domains, function (domain) {
+            var domains = settings.domains || [];
+
+            if (domains.length > 0 && !_.some(settings.domains, function(domain) {
                 return endsWith(fields.email, domain);
             })) {
                 var message = 'Sorry, your email is not from a whitelisted domain.';
