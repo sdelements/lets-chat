@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash'),
-    Stanza = require('node-xmpp-core').Stanza,
+    Presence = require('node-xmpp-server').Presence,
     settings = require('./../../config'),
     EventListener = require('./../event-listener');
 
@@ -34,7 +34,7 @@ module.exports = EventListener.extend({
             }
 
             // Reannounce presence
-            var presence = new Stanza.Presence({
+            var presence = new Presence({
                 from: connection.getUserJid(user.username)
             });
 

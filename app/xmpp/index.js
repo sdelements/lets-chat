@@ -1,10 +1,10 @@
 'use strict';
 
 var xmpp = require('node-xmpp-server'),
+    IQ = xmpp.IQ,
     settings = require('./../config'),
     auth = require('./../auth/index'),
     all = require('require-tree'),
-    Stanza = require('node-xmpp-core').Stanza,
     XmppConnection = require('./xmpp-connection');
 
 var allArray = function(path) {
@@ -75,7 +75,7 @@ function xmppStart(core) {
                 return;
             }
 
-            var msg = new Stanza.Iq({
+            var msg = new IQ({
                 type: 'error',
                 id: stanza.attrs.id,
                 to: stanza.attrs.from,

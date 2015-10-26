@@ -1,6 +1,6 @@
 'use strict';
 
-var Stanza = require('node-xmpp-core').Stanza,
+var Message = require('node-xmpp-server').Message,
     settings = require('./../../config'),
     EventListener = require('./../event-listener');
 
@@ -24,7 +24,7 @@ module.exports = EventListener.extend({
                 id = data && data.id || id;
             }
 
-            var stanza = new Stanza.Message({
+            var stanza = new Message({
                 id: id,
                 type: 'chat',
                 to: connection.getUserJid(user.username),

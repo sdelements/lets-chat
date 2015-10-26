@@ -1,6 +1,6 @@
 'use strict';
 
-var Stanza = require('node-xmpp-core').Stanza,
+var Message = require('node-xmpp-server').Message,
     EventListener = require('./../event-listener');
 
 var mentionPattern = /\B@(\w+)(?!@)\b/g;
@@ -26,7 +26,7 @@ module.exports = EventListener.extend({
                 id = data && data.id || id;
             }
 
-            var stanza = new Stanza.Message({
+            var stanza = new Message({
                 id: id,
                 type: 'groupchat',
                 to: connection.getRoomJid(room.slug),
