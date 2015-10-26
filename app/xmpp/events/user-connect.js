@@ -1,7 +1,8 @@
 'use strict';
 
 var _ = require('lodash'),
-    Stanza = require('node-xmpp-core').Stanza,
+    IQ = require('node-xmpp-server').IQ,
+    Presence = require('node-xmpp-server').Presence,
     settings = require('./../../config'),
     EventListener = require('./../event-listener');
 
@@ -38,7 +39,7 @@ module.exports = EventListener.extend({
             }
 
             // Update rosters
-            var roster = new Stanza.Iq({
+            var roster = new IQ({
                 id: connection.user.id,
                 type: 'set',
                 to: x.jid()
@@ -56,7 +57,7 @@ module.exports = EventListener.extend({
 
 
             // Announce presence
-            var presence = new Stanza.Presence({
+            var presence = new Presence({
                 from: x.getUserJid(connection.user.username)
             });
 

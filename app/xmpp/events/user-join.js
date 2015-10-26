@@ -1,6 +1,6 @@
 'use strict';
 
-var Stanza = require('node-xmpp-core').Stanza,
+var Presence = require('node-xmpp-server').Presence,
     EventListener = require('./../event-listener');
 
 module.exports = EventListener.extend({
@@ -11,7 +11,7 @@ module.exports = EventListener.extend({
         var connections = this.getConnectionsForRoom(data.roomId);
 
         connections.forEach(function(connection) {
-            var presence = new Stanza.Presence({
+            var presence = new Presence({
                 to: connection.jid(data.roomSlug),
                 from: connection.getRoomJid(data.roomSlug, data.username)
             });

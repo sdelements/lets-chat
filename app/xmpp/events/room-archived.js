@@ -1,6 +1,6 @@
 'use strict';
 
-var Stanza = require('node-xmpp-core').Stanza,
+var Presence = require('node-xmpp-server').Presence,
     EventListener = require('./../event-listener');
 
 module.exports = EventListener.extend({
@@ -13,7 +13,7 @@ module.exports = EventListener.extend({
         connections.forEach(function(connection) {
             // Kick connection from room!
 
-            var presence = new Stanza.Presence({
+            var presence = new Presence({
                 to: connection.jid(room.slug),
                 from: connection.jid(room.slug),
                 type: 'unavailable'

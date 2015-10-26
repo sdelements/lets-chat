@@ -1,6 +1,6 @@
 'use strict';
 
-var Stanza = require('node-xmpp-core').Stanza,
+var Stanza = require('node-xmpp-server').Stanza,
     settings = require('./../config'),
     _ = require('lodash'),
     util = require('util');
@@ -27,7 +27,7 @@ MessageProcessor.prototype.Stanza = function(name, attr) {
         from: this.request.attrs.to
     }, attr || {});
 
-    return new Stanza.Stanza(name, attr);
+    return new Stanza(name, attr);
 };
 
 MessageProcessor.prototype.Iq = function(attr) {

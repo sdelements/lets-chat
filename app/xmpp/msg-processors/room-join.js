@@ -2,7 +2,7 @@
 
 var _ = require('lodash'),
     moment = require('moment'),
-    Stanza = require('node-xmpp-core').Stanza,
+    Message = require('node-xmpp-server').Message,
     MessageProcessor = require('./../msg-processor'),
     settings = require('./../../config');
 
@@ -246,7 +246,7 @@ module.exports = MessageProcessor.extend({
 
             var msgs = messages.map(function(msg) {
 
-                var stanza = new Stanza.Message({
+                var stanza = new Message({
                     id: msg._id,
                     type: 'groupchat',
                     to: this.connection.getRoomJid(room.slug),

@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash'),
-    Stanza = require('node-xmpp-core').Stanza,
+    Presence = require('node-xmpp-server').Presence,
     settings = require('./../../config'),
     EventListener = require('./../event-listener');
 
@@ -37,7 +37,7 @@ module.exports = EventListener.extend({
                 return;
             }
 
-            var presence = new Stanza.Presence({
+            var presence = new Presence({
                 to: x.jid(),
                 from: x.getUserJid(connection.user.username),
                 type: 'unavailable'
