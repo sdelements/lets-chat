@@ -45,6 +45,22 @@ Dropzone && (Dropzone.autoDiscover = false);
                 .on('sendingmultiple', _.bind(this.sending, this))
                 .on('addedfile', _.bind(this.show, this))
                 .on('queuecomplete', _.bind(this.complete, this));
+
+            //
+            // Paste Image
+            //
+            var _dropzone = this.dropzone;
+            FileReaderJS.setupClipboard(window.document.body, {
+                    accept: {
+                        'image/*': 'DataURL'
+                    },
+                    on: {
+                        load: function(e, file) {
+                            _dropzone.addFile(file);
+                        }
+                    }
+                });
+
             //
             // Selectize
             //
