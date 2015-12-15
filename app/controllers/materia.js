@@ -13,7 +13,7 @@ module.exports = function() {
 
     app.use('/materia', express.static(path.resolve(__dirname, '../../materia/public')));
 
-    app.get('/materia/*', function(req, res){
+    app.get('/materia/*', function(req, res, next) {
 
         if (/^\/materia\/assets/i.test(req.url)) {
             return next();
