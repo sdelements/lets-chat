@@ -9,11 +9,12 @@ var express = require('express.oi'),
 
 module.exports = function() {
 
-    var app = this.app;
+    var app = this.app,
+        middlewares = this.middlewares;
 
     app.use('/materia', express.static(path.resolve(__dirname, '../../materia/public')));
 
-    app.get('/materia/*', function(req, res, next) {
+    app.get('/materia/*', middlewares.requireLogin, function(req, res, next) {
 
         if (/^\/materia\/assets/i.test(req.url)) {
             return next();
