@@ -25,6 +25,8 @@
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.1.18",
     "babel-preset-react": "^6.1.18",
+    "bourbon": "^4.2.6",
+    "bourbon-neat": "^1.7.2",
     "css-loader": "^0.23.0",
     "gridle": "^2.0.43",
     "history": "^1.16.0",

@@ -1,14 +1,17 @@
 'use strict';
 
+import './sass/style.sass';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import { Router, Route } from 'react-router';
+import { Router, Route, IndexRoute } from 'react-router';
 import { createHistory } from 'history';
 import { syncReduxAndRouter, routeReducer } from 'redux-simple-router';
 
 import App from './components/app';
+import Browser from './components/browser';
 import Conversation from './components/conversation';
 
 const reducer = combineReducers(Object.assign({}, {}, {
@@ -23,9 +26,10 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
             <Route path="/materia" component={App}>
-                <Route path="conversation" component={Conversation} />
+                <IndexRoute component={Browser}/>
+                <Route path="room/:id" component={Conversation} />
             </Route>
         </Router>
     </Provider>,
-    document.getElementById('app-mount')
+    document.getElementById('lcb-app-mount')
 );

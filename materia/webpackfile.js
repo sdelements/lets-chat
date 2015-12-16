@@ -3,7 +3,7 @@
 var path = require('path');
 
 module.exports = {
-    entry: path.join(__dirname, './src/jsx/client.jsx'),
+    entry: path.join(__dirname, './src/client.jsx'),
     resolve: {
         extensions: ['', '.js', '.jsx']
     },
@@ -24,6 +24,12 @@ module.exports = {
                 test: /\.s(a|c)ss$/,
                 loaders: ['style', 'css', 'sass']
             }
+        ]
+    },
+    sassLoader: {
+        includePaths: [
+            path.resolve(__dirname, 'node_modules/bourbon/app/assets/stylesheets'),
+            path.resolve(__dirname, 'node_modules/bourbon-neat/app/assets/stylesheets')
         ]
     }
 };

@@ -5,8 +5,8 @@ import React from 'react';
 export default React.createClass({
     render: function() {
         return (
-            <div>
-                Some Conversation
+            <div className="lcb-browser">
+                Browser
                 {this.props.children}
             </div>
         )
