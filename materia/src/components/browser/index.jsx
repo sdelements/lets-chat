@@ -1,14 +1,17 @@
 'use strict';
 
-import React from 'react';
+import React, { Component } from 'react';
 
-export default React.createClass({
-    render: function() {
+export default class Browser extends Component {
+    constructor(props) {
+        super(props);
+    };
+    render() {
         return (
             <div className="lcb-browser">
                 Browser
                 {this.props.children}
             </div>
-        )
-    }
-});
+        );
+    };
+};
