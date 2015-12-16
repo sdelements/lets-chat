@@ -30,6 +30,7 @@
     "css-loader": "^0.23.0",
     "gridle": "^2.0.43",
     "history": "^1.16.0",
+    "lodash": "^3.10.1",
     "material-ui": "^0.13.4",
     "node-sass": "^3.4.2",
     "radium": "^0.15.3",
@@ -45,6 +46,7 @@
     "redux-thunk": "^1.0.2",
     "reset.css": "^2.0.2",
     "sass-loader": "^3.1.2",
+    "socket.io-client": "^1.3.7",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.9"
   },

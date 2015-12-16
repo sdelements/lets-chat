@@ -1,10 +1,13 @@
 'use strict';
 
-const REQUEST_CONNECTION = 'REQUEST_CONNECTION';
-const RECEIVE_CONNECTION = 'RECEIVE_CONNECTION';
+import IO from 'socket.io-client';
 
-const REQUEST_ROOMS = 'REQUEST_ROOMS';
-const RECEIVE_ROOMS = 'RECEIVE_ROOMS';
+export const REQUEST_CONNECTION = 'REQUEST_CONNECTION';
+export const RECEIVE_CONNECTION = 'RECEIVE_CONNECTION';
+export const REQUEST_ROOMS = 'REQUEST_ROOMS';
+export const RECEIVE_ROOMS = 'RECEIVE_ROOMS';
+
+const socket = IO();
 
 export function requestConnection() {
     return {
@@ -21,8 +24,10 @@ export function receiveConnection() {
 export function fetchConnection() {
     return dispatch => {
         dispatch(requestConnection());
-        dispatch(fetchRooms());
-        return dispatch(receiveConnection());
+        return socket.on('connect', function() {
+            dispatch(receiveConnection());
+            dispatch(fetchRooms());
+        });
     };
 };
 
@@ -42,6 +47,8 @@ export function receiveRooms(rooms) {
 export function fetchRooms() {
     return dispatch => {
         dispatch(requestRooms());
-        return dispatch(receiveRooms());
+        return socket.emit('rooms:list', { users: true }, function(rooms) {
+            dispatch(receiveRooms(rooms));
+        });
     };
 };

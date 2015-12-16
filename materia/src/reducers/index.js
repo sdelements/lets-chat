@@ -42,32 +42,11 @@ function rooms(state = {
         case RECEIVE_ROOMS:
             return Object.assign({}, state, {
                 isFetching: false,
-                items: action.items || []
+                items: action.rooms || []
             });
         default:
             return state;
     }
-};
-
-
-function rooms(state = {
-    isFetching: true,
-    items: []
-}, action) {
-    switch (action.type) {
-        case REQUEST_ROOMS:
-            return Object.assign({}, state, {
-                isFetching: true,
-                items: state.items
-            });
-        case RECEIVE_ROOMS:
-            return Object.assign({}, state, {
-                isFetching: false,
-                items: action.items || []
-            });
-        default:
-            return state;
-    };
 };
 
 export default combineReducers(Object.assign({}, {
