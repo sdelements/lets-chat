@@ -68,6 +68,7 @@ function conversation(state = {
                 isFetching: false,
                 id: action.id,
                 name: action.name,
+                slug: action.slug,
                 description: action.description,
                 users: action.users,
                 files: action.files

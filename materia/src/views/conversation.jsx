@@ -8,6 +8,7 @@ import {
     fetchConversation
 } from '../actions';
 
+import Header from '../components/header';
 import Messages from '../components/messages';
 
 export default class Conversation extends Component {
@@ -24,7 +25,9 @@ export default class Conversation extends Component {
     render() {
         return (
             <div className="lcb-conversation">
-                <h1 style={{ color: '#fff' }}>{this.props.name}</h1>
+                <Header
+                    title={`#${this.props.slug}`}
+                    description={this.props.description} />
                 <Messages />
             </div>
         );
@@ -34,6 +37,7 @@ export default class Conversation extends Component {
 Conversation.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
+    slug: PropTypes.string,
     description: PropTypes.string,
     users: PropTypes.array,
     files: PropTypes.array,
@@ -41,7 +45,6 @@ Conversation.propTypes = {
 };
 
 function mapStateToProps(state, props) {
-    console.log(state.conversation)
     return state.conversation;
 };
 
