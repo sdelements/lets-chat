@@ -9,12 +9,12 @@ import { connect } from 'react-redux';
 import {
     fetchConnection,
     fetchRooms
-} from '../../actions';
+} from '../actions';
 
-import Sidebar from './sidebar';
-import Connection from './connection';
-import Main from './main';
-import Tabs from './tabs';
+import Sidebar from '../components/sidebar';
+import Connection from '../components/connection';
+import Main from '../components/main';
+import Tabs from '../components/tabs';
 
 const socket = IO();
 
@@ -45,9 +45,7 @@ class App extends Component {
                     <Connection isConnecting={this.props.connection.isConnecting} />
                 </Sidebar>
                 <Main>
-                    {React.cloneElement(this.props.children, {
-                        rooms: this.props.rooms
-                    })}
+                    {this.props.children}
                 </Main>
             </div>
         );

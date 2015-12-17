@@ -8,7 +8,9 @@ import {
     REQUEST_CONNECTION,
     RECEIVE_CONNECTION,
     REQUEST_ROOMS,
-    RECEIVE_ROOMS
+    RECEIVE_ROOMS,
+    REQUEST_CONVERSATION,
+    RECEIVE_CONVERSATION
 } from '../actions';
 
 function connection(state = {
@@ -36,13 +38,39 @@ function rooms(state = {
     switch (action.type) {
         case REQUEST_ROOMS:
             return Object.assign({}, state, {
-                isFetching: true,
-                items: state.items
+                isFetching: true
             });
         case RECEIVE_ROOMS:
             return Object.assign({}, state, {
                 isFetching: false,
-                items: action.rooms || []
+                items: action.rooms
+            });
+        default:
+            return state;
+    }
+};
+
+function conversation(state = {
+    isFetching: true,
+    id: null,
+    name: null,
+    description: null,
+    users: [],
+    files: []
+}, action) {
+    switch (action.type) {
+        case REQUEST_CONVERSATION:
+            return Object.assign({}, state, {
+                isFetching: true
+            });
+        case RECEIVE_CONVERSATION:
+            return Object.assign({}, state, {
+                isFetching: false,
+                id: action.id,
+                name: action.name,
+                description: action.description,
+                users: action.users,
+                files: action.files
             });
         default:
             return state;
@@ -51,7 +79,8 @@ function rooms(state = {
 
 export default combineReducers(Object.assign({}, {
     connection,
-    rooms
+    rooms,
+    conversation
 }, {
     routing: routeReducer
 }));

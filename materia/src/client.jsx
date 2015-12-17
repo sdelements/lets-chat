@@ -13,9 +13,9 @@ import { createHistory } from 'history';
 
 import createStore from './store';
 
-import App from './components/app';
-import Browser from './components/browser';
-import Conversation from './components/conversation';
+import App from './views/app';
+import Browser from './views/browser';
+import Conversation from './views/conversation';
 
 const store = createStore();
 
