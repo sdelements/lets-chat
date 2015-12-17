@@ -4,10 +4,14 @@ import IO from 'socket.io-client';
 
 export const REQUEST_CONNECTION = 'REQUEST_CONNECTION';
 export const RECEIVE_CONNECTION = 'RECEIVE_CONNECTION';
+
 export const REQUEST_ROOMS = 'REQUEST_ROOMS';
 export const RECEIVE_ROOMS = 'RECEIVE_ROOMS';
+
 export const REQUEST_CONVERSATION = 'REQUEST_CONVERSATION';
 export const RECEIVE_CONVERSATION = 'RECEIVE_CONVERSATION';
+export const REQUEST_CONVERSATION_MESSAGES = 'REQUEST_CONVERSATION_MESSAGES';
+export const RECEIVE_CONVERSATION_MESSAGES = 'RECEIVE_CONVERSATION_MESSAGES';
 
 const socket = IO();
 
@@ -50,7 +54,7 @@ export function requestRooms() {
 export function receiveRooms(rooms) {
     return {
         type: RECEIVE_ROOMS,
-        rooms: rooms
+        rooms
     };
 };
 
@@ -70,7 +74,7 @@ export function fetchRooms() {
 export function requestConversation(id) {
     return {
         type: REQUEST_CONVERSATION,
-        id: id
+        id
     };
 };
 
@@ -85,9 +89,38 @@ export function fetchConversation(id) {
     return dispatch => {
         dispatch(requestConversation());
         return socket.emit('rooms:get', {
-            id: id
+            id
         }, function(room) {
             dispatch(receiveConversation(room));
+            dispatch(fetchConversationMessages(id));
+        });
+    };
+};
+
+export function requestConversationMessages(id) {
+    return {
+        type: REQUEST_CONVERSATION_MESSAGES,
+        id
+    };
+};
+
+export function receiveConversationMessages(messages) {
+    return {
+        type: RECEIVE_CONVERSATION_MESSAGES,
+        messages
+    };
+};
+
+export function fetchConversationMessages(id) {
+    return dispatch => {
+        dispatch(requestConversationMessages());
+        return socket.emit('messages:list', {
+            room: id,
+            take: 500,
+            expand: 'owner',
+            reverse: true
+        }, function(messages) {
+            dispatch(receiveConversationMessages(messages));
         });
     };
 };

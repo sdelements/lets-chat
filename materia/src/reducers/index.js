@@ -10,7 +10,9 @@ import {
     REQUEST_ROOMS,
     RECEIVE_ROOMS,
     REQUEST_CONVERSATION,
-    RECEIVE_CONVERSATION
+    RECEIVE_CONVERSATION,
+    REQUEST_CONVERSATION_MESSAGES,
+    RECEIVE_CONVERSATION_MESSAGES
 } from '../actions';
 
 function connection(state = {
@@ -52,9 +54,11 @@ function rooms(state = {
 
 function conversation(state = {
     isFetching: true,
+    isFetchingMessages: true,
     id: null,
     name: null,
     description: null,
+    messages: [],
     users: [],
     files: []
 }, action) {
@@ -72,6 +76,16 @@ function conversation(state = {
                 description: action.description,
                 users: action.users,
                 files: action.files
+            });
+        case REQUEST_CONVERSATION_MESSAGES:
+            return Object.assign({}, state, {
+                isFetchingMessages: true
+            });
+        case RECEIVE_CONVERSATION_MESSAGES:
+            console.log(action.messages);
+            return Object.assign({}, state, {
+                isFetchingMessages: false,
+                messages: action.messages
             });
         default:
             return state;

@@ -25,39 +25,3 @@
     overflow-y: auto
     @include display(flex)
     @include flex(1)
-
-.lcb-conversation
-    @include flex(1)
-
-.lcb-header
-    background: #f3f3f3
-    height: 60px
-    min-height: 60px
-    line-height: 60px
-    padding: 0 15px
-    border-bottom: 1px #ddd solid
-    position: relative
-    box-shadow: 0 4px 5px -5px rgba(0, 0, 0, .1)
-    z-index: 1
-    @include display(flex)
-    @include flex-direction(row)
-
-.lcb-header-meta
-    padding-right: 15px
-    @include flex(1)
-    @include ellipsis(50%)
-
-.lcb-header-title
-    font-size: 24px
-    font-weight: 300
-    color: #555
-    line-height: inherit
-    margin: 0
-    margin-right: 5px
-    display: inline
-
-.lcb-header-description
-    font-weight: 300
-    color: #9f9f9f
-    margin: 0
-    display: inline

@@ -13,7 +13,7 @@ export default class Browser extends Component {
         super(props);
     };
     render() {
-        var rooms = _.sortBy(this.props.rooms, function(room) {
+        const rooms = _.sortBy(this.props.rooms, function(room) {
             return room.userCount
         }).reverse();
         return (
@@ -28,7 +28,7 @@ export default class Browser extends Component {
                 }}>
                     Rooms ({rooms.length})
                 </span>
-                {rooms.map(function(room, i){
+                {rooms.map(function(room, i) {
                     return <Link key={room.id} to={`/materia/room/${room.id}`} style={{
                         color: '#fff',
                         display: 'block',

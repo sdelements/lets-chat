@@ -5,22 +5,25 @@ import React from 'react';
 export default React.createClass({
     render() {
         return (
-            <div className="lcb-message">
+            <div key={this.props.id} className="lcb-message">
                 <img
                     className="lcb-message-avatar lcb-avatar"
-                    src="https://www.gravatar.com/avatar/{{owner.avatar}}?s=30" />
-                <div class="lcb-message-meta">
-                        <span class="lcb-message-name">
-                            <span class="lcb-room-poke">
-                                <span class="lcb-message-displayname">
-                                    {{owner.displayName}}
-                                </span>
-                                <span class="lcb-message-username">
-                                    @{{owner.username}}
-                                </span>
-                            </span>
+                    src="https://www.gravatar.com/avatar/?s=30" />
+                <div className="lcb-message-meta">
+                    <span className="lcb-message-name">
+                        <span className="lcb-message-displayname">
+                            {this.props.owner.displayName}
                         </span>
-                        <time class="lcb-message-time" title="{{posted}}"></time>
+                        <span className="lcb-message-username">
+                            @{this.props.owner.username}
+                        </span>
+                    </span>
+                    <time className="lcb-message-time">
+                        {this.props.posted}
+                    </time>
+                    <div className="lcb-message-text">
+                        {this.props.text}
+                    </div>
                 </div>
             </div>
         )

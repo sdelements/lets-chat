@@ -28,7 +28,7 @@ export default class Conversation extends Component {
                 <Header
                     title={`#${this.props.slug}`}
                     description={this.props.description} />
-                <Messages />
+                <Messages messages={this.props.messages} />
             </div>
         );
     };
@@ -39,6 +39,7 @@ Conversation.propTypes = {
     name: PropTypes.string,
     slug: PropTypes.string,
     description: PropTypes.string,
+    messages: PropTypes.array,
     users: PropTypes.array,
     files: PropTypes.array,
     dispatch: PropTypes.func.isRequired
