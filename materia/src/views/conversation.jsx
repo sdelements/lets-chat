@@ -10,6 +10,7 @@ import {
 
 import Header from '../components/header';
 import Messages from '../components/messages';
+import Entry from '../components/entry';
 
 export default class Conversation extends Component {
     constructor(props) {
@@ -28,7 +29,10 @@ export default class Conversation extends Component {
                 <Header
                     title={`#${this.props.slug}`}
                     description={this.props.description} />
-                <Messages messages={this.props.messages} />
+                <Messages
+                    isFetching={this.props.isFetchingMessages}
+                    messages={this.props.messages} />
+                <Entry />
             </div>
         );
     };
