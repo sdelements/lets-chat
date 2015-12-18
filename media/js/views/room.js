@@ -250,9 +250,17 @@
             this.$('.lcb-room-style').text(this.model.get('style'));
 
             console.log('updateMeta');
+            var opacity = 1.0;
             var chatDiv = this.$('.lcb-room-chat')[0];
             var bgURL = 'url("'+this.model.get('style')+'");';
             chatDiv.style.cssText = this.model.get('style');
+            if(this.model.get('style').length > 0) opacity = 0.5;
+            var messagesElems = document.getElementsByClassName('lcb-messages');
+            var i = 0;
+            while(i < messagesElems.length) {
+                messagesElems[i].style.opacity = opacity;
+                i++;
+            }
         },
         sendMeta: function(e) {
             console.log('sendMeta');
