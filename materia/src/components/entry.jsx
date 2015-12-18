@@ -13,6 +13,9 @@ export default React.createClass({
             text: ''
         }
     },
+    componentDidMount(){
+        React.findDOMNode(this.refs.text).focus();
+    },
     sendMessage(e) {
         if (e.which !== 13) {
             return;
@@ -33,6 +36,7 @@ export default React.createClass({
             <div className="lcb-entry">
                 <textarea
                     className="lcb-entry-input"
+                    ref="text"
                     placeholder="Got something to say?"
                     valueLink={this.linkState('text')}
                     onKeyDown={this.sendMessage}
