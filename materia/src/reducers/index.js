@@ -82,7 +82,6 @@ function conversation(state = {
                 isFetchingMessages: true
             });
         case RECEIVE_CONVERSATION_MESSAGES:
-            console.log(action.messages);
             return Object.assign({}, state, {
                 isFetchingMessages: false,
                 messages: action.messages

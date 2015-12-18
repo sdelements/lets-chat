@@ -12,6 +12,8 @@ export const REQUEST_CONVERSATION = 'REQUEST_CONVERSATION';
 export const RECEIVE_CONVERSATION = 'RECEIVE_CONVERSATION';
 export const REQUEST_CONVERSATION_MESSAGES = 'REQUEST_CONVERSATION_MESSAGES';
 export const RECEIVE_CONVERSATION_MESSAGES = 'RECEIVE_CONVERSATION_MESSAGES';
+export const ATTEMPT_CONVERSATION_MESSAGE = 'ATTEMPT_CONVERSATION_MESSAGE';
+export const CONFIRM_CONVERSATION_MESSAGE = 'CONFIRM_CONVERSATION_MESSAGE';
 
 const socket = IO();
 
@@ -121,6 +123,29 @@ export function fetchConversationMessages(id) {
             reverse: true
         }, function(messages) {
             dispatch(receiveConversationMessages(messages));
+        });
+    };
+};
+
+export function attemptConversationMessage(message) {
+    return {
+        type: ATTEMPT_CONVERSATION_MESSAGE,
+        message
+    };
+};
+
+export function confirmConversationMessage(message) {
+    return {
+        type: CONFIRM_CONVERSATION_MESSAGE,
+        message
+    };
+};
+
+export function sendConversationMessage(message) {
+    return dispatch => {
+        dispatch(attemptConversationMessage(message));
+        return socket.emit('messages:create', message, function(confirmedMessage) {
+            dispatch(confirmConversationMessage(confirmedMessage));
         });
     };
 };

@@ -11,7 +11,7 @@ export default React.createClass({
                 { this.props.isFetching
                     && <div>Loading...</div>
                     || this.props.messages.map(function(message, i) {
-                        return <Message {...message} />;
+                        return <Message key={message.id} {...message} />;
                     })
                 }
             </div>

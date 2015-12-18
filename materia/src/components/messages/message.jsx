@@ -5,7 +5,7 @@ import React from 'react';
 export default React.createClass({
     render() {
         return (
-            <div key={this.props.id} className="lcb-message">
+            <div className="lcb-message">
                 <img
                     className="lcb-message-avatar lcb-avatar"
                     src="https://www.gravatar.com/avatar/?s=30" />
