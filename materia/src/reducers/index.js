@@ -2,6 +2,8 @@
 
 import { combineReducers } from 'redux';
 
+import update from 'react-addons-update';
+
 import { routeReducer } from 'redux-simple-router';
 
 import {
@@ -14,7 +16,8 @@ import {
     REQUEST_CONVERSATION_MESSAGES,
     RECEIVE_CONVERSATION_MESSAGES,
     ATTEMPT_CONVERSATION_MESSAGE,
-    CONFIRM_CONVERSATION_MESSAGE
+    CONFIRM_CONVERSATION_MESSAGE,
+    RECEIVE_CONVERSATION_MESSAGE
 } from '../actions';
 
 function connection(state = {
@@ -94,6 +97,12 @@ function conversation(state = {
         case CONFIRM_CONVERSATION_MESSAGE:
             return Object.assign({}, state, {
                 isSendingMessage: false
+            });
+        case RECEIVE_CONVERSATION_MESSAGE:
+            return Object.assign({}, state, {
+                messages: update(state.messages, {
+                    $push: [action.message]
+                })
             });
         default:
             return state;

@@ -4,6 +4,8 @@ import React, { PropTypes, Component } from 'react';
 
 import { connect } from 'react-redux';
 
+import IO from 'socket.io-client';
+
 import {
     fetchConversation,
     sendConversationMessage as sendMessage
@@ -14,13 +16,18 @@ import Header from '../components/header';
 import Messages from '../components/messages';
 import Entry from '../components/entry';
 
+const socket = IO();
+
 export default class Conversation extends Component {
     constructor(props) {
         super(props);
-        this.sendMessage = this.sendMessage.bind(this)
+        this.sendMessage = this.sendMessage.bind(this);
     };
-    componentDidMount() {
+    componentWillMount() {
         this.props.dispatch(fetchConversation(this.props.params.id));
+        socket.on('messages:new', function(message) {
+            console.log(message);
+        });
     };
     sendMessage(message) {
         this.props.dispatch(sendMessage({
