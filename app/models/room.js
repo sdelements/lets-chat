@@ -32,6 +32,10 @@ var RoomSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    style: {
+        type: String,
+        trim: true,
+    },
     owner: {
 		type: ObjectId,
 		ref: 'User',
@@ -181,6 +185,7 @@ RoomSchema.method('toJSON', function(user) {
         slug: room.slug,
         name: room.name,
         description: room.description,
+        style: room.style,
         lastActive: room.lastActive,
         created: room.created,
         owner: room.owner,

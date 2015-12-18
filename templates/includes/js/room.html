@@ -10,6 +10,7 @@
                         {{/if}}
                     </h2>
                     <p class="lcb-room-description">{{description}}</p>
+                    <p class="lcb-room-style">{{style}}</p>
                 </div>
             </div>
             <div class="lcb-room-header-actions">
@@ -44,7 +45,7 @@
         </header><!-- lcb-room-header end -->
         <div class="lcb-room-main">
             <div class="lcb-room-chat">
-                <ul class="lcb-messages" aria-live="polite"></ul>
+                    <ul class="lcb-messages" aria-live="polite"></ul>
                 <form class="lcb-entry">
                     <textarea class="lcb-entry-input" placeholder="<$ __('Got something to say?') $>" autofocus></textarea>
                     <button type="submit" class="lcb-entry-button" aria-label="<$ __('Send') $>">
@@ -98,6 +99,13 @@
                             <div class="col-sm-11">
                                 <textarea class="form-control" name=
                                 "description" rows="5">{{description}}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class=
+                            "control-label col-sm-6"><$ __('Custom CSS style') $></label>
+                            <div class="col-sm-11">
+                                <textarea class="form-control" name="style" rows="1">{{style}}</textarea>
                             </div>
                         </div>
                         {{#if private}}
