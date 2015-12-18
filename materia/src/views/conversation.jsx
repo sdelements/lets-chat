@@ -7,8 +7,9 @@ import { connect } from 'react-redux';
 import IO from 'socket.io-client';
 
 import {
-    fetchConversation,
-    sendConversationMessage as sendMessage
+    joinConversation,
+    receiveConversationMessage,
+    sendConversationMessage
 } from '../actions';
 
 import Loader from '../components/loader';
@@ -24,13 +25,14 @@ export default class Conversation extends Component {
         this.sendMessage = this.sendMessage.bind(this);
     };
     componentWillMount() {
-        this.props.dispatch(fetchConversation(this.props.params.id));
+        const { dispatch } = this.props;
+        dispatch(joinConversation(this.props.params.id));
         socket.on('messages:new', function(message) {
-            console.log(message);
+            dispatch(receiveConversationMessage(message));
         });
     };
     sendMessage(message) {
-        this.props.dispatch(sendMessage({
+        this.props.dispatch(sendConversationMessage({
             room: this.props.params.id,
             ...message
         }));

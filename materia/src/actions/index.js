@@ -88,12 +88,10 @@ export function receiveConversation(conversation) {
     };
 };
 
-export function fetchConversation(id) {
+export function joinConversation(id) {
     return dispatch => {
         dispatch(requestConversation());
-        return socket.emit('rooms:get', {
-            id
-        }, function(room) {
+        return socket.emit('rooms:join', id, function(room) {
             dispatch(receiveConversation(room));
             dispatch(fetchConversationMessages(id));
         });
@@ -151,10 +149,8 @@ export function receiveConversationMessage(message) {
 
 export function sendConversationMessage(message) {
     return dispatch => {
-        dispatch(attemptConversationMessage(message));
         return socket.emit('messages:create', message, function(confirmedMessage) {
             dispatch(confirmConversationMessage(confirmedMessage));
-            dispatch(receiveConversationMessage(confirmedMessage));
         });
     };
 };
