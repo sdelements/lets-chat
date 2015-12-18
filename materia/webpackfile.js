@@ -22,7 +22,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.s(a|c)ss$/,
+                test: /\.s?(a|c)ss$/,
                 loaders: ['style', 'css', 'sass']
             }
         ]

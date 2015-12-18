@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import Loader from '../loader';
 import Message from './message';
 
 export default React.createClass({
@@ -9,7 +10,7 @@ export default React.createClass({
         return (
             <div className="lcb-messages">
                 { this.props.isFetching
-                    && <div>Loading...</div>
+                    && <Loader className="lcb-messages-loader" />
                     || this.props.messages.map(function(message, i) {
                         return <Message key={message.id} {...message} />;
                     })
