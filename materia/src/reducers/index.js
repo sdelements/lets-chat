@@ -7,8 +7,8 @@ import update from 'react-addons-update';
 import { routeReducer } from 'redux-simple-router';
 
 import {
-    REQUEST_CONNECTION,
-    RECEIVE_CONNECTION,
+    CLIENT_CONNECTED,
+    CLIENT_DISCONNECTED,
     REQUEST_ROOMS,
     RECEIVE_ROOMS,
     REQUEST_CONVERSATION,
@@ -21,16 +21,16 @@ import {
 } from '../actions';
 
 function connection(state = {
-    isConnecting: false
+    isConnected: false
 }, action) {
     switch (action.type) {
-        case REQUEST_CONNECTION:
+        case CLIENT_CONNECTED:
             return Object.assign({}, state, {
-                isConnecting: true
+                isConnected: true
             });
-        case RECEIVE_CONNECTION:
+        case CLIENT_DISCONNECTED:
             return Object.assign({}, state, {
-                isConnecting: false
+                isConnected: false
             });
         default:
             return state;

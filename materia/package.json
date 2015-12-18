@@ -38,6 +38,7 @@
     "react-addons-linked-state-mixin": "^0.14.3",
     "react-addons-update": "^0.14.3",
     "react-dom": "^0.14.3",
+    "react-material-icons": "^1.0.1",
     "react-redux": "^4.0.1",
     "react-router": "^1.0.2",
     "react-spinkit": "^1.1.4",

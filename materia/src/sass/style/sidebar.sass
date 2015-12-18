@@ -9,11 +9,18 @@
     position: relative
     @include flex(0)
 
-.lcb-sidebar-version
+.lcb-sidebar-version,
+.lcb-sidebar-connection
     font-size: 9px
     text-transform: uppercase
-    letter-spacing: 3px
     position: absolute
+    opacity: .6
+
+.lcb-sidebar-connection
+    bottom: 10px
+    left: 10px
+
+.lcb-sidebar-version
+    letter-spacing: 3px
     right: 10px
     bottom: 10px
-    opacity: .6

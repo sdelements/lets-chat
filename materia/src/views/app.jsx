@@ -7,7 +7,8 @@ import IO from 'socket.io-client';
 import { connect } from 'react-redux';
 
 import {
-    fetchConnection,
+    clientConnected,
+    clientDisconnected,
     fetchRooms
 } from '../actions';
 
@@ -26,15 +27,14 @@ class App extends Component {
 
         const { dispatch } = this.props;
 
-        socket.on('users:join', function() {
+        socket.on('connect', function() {
+            dispatch(clientConnected());
             dispatch(fetchRooms());
         });
 
-        socket.on('users:leave', function() {
-            dispatch(fetchRooms());
+        socket.on('disconnect', function() {
+            dispatch(clientDisconnected());
         });
-
-        dispatch(fetchConnection());
 
     };
     render() {
@@ -42,7 +42,7 @@ class App extends Component {
             <div className="lcb-app">
                 <Sidebar>
                     <Tabs />
-                    <Connection isConnecting={this.props.connection.isConnecting} />
+                    <Connection isConnected={this.props.connection.isConnected} />
                 </Sidebar>
                 <Main>
                     {this.props.children}
@@ -54,7 +54,7 @@ class App extends Component {
 
 App.propTypes = {
     connection: React.PropTypes.shape({
-        isConnecting: PropTypes.bool.isRequired
+        isConnected: PropTypes.bool.isRequired
     }),
     dispatch: PropTypes.func.isRequired
 };

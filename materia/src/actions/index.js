@@ -2,8 +2,8 @@
 
 import IO from 'socket.io-client';
 
-export const REQUEST_CONNECTION = 'REQUEST_CONNECTION';
-export const RECEIVE_CONNECTION = 'RECEIVE_CONNECTION';
+export const CLIENT_CONNECTED = 'CLIENT_CONNECTED';
+export const CLIENT_DISCONNECTED = 'CLIENT_DISCONNECTED';
 
 export const REQUEST_ROOMS = 'REQUEST_ROOMS';
 export const RECEIVE_ROOMS = 'RECEIVE_ROOMS';
@@ -22,25 +22,15 @@ const socket = IO();
 // Connection
 //
 
-export function requestConnection() {
+export function clientConnected() {
     return {
-        type: REQUEST_CONNECTION
+        type: CLIENT_CONNECTED
     };
 };
 
-export function receiveConnection() {
+export function clientDisconnected() {
     return {
-        type: RECEIVE_CONNECTION
-    };
-};
-
-export function fetchConnection() {
-    return dispatch => {
-        dispatch(requestConnection());
-        return socket.on('connect', function() {
-            dispatch(receiveConnection());
-            dispatch(fetchRooms());
-        });
+        type: CLIENT_DISCONNECTED
     };
 };
 
