@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 
 import ReactLinkedStateMixin from 'react-addons-linked-state-mixin';
 
+import Loader from './loader';
+
 export default React.createClass({
     mixins: [ReactLinkedStateMixin],
     getInitialState: function() {
@@ -35,6 +37,15 @@ export default React.createClass({
                     valueLink={this.linkState('text')}
                     onKeyDown={this.sendMessage}
                 ></textarea>
+                <Loader
+                    className="lcb-entry-loader"
+                    fadeIn
+                    style={{
+                        visibility:
+                            this.props.isSendingMessage
+                            && 'visible' || 'hidden'
+                    }}
+                    size={18} />
                 <button
                     className="lcb-entry-button"
                     aria-label="Send">

@@ -12,7 +12,9 @@ import {
     REQUEST_CONVERSATION,
     RECEIVE_CONVERSATION,
     REQUEST_CONVERSATION_MESSAGES,
-    RECEIVE_CONVERSATION_MESSAGES
+    RECEIVE_CONVERSATION_MESSAGES,
+    ATTEMPT_CONVERSATION_MESSAGE,
+    CONFIRM_CONVERSATION_MESSAGE
 } from '../actions';
 
 function connection(state = {
@@ -55,6 +57,7 @@ function rooms(state = {
 function conversation(state = {
     isFetching: true,
     isFetchingMessages: true,
+    isSendingMessage: false,
     id: null,
     name: null,
     description: null,
@@ -73,9 +76,7 @@ function conversation(state = {
                 id: action.id,
                 name: action.name,
                 slug: action.slug,
-                description: action.description,
-                users: action.users,
-                files: action.files
+                description: action.description
             });
         case REQUEST_CONVERSATION_MESSAGES:
             return Object.assign({}, state, {
@@ -85,6 +86,14 @@ function conversation(state = {
             return Object.assign({}, state, {
                 isFetchingMessages: false,
                 messages: action.messages
+            });
+        case ATTEMPT_CONVERSATION_MESSAGE:
+            return Object.assign({}, state, {
+                isSendingMessage: true
+            });
+        case CONFIRM_CONVERSATION_MESSAGE:
+            return Object.assign({}, state, {
+                isSendingMessage: false
             });
         default:
             return state;

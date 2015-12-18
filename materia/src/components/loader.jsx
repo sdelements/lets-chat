@@ -1,19 +1,30 @@
 'use strict';
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import Radium, { Style } from 'radium';
 
 import Spinner from 'react-spinkit';
 
-@Radium
-export default class Button extends React.Component {
+const Loader = React.createClass({
+    propTypes: {
+        color: React.PropTypes.string,
+        size: React.PropTypes.number
+    },
+    getDefaultProps() {
+        return {
+            fadeIn: false,
+            color: '#72d4ee',
+            size: 40
+        };
+    },
     render() {
         return (
             <span
                 {...this.props}
-                className={`lcb-loader ${this.props.className}`}>
-                <Spinner noFadeIn spinnerName="cube-grid" />
+                className={`lcb-loader ${this.props.className}`}
+                >
+                <Spinner noFadeIn={!this.props.fadeIn} spinnerName="cube-grid" />
                 <Style
                     scopeSelector=".lcb-loader"
                     rules={{
@@ -21,10 +32,16 @@ export default class Button extends React.Component {
                             transform: 'rotate(45deg)'
                         },
                         '.cube': {
-                            background: this.props.color || '#72d4ee'
+                            background: this.props.color
+                        },
+                        '.cube-grid': {
+                            width: this.props.size + 'px',
+                            height: this.props.size + 'px'
                         }
                     }} />
             </span>
-        );
-    };
-};
+        )
+    }
+});
+
+export default Radium(Loader);

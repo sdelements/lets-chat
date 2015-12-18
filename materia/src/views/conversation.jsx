@@ -9,6 +9,7 @@ import {
     sendConversationMessage as sendMessage
 } from '../actions';
 
+import Loader from '../components/loader';
 import Header from '../components/header';
 import Messages from '../components/messages';
 import Entry from '../components/entry';
@@ -28,6 +29,13 @@ export default class Conversation extends Component {
         }));
     };
     render() {
+        if (true && this.props.isFetching) {
+            return (
+                <div className="lcb-conversation">
+                    <Loader className="lcb-conversation-loader" fadeIn />
+                </div>
+            );
+        }
         return (
             <div className="lcb-conversation">
                 <Header
@@ -37,6 +45,7 @@ export default class Conversation extends Component {
                     isFetching={this.props.isFetchingMessages}
                     messages={this.props.messages} />
                 <Entry
+                    isSendingMessage={this.props.isSendingMessage}
                     sendMessage={this.sendMessage} />
             </div>
         );
@@ -44,13 +53,16 @@ export default class Conversation extends Component {
 };
 
 Conversation.propTypes = {
+    isFetching: PropTypes.bool.isRequired,
+    isFetchingMessages: PropTypes.bool.isRequired,
+    isSendingMessage: PropTypes.bool.isRequired,
     id: PropTypes.string,
     name: PropTypes.string,
     slug: PropTypes.string,
     description: PropTypes.string,
-    messages: PropTypes.array,
-    users: PropTypes.array,
-    files: PropTypes.array,
+    messages: PropTypes.array.isRequired,
+    users: PropTypes.array.isRequired,
+    files: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired
 };
 
