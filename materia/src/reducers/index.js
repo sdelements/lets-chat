@@ -85,7 +85,7 @@ function conversation(state = {
         case RECEIVE_CONVERSATION_MESSAGES:
             return Object.assign({}, state, {
                 isFetchingMessages: false,
-                messages: action.messages
+                messages: action.messages.reverse()
             });
         case ATTEMPT_CONVERSATION_MESSAGE:
             return Object.assign({}, state, {

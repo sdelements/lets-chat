@@ -2,6 +2,8 @@
 
 import React, { Component } from 'react';
 
+import ReactDOM from 'react-dom';
+
 import ReactLinkedStateMixin from 'react-addons-linked-state-mixin';
 
 import Loader from './loader';
@@ -14,7 +16,7 @@ export default React.createClass({
         }
     },
     componentDidMount(){
-        React.findDOMNode(this.refs.text).focus();
+        ReactDOM.findDOMNode(this.refs.text).focus();
     },
     sendMessage(e) {
         if (e.which !== 13) {
