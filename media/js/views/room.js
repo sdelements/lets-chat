@@ -53,6 +53,16 @@
                 collection: this.model.files
             });
         },
+        renderRoomStyle: function() {
+            var h = document.head.innerHTML;
+            var tagBegin = '<!-- head_room_style_begin -->';
+            var tagEnd = '<!-- head_room_style_end -->';
+            var b = document.head.innerHTML.indexOf(tagBegin);
+            var h2 = h.substr(0, b);
+            h2 += tagBegin;
+            h2 += tagEnd;
+            document.head.innerHTML = h2.replace(tagEnd, '<style>'+this.model.get('style')+'</style>');
+        },
         render: function() {
             this.$el = $(this.template(_.extend(this.model.toJSON(), {
                 sidebar: store.get('sidebar')
@@ -250,17 +260,20 @@
             this.$('.lcb-room-style').text(this.model.get('style'));
 
             console.log('updateMeta');
+            /*
             var opacity = 1.0;
             var chatDiv = this.$('.lcb-room-chat')[0];
             var bgURL = 'url("'+this.model.get('style')+'");';
             chatDiv.style.cssText = this.model.get('style');
-            if(this.model.get('style').length > 0) opacity = 0.5;
+            if(this.model.get('style').length > 0) opacity = 0.8;
             var messagesElems = document.getElementsByClassName('lcb-messages');
             var i = 0;
             while(i < messagesElems.length) {
                 messagesElems[i].style.opacity = opacity;
                 i++;
             }
+            */
+            this.renderRoomStyle();
         },
         sendMeta: function(e) {
             console.log('sendMeta');
