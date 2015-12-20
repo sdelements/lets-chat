@@ -9,6 +9,8 @@ import { routeReducer } from 'redux-simple-router';
 import {
     CLIENT_CONNECTED,
     CLIENT_DISCONNECTED,
+    REQUEST_WHO_AM_I,
+    RECEIVE_WHO_AM_I,
     REQUEST_ROOMS,
     RECEIVE_ROOMS,
     REQUEST_CONVERSATION,
@@ -37,6 +39,24 @@ function connection(state = {
     };
 };
 
+function user(state = {
+    isFetching: true,
+    profile: {}
+}, action) {
+    switch (action.type) {
+        case REQUEST_WHO_AM_I:
+            return Object.assign({}, state, {
+                isFetching: true
+            });
+        case RECEIVE_WHO_AM_I:
+            return Object.assign({}, state, {
+                isFetching: false,
+                profile: Object.assign({}, action.user)
+            });
+        default:
+            return state;
+    };
+};
 
 function rooms(state = {
     isFetching: true,
@@ -111,6 +131,7 @@ function conversation(state = {
 
 export default combineReducers(Object.assign({}, {
     connection,
+    user,
     rooms,
     conversation
 }, {

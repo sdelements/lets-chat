@@ -7,11 +7,13 @@ import { connect } from 'react-redux';
 import { socket } from '../services/io'
 
 import Sidebar from '../components/sidebar';
+import UserMenu from '../components/user-menu';
+import Tabs from '../components/tabs';
 import Connection from '../components/connection';
 import Main from '../components/main';
-import Tabs from '../components/tabs';
 
 import {
+    fetchWhoAmI,
     clientConnected
 } from '../actions';
 
@@ -31,11 +33,14 @@ class App extends Component {
             dispatch(clientDisconnected());
         });
 
+        dispatch(fetchWhoAmI());
+
     };
     render() {
         return (
             <div className="lcb-app">
                 <Sidebar>
+                    <UserMenu {...this.props.user.profile} />
                     <Tabs />
                     <Connection isConnected={this.props.connection.isConnected} />
                 </Sidebar>
