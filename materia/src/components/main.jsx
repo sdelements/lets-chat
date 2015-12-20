@@ -3,10 +3,9 @@
 import React from 'react';
 
 export default React.createClass({
-    render: function() {
+    render() {
         return (
-            <div className="lcb-conversation">
-                Some Conversation
+            <div className="lcb-main">
                 {this.props.children}
             </div>
         )

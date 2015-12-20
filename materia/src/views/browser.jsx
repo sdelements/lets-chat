@@ -1,14 +1,19 @@
 'use strict';
 
 import _ from 'lodash';
-import React, { Component } from 'react';
+
+import React, { PropTypes, Component } from 'react';
+
+import { connect } from 'react-redux';
+
+import { Link } from 'react-router';
 
 export default class Browser extends Component {
     constructor(props) {
         super(props);
     };
     render() {
-        var rooms = _.sortBy(this.props.rooms.items, function(room) {
+        const rooms = _.sortBy(this.props.rooms, function(room) {
             return room.userCount
         }).reverse();
         return (
@@ -23,15 +28,28 @@ export default class Browser extends Component {
                 }}>
                     Rooms ({rooms.length})
                 </span>
-                {rooms.map(function(room, i){
-                    return <a key={room.id} href="#" style={{
+                {rooms.map(function(room, i) {
+                    return <Link key={room.id} to={`/materia/room/${room.id}`} style={{
                         color: '#fff',
                         display: 'block',
                         textDecoration: 'none',
                         marginBottom: '5px'
-                    }}>({room.userCount}) {room.id} &mdash; {room.name}</a>
+                    }}>({room.userCount}) {room.id} &mdash; {room.name}</Link>
                 })}
             </div>
         );
     };
 };
+
+Browser.propTypes = {
+    rooms: PropTypes.array.isRequired,
+    dispatch: PropTypes.func.isRequired
+};
+
+function mapStateToProps(state, props) {
+    return {
+        rooms: state.rooms.items
+    }
+};
+
+export default connect(mapStateToProps)(Browser);
