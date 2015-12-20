@@ -4,8 +4,17 @@ import React from 'react';
 
 import Avatar from './avatar';
 
+import Loader from '../components/loader';
+
 export default React.createClass({
     render() {
+        if (this.props.isFetching) {
+            return (
+                <div className="lcb-user-menu">
+                    <Loader className="lcb-user-menu-loader" size={16} fadeIn />
+                </div>
+            );
+        }
         return (
             <div className="lcb-user-menu">
                 <Avatar

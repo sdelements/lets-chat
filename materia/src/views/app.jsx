@@ -40,7 +40,7 @@ class App extends Component {
         return (
             <div className="lcb-app">
                 <Sidebar>
-                    <UserMenu {...this.props.user.profile} />
+                    <UserMenu isFetching={this.props.user.isFetching} {...this.props.user.profile} />
                     <Tabs />
                     <Connection isConnected={this.props.connection.isConnected} />
                 </Sidebar>

@@ -40,7 +40,7 @@ export default class Conversation extends Component {
         }));
     };
     render() {
-        if (true && this.props.isFetching) {
+        if (this.props.isFetching) {
             return (
                 <div className="lcb-conversation">
                     <Loader className="lcb-conversation-loader" fadeIn />
