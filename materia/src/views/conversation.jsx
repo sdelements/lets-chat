@@ -4,7 +4,7 @@ import React, { PropTypes, Component } from 'react';
 
 import { connect } from 'react-redux';
 
-import IO from 'socket.io-client';
+import { socket } from '../services/io';
 
 import {
     joinConversation,
@@ -17,19 +17,21 @@ import Header from '../components/header';
 import Messages from '../components/messages';
 import Entry from '../components/entry';
 
-const socket = IO();
-
 export default class Conversation extends Component {
     constructor(props) {
         super(props);
         this.sendMessage = this.sendMessage.bind(this);
     };
     componentWillMount() {
+
         const { dispatch } = this.props;
-        dispatch(joinConversation(this.props.params.id));
+
         socket.on('messages:new', function(message) {
             dispatch(receiveConversationMessage(message));
         });
+
+        dispatch(joinConversation(this.props.params.id));
+
     };
     sendMessage(message) {
         this.props.dispatch(sendConversationMessage({

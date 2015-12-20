@@ -8,9 +8,16 @@ import { connect } from 'react-redux';
 
 import { Link } from 'react-router';
 
+import {
+    fetchRooms
+} from '../actions';
+
 export default class Browser extends Component {
     constructor(props) {
         super(props);
+    };
+    componentDidMount() {
+        this.props.dispatch(fetchRooms());
     };
     render() {
         const rooms = _.sortBy(this.props.rooms, function(room) {

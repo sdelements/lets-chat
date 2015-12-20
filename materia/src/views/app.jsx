@@ -2,34 +2,29 @@
 
 import React, { PropTypes, Component } from 'react';
 
-import IO from 'socket.io-client';
-
 import { connect } from 'react-redux';
 
-import {
-    clientConnected,
-    clientDisconnected,
-    fetchRooms
-} from '../actions';
+import { socket } from '../services/io'
 
 import Sidebar from '../components/sidebar';
 import Connection from '../components/connection';
 import Main from '../components/main';
 import Tabs from '../components/tabs';
 
-const socket = IO();
+import {
+    clientConnected
+} from '../actions';
 
 class App extends Component {
     constructor(props) {
         super(props);
     };
-    componentDidMount() {
+    componentWillMount() {
 
         const { dispatch } = this.props;
 
         socket.on('connect', function() {
             dispatch(clientConnected());
-            dispatch(fetchRooms());
         });
 
         socket.on('disconnect', function() {
