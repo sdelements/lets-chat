@@ -6,6 +6,9 @@ import ReactDOM from 'react-dom';
 
 import ReactLinkedStateMixin from 'react-addons-linked-state-mixin';
 
+import IconButton from 'material-ui/lib/icon-button';
+import SendIcon from 'react-material-icons/icons/content/send';
+
 import Loader from './loader';
 
 export default React.createClass({
@@ -52,11 +55,11 @@ export default React.createClass({
                             && 'visible' || 'hidden'
                     }}
                     size={18} />
-                <button
+                <IconButton
                     className="lcb-entry-button"
                     aria-label="Send">
-                    Send
-                </button>
+                    <SendIcon color="#bbb" />
+                </IconButton>
             </div>
         )
     }
