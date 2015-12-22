@@ -4,7 +4,7 @@
 html,
 body
     height: 100%
-    margin: 0;
+    margin: 0
 
 body
     background: #282c34;
@@ -12,7 +12,11 @@ body
     font-size: 14px
     margin: 0
 
-.lcb-loader
-    @include display(flex)
-    @include align-items(center)
-    @include justify-content(center)
+a
+    color: #337ab7
+    text-decoration: none
+    &:hover
+        color: #23527c
+        text-decoration: underline
+    &:focus
+        outline: 0

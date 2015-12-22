@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 
 import { socket } from '../services/io'
 
+import LockIcon from 'react-material-icons/icons/action/lock-outline';
+
 import Sidebar from '../components/sidebar';
 import UserMenu from '../components/user-menu';
 import Tabs from '../components/tabs';
@@ -14,7 +16,9 @@ import Main from '../components/main';
 
 import {
     fetchWhoAmI,
-    clientConnected
+    clientConnected,
+    clientDisconnected,
+    clientError
 } from '../actions';
 
 class App extends Component {
@@ -33,10 +37,36 @@ class App extends Component {
             dispatch(clientDisconnected());
         });
 
+        socket.on('error', function(err) {
+            dispatch(clientError(err));
+        });
+
         dispatch(fetchWhoAmI());
 
     };
     render() {
+        if (!this.props.connection.isAuthenticated) {
+            return (
+                <div className="lcb-app">
+                    <div className="lcb-app-message">
+                        <LockIcon
+                            className="lcb-app-message-icon"
+                            color="inherit"
+                            style={{
+                                width: '70px',
+                                height: '70px'
+                            }} />
+                        <div className="lcb-app-message-text">
+                            Your session has expired.
+                        </div>
+                        <div className="lcb-app-message-actions">
+                            <a className="lcb-fancy-link"
+                                href="/login">Sign in</a>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
         return (
             <div className="lcb-app">
                 <Sidebar>

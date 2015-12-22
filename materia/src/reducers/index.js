@@ -9,6 +9,7 @@ import { routeReducer } from 'redux-simple-router';
 import {
     CLIENT_CONNECTED,
     CLIENT_DISCONNECTED,
+    CLIENT_ERROR,
     REQUEST_WHO_AM_I,
     RECEIVE_WHO_AM_I,
     REQUEST_ROOMS,
@@ -23,16 +24,23 @@ import {
 } from '../actions';
 
 function connection(state = {
+    isAuthenticated: true,
     isConnected: false
 }, action) {
     switch (action.type) {
         case CLIENT_CONNECTED:
             return Object.assign({}, state, {
-                isConnected: true
+                isConnected: true,
+                isAuthenticated: true
             });
         case CLIENT_DISCONNECTED:
             return Object.assign({}, state, {
                 isConnected: false
+            });
+        case CLIENT_ERROR:
+            const isAuthenticated = !/not authorized/i.test(action.error);
+            return Object.assign({}, state, {
+                isAuthenticated
             });
         default:
             return state;

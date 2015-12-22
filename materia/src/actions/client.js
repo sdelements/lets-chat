@@ -5,6 +5,8 @@ import { socket } from '../services/io';
 export const CLIENT_CONNECTED = 'CLIENT_CONNECTED';
 export const CLIENT_DISCONNECTED = 'CLIENT_DISCONNECTED';
 
+export const CLIENT_ERROR = 'CLIENT_ERROR';
+
 export const REQUEST_WHO_AM_I = 'REQUEST_WHO_AM_I';
 export const RECEIVE_WHO_AM_I = 'RECEIVE_WHO_AM_I';
 
@@ -19,6 +21,13 @@ export function clientDisconnected() {
         type: CLIENT_DISCONNECTED
     };
 };
+
+export function clientError(error) {
+    return {
+        type: CLIENT_ERROR,
+        error
+    };
+}
 
 export function requestWhoAmI() {
     return {
