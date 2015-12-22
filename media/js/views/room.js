@@ -52,16 +52,12 @@
                 el: this.$('.lcb-room-sidebar-files'),
                 collection: this.model.files
             });
-        },
-        renderRoomStyle: function() {
-            var h = document.head.innerHTML;
-            var tagBegin = '<!-- head_room_style_begin -->';
-            var tagEnd = '<!-- head_room_style_end -->';
-            var b = document.head.innerHTML.indexOf(tagBegin);
-            var h2 = h.substr(0, b);
-            h2 += tagBegin;
-            h2 += tagEnd;
-            document.head.innerHTML = h2.replace(tagEnd, '<style>'+this.model.get('style')+'</style>');
+
+            var that = this;
+            setInterval(function() {
+                that.modifyRoomStyle();
+            },
+            4000);
         },
         render: function() {
             this.$el = $(this.template(_.extend(this.model.toJSON(), {
@@ -76,6 +72,26 @@
             this.atwhoRooms();
             this.atwhoEmotes();
             this.selectizeParticipants();
+        },
+        modifyRoomStyle: function() {
+            var tagDone = '<!-- head_room_style_done -->';
+            if (document.head.innerHTML.indexOf(tagDone) >= 0 || this.model.get('style').length <= 0) return;
+
+            var head = document.head.innerHTML;
+            var tagBegin = '<!-- head_room_style_begin -->';
+            var tagEnd = '<!-- head_room_style_end -->';
+            var b = head.indexOf(tagBegin);
+            var e = head.indexOf(tagEnd);
+
+            if (b < 0 || e < 0) return;
+
+            var h2 = head.substr(0, b);
+            h2 += tagBegin + '<style>'+this.model.get('style')+'</style>' + tagDone + tagEnd;
+            document.head.innerHTML = h2;
+        },
+        updateRoomStyle: function() {
+            document.head.innerHTML = document.head.innerHTML.replace('<!-- head_room_style_done -->', '<!-- -->');
+            this.modifyRoomStyle();
         },
         atwhoTplEval: function(tpl, map) {
             var error;
@@ -259,24 +275,9 @@
             this.$('.lcb-room-participants').text(this.model.get('participants'));
             this.$('.lcb-room-style').text(this.model.get('style'));
 
-            console.log('updateMeta');
-            /*
-            var opacity = 1.0;
-            var chatDiv = this.$('.lcb-room-chat')[0];
-            var bgURL = 'url("'+this.model.get('style')+'");';
-            chatDiv.style.cssText = this.model.get('style');
-            if(this.model.get('style').length > 0) opacity = 0.8;
-            var messagesElems = document.getElementsByClassName('lcb-messages');
-            var i = 0;
-            while(i < messagesElems.length) {
-                messagesElems[i].style.opacity = opacity;
-                i++;
-            }
-            */
-            this.renderRoomStyle();
+            this.updateRoomStyle();
         },
         sendMeta: function(e) {
-            console.log('sendMeta');
             this.model.set({
                 name: this.$('.lcb-room-heading').text(),
                 description: this.$('.lcb-room-description').text(),
