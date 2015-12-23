@@ -7,11 +7,12 @@ $messagePadding: 7px
     background: #fff
     padding: 0
     margin: 0
-    overflow: auto
     position: relative
+    overflow-y: auto
     -webkit-overflow-scrolling: touch
-    @include flex(1 0 0)
+    @include backface-visibility(hidden)
     @include transform(translate3d(0,0,0))
+    @include flex(1 0 0)
 
 .lcb-messages-loader
     width: 100%
