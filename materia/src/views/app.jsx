@@ -71,7 +71,9 @@ class App extends Component {
             <div className="lcb-app">
                 <Sidebar>
                     <UserMenu isFetching={this.props.user.isFetching} {...this.props.user.profile} />
-                    <Tabs conversations={this.props.conversations.items} />
+                    <Tabs
+                        selected={this.props.params.id}
+                        conversations={this.props.conversations.items} />
                     <Connection isConnected={this.props.connection.isConnected} />
                 </Sidebar>
                 <Main>

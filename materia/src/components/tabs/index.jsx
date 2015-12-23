@@ -19,9 +19,10 @@ export default React.createClass({
                         <HomeIcon color="#fff" />
                     </IconButton>
                 </Link>
-                {this.props.conversations.map(function(conversation) {
+                {this.props.conversations.map((conversation) => {
                     return (
                         <Tab
+                            className={this.props.selected === conversation.id && 'selected'}
                             key={conversation.id}
                             label={conversation.name}
                             url={`/materia/room/${conversation.id}`} />
