@@ -34,7 +34,7 @@ export default React.createClass({
                 ref="list"
                 onScroll={this.onScroll}>
                 { this.props.isFetching
-                    && <Loader className="lcb-messages-loader" />
+                    && <Loader className="lcb-messages-loader" fadeIn />
                     || this.props.messages.map(function(message, i) {
                         return <Message key={message.id} {...message} />;
                     })

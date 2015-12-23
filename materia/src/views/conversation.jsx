@@ -1,5 +1,7 @@
 'use strict';
 
+import _ from 'lodash';
+
 import React, { PropTypes, Component } from 'react';
 
 import { connect } from 'react-redux';
@@ -27,26 +29,24 @@ export default class Conversation extends Component {
         const { dispatch } = this.props;
 
         socket.on('messages:new', function(message) {
-            dispatch(receiveConversationMessage(message));
+            dispatch(receiveConversationMessage(message.room.id, message));
         });
 
         dispatch(joinConversation(this.props.params.id));
 
     };
+    componentWillReceiveProps(nextProps) {
+        if (this.props.params.id === nextProps.params.id) {
+            return;
+        }
+        this.props.dispatch(joinConversation(nextProps.params.id));
+    };
     sendMessage(message) {
-        this.props.dispatch(sendConversationMessage({
-            room: this.props.params.id,
+        this.props.dispatch(sendConversationMessage(this.props.params.id, {
             ...message
         }));
     };
     render() {
-        if (this.props.isFetching) {
-            return (
-                <div className="lcb-conversation">
-                    <Loader className="lcb-conversation-loader" fadeIn />
-                </div>
-            );
-        }
         return (
             <div className="lcb-conversation">
                 <Header
@@ -64,21 +64,26 @@ export default class Conversation extends Component {
 };
 
 Conversation.propTypes = {
-    isFetching: PropTypes.bool.isRequired,
-    isFetchingMessages: PropTypes.bool.isRequired,
-    isSendingMessage: PropTypes.bool.isRequired,
+    isFetching: PropTypes.bool,
+    isFetchingMessages: PropTypes.bool,
+    isSendingMessage: PropTypes.bool,
     id: PropTypes.string,
     name: PropTypes.string,
     slug: PropTypes.string,
     description: PropTypes.string,
-    messages: PropTypes.array.isRequired,
-    users: PropTypes.array.isRequired,
-    files: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired
+    messages: PropTypes.array,
+    users: PropTypes.array,
+    files: PropTypes.array,
+    dispatch: PropTypes.func
 };
 
 function mapStateToProps(state, props) {
-    return state.conversation;
+    return _.findWhere(state.conversations.items, {
+        id: props.params.id
+    }) || {
+        isFetching: false,
+        messages: []
+    }
 };
 
 export default connect(mapStateToProps)(Conversation);

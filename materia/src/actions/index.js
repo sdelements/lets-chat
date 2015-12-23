@@ -2,6 +2,6 @@
 
 module.exports = Object.assign({},
     require('./client'),
-    require('./room'),
-    require('./conversation')
+    require('./rooms'),
+    require('./conversations')
 );

@@ -13,11 +13,19 @@ export default React.createClass({
         return (
             <div className="lcb-tabs">
                 <Link to="/materia">
-                    <IconButton tooltip="Browse Rooms">
+                    <IconButton>
                         <HomeIcon color="#fff" />
                     </IconButton>
                 </Link>
-                {this.props.children}
+                { this.props.conversations.map(function(conversation) {
+                    return (
+                        <div key={conversation.id}>
+                            <Link to={`/materia/room/${conversation.id}`}>
+                                {conversation.name}
+                            </Link>
+                        </div>
+                    );
+                })}
             </div>
         )
     }

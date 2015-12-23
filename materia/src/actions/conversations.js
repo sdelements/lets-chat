@@ -1,11 +1,15 @@
 'use strict';
 
+import _ from 'lodash';
+
 import { socket } from '../services/io';
 
 export const REQUEST_CONVERSATION = 'REQUEST_CONVERSATION';
 export const RECEIVE_CONVERSATION = 'RECEIVE_CONVERSATION';
+
 export const REQUEST_CONVERSATION_MESSAGES = 'REQUEST_CONVERSATION_MESSAGES';
 export const RECEIVE_CONVERSATION_MESSAGES = 'RECEIVE_CONVERSATION_MESSAGES';
+
 export const ATTEMPT_CONVERSATION_MESSAGE = 'ATTEMPT_CONVERSATION_MESSAGE';
 export const CONFIRM_CONVERSATION_MESSAGE = 'CONFIRM_CONVERSATION_MESSAGE';
 export const RECEIVE_CONVERSATION_MESSAGE = 'RECEIVE_CONVERSATION_MESSAGE';
@@ -17,18 +21,24 @@ export function requestConversation(id) {
     };
 };
 
-export function receiveConversation(conversation) {
+export function receiveConversation(id, conversation) {
     return {
         type: RECEIVE_CONVERSATION,
-        ...conversation
+        id,
+        conversation
     };
 };
 
 export function joinConversation(id) {
-    return dispatch => {
-        dispatch(requestConversation());
+    return (dispatch, getState) => {
+        dispatch(requestConversation(id));
+        const conversations = getState().conversations.items;
+        const conversation = _.findWhere(conversations, { id })
+        if (conversation && conversation.isJoined) {
+            return dispatch(receiveConversation(id, conversation));
+        }
         return socket.emit('rooms:join', id, function(room) {
-            dispatch(receiveConversation(room));
+            dispatch(receiveConversation(id, room));
             dispatch(fetchConversationMessages(id));
         });
     };
@@ -41,52 +51,67 @@ export function requestConversationMessages(id) {
     };
 };
 
-export function receiveConversationMessages(messages) {
+export function receiveConversationMessages(id, messages) {
     return {
         type: RECEIVE_CONVERSATION_MESSAGES,
+        id,
         messages
     };
 };
 
 export function fetchConversationMessages(id) {
-    return dispatch => {
-        dispatch(requestConversationMessages());
+    return (dispatch, getState) => {
+        dispatch(requestConversationMessages(id));
+        const { conversations } = getState();
+        const { messages = [] } = _.findWhere(conversations.items, {
+            id
+        });
+        if (messages.length > 0) {
+            return dispatch(receiveConversationMessages(id, messages));
+        }
         return socket.emit('messages:list', {
             room: id,
             take: 500,
             expand: 'owner',
             reverse: true
         }, function(messages) {
-            dispatch(receiveConversationMessages(messages));
+            dispatch(receiveConversationMessages(id, messages));
         });
     };
 };
 
-export function attemptConversationMessage(message) {
+export function attemptConversationMessage(id, message) {
     return {
         type: ATTEMPT_CONVERSATION_MESSAGE,
+        id,
         message
     };
 };
 
-export function confirmConversationMessage(message) {
+export function confirmConversationMessage(id, message) {
     return {
         type: CONFIRM_CONVERSATION_MESSAGE,
+        id,
         message
     };
 };
 
-export function receiveConversationMessage(message) {
+export function receiveConversationMessage(id, message) {
     return {
         type: RECEIVE_CONVERSATION_MESSAGE,
+        id,
         message
     };
 };
 
-export function sendConversationMessage(message) {
+export function sendConversationMessage(id, message) {
     return dispatch => {
-        return socket.emit('messages:create', message, function(confirmedMessage) {
-            dispatch(confirmConversationMessage(confirmedMessage));
+        dispatch(attemptConversationMessage(id, message))
+        return socket.emit('messages:create', {
+            room: id,
+            ...message
+        }, function(confirmedMessage) {
+            dispatch(confirmConversationMessage(id, confirmedMessage));
         });
     };
 };

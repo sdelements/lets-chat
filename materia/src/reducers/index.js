@@ -86,37 +86,41 @@ function rooms(state = {
 };
 
 function conversation(state = {
-    isFetching: true,
-    isFetchingMessages: true,
-    isSendingMessage: false,
-    id: null,
-    name: null,
-    description: null,
-    messages: [],
-    users: [],
-    files: []
+    isFetching: false,
+    isFetchingMessages: false,
+    isSendingMessages: false,
+    isJoined: false,
+    messages: []
 }, action) {
     switch (action.type) {
         case REQUEST_CONVERSATION:
             return Object.assign({}, state, {
+                id: action.id,
                 isFetching: true
             });
         case RECEIVE_CONVERSATION:
-            return Object.assign({}, state, {
-                isFetching: false,
+            return Object.assign({}, state, action.conversation, {
                 id: action.id,
-                name: action.name,
-                slug: action.slug,
-                description: action.description
+                isFetching: false,
+                isJoined: true
             });
         case REQUEST_CONVERSATION_MESSAGES:
             return Object.assign({}, state, {
                 isFetchingMessages: true
             });
         case RECEIVE_CONVERSATION_MESSAGES:
-            return Object.assign({}, state, {
-                isFetchingMessages: false,
-                messages: action.messages.reverse()
+            if (state.messages.length > 0) {
+                return Object.assign({}, state, {
+                    isFetchingMessages: false
+                });
+            }
+            return update(state, {
+                isFetchingMessages: {
+                    $set: false
+                },
+                messages: {
+                    $merge: action.messages.reverse()
+                }
             });
         case ATTEMPT_CONVERSATION_MESSAGE:
             return Object.assign({}, state, {
@@ -127,10 +131,43 @@ function conversation(state = {
                 isSendingMessage: false
             });
         case RECEIVE_CONVERSATION_MESSAGE:
-            return Object.assign({}, state, {
-                messages: update(state.messages, {
+            return update(state, {
+                messages: {
                     $push: [action.message]
-                })
+                }
+            });
+        default:
+            return state;
+    }
+};
+
+function conversations(state = {
+    items: []
+}, action) {
+    switch (action.type) {
+        case REQUEST_CONVERSATION:
+        case RECEIVE_CONVERSATION:
+        case REQUEST_CONVERSATION_MESSAGES:
+        case RECEIVE_CONVERSATION_MESSAGES:
+        case ATTEMPT_CONVERSATION_MESSAGE:
+        case CONFIRM_CONVERSATION_MESSAGE:
+        case RECEIVE_CONVERSATION_MESSAGE:
+            const index = _.findIndex(state.items, {
+                id: action.id
+            });
+            if (index > -1) {
+                return update(state, {
+                    items: {
+                        [index]: {
+                            $merge: conversation(state.items[index], action)
+                        }
+                    }
+                });
+            }
+            return update(state, {
+                items: {
+                    $push: [conversation(undefined, action)]
+                }
             });
         default:
             return state;
@@ -141,7 +178,7 @@ export default combineReducers(Object.assign({}, {
     connection,
     user,
     rooms,
-    conversation
+    conversations
 }, {
     routing: routeReducer
 }));

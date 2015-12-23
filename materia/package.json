@@ -29,7 +29,7 @@
     "bourbon-neat": "^1.7.2",
     "css-loader": "^0.23.0",
     "gridle": "^2.0.43",
-    "history": "^1.16.0",
+    "history": "^1.13.0",
     "lodash": "^3.10.1",
     "material-ui": "^0.13.4",
     "node-sass": "^3.4.2",
