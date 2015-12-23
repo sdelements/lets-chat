@@ -2,5 +2,40 @@
 /* Let's Chat (MIT) -> Chat */
 
 .lcb-tabs
-    padding: 20px
-    text-align: center
+    margin: 20px 0
+
+.lcb-tab
+    height: 36px
+    line-height: 36px
+    font-size: 12px
+    position: relative
+    opacity: .7
+    &:before
+        background: transparent
+        width: 1px
+        height: 100%
+        content: ' '
+        position: absolute
+        top: 0
+        left: 0
+        @include transition(background .02s linear)
+    a
+        height: inherit
+        color: #999
+        text-decoration: none
+        padding-left: 10px
+        border-bottom: none
+        display: block
+        position: relative
+        @include transition(color .07s linear)
+    &:hover
+        opacity: .8
+        a
+            color: #bbb
+    &.selected
+        background: rgba(255, 255, 255, .06)
+        &:before
+            background: rgba(255, 255, 255, .9)
+        a
+            color: #fff
+        opacity: 1

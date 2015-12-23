@@ -8,6 +8,8 @@ import IconButton from 'material-ui/lib/icon-button';
 
 import HomeIcon from 'react-material-icons/icons/navigation/apps';
 
+import Tab from './tab';
+
 export default React.createClass({
     render() {
         return (
@@ -17,13 +19,12 @@ export default React.createClass({
                         <HomeIcon color="#fff" />
                     </IconButton>
                 </Link>
-                { this.props.conversations.map(function(conversation) {
+                {this.props.conversations.map(function(conversation) {
                     return (
-                        <div key={conversation.id}>
-                            <Link to={`/materia/room/${conversation.id}`}>
-                                {conversation.name}
-                            </Link>
-                        </div>
+                        <Tab
+                            key={conversation.id}
+                            label={conversation.name}
+                            url={`/materia/room/${conversation.id}`} />
                     );
                 })}
             </div>
