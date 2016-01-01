@@ -30,9 +30,9 @@ var _ = require('lodash'),
 var MongoStore = connectMongo(express.session),
     httpEnabled = settings.http && settings.http.enable,
     httpsEnabled = settings.https && settings.https.enable,
-    models = all('./app/models'),
-    middlewares = all('./app/middlewares'),
-    controllers = all('./app/controllers'),
+    models = all(__dirname+'/app/models'),
+    middlewares = all(__dirname+'/app/middlewares'),
+    controllers = all(__dirname+'/app/controllers'),
     app;
 
 //
