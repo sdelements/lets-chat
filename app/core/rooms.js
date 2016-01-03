@@ -101,6 +101,7 @@ RoomManager.prototype.update = function(roomId, options, cb) {
             // DO NOT UPDATE SLUG
             // room.slug = options.slug;
             room.description = options.description;
+            room.style = options.style;
 
             if (room.private) {
                 room.password = options.password;

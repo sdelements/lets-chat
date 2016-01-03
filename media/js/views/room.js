@@ -14,7 +14,7 @@
             'scroll .lcb-messages': 'updateScrollLock',
             'keypress .lcb-entry-input': 'sendMessage',
             'click .lcb-entry-button': 'sendMessage',
-            'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta',
+            'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description, .lcb-room-style': 'sendMeta',
             'click .lcb-room-toggle-sidebar': 'toggleSidebar',
             'click .show-edit-room': 'showEditRoom',
             'click .hide-edit-room': 'hideEditRoom',
@@ -52,6 +52,12 @@
                 el: this.$('.lcb-room-sidebar-files'),
                 collection: this.model.files
             });
+
+            var that = this;
+            setInterval(function() {
+                that.modifyRoomStyle();
+            },
+            4000);
         },
         render: function() {
             this.$el = $(this.template(_.extend(this.model.toJSON(), {
@@ -66,6 +72,26 @@
             this.atwhoRooms();
             this.atwhoEmotes();
             this.selectizeParticipants();
+        },
+        modifyRoomStyle: function() {
+            var tagDone = '<!-- head_room_style_done -->';
+            if (document.head.innerHTML.indexOf(tagDone) >= 0 || this.model.get('style').length <= 0) return;
+
+            var head = document.head.innerHTML;
+            var tagBegin = '<!-- head_room_style_begin -->';
+            var tagEnd = '<!-- head_room_style_end -->';
+            var b = head.indexOf(tagBegin);
+            var e = head.indexOf(tagEnd);
+
+            if (b < 0 || e < 0) return;
+
+            var h2 = head.substr(0, b);
+            h2 += tagBegin + '<style>'+this.model.get('style')+'</style>' + tagDone + tagEnd;
+            document.head.innerHTML = h2;
+        },
+        updateRoomStyle: function() {
+            document.head.innerHTML = document.head.innerHTML.replace('<!-- head_room_style_done -->', '<!-- -->');
+            this.modifyRoomStyle();
         },
         atwhoTplEval: function(tpl, map) {
             var error;
@@ -247,18 +273,23 @@
             this.$('.lcb-room-heading .slug').text('#' + this.model.get('slug'));
             this.$('.lcb-room-description').text(this.model.get('description'));
             this.$('.lcb-room-participants').text(this.model.get('participants'));
+            this.$('.lcb-room-style').text(this.model.get('style'));
+
+            this.updateRoomStyle();
         },
         sendMeta: function(e) {
             this.model.set({
                 name: this.$('.lcb-room-heading').text(),
                 description: this.$('.lcb-room-description').text(),
-                participants: this.$('.lcb-room-participants').text()
+                participants: this.$('.lcb-room-participants').text(),
+                style: this.$('.lcb-room-style').text()
             });
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
                 name: this.model.get('name'),
                 description: this.model.get('description'),
-                participants: this.model.get('participants')
+                participants: this.model.get('participants'),
+                style: this.model.get('style')
             });
         },
         showEditRoom: function(e) {
@@ -270,10 +301,13 @@
                 $name = $modal.find('input[name="name"]'),
                 $description = $modal.find('textarea[name="description"]'),
                 $password = $modal.find('input[name="password"]'),
-                $confirmPassword = $modal.find('input[name="confirmPassword"]');
+                $confirmPassword = $modal.find('input[name="confirmPassword"]'),
+                $style = $modal.find('textarea[name="style"]');
+            
 
             $name.val(this.model.get('name'));
             $description.val(this.model.get('description'));
+            $style.val(this.model.get('style'));
             $password.val('');
             $confirmPassword.val('');
 
@@ -289,12 +323,12 @@
             if (e) {
                 e.preventDefault();
             }
-
             var $modal = this.$('.lcb-room-edit'),
                 $name = $modal.find('input[name="name"]'),
                 $description = $modal.find('textarea[name="description"]'),
                 $password = $modal.find('input[name="password"]'),
                 $confirmPassword = $modal.find('input[name="confirmPassword"]'),
+                $style = $modal.find('textarea[name="style"]'),
                 $participants =
                     this.$('.edit-room textarea[name="participants"]');
 
@@ -316,7 +350,8 @@
                 name: $name.val(),
                 description: $description.val(),
                 password: $password.val(),
-                participants: $participants.val()
+                participants: $participants.val(),
+                style: $style.val()
             });
 
             $modal.modal('hide');

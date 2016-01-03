@@ -166,6 +166,7 @@ module.exports = function() {
                 name: req.param('name'),
                 slug: req.param('slug'),
                 description: req.param('description'),
+                style: req.param('style'),
                 private: req.param('private'),
                 password: req.param('password')
             };
@@ -191,6 +192,7 @@ module.exports = function() {
                     name: req.param('name'),
                     slug: req.param('slug'),
                     description: req.param('description'),
+                    style: req.param('style'),
                     password: req.param('password'),
                     participants: req.param('participants'),
                     user: req.user
