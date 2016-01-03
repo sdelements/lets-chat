@@ -9,6 +9,7 @@ process.title = 'letschat';
 require('colors');
 
 var _ = require('lodash'),
+    path = require('path'),
     fs = require('fs'),
     express = require('express.oi'),
     i18n = require('i18n'),
@@ -30,9 +31,9 @@ var _ = require('lodash'),
 var MongoStore = connectMongo(express.session),
     httpEnabled = settings.http && settings.http.enable,
     httpsEnabled = settings.https && settings.https.enable,
-    models = all('./app/models'),
-    middlewares = all('./app/middlewares'),
-    controllers = all('./app/controllers'),
+    models = all(path.resolve('./app/models')),
+    middlewares = all(path.resolve('./app/middlewares')),
+    controllers = all(path.resolve('./app/controllers')),
     app;
 
 //
