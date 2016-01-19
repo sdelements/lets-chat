@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import moment from 'moment';
+
 import Loader from '../loader';
 import Message from './message';
 
@@ -35,8 +37,16 @@ export default React.createClass({
                 onScroll={this.onScroll}>
                 { this.props.isFetching
                     && <Loader className="lcb-messages-loader" fadeIn />
-                    || this.props.messages.map(function(message, i) {
-                        return <Message key={message.id} {...message} />;
+                    || this.props.messages.map((message, i, messages) => {
+                        let posted = moment(message.posted);
+                        let lastMessage = messages[--i];
+                        let isFragment = false;
+                        if (lastMessage && lastMessage.owner) {
+                            isFragment = lastMessage.owner.id
+                                === message.owner.id &&
+                                posted.diff(lastMessage.posted, 'minutes') < 2;
+                        }
+                        return <Message key={message.id} {...message} fragment={isFragment} />;
                     })
                 }
             </div>

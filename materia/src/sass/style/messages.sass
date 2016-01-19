@@ -29,6 +29,10 @@ $messagePadding: 7px
     position: relative
     &:first-child
         border-top: none
+    &.lcb-message-fragment
+        min-height: 0;
+        margin-top: -$messagePadding / 2;
+        border-top: none;
     &.lcb-message-own
         background: #fcffd8
     &.lcb-message-mentioned

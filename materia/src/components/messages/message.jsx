@@ -4,6 +4,17 @@ import React from 'react';
 
 export default React.createClass({
     render() {
+        if (this.props.fragment) {
+            return (
+                <div className="lcb-message lcb-message-fragment">
+                    <div className="lcb-message-meta">
+                        <div className="lcb-message-text">
+                            {this.props.text}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
         return (
             <div className="lcb-message">
                 <img
