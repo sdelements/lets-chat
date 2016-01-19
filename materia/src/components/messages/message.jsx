@@ -8,7 +8,7 @@ export default React.createClass({
             <div className="lcb-message">
                 <img
                     className="lcb-message-avatar lcb-avatar"
-                    src="https://www.gravatar.com/avatar/?s=30" />
+                    src={'https://www.gravatar.com/avatar/' + this.props.owner.avatar + '?s=30'} />
                 <div className="lcb-message-meta">
                     <span className="lcb-message-name">
                         <span className="lcb-message-displayname">

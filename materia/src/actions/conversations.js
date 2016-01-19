@@ -71,7 +71,7 @@ export function fetchConversationMessages(id) {
         }
         return socket.emit('messages:list', {
             room: id,
-            take: 500,
+            take: 200,
             expand: 'owner',
             reverse: true
         }, function(messages) {
