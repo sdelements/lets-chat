@@ -40,7 +40,7 @@ var MongoStore = connectMongo(express.session),
 // express.oi Setup
 //
 if (httpsEnabled) {
-     app = express().https({
+    app = express().https({
         key: fs.readFileSync(settings.https.key),
         cert: fs.readFileSync(settings.https.cert)
     }).io();

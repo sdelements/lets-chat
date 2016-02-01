@@ -7,6 +7,9 @@
         "no-underscore-dangle": 0,
         "quotes": [2, "single"],
         "strict": [2, "global"],
+        "space-in-parens": [2, "never"],
+        "indent": [2, 4],
+        "linebreak-style": [2, "unix"],
 
         "consistent-return": 0,
 

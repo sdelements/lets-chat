@@ -227,14 +227,14 @@ RoomManager.prototype.findOne = function(options, cb) {
     Room.findOne(options.criteria)
         .populate('participants').exec(function(err, room) {
 
-        if (err) {
-            return cb(err);
-        }
+            if (err) {
+                return cb(err);
+            }
 
-        this.sanitizeRoom(options, room);
-        cb(err, room);
+            this.sanitizeRoom(options, room);
+            cb(err, room);
 
-    }.bind(this));
+        }.bind(this));
 };
 
 RoomManager.prototype.get = function(options, cb) {

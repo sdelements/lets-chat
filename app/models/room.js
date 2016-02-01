@@ -202,7 +202,7 @@ RoomSchema.method('toJSON', function(user) {
     }
 
     return data;
- });
+});
 
 RoomSchema.statics.findByIdOrSlug = function(identifier, cb) {
     var opts = {
