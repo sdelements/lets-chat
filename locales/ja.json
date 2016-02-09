@@ -41,7 +41,7 @@
 	"Name": "名前",
 	"Description": "説明",
 	"Participants": "参加者",
-	"Archive Room": "アーカイブルーム",
+	"Archive Room": "ルームをアーカイブする",
 	"Password required": "パスワードが必要",
 	"Room %s requires a password.": "ルーム %s は、パスワードが必要です。",
 	"Cancel": "キャンセル",
@@ -74,5 +74,11 @@
 	"Slug": "短縮名",
 	"XMPP/Jabber": "XMPP/Jabber",
 	"Private?": "非公開ルームにしますか？",
-	"Empty for public room": "公開ルームがありません"
+	"Empty for public room": "公開ルームの場合は未入力",
+	"Toggle Navigation": "ナビゲーション表示/非表示",
+	"Home": "Home",
+	"Toggle Sidebar": "サイドバー表示/非表示",
+	"Close": "閉じる",
+	"Transcript for": "履歴",
+	"Find a room...": "ルームを検索"
 }
