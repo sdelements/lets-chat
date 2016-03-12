@@ -37,6 +37,7 @@ For installation instructions, please use the following links:
 * [Docker][install-docker]
 * [Heroku][install-heroku]
 * [Vagrant][install-vagrant]
+* [Cloudron][install-cloudron]
 
 ## Support & Problems
 
@@ -90,3 +91,4 @@ Released under [the MIT license][license].
 [install-docker]: https://registry.hub.docker.com/u/sdelements/lets-chat/
 [install-heroku]: https://github.com/sdelements/lets-chat/wiki/Heroku
 [install-vagrant]: https://github.com/sdelements/lets-chat/wiki/Vagrant
+[install-cloudron]: https://github.com/sdelements/lets-chat/wiki/Cloudron
