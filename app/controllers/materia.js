@@ -12,9 +12,9 @@ module.exports = function() {
     var app = this.app,
         middlewares = this.middlewares;
 
-    app.use('/materia', express.static(path.resolve(__dirname, '../../materia/public')));
+    app.use('/m', express.static(path.resolve(__dirname, '../../materia/public')));
 
-    app.get('/materia/*', middlewares.requireLogin, function(req, res, next) {
+    app.get('/m/*', middlewares.requireLogin, function(req, res, next) {
 
         if (/^\/materia\/assets/i.test(req.url)) {
             return next();

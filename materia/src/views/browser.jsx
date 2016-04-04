@@ -36,7 +36,7 @@ export default class Browser extends Component {
                     Rooms ({rooms.length})
                 </span>
                 {rooms.map(function(room, i) {
-                    return <Link key={room.id} to={`/materia/room/${room.id}`} style={{
+                    return <Link key={room.id} to={`/m/room/${room.id}`} style={{
                         color: '#fff',
                         display: 'block',
                         textDecoration: 'none',

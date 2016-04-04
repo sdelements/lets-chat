@@ -26,7 +26,7 @@ syncReduxAndRouter(history, store);
 ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
-            <Route path="/materia" component={App}>
+            <Route path="/m" component={App}>
                 <IndexRoute component={Browser}/>
                 <Route path="room/:id" component={Conversation} />
             </Route>

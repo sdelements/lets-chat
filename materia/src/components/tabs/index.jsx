@@ -14,7 +14,7 @@ export default React.createClass({
     render() {
         return (
             <div className="lcb-tabs">
-                <Link to="/materia">
+                <Link to="/m">
                     <IconButton>
                         <HomeIcon color="#fff" />
                     </IconButton>
@@ -25,7 +25,7 @@ export default React.createClass({
                             className={this.props.selected === conversation.id && 'selected'}
                             key={conversation.id}
                             label={conversation.name}
-                            url={`/materia/room/${conversation.id}`} />
+                            url={`/m/room/${conversation.id}`} />
                     );
                 })}
             </div>
