@@ -1,3 +1,14 @@
+## 0.4.6 (2016-1-22)
+
+Fixes
+
+* Display bugs in Chrome 48
+* NODE_PATH whitespace issue
+
+Enhancements
+
+* nl/es language adjustments
+
 ## 0.4.5 (2015-12-22)
 
 Fixes

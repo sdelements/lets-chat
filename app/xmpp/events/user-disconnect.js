@@ -45,7 +45,7 @@ module.exports = EventListener.extend({
 
             this.send(x, presence);
 
-        }, this);
+        }.bind(this));
     }
 
 });

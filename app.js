@@ -98,7 +98,7 @@ app.use(helmet.contentSecurityPolicy({
     fontSrc: ['\'self\'', 'fonts.gstatic.com'],
     mediaSrc: ['\'self\''],
     objectSrc: ['\'self\''],
-    imgSrc: ['*']
+    imgSrc: ['* data:']
 }));
 
 var bundles = {};

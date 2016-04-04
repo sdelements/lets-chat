@@ -111,7 +111,7 @@ MessageProcessor.extend = function(options) {
 
         _.forEach(this.methods, function(key) {
             this[key] = this[key].bind(this);
-        }, this);
+        }.bind(this));
     };
 
     util.inherits(processor, MessageProcessor);

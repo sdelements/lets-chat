@@ -2,7 +2,7 @@
 	"Sign In": "Aanmelden",
 	"Sign in": "Aanmelden",
 	"Username or Email": "Gebruikersnaam of e-mail",
-	"Password": "Paswoord",
+	"Password": "Wachtwoord",
 	"I need an account": "Ik heb nog geen account",
 	"Register": "Registreren",
 	"Username": "Gebruikersnaam",
@@ -41,7 +41,7 @@
 	"Name": "Naam",
 	"Description": "Beschrijving",
 	"Participants": "Deelnemers",
-	"Archive Room": "Archieveer chatroom",
+	"Archive Room": "Archiveer chatroom",
 	"Password required": "Wachtwoord vereist",
 	"Room %s requires a password.": "Chatroom %s vereist een wachtwoord.",
 	"Cancel": "Annuleren",
@@ -73,6 +73,10 @@
 	"Add Room": "Chatroom toevoegen",
 	"Slug": "Referentie",
 	"XMPP/Jabber": "XMPP/Jabber",
-	"Private?": "Privaat?",
-	"Empty for public room": "Leegmaken voor publieke chatroom"
+	"Private?": "Besloten?",
+	"Empty for public room": "Leegmaken voor publieke chatroom",
+	"Find a room...": "Zoek een chatroom...",
+	"Toggle Navigation": "Navigatie aan/uit zetten",
+	"Toggle Sidebar": "Zijbalk aan/uit zetten",
+	"Home": "Home"
 }

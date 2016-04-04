@@ -38,7 +38,7 @@ module.exports = MessageProcessor.extend({
 
             msgs.push(presence);
 
-        }, this);
+        }.bind(this));
 
         cb(null, msgs);
     }
