@@ -33,7 +33,7 @@ export function joinConversation(id) {
     return (dispatch, getState) => {
         dispatch(requestConversation(id));
         const conversations = getState().conversations.items;
-        const conversation = _.findWhere(conversations, { id })
+        const conversation = _.find(conversations, { id })
         if (conversation && conversation.isJoined) {
             return dispatch(receiveConversation(id, conversation));
         }
@@ -63,7 +63,7 @@ export function fetchConversationMessages(id) {
     return (dispatch, getState) => {
         dispatch(requestConversationMessages(id));
         const { conversations } = getState();
-        const { messages = [] } = _.findWhere(conversations.items, {
+        const { messages = [] } = _.find(conversations.items, {
             id
         });
         if (messages.length > 0) {

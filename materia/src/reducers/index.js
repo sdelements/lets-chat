@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 
 import update from 'react-addons-update';
 
-import { routeReducer } from 'redux-simple-router';
+import { routerReducer as routing } from 'react-router-redux';
 
 import {
     CLIENT_CONNECTED,
@@ -175,10 +175,9 @@ function conversations(state = {
 };
 
 export default combineReducers(Object.assign({}, {
+    routing,
     connection,
     user,
     rooms,
     conversations
-}, {
-    routing: routeReducer
 }));

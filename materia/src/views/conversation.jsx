@@ -78,7 +78,7 @@ Conversation.propTypes = {
 };
 
 function mapStateToProps(state, props) {
-    return _.findWhere(state.conversations.items, {
+    return _.find(state.conversations.items, {
         id: props.params.id
     }) || {
         isFetching: false,
