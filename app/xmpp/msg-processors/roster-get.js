@@ -60,7 +60,7 @@ module.exports = MessageProcessor.extend({
                 name: user.displayName,
                 subscription: 'both'
             }).c('group').t('Let\'s Chat');
-        }, this);
+        }.bind(this));
 
         cb(null, stanza);
     }

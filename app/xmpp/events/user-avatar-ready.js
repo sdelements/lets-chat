@@ -41,7 +41,7 @@ module.exports = EventListener.extend({
             connection.populateVcard(presence, user, this.core);
 
             this.send(connection, presence);
-        }, this);
+        }.bind(this));
     }
 
 });

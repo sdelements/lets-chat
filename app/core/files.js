@@ -38,7 +38,7 @@ FileManager.prototype.create = function(options, cb) {
     if (settings.restrictTypes &&
         settings.allowedTypes &&
         settings.allowedTypes.length &&
-        !_.include(settings.allowedTypes, options.file.mimetype)) {
+        !_.includes(settings.allowedTypes, options.file.mimetype)) {
             return cb('The MIME type ' + options.file.mimetype +
                       ' is not allowed');
     }
