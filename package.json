@@ -70,7 +70,7 @@
     "connect-assets": "^5.0.1",
     "connect-mongo": "^0.8.2",
     "cookie-parser": "^1.4.0",
-    "express.oi": "^0.0.19",
+    "express.io": "^0.0.19",
     "helmet": "^0.11.0",
     "i18n": "^0.5.0",
     "js-yaml": "^3.4.2",
