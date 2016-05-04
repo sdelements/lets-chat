@@ -197,10 +197,10 @@ RoomManager.prototype.list = function(options, cb) {
 
         _.each(rooms, function(room) {
             this.sanitizeRoom(options, room);
-        }, this);
+        }.bind(this));
 
         if (options.users && !options.sort) {
-            rooms = _.sortByAll(rooms, ['userCount', 'lastActive'])
+            rooms = _.sortBy(rooms, ['userCount', 'lastActive'])
                      .reverse();
         }
 
