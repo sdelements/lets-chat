@@ -1,3 +1,15 @@
+## 0.4.7 (2016-5-10)
+
+Fixes
+
+* Update dependencies
+* Chrome display issues
+* CSP warning
+
+Enhancements
+
+* Azerbaijani, Turkish language packs
+
 ## 0.4.6 (2016-1-22)
 
 Fixes
