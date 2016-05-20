@@ -18,6 +18,9 @@ module.exports = {
     needsMigration: function(cb) {
         var runner = new Runner(process.cwd(), 'migrootions');
         var migrations = runner.getMigrations();
+        if (migrations.length === 0) {
+            return cb(null, false)
+        }
         var lastMigration = migrations.slice(migrations.length - 1)[0];
         MigrationModel.findOne({migrationId: lastMigration.migrationId}, function(err, model) {
             if (err) {
