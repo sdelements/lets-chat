@@ -28,17 +28,12 @@ RUN tar -xzvf master.tar.gz \
 &&  cp -a lets-chat-master/. . \
 &&  rm -rf lets-chat-master
 
-RUN groupadd -r node \
-&&  useradd -r -g node node \
-&&  chown node:node uploads
 
 ENV LCB_DATABASE_URI=mongodb://mongo/letschat \
     LCB_HTTP_HOST=0.0.0.0 \
     LCB_HTTP_PORT=8080 \
     LCB_XMPP_ENABLE=true \
     LCB_XMPP_PORT=5222
-
-USER node
 
 EXPOSE 8080 5222
 
