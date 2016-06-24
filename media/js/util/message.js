@@ -38,10 +38,6 @@ if (typeof exports !== 'undefined') {
             return part.length;
         });
 
-        if (parts.length) {
-            parts.splice(parts.length - 1, 1);
-        }
-
         var path = window.location.origin;
 
         if (parts.length) {
