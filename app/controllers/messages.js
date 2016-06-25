@@ -69,8 +69,8 @@ module.exports = function() {
                     to: req.param('to'),
                     query: req.param('query'),
                     reverse: req.param('reverse'),
-                    skip: req.param('skip'),
-                    take: req.param('take'),
+                    skip: parseInt(req.param('skip')),
+                    take: parseInt(req.param('take')),
                     expand: req.param('expand')
                 };
 
