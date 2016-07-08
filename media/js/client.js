@@ -83,7 +83,7 @@
     Client.prototype.getRooms = function(cb) {
         var that = this;
         this.socket.emit('rooms:list', { users: true }, function(rooms) {
-            that.rooms.set(rooms);
+            that.rooms.set(rooms, {add:true, merge:true, remove:false});
             // Get users for each room!
             // We do it here for the room browser
             _.each(rooms, function(room) {
