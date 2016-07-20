@@ -20,7 +20,6 @@ var _ = require('lodash'),
     http = require('http'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
-    migroose = require('./migroose'),
     connectMongo = require('connect-mongo/es5'),
     all = require('require-tree'),
     psjon = require('./package.json'),
@@ -267,23 +266,5 @@ mongoose.connect(settings.database.uri, function(err) {
     }
 
     checkForMongoTextSearch();
-
-    migroose.needsMigration(function(err, migrationRequired) {
-        if (err) {
-            console.error(err);
-        }
-
-        else if (migrationRequired) {
-            console.log('Database migration required'.red);
-            console.log('Ensure you backup your database first.');
-            console.log('');
-            console.log(
-                'Run the following command: ' + 'npm run migrate'.yellow
-            );
-
-            return process.exit();
-        }
-
-        startApp();
-    });
+    startApp();
 });
