@@ -378,7 +378,7 @@
             var $text = $html.find('.lcb-message-text');
 
             var that = this;
-            this.formatMessage($text.html(), function(text) {
+            this.formatMessage($text.text(), function(text) {
                 $text.html(text);
                 $html.find('time').updateTimeStamp();
                 that.$messages.append($html);
