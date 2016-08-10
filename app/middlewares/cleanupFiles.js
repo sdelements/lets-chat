@@ -17,15 +17,17 @@ function cleanupReqFiles(req, cb) {
 
     async.each(files, function(file, callback) {
         fs.stat(file.path, function(err, stats) {
-			if (!err && stats.isFile()) {
-                fs.unlink(file.path, function(e) {
-                    if (e) {
-                        console.error(e);
-                    }
-
-                    callback();
-                });
+			if (err || !stats.isFile()) {
+                return callback();
             }
+            
+            fs.unlink(file.path, function(e) {
+                if (e) {
+                    console.error(e);
+                }
+
+                callback();
+            });
         });
     });
 }

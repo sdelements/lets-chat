@@ -20,7 +20,6 @@ var _ = require('lodash'),
     http = require('http'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
-    migroose = require('./migroose'),
     connectMongo = require('connect-mongo/es5'),
     all = require('require-tree'),
     psjon = require('./package.json'),
@@ -42,7 +41,8 @@ var MongoStore = connectMongo(express.session),
 if (httpsEnabled) {
      app = express().https({
         key: fs.readFileSync(settings.https.key),
-        cert: fs.readFileSync(settings.https.cert)
+        cert: fs.readFileSync(settings.https.cert),
+        passphrase: settings.https.passphrase
     }).io();
 } else {
     app = express().http().io();
@@ -148,8 +148,9 @@ nun.addGlobal('text_search', false);
 
 // i18n
 i18n.configure({
-    directory: __dirname + '/locales',
-    defaultLocale: settings.i18n && settings.i18n.locale || 'en'
+    directory: path.resolve(__dirname, './locales'),
+    locales: settings.i18n.locales || settings.i18n.locale,
+    defaultLocale: settings.i18n.locale
 });
 app.use(i18n.init);
 
@@ -265,23 +266,5 @@ mongoose.connect(settings.database.uri, function(err) {
     }
 
     checkForMongoTextSearch();
-
-    migroose.needsMigration(function(err, migrationRequired) {
-        if (err) {
-            console.error(err);
-        }
-
-        else if (migrationRequired) {
-            console.log('Database migration required'.red);
-            console.log('Ensure you backup your database first.');
-            console.log('');
-            console.log(
-                'Run the following command: ' + 'npm run migrate'.yellow
-            );
-
-            return process.exit();
-        }
-
-        startApp();
-    });
+    startApp();
 });

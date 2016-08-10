@@ -156,6 +156,9 @@ var pipeline = [
         if (process.env.MONGOLAB_URI) {
             context.result.database.uri = process.env.MONGOLAB_URI;
         }
+        if (process.env.MONGODB_URI) {
+            context.result.database.uri = process.env.MONGODB_URI;
+        }
     },
 
     function openShift(context) {

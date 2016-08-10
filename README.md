@@ -37,7 +37,7 @@ For installation instructions, please use the following links:
 * [Docker][install-docker]
 * [Heroku][install-heroku]
 * [Vagrant][install-vagrant]
-* [Cloudron](https://github.com/cloudron-io/lets-chat/wiki/Cloudron)
+* [Cloudron](https://github.com/cloudron-io/letschat-app/blob/master/README.md)
 
 ## Support & Problems
 

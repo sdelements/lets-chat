@@ -69,7 +69,8 @@ module.exports = function() {
                 if (settings.provider === 'local') {
                     res.sendFile(url, {
                         headers: {
-                            'Content-Type': file.type
+                            'Content-Type': file.type,
+                            'Content-Disposition': 'attachment'
                         }
                     });
                 } else {
