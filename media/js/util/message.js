@@ -87,7 +87,7 @@ if (typeof exports !== 'undefined') {
 
     function links(text) {
         if (imagePattern.test(text)) {
-            return text.replace(imagePattern, function (url) {
+            return text.replace(imagePattern, function(url) {
                 var uri = encodeEntities(_.unescape(url));
                 return '<a class="thumbnail" ><img src="' + uri +
                        '" alt="Pasted Image" data-target="#myModal" data-toggle="modal"/></a>';

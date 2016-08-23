@@ -10,7 +10,7 @@
 //= require views/client.js
 //= require client.js
 
-$(function () {
+$(function() {
     window.client = new window.LCB.Client({
         filesEnabled: $('#lcb-upload').length > 0,
         giphyEnabled: $('#lcb-giphy').length > 0
