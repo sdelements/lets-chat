@@ -16,4 +16,11 @@ $(function() {
         giphyEnabled: $('#lcb-giphy').length > 0
     });
     window.client.start();
+
+    $('#myModal').on('show.bs.modal', function (e) {
+        var img = $(e.relatedTarget).attr('src'); //image
+        $('#showimg').attr('src', img);
+        $('#showimg').parent().attr("href", img);
+        $('.modal-dialog').width("95vw");
+    });
 });
