@@ -18,6 +18,7 @@
 <% endblock %>
 
 <% block body %>
+    <div class="modal fade" id="myModal" role="dialog"> <div class="modal-dialog"> <!-- Modal content--> <div class="modal-content"> <div class="modal-body"> <button type="button" class="close pull-left" data-dismiss="modal">&times;</button><a href="" target="_blank"> <img style="margin-right:auto;margin-left:auto;" class="img-responsive" src="" alt="" id="showimg"> </a></div> </div> </div> </div>
     <div id="lcb-client" class="lcb-client">
         <div class="lcb-header">
             <button type="button" class="btn lcb-header-toggle">
@@ -50,11 +51,11 @@
                         </a>
                     </li>
                     <% if settings.xmpp.enable %>
-                        <li>
-                            <a data-toggle="modal" href="#lcb-xmpp">
-                                <i class="fa fa-fw fa-comments"></i> <$ __('XMPP/Jabber') $>
-                            </a>
-                        </li>
+                    <li>
+                        <a data-toggle="modal" href="#lcb-xmpp">
+                            <i class="fa fa-fw fa-comments"></i> <$ __('XMPP/Jabber') $>
+                        </a>
+                    </li>
                     <% endif %>
                     <li>
                         <a data-toggle="modal" href="#lcb-tokens">
@@ -112,7 +113,7 @@
                         <$ __('All Rooms') $>
                     </h2>
 
-                    
+
                 </header>
                 <ul class="lcb-rooms-list"></ul>
                 <% include 'includes/modals/add-room.html' %>

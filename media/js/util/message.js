@@ -87,11 +87,10 @@ if (typeof exports !== 'undefined') {
 
     function links(text) {
         if (imagePattern.test(text)) {
-            return text.replace(imagePattern, function(url) {
+            return text.replace(imagePattern, function (url) {
                 var uri = encodeEntities(_.unescape(url));
-                return '<a class="thumbnail" href="' + uri +
-                       '" target="_blank"><img src="' + uri +
-                       '" alt="Pasted Image" /></a>';
+                return '<a class="thumbnail" ><img src="' + uri +
+                       '" alt="Pasted Image" data-target="#myModal" data-toggle="modal"/></a>';
             });
         } else {
             return text.replace(linkPattern, function(url) {
