@@ -90,13 +90,13 @@ if (typeof exports !== 'undefined') {
             return text.replace(imagePattern, function(url) {
                 var uri = encodeEntities(_.unescape(url));
                 return '<a class="thumbnail" href="' + uri +
-                       '" target="_blank"><img src="' + uri +
+                       '" target="_blank" rel="noreferrer nofollow"><img src="' + uri +
                        '" alt="Pasted Image" /></a>';
             });
         } else {
             return text.replace(linkPattern, function(url) {
                 var uri = encodeEntities(_.unescape(url));
-                return '<a href="' + uri + '" target="_blank">' + url + '</a>';
+                return '<a href="' + uri + '" target="_blank" rel="noreferrer nofollow">' + url + '</a>';
             });
         }
     }
