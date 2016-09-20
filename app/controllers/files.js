@@ -65,12 +65,19 @@ module.exports = function() {
                     return res.send(400);
                 }
 
+                var isImage = [
+                  'image/jpeg',
+                  'image/png',
+                  'image/gif'
+                ].indexOf(file.type) > -1;
+
                 var url = core.files.getUrl(file);
+
                 if (settings.provider === 'local') {
                     res.sendFile(url, {
                         headers: {
                             'Content-Type': file.type,
-                            'Content-Disposition': 'attachment'
+                            'Content-Disposition': isImage ? 'inline' : 'attachment'
                         }
                     });
                 } else {
