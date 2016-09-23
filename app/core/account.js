@@ -40,6 +40,10 @@ AccountManager.prototype.update = function(id, options, cb) {
             user.email = options.email;
         }
 
+        if (options.rooms) {
+          user.rooms = options.rooms;
+        }
+        
         if (options.username && options.username !== user.username) {
             var xmppConns = this.core.presence.system.connections.query({
                 userId: user._id,

@@ -84,12 +84,14 @@ module.exports = function() {
         whoami: function(req, res) {
             res.json(req.user);
         },
+
         profile: function(req, res) {
             var form = req.body || req.data,
                 data = {
                     displayName: form.displayName || form['display-name'],
                     firstName: form.firstName || form['first-name'],
-                    lastName: form.lastName || form['last-name']
+                    lastName: form.lastName || form['last-name'],
+                    rooms: form.rooms,
                 };
 
             core.account.update(req.user._id, data, function (err, user) {

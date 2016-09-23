@@ -4,28 +4,6 @@
 
 (function(window, $, _) {
 
-    var RoomStore = {
-        add: function(id) {
-            var rooms = store.get('openrooms') || [];
-            if (!_.contains(rooms, id)) {
-                rooms.push(id);
-                store.set('openrooms', rooms);
-            }
-        },
-        remove: function(id) {
-            var rooms = store.get('openrooms') || [];
-            if (_.contains(rooms, id)) {
-                store.set('openrooms', _.without(rooms, id));
-            }
-        },
-        get: function() {
-            var rooms = store.get('openrooms') || [];
-            rooms = _.uniq(rooms);
-            store.set('openrooms', rooms);
-            return rooms;
-        }
-    };
-
     //
     // Base
     //
@@ -254,9 +232,15 @@
                 that.switchRoom(id);
             }
             //
-            // Add room id to localstorage so we can reopen it on refresh
+            // Add room id to User rooms list.
             //
-            RoomStore.add(id);
+
+            var urooms = that.user.get('rooms');
+            if (urooms.indexOf(id) == -1) {
+              urooms.push(id);
+            }
+
+            that.socket.emit('account:profile', {'rooms': urooms });
 
             that.unlockJoin(id);
         });
@@ -275,8 +259,18 @@
             var room = this.rooms.get(this.rooms.last.get('id'));
             this.switchRoom(room && room.get('joined') ? room.id : '');
         }
-        // Remove room id from localstorage
-        RoomStore.remove(id);
+        // Remove room id from User room list.
+
+        var urooms = this.user.get('rooms');
+        var urindex =  urooms.indexOf(id);
+        if (urindex != -1) {
+          urooms.splice(urindex, 1);    
+        }
+
+        console.log(urooms);
+
+        this.socket.emit('account:profile', {'rooms': urooms});
+
     };
     Client.prototype.getRoomUsers = function(id, callback) {
         this.socket.emit('rooms:users', {
@@ -463,7 +457,7 @@
                 return room.id;
             });
 
-            var openRooms = RoomStore.get();
+            var openRooms = that.user.get('rooms') || [];
             // Let's open some rooms!
             _.defer(function() {
                 //slow down because router can start a join with no password
