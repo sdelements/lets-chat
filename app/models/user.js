@@ -108,6 +108,9 @@ UserSchema.virtual('local').get(function() {
 });
 
 UserSchema.virtual('avatar').get(function() {
+    if (!this.email) {
+      return null;
+    }
     return md5(this.email);
 });
 
