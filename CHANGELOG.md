@@ -1,3 +1,19 @@
+## 0.4.8 (2016-09-26)
+
+Fixes
+
+* Undefined avatar/email value (#715)
+* SVG XSS Vector
+* Dropped migroose
+* Uploaded file's path error (#700)
+* Add builtAssets to docker setup (#698)
+* Default locale settings (#696)
+
+Enhancements
+
+* Italian translation
+* Add passphrase setting for https
+
 ## 0.4.7 (2016-5-10)
 
 Fixes
