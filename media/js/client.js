@@ -232,15 +232,14 @@
                 that.switchRoom(id);
             }
             //
-            // Add room id to User rooms list.
+            // Add room id to User Open rooms list.
             //
 
-            var urooms = that.user.get('rooms');
-            if (urooms.indexOf(id) == -1) {
-              urooms.push(id);
+            var orooms = that.user.get('openRooms');
+            if ( ! _.contains(orooms,id)) {
+              orooms.push(id);
             }
-
-            that.socket.emit('account:profile', {'rooms': urooms });
+            that.socket.emit('account:profile', {'openRooms': orooms });
 
             that.unlockJoin(id);
         });
@@ -259,17 +258,10 @@
             var room = this.rooms.get(this.rooms.last.get('id'));
             this.switchRoom(room && room.get('joined') ? room.id : '');
         }
-        // Remove room id from User room list.
-
-        var urooms = this.user.get('rooms');
-        var urindex =  urooms.indexOf(id);
-        if (urindex != -1) {
-          urooms.splice(urindex, 1);    
-        }
-
-        console.log(urooms);
-
-        this.socket.emit('account:profile', {'rooms': urooms});
+        // Remove room id from User open rooms list.
+        var orooms = this.user.get('openRooms');
+        orooms = _.without(orooms, id);
+        this.socket.emit('account:profile', {'openRooms': orooms});
 
     };
     Client.prototype.getRoomUsers = function(id, callback) {
@@ -450,14 +442,15 @@
 
         function joinRooms(rooms) {
             //
-            // Join rooms from localstorage
+            // Join rooms from User's open Rooms List.
             // We need to check each room is available before trying to join
             //
             var roomIds = _.map(rooms, function(room) {
                 return room.id;
             });
 
-            var openRooms = that.user.get('rooms') || [];
+            var openRooms = that.user.get('openRooms') || [];
+
             // Let's open some rooms!
             _.defer(function() {
                 //slow down because router can start a join with no password

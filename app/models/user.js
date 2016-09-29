@@ -87,8 +87,12 @@ var UserSchema = new mongoose.Schema({
         trim: true
     },
     rooms: [{
-		type: String,
-		trim: true
+		type: ObjectId,
+		ref: 'Room' 
+    }],
+    openRooms: [{
+      		type: String,
+                trim: true
     }],
 	messages: [{
 		type: ObjectId,
@@ -275,7 +279,7 @@ UserSchema.method('toJSON', function() {
         username: this.username,
         displayName: this.displayName,
         avatar: this.avatar,
-        rooms: this.rooms,
+        openRooms: this.openRooms,
     };
 });
 

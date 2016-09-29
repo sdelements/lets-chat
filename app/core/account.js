@@ -40,8 +40,8 @@ AccountManager.prototype.update = function(id, options, cb) {
             user.email = options.email;
         }
 
-        if (options.rooms) {
-          user.rooms = options.rooms;
+        if (options.openRooms) {
+          user.openRooms = options.openRooms;
         }
         
         if (options.username && options.username !== user.username) {
