@@ -4,28 +4,6 @@
 
 (function(window, $, _) {
 
-    var RoomStore = {
-        add: function(id) {
-            var rooms = store.get('openrooms') || [];
-            if (!_.contains(rooms, id)) {
-                rooms.push(id);
-                store.set('openrooms', rooms);
-            }
-        },
-        remove: function(id) {
-            var rooms = store.get('openrooms') || [];
-            if (_.contains(rooms, id)) {
-                store.set('openrooms', _.without(rooms, id));
-            }
-        },
-        get: function() {
-            var rooms = store.get('openrooms') || [];
-            rooms = _.uniq(rooms);
-            store.set('openrooms', rooms);
-            return rooms;
-        }
-    };
-
     //
     // Base
     //
@@ -254,9 +232,14 @@
                 that.switchRoom(id);
             }
             //
-            // Add room id to localstorage so we can reopen it on refresh
+            // Add room id to User Open rooms list.
             //
-            RoomStore.add(id);
+
+            var orooms = that.user.get('openRooms');
+            if ( ! _.contains(orooms,id)) {
+              orooms.push(id);
+            }
+            that.socket.emit('account:profile', {'openRooms': orooms });
 
             that.unlockJoin(id);
         });
@@ -275,8 +258,11 @@
             var room = this.rooms.get(this.rooms.last.get('id'));
             this.switchRoom(room && room.get('joined') ? room.id : '');
         }
-        // Remove room id from localstorage
-        RoomStore.remove(id);
+        // Remove room id from User open rooms list.
+        var orooms = this.user.get('openRooms');
+        orooms = _.without(orooms, id);
+        this.socket.emit('account:profile', {'openRooms': orooms});
+
     };
     Client.prototype.getRoomUsers = function(id, callback) {
         this.socket.emit('rooms:users', {
@@ -456,14 +442,15 @@
 
         function joinRooms(rooms) {
             //
-            // Join rooms from localstorage
+            // Join rooms from User's open Rooms List.
             // We need to check each room is available before trying to join
             //
             var roomIds = _.map(rooms, function(room) {
                 return room.id;
             });
 
-            var openRooms = RoomStore.get();
+            var openRooms = that.user.get('openRooms') || [];
+
             // Let's open some rooms!
             _.defer(function() {
                 //slow down because router can start a join with no password
