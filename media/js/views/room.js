@@ -14,7 +14,6 @@
             'scroll .lcb-messages': 'updateScrollLock',
             'keypress .lcb-entry-input': 'sendMessage',
             'click .lcb-entry-button': 'sendMessage',
-            'DOMCharacterDataModified .lcb-room-heading, .lcb-room-description': 'sendMeta',
             'click .lcb-room-toggle-sidebar': 'toggleSidebar',
             'click .show-edit-room': 'showEditRoom',
             'click .hide-edit-room': 'hideEditRoom',
@@ -243,22 +242,12 @@
             swal('Archived!', '"' + this.model.get('name') + '" has been archived.', 'warning');
         },
         updateMeta: function() {
+            var that = this;
             this.$('.lcb-room-heading .name').text(this.model.get('name'));
             this.$('.lcb-room-heading .slug').text('#' + this.model.get('slug'));
-            this.$('.lcb-room-description').text(this.model.get('description'));
             this.$('.lcb-room-participants').text(this.model.get('participants'));
-        },
-        sendMeta: function(e) {
-            this.model.set({
-                name: this.$('.lcb-room-heading').text(),
-                description: this.$('.lcb-room-description').text(),
-                participants: this.$('.lcb-room-participants').text()
-            });
-            this.client.events.trigger('rooms:update', {
-                id: this.model.id,
-                name: this.model.get('name'),
-                description: this.model.get('description'),
-                participants: this.model.get('participants')
+            this.formatMessage(_.escape(this.model.get('description')), function(html) {
+              that.$('.lcb-room-description').html(html);
             });
         },
         showEditRoom: function(e) {
