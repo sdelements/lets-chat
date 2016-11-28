@@ -55,6 +55,9 @@
                 rooms: this.client.rooms,
                 client: this.client
             });
+            this.audioNotifications = new window.LCB.AudioNotificationsView({
+                client: this.client
+            });
             if (this.client.options.filesEnabled) {
                 this.upload = new window.LCB.UploadView({
                     el: this.$el.find('#lcb-upload'),
