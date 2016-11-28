@@ -80,7 +80,6 @@
     "mongoose-unique-validator": "^1.0.2",
     "mongoose-validate": "0.0.5",
     "multer": "^1.1.0",
-    "node-uuid": "^1.4.7",
     "node-xmpp-server": "^2.2.0",
     "node_hash": "^0.2.0",
     "nunjucks": "^2.4.2",
@@ -91,7 +90,8 @@
     "passport-local": "1.0.0",
     "passport.socketio": "3.6.2",
     "require-directory": "~2.1.1",
-    "require-tree": "^1.1.1"
+    "require-tree": "^1.1.1",
+    "uuid": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^3.1.1",

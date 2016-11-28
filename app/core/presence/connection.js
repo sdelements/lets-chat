@@ -2,7 +2,7 @@
 
 var EventEmitter = require('events').EventEmitter,
     util = require('util'),
-    uuid = require('node-uuid');
+    uuid = require('uuid');
 
 
 function Connection(type, user) {
