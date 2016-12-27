@@ -56,6 +56,18 @@ module.exports = function() {
     app.post('/account/register', function(req) {
         req.io.route('account:register');
     });
+    /*
+        PROJ ESOF
+
+    */
+    app.post('/account/registerGuest', function(req) {
+        req.io.route('account:registerGuest');
+    });
+
+    /*
+        PROJ ESOF
+
+    */
 
     app.get('/account', middlewares.requireLogin, function(req) {
         req.io.route('account:whoami');
@@ -271,6 +283,74 @@ module.exports = function() {
                 });
             });
         },
+
+        /*
+        PROJ ESOF
+
+    */
+
+         registerGuest: function(req, res) {
+
+            if (req.user ||
+                !auth.providers.local ||
+                !auth.providers.local.enableRegistration) {
+
+                return res.status(403).json({
+                    status: 'error',
+                    message: 'Permission denied'
+                });
+            }
+
+            var fields = req.body || req.data;
+
+           
+
+            var data = {
+                provider: 'local',
+                username: fields.username,
+                email: 'temp@gmail.com',
+                password: 'temsdsddsp',
+                firstName: 'temp',
+                lastName: 'temp',
+                displayName: fields.username
+            };
+
+            core.account.create('local', data, function(err) {
+                if (err) {
+                    var message = 'Sorry, we could not process your request';
+                    // User already exists
+                    if (err.code === 11000) {
+                        message = 'Email has already been taken';
+                    }
+                    // Invalid username
+                    if (err.errors) {
+                        message = _.map(err.errors, function(error) {
+                            return error.message;
+                        }).join(' ');
+                    // If all else fails...
+                    } else {
+                        console.error(err);
+                    }
+                    // Notify
+                    return res.status(400).json({
+                        status: 'error',
+                        message: message
+                    });
+                }
+
+            
+
+               
+            });
+
+        },
+
+        /*
+        PROJ ESOF
+
+    */
+
+       
         login: function(req, res) {
             auth.authenticate(req, function(err, user, info) {
                 if (err) {

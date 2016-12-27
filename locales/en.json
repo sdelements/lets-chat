@@ -80,5 +80,9 @@
 	"Toggle Sidebar": "Toggle Sidebar",
 	"Close": "Close",
 	"Transcript for": "Transcript for",
-	"Find a room...": "Find a room..."
+	"Find a room...": "Find a room...",
+	"GUEST": "GUEST",
+	"Login as a guest": "Login as a guest",
+	"Sign in as guest!": "Sign in as guest!",
+	"Register as a guest": "Register as a guest"
 }

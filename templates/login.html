@@ -38,7 +38,42 @@
                         <i class="fa fa-sign-in"></i>
                     </button>
                 </div>
+                <div class="lcb-login-box-bottom">
+                    <% if auth.local.enableRegistration %>
+                        <div class="links pull-right">
+                            <a href="#" class="lcb-show-box" data-target=".lcb-login-box-registration-guest">
+                                <$ __('Login as a guest') $>
+                            </a>
+                        </div>
+                    <% endif %>
+                   
+                </div>
             </form>
+
+             <% if auth.local.enableRegistration %>
+                <form class="lcb-login-box lcb-login-box-registration-guest validate" action="./account/registerGuest" method="post" style="display: none;">
+                    <h2 class="lcb-login-box-heading"><$ __('Register as a guest') $></h2>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">@</span>
+                            <input type="text" name="username"
+                                class="required form-control"
+                                placeholder="<$ __('Username') $>" maxlength="24" >
+                        </div>
+                    
+                    <div class="lcb-login-box-bottom">
+                        <div class="links pull-left">
+                            <a href="#" class="lcb-show-box" data-target=".lcb-login-box-login">
+                                <$ __('I already have an account') $>
+                            </a>
+                        </div>
+                        <button class="btn-info btn btn-lg pull-right" type="submit">
+                            <$ __('Register') $>
+                        </button>
+                    </div>
+                </form>
+            <% endif %>
+           
             <% if auth.local.enableRegistration %>
                 <form class="lcb-login-box lcb-login-box-registration validate" action="./account/register" method="post" style="display: none;">
                     <h2 class="lcb-login-box-heading"><$ __('Register') $></h2>

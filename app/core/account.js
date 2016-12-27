@@ -18,6 +18,8 @@ AccountManager.prototype.create = function(provider, options, cb) {
     user.save(cb);
 };
 
+
+
 AccountManager.prototype.update = function(id, options, cb) {
     var User = mongoose.model('User');
     var usernameChange = false;
