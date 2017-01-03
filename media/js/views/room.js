@@ -13,6 +13,8 @@
         events: {
             'scroll .lcb-messages': 'updateScrollLock',
             'keypress .lcb-entry-input': 'sendMessage',
+            'keyup .lcb-entry-input': 'historyUp',
+            'keydown .lcb-entry-input': 'historyDown',
             'click .lcb-entry-button': 'sendMessage',
             'click .lcb-room-toggle-sidebar': 'toggleSidebar',
             'click .show-edit-room': 'showEditRoom',
@@ -30,6 +32,15 @@
 
             this.model.set('iAmOwner', iAmOwner);
             this.model.set('iCanEdit', iCanEdit);
+            this.model.set('messageHistory', new Array());
+            this.model.set('messageHistoryCurrent', -1);
+            var setHistory = function() {
+                var messages = this.model.get('messageHistory');
+                var lastMessage = messages[this.model.get('messageHistoryCurrent')];
+                var $textarea = this.$('.lcb-entry-input');
+                $textarea.val(lastMessage);
+            };
+            this.model.set('setHistory', setHistory.bind(this));
 
             this.template = options.template;
             this.messageTemplate =
@@ -342,9 +353,56 @@
                 room: this.model.id,
                 text: $textarea.val()
             });
+            var messageHistory = this.model.get('messageHistory').concat($textarea.val());
+            this.model.set({
+                'messageHistory': messageHistory
+            });
+            this.model.set({
+                'messageHistoryCurrent': messageHistory.length
+            });
             $textarea.val('');
             this.scrollLocked = true;
             this.scrollMessages();
+        },
+        getCaretPosition: function(e, field) {
+            var caretPosition = 0;
+            if (document.selection) {
+                field.focus ();
+                var oSel = document.selection.createRange ();
+                oSel.moveStart ('character', -field.value.length);
+                caretPosition = oSel.text.length;
+            } else if (field.selectionStart || field.selectionStart == '0') {
+                caretPosition = field.selectionStart;
+            }
+            return (caretPosition);
+        },
+        historyUp: function(e) {
+            var caretPosition = getCaretPosition();
+            if (e.type === 'keyup' && e.keyCode === 38 && this.model.get('messageHistoryCurrent') > 0) {
+                e.preventDefault();
+                this.model.set({
+                    'messageHistoryCurrent': this.model.get('messageHistoryCurrent') - 1
+                });
+                this.model.get('setHistory')();
+            }
+            console.log('event', e);
+            e.setSelectionRange(caretPosition, caretPosition);
+        },
+        historyDown: function(e) {
+            var caretPosition = getCaretPosition();
+            if (e.type === 'keydown' && e.keyCode === 40) {
+                e.preventDefault();
+                if (this.model.get('messageHistoryCurrent') < this.model.get('messageHistory').length - 1) {
+                    this.model.set({
+                        'messageHistoryCurrent': this.model.get('messageHistoryCurrent') + 1
+                    });
+                }
+                if(this.model.get('messageHistoryCurrent') < this.model.get('messageHistory').length) {
+                    this.model.get('setHistory')();
+                }
+            }
+            console.log('event', e);
+            e.setSelectionRange(caretPosition, caretPosition);
         },
         addMessage: function(message) {
             // Smells like pasta
