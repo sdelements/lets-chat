@@ -66,7 +66,7 @@
 	"Room": "채팅방",
 	"Post in room?": "채팅방에 게시 하시겠습니까?",
 	"Authentication tokens": "인증 토큰",
-	"Auth tokens are used to access the Let's Chat API": "인증 토큰은 Let's Chat API에 액세스하는데 사용됩니다.",
+	"Auth tokens are used to access the Let's Chat API.": "인증 토큰은 Let's Chat API에 액세스하는데 사용됩니다.",
 	"Generate token": "인증 토큰 발급",
 	"Revoke token": "인증 토큰 회수",
 	"Your generated token is below. It will not be shown again.": "생성된 토큰은 다음과 같습니다. 다시 표시되지 않으므로 주의하십시오.",
