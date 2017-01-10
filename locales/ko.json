@@ -53,7 +53,7 @@
 	"blocked": "차단됨",
 	"Please check your browser settings": "브라우저 설정을 확인해주세요.",
 	"Profile Settings": "프로필 설정",
-	"XMPP/Jabber Connection Details": "XMPP / Jabber 연결 설정",
+	"XMPP/Jabber Connection Details": "XMPP/Jabber 연결 설정",
 	"Connection Details": "연결 상세정보",
 	"Host": "호스트",
 	"Port": "포트",
@@ -79,6 +79,6 @@
 	"Home": "홈",
 	"Toggle Sidebar": "사이드 바 표시/숨기기",
 	"Close": "닫기",
-	"Transcript for": "다음 사용자의 활동성적",
+	"Transcript for": "채팅방 내역",
 	"Find a room...": "채팅방 찾기"
 }
