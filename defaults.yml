@@ -1,0 +1,77 @@
+#
+# Let's Chat Built-in Defaults
+#
+
+env: development # development / production
+
+http:
+  enable: true
+  host:
+  port: 5000
+
+https:
+  enable: false
+  host:
+  port: 5001
+  key: key.pem
+  cert: certificate.pem
+
+xmpp:
+  enable: false
+  roomCreation: false
+  debug:
+    handled: false
+    unhandled: false
+  port: 5222
+  domain: example.com
+  username: node # node / full
+  tls:
+    enable: false
+    key: ./server.key
+    cert: ./server.crt
+
+database:
+  uri: mongodb://localhost/letschat
+
+secrets:
+  cookie: secretsauce
+
+files:
+  enable: false
+  provider: local
+  maxFileSize: 100000000
+  restrictTypes: true
+  allowedTypes:
+    - 'image/jpeg'
+    - 'image/png'
+    - 'image/gif'
+  local:
+    dir: uploads
+
+auth:
+  throttling:
+    enable: true
+    threshold: 3
+  providers: [local] # [local, kerberos, ldap] - You can specify the order
+  local:
+    enableRegistration: true
+    passwordRegex: ^.{8,64}$
+
+private:
+  enable: false
+  roster: online # online / all
+  expire: 360 # false or number of minutes
+
+noRobots: true # Serve robots.txt with disallow
+
+giphy:
+  enable: true
+  rating: pg-13
+  limit: 24
+  apiKey: dc6zaTOxFJmzC
+
+rooms:
+  private: false
+
+i18n:
+  locale: en

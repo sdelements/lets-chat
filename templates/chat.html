@@ -1,0 +1,133 @@
+<% extends 'base.html' %>
+
+<% block css %><% endblock %>
+
+<% block js %>
+<$ 'chat' | js | safe $>
+<% endblock %>
+
+<% block templates %>
+    <% include 'includes/js/room.html' %>
+    <% include 'includes/js/user.html' %>
+    <% include 'includes/js/file.html' %>
+    <% include 'includes/js/message.html' %>
+    <% include 'includes/js/tab.html' %>
+    <% include 'includes/js/browser-item.html' %>
+    <% include 'includes/js/browser-item-user.html' %>
+    <% include 'includes/js/upload.html' %>
+<% endblock %>
+
+<% block body %>
+    <div id="lcb-client" class="lcb-client">
+        <div class="lcb-header">
+            <button type="button" class="btn lcb-header-toggle">
+                <i class="fa fa-bars" aria-label="<$ __('Toggle Navigation') $>"></i>
+            </button>
+            <div class="lcb-header-logo">Let's Chat</div>
+        </div>
+        <section class="lcb-sidebar">
+            <div class="dropdown">
+                <a class="lcb-account-button dropdown-toggle" data-toggle="dropdown" href="3">
+                    <img class="lcb-account-button-avatar lcb-avatar" src="https://www.gravatar.com/avatar/<$ account.avatar $>?s=50" />
+                    <span class="lcb-account-button-name"><$ account.displayName $></span>
+                    <span class="lcb-account-button-username">@<$ account.username $></span>
+                    <i class="lcb-account-button-chevron fa fa-chevron-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li>
+                        <a data-toggle="modal" href="#lcb-profile">
+                            <i class="fa fa-fw fa-edit"></i> <$ __('Edit Profile') $>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#lcb-account">
+                            <i class="fa fa-fw fa-cogs"></i> <$ __('Account Settings') $>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#lcb-notifications">
+                            <i class="fa fa-fw fa-bell"></i> <$ __('Notifications') $>
+                        </a>
+                    </li>
+                    <% if settings.xmpp.enable %>
+                        <li>
+                            <a data-toggle="modal" href="#lcb-xmpp">
+                                <i class="fa fa-fw fa-comments"></i> <$ __('XMPP/Jabber') $>
+                            </a>
+                        </li>
+                    <% endif %>
+                    <li>
+                        <a data-toggle="modal" href="#lcb-tokens">
+                            <i class="fa fa-fw fa-lock"></i> <$ __('Auth Tokens') $>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="./logout"><i class="fa fa-fw fa-sign-out"></i> <$ __('Logout') $></a></li>
+                </ul>
+            </div>
+            <div class="lcb-status-indicators">
+                <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection" data-status="disconnected" style="display: none;">
+                    <i class="fa fa-plug"></i> <$ __('Disconnected') $>
+                </span>
+                <span class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
+                    <i class="fa fa-refresh"></i> <$ __('Connected') $>
+                </span>
+                <span class="lcb-status-indicator lcb-status-connection" style="display: none;">
+                    <i class="fa fa-bell-slash"></i>
+                </span>
+            </div>
+            <div class="lcb-version">
+                v <$ version $>
+            </div>
+            <div class="lcb-tabs-outer">
+                <ul class="lcb-tabs">
+                    <li data-id="list" class="lcb-tab lcb-tab-home">
+                        <a href="#!/">
+                            <i class="fa fa-th" aria-label="<$ __('Home') $>"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="lcb-panes">
+            <div class="lcb-rooms-browser lcb-pane hide" data-id="list">
+                <header class="lcb-room-header">
+                    <div class="lcb-room-meta">
+                        <h2 class="lcb-room-heading lcb-room-heading-loud"><$ __('All Rooms') $></h2>
+                    </div>
+                    <div class="lcb-rooms-browser-filter">
+                        <label class="lcb-rooms-browser-filter-label" for="lcb-rooms-browser-filter-input">
+                            <i class="fa fa-search" aria-label="<$ __('Search') $>"></i>
+                        </label>
+                        <input id="lcb-rooms-browser-filter-input" class="lcb-rooms-browser-filter-input" type="search" autofocus placeholder="<$ __('Find a room...') $>" />
+                    </div>
+                    <div class="lcb-room-header-actions">
+                        <a class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
+                            <i class="fa fa-plus" aria-label="<$ __('Add Room') $>"></i>
+                        </a>
+                    </div>
+                </header>
+                <header class="lcb-rooms-browser-header hide">
+                    <h2 class="lcb-rooms-browser-heading">
+                        <$ __('All Rooms') $>
+                    </h2>
+
+                    
+                </header>
+                <ul class="lcb-rooms-list"></ul>
+                <% include 'includes/modals/add-room.html' %>
+                <% include 'includes/modals/password.html' %>
+            </div>
+        </section>
+        <div class="lcb-loading lcb-client-loading">
+            <img class="lcb-loading-indicator" src="./media/img/loading.svg" alt="<$ __('Loading') $>..." />
+        </div>
+        <% include 'includes/modals/notifications.html' %>
+        <% include 'includes/modals/profile.html' %>
+        <% include 'includes/modals/account.html' %>
+        <% include 'includes/modals/xmpp.html' %>
+        <% include 'includes/modals/tokens.html' %>
+        <% include 'includes/modals/upload.html' %>
+        <% include 'includes/modals/giphy.html' %>
+    </div><!-- lcb-client end -->
+<% endblock %>

@@ -1,0 +1,69 @@
+{
+  "assets": {
+    "chat.js": "chat-a3d32ff0452dedab8a4301109324c838.js",
+    "client.js": "client-c143bc8a80f3662a94dd139551ce11e2.js",
+    "common.js": "common-bb1d24c9caecb4a07dffbd92a2f5db21.js",
+    "login.js": "login-7837de7d77c06a887aa8ac155b65ffe5.js",
+    "models.js": "models-11146157a7196c4c20604b80f2e39181.js",
+    "transcript.js": "transcript-b8378a0e9e0a8ff4b997b4a7c412ec64.js",
+    "vendor.js": "vendor-5b9a2bb2f19551857f2c0020dc2e7795.js",
+    "style.css": "style-8dc8edf892836803f025c4197997ae41.css",
+    "vendor.css": "vendor-f5a60d1bd9e76696f088fa97a53737f1.css"
+  },
+  "files": {
+    "chat-a3d32ff0452dedab8a4301109324c838.js": {
+      "logical_path": "chat.js",
+      "mtime": "2017-01-10T09:21:42.000Z",
+      "size": 79633,
+      "digest": "a3d32ff0452dedab8a4301109324c838"
+    },
+    "client-c143bc8a80f3662a94dd139551ce11e2.js": {
+      "logical_path": "client.js",
+      "mtime": "2017-01-10T09:21:41.000Z",
+      "size": 16471,
+      "digest": "c143bc8a80f3662a94dd139551ce11e2"
+    },
+    "common-bb1d24c9caecb4a07dffbd92a2f5db21.js": {
+      "logical_path": "common.js",
+      "mtime": "2017-01-10T09:21:41.000Z",
+      "size": 1538,
+      "digest": "bb1d24c9caecb4a07dffbd92a2f5db21"
+    },
+    "login-7837de7d77c06a887aa8ac155b65ffe5.js": {
+      "logical_path": "login.js",
+      "mtime": "2017-01-10T09:21:42.000Z",
+      "size": 13255,
+      "digest": "7837de7d77c06a887aa8ac155b65ffe5"
+    },
+    "models-11146157a7196c4c20604b80f2e39181.js": {
+      "logical_path": "models.js",
+      "mtime": "2017-01-10T09:21:41.000Z",
+      "size": 1161,
+      "digest": "11146157a7196c4c20604b80f2e39181"
+    },
+    "transcript-b8378a0e9e0a8ff4b997b4a7c412ec64.js": {
+      "logical_path": "transcript.js",
+      "mtime": "2017-01-10T09:21:42.000Z",
+      "size": 60946,
+      "digest": "b8378a0e9e0a8ff4b997b4a7c412ec64"
+    },
+    "vendor-5b9a2bb2f19551857f2c0020dc2e7795.js": {
+      "logical_path": "vendor.js",
+      "mtime": "2017-01-10T09:21:42.000Z",
+      "size": 1274461,
+      "digest": "5b9a2bb2f19551857f2c0020dc2e7795"
+    },
+    "style-8dc8edf892836803f025c4197997ae41.css": {
+      "logical_path": "style.css",
+      "mtime": "2017-01-10T09:21:42.000Z",
+      "size": 97025,
+      "digest": "8dc8edf892836803f025c4197997ae41"
+    },
+    "vendor-f5a60d1bd9e76696f088fa97a53737f1.css": {
+      "logical_path": "vendor.css",
+      "mtime": "2017-01-10T09:21:42.000Z",
+      "size": 142950,
+      "digest": "f5a60d1bd9e76696f088fa97a53737f1"
+    }
+  }
+}

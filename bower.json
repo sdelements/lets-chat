@@ -1,0 +1,15 @@
+{
+  "name": "Let's Chat",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "jquery-validate": "~1.12.0",
+    "underscore": "~1.6.0",
+    "backbone": "~1.1.2",
+    "handlebars": "~1.3.0",
+    "bootstrap": "~3.1.1",
+    "store.js": "~1.3.16",
+    "backbone.keys": "~0.2.0",
+    "favico.js": "~0.3.7"
+  }
+}

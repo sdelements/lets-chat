@@ -1,0 +1,40 @@
+#
+# Let's Chat Settings
+#
+# See defaults.yml for all available options
+#
+
+env: production # development / production
+
+http:
+  enable: true
+  host: 'localhost'
+  port: 5000
+
+https:
+  enable: false
+  port: 5001
+  key: key.pem
+  cert: certificate.pem
+
+files:
+  enable: true
+  provider: local
+  local:
+    dir: uploads
+
+xmpp:
+  enable: false
+  port: 5222
+  domain: example.com
+
+database:
+  uri: mongodb://localhost/letschat
+
+secrets:
+  cookie: secretsauce
+
+auth:
+  providers: [local]
+  local:
+    enableRegistration: true

@@ -1,0 +1,50 @@
+/*********************
+ * Let's Chat
+ *********************/
+
+html,
+body {
+    height: 100%;
+}
+
+[contenteditable]:empty::before {
+    content: attr(placeholder);
+    color: inherit;
+    .opacity(.4);
+}
+
+.modal {
+    overflow-y: scroll;
+}
+
+.modal-content {
+    border: none;
+}
+
+.form-control {
+    height: auto;
+    font-size: 14px;
+    padding: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.jvFloat {
+    display: block;
+    margin: 0;
+    .placeHolder {
+        background-color: #eee;
+        height: 16px;
+        line-height: 16px;
+        color: #555;
+        font-weight: 300;
+        font-size: 11px;
+        padding: 0 8px;
+        top: -5px;
+        right: 0;
+        left: auto;
+        .text-overflow;
+    }
+}

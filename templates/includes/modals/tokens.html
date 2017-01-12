@@ -1,0 +1,28 @@
+<div id="lcb-tokens" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-lock"></i> <$ __('Authentication tokens') $></h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p><$ __('Auth tokens are used to access the Let\'s Chat API.') $></p>
+                    <button class="generate-token btn btn-info" style="text-align: left">
+                        <$ __('Generate token') $>
+                    </button>
+                    <button class="revoke-token btn btn-danger" style="text-align: left">
+                        <$ __('Revoke token') $>
+                    </button>
+                </div>
+                <div class="generated-token" style="display: none">
+                    <div class="alert alert-success" role="alert">
+                        <$ __('Your generated token is below. It will not be shown again.') $>
+                    </div>
+                    <textarea class="token form-control"></textarea>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

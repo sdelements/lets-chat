@@ -1,0 +1,59 @@
+<div id="lcb-xmpp" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-comments"></i> <$ __('XMPP/Jabber Connection Details') $></h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <h4><$ __('Connection Details') $></h4>
+
+                        <dl class="">
+                            <dt><$ __('Username') $></dt>
+                            <dd>
+                                <% if account.local %>
+                                    <$ account.username $>@<$ settings.xmpp.domain $>
+                                <% else %>
+                                    <$ account.uid $>@<$ settings.xmpp.domain $>
+                                <% endif %></dd>
+                            <% if settings.xmpp.port != 5222 %>
+                            <dt><$ __('Port') $></dt>
+                            <dd><$ settings.xmpp.port $></dd>
+                            <% endif %>
+                        </dl>
+
+                        <dl class="">
+                            <dt><$ __('Host') $></dt>
+                            <dd><$ settings.xmpp.domain $></dd>
+                            <% if settings.xmpp.port == 5222 %>
+                            <dt><$ __('Port') $></dt>
+                            <dd><$ settings.xmpp.port $></dd>
+                            <% endif %>
+                            <dt><$ __('Conference Host') $></dt>
+                            <dd><$ settings.xmpp.confdomain $></dd>
+                        </dl>
+
+                    </div>
+                    <div class="col-sm-6">
+
+                        <h4><$ __('Supported Clients') $></h4>
+
+                        <h6><$ __('Desktop') $></h6>
+
+                        <ul class="list-unstyled">
+                            <li><a href="https://adium.im/">Adium</a></li>
+                            <li><a href="https://www.pidgin.im/">Pidgin</a></li>
+                            <li><a href="http://profanity.im/">Profanity</a></li>
+                            <li><a href="http://psi-im.org/">Psi</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

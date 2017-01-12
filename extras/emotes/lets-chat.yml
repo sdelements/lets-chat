@@ -1,0 +1,12 @@
+#
+# Emotes
+#
+
+- emote: simon
+  image: simon.gif
+  size: 50
+- emote: houssam
+  image: houssam.gif
+  size: 50
+- emote: pistol
+  image: pistol.png

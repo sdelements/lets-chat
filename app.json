@@ -1,0 +1,24 @@
+{
+    "name": "Let's Chat",
+    "description": "Self-hosted chat app for small teams",
+    "repository": "https://github.com/sdelements/lets-chat",
+    "logo": "http://i.imgur.com/eXTLHNN.png",
+    "keywords": [
+        "lets",
+        "chat",
+        "xmpp"
+    ],
+    "addons": [
+        "mongolab"
+    ],
+    "env": {
+        "NODE_ENV": {
+            "description": "Configures Express for production",
+            "value": "production"
+        },
+        "LCB_SECRETS_COOKIE": {
+            "description": "Session cookies are signed with this secret to prevent tampering",
+            "generator": "secret"
+        }
+    }
+}

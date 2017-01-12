@@ -1,0 +1,36 @@
+<div id="lcb-profile" class="lcb-edit-profile modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="validate form-horizontal" action="./account/profile" method="POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><i class="icon-edit"></i> <$ __('Profile Settings') $></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-6"><$ __('Display Name') $></label>
+                        <div class="col-sm-11">
+                            <input class="form-control" name="display-name" type="text" value="<$ account.displayName $>" required data-model="displayName" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-6"><$ __('First Name') $></label>
+                        <div class="col-sm-11">
+                            <input class="form-control" name="first-name" type="text" value="<$ account.firstName $>" required data-model="firstName" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-6"><$ __('Last Name') $></label>
+                        <div class="col-sm-11">
+                            <input class="form-control" name="last-name" type="text" value="<$ account.lastname $>" required data-model="lastName" />
+                        </div>
+                    </div>
+                    <p class="alert response" style="display: none;"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="submit-edit-profile btn btn-info indicator" name="submit"><i class="icon-ok"></i> <$ __('Save') $></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

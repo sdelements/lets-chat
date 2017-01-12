@@ -1,0 +1,102 @@
+{
+  "name": "lets-chat",
+  "version": "0.4.8",
+  "description": "A chat app for small teams.",
+  "license": "MIT",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "stop": "pkill --signal SIGINT letschat",
+    "test": "eslint ."
+  },
+  "engine": {
+    "node": "0.10.x",
+    "npm": "2.1.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sdelements/lets-chat.git"
+  },
+  "author": {
+    "name": "Houssam Haidar",
+    "email": "houssam@sdelements.com"
+  },
+  "contributors": [
+    {
+      "name": "Simon Bartlett",
+      "email": "simon@sdelements.com"
+    },
+    {
+      "name": "Shawn Gustaw",
+      "email": "shawn@sdelements.com"
+    },
+    {
+      "name": "Geoff Whittington",
+      "email": "geoff@sdelements.com"
+    },
+    {
+      "name": "Hanif Virani",
+      "email": "hanif@sdelements.com"
+    },
+    {
+      "name": "Jeffery Bain",
+      "email": "jeff@sdelements.com"
+    },
+    {
+      "name": "Ramanan Sivaranjan",
+      "email": "ramanan@sdelements.com"
+    },
+    {
+      "name": "Sonny Piers",
+      "email": "sonny@fastmail.net"
+    }
+  ],
+  "keywords": [
+    "chat",
+    "group chat"
+  ],
+  "bugs": {
+    "url": "https://github.com/sdelements/lets-chat/issues"
+  },
+  "homepage": "https://github.com/sdelements/lets-chat",
+  "dependencies": {
+    "async": "^2.0.0",
+    "bcryptjs": "^2.3.0",
+    "body-parser": "^1.15.2",
+    "colors": "~1.1.2",
+    "compression": "^1.6.2",
+    "connect-assets": "^5.3.0",
+    "connect-mongo": "^1.2.1",
+    "cookie-parser": "^1.4.3",
+    "express.oi": "0.0.21",
+    "helmet": "^2.1.1",
+    "i18n": "^0.8.3",
+    "js-yaml": "^3.6.1",
+    "less": "^2.7.1",
+    "lodash": "^4.13.1",
+    "md5": "^2.1.0",
+    "moment": "^2.14.1",
+    "mongoose": "^4.5.5",
+    "mongoose-unique-validator": "^1.0.2",
+    "mongoose-validate": "0.0.5",
+    "multer": "^1.1.0",
+    "node-xmpp-server": "^2.2.0",
+    "node_hash": "^0.2.0",
+    "nunjucks": "^2.4.2",
+    "on-finished": "^2.3.0",
+    "passport": "^0.3.2",
+    "passport-http": "0.3.0",
+    "passport-http-bearer": "1.0.1",
+    "passport-local": "1.0.0",
+    "passport.socketio": "3.6.2",
+    "require-directory": "~2.1.1",
+    "require-tree": "^1.1.1",
+    "uuid": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.1.1",
+    "grunt": "~0.4.5",
+    "grunt-bower": "^0.21.2",
+    "grunt-bower-task": "~0.4.0"
+  }
+}

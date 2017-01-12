@@ -1,0 +1,42 @@
+{
+  "name": "JVFloat",
+  "main": "jvfloat.min.js, jvfloat.css",
+  "version": "1.1.0",
+  "homepage": "http://maman.github.io/JVFloat.js",
+  "authors": [
+    "Achmad Mahardi <achmad@mahardi.me>"
+  ],
+  "description": "a jQuery plugin to transform input's placeholder into a floated placeholder",
+  "keywords": [
+    "javascript",
+    "jquery",
+    "input",
+    "placeholder",
+    "ui",
+    "float",
+    "jvfloat"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">= 1.7.0"
+  },
+  "devDependencies": {},
+  "_release": "1.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.0",
+    "commit": "07fc80f3e911b5e5b95958615a1483f9c4c06d36"
+  },
+  "_source": "git://github.com/maman/JVFloat.js.git",
+  "_target": "~1.1.0",
+  "_originalSource": "JVFloat",
+  "_direct": true
+}

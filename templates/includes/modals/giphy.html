@@ -1,0 +1,28 @@
+<% if settings.giphy.enable %>
+    <div id="lcb-giphy" class="lcb-giphy modal fade" data-rating="<$ settings.giphy.rating $>"  data-limit="<$ settings.giphy.limit $>"  data-apikey="<$ settings.giphy.apiKey $>">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="validate form-horizontal" action="./messages" method="POST">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><i class="icon-edit"></i> <$ __('Giphy') $></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-6"><$ __('Search') $></label>
+                            <div class="col-sm-11">
+                                <input class="form-control search-giphy" name="search" />
+                                <p class="help-block">
+                                    Powered by <a href="http://giphy.com/" target="_blank">Giphy</a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="giphy-results">
+                            <ul></ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<% endif %>

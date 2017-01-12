@@ -1,0 +1,58 @@
+<div id="lcb-add-room" class="modal fade" data-backdrop=false>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form role="form" action="#!/rooms/add" class="lcb-rooms-add">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><$ __('Add Room') $></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="lcb-room-name"><$ __('Name') $></label>
+                        <input type="text" placeholder="<$ __('Name') $>"
+                            class="lcb-room-name form-control" >
+                    </div>
+
+                    <div class="form-group">
+                        <label><$ __('Slug') $></label>
+                        <div class="input-group">
+                            <span class="input-group-addon">#</span>
+                            <input type="text" placeholder="<$ __('Slug') $>"
+                                class="lcb-room-slug form-control" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><$ __('Description') $></label>
+                        <input type="text" placeholder="<$ __('Description') $>"
+                            class="lcb-room-description form-control">
+                    </div>
+                    <% if settings.rooms.private %>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" class="lcb-room-private" />
+                                <$ __('Private?') $>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-9">
+                                <label><$ __('Password') $></label>
+                                <input type="password"
+                                    placeholder="<$ __('Empty for public room') $>"
+                                    class="lcb-room-password form-control">
+                            </div>
+                            <div class="form-group col-sm-9">
+                                <label><$ __('Confirm Password') $></label>
+                                <input type="password"
+                                    class="lcb-room-confirm-password form-control">
+                            </div>
+                        </div>
+                    <% endif %>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><$ __('Cancel') $></button>
+                    <button type="submit" class="btn btn-primary"><$ __('Save') $></button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

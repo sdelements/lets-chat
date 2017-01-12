@@ -1,0 +1,50 @@
+/*********************
+ * Transcript
+ *********************/
+ 
+.lcb-transcript {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    .flex-display;
+    .flex-direction(column);
+    @media print {
+        & {
+            position: static;
+            display: block;
+        }
+    }
+}
+
+.lcb-transcript-header {
+    background: #ddd;
+    padding: 12px;
+}
+
+.lcb-transcript-heading {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0;
+    margin-bottom: 12px;
+}
+
+.lcb-search-entry,
+.lcb-transcript-daterange {
+    width: auto;
+    padding: 8px 12px;
+    margin-right: 10px;
+    float: left;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+    border-radius: 0;
+}
+
+.lcb-transcript-daterange {
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    float: left;
+    box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+}

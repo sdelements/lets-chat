@@ -1,0 +1,100 @@
+<% extends 'base.html' %>
+
+<% block title %>Login &middot; Let's Chat<% endblock %>
+
+<% block class %>lcb-login animated fadeIn<% endblock %>
+
+<% block attributes %>
+    style="background-image: url('./media/img/photos/<$ photo $>');"
+<% endblock %>
+
+<% block js %>
+<$ 'login' | js | safe $>
+<% endblock %>
+
+<% block body %>
+    <section class="lcb-login-main">
+        <h1 class="lcb-login-logo">Let<span class="flavour">'</span>s Chat</h1>
+        <div class="lcb-login-boxes">
+            <form class="lcb-login-box lcb-login-box-login validate" action="./account/login" method="post" data-refresh="true">
+                <h2 class="lcb-login-box-heading"><$ __('Sign in') $></h2>
+                <img class="lcb-login-avatar" style="display: none;" />
+                <div class="form-group">
+                    <input class="required form-control" placeholder="<$ __('Username or Email') $>" name="username" type="text" autofocus />
+                </div>
+                <div class="form-group">
+                    <input class="required form-control" placeholder="<$ __('Password') $>" name="password" type="password" autocomplete="off" />
+                </div>
+                <div class="lcb-login-box-bottom">
+                    <% if auth.local.enableRegistration %>
+                        <div class="links pull-left">
+                            <a href="#" class="lcb-show-box" data-target=".lcb-login-box-registration">
+                                <$ __('I need an account') $>
+                            </a>
+                        </div>
+                    <% endif %>
+                    <button class="btn-info btn btn-lg pull-right" type="submit">
+                        <$ __('Sign in') $>
+                        <i class="fa fa-sign-in"></i>
+                    </button>
+                </div>
+            </form>
+            <% if auth.local.enableRegistration %>
+                <form class="lcb-login-box lcb-login-box-registration validate" action="./account/register" method="post" style="display: none;">
+                    <h2 class="lcb-login-box-heading"><$ __('Register') $></h2>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon">@</span>
+                            <input type="text" name="username"
+                                class="required form-control"
+                                placeholder="<$ __('Username') $>" maxlength="24" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input class="required email form-control" name="email" type="text" placeholder="<$ __('Email') $>" />
+                    </div>
+                    <div class="form-group">
+                        <input class="required form-control" name="display-name" type="text" placeholder="<$ __('Display Name') $>" maxlength="24" />
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-9">
+                            <input class="required form-control" name="first-name" type="text" placeholder="<$ __('First Name') $>" maxlength="24" />
+                        </div>
+                        <div class="form-group col-sm-9">
+                            <input class="required form-control" name="last-name" type="text" placeholder="<$ __('Last Name') $>" maxlength="24" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-9">
+                            <input class="required form-control" name="password" type="password"
+                                placeholder="<$ __('Password') $>" minlength="8" maxlength="64" autocomplete="off" />
+                        </div>
+                        <div class="form-group col-sm-9">
+                            <input class="required form-control" name="password-confirm" type="password"
+                                placeholder="<$ __('Confirm Password') $>" minlength="8" maxlength="64" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="lcb-login-box-bottom">
+                        <div class="links pull-left">
+                            <a href="#" class="lcb-show-box" data-target=".lcb-login-box-login">
+                                <$ __('I already have an account') $>
+                            </a>
+                        </div>
+                        <button class="btn-info btn btn-lg pull-right" type="submit">
+                            <$ __('Register') $>
+                        </button>
+                    </div>
+                </form>
+            <% endif %>
+            <footer class="lcb-login-footer">
+                <p class="lcb-login-footer-heart">
+                    <i class="fa fa-heart"></i> <$ __('From Toronto with Love') $> <span class="dash">&mdash;</span>
+                    <$ __('Photos by %s and Friends', '<a href="http://funkaoshi.com/" target="_blank">Ramanan Sivaranjan</a>') | safe $>
+                </p>
+                <p class="lcb-login-footer-github"><a href="https://github.com/sdelements/lets-chat" target="_blank">
+                    <i class="fa fa-github"></i> <$ __('Fork me on GitHub') $> &raquo;</a>
+                </p>
+            </footer>
+        </div>
+    </section>
+<% endblock %>

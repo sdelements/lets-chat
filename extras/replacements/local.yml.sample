@@ -1,0 +1,6 @@
+#
+# Replacements
+#
+
+- regex: \B#(\d{2,8})\b
+  template: <a href="http://example.com/$1" target="_blank">#$1</a>

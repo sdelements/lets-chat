@@ -1,0 +1,123 @@
+/*********************
+ * Tabs
+ *********************/
+
+.lcb-tabs,
+.lab-tab {
+    padding: 0;
+    margin: 0;
+}
+
+.lcb-tabs-outer {
+    width: 100%;
+    margin-bottom: 24px;
+    padding-right: 1px;
+    overflow-y: auto;
+    .box-sizing(content-box);
+    .flex(1);
+}
+
+.lcb-tabs {
+    margin: 20px 0;
+}
+
+.lcb-tab {
+    height: 36px;
+    line-height: 36px;
+    font-size: 12px;
+    display: block;
+    position: relative;
+    z-index: 1;
+    .box-sizing(content-box);
+    .opacity(.7);
+    &:after {
+        background-color: transparent;
+        width: 1px;
+        height: 100%;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        .transition(background .02s linear);
+    }
+    a {
+        height: inherit;
+        color: #999;
+        text-decoration: none;
+        padding-left: 10px;
+        border-bottom: none;
+        display: block;
+        position: relative;
+        .transition(color .07s linear);
+    }
+    &:hover {
+        .opacity(.8);
+        a {
+            color: #bbb;
+        }
+    }
+    &.selected {
+        background: #323232;
+        &:after {
+            background: rgba(255, 255, 255, .9);
+        }
+        a {
+            color: #fff;
+        }
+        .opacity(1);
+    }
+}
+
+.lcb-tab-title {
+    padding-right: 22px;
+    display: block;
+    .text-overflow;
+}
+
+.lcb-tab-alerts {
+    background-color: #b94a48;
+    color: #fff;
+    font-weight: bold;
+    font-size: 11px;
+    line-height: 100%;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    position: absolute;
+    top: 10px;
+    right: 24px;
+    border-radius: 3px;
+}
+
+.lcb-tab-alerts-mentions,
+.lcb-tab-alerts-total {
+    padding: 2px 5px;
+    float: left;
+    border-radius: 3px;
+    &:empty {
+        display: none;
+    }
+}
+
+.lcb-tab-alerts-mentions {
+    background: #f22472;
+}
+
+.lcb-tab-alerts-total {
+    background: #b94a48;
+}
+
+.lcb-tab-close {
+    line-height: 32px;
+    font-size: 20px;
+    color: #ccc;
+    position: absolute;
+    top: 0;
+    right: 8px;
+    .transition(opacity .07s linear);
+    .opacity(0);
+    &:hover {
+        .opacity(1);
+    }
+    .lcb-tab:hover & {
+        .opacity(.4);
+    }
+}

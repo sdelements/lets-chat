@@ -1,0 +1,20 @@
+{
+    "env": {
+        "node": true
+    },
+
+    "rules": {
+        "no-underscore-dangle": 0,
+        "quotes": [2, "single"],
+        "strict": [2, "global"],
+
+        "consistent-return": 0,
+
+        // Disable certain checks until we have time to fix these issues
+        "no-shadow": 0,
+        "camelcase": 0,
+        "no-path-concat": 0,
+        "no-process-exit": 0,
+        "new-cap": 0
+    }
+}

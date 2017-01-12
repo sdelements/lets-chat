@@ -1,0 +1,157 @@
+/*********************
+ * Login
+ *********************/
+
+.lcb-login {
+    background-color: #222;
+    background-image: url('../img/photos/reflection.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    padding-top: 40px;
+    .flex-display;
+    .align-items(center);
+    .justify-content(center);
+    &:before {
+        background-image: url('../img/photo-overlay.png');
+        .size(100%);
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        .opacity(.4);
+    }
+
+    @media (max-width: @screen-xs-max) {
+        display: block;
+    }
+}
+
+.lcb-login-main {
+    max-width: 420px;
+    text-align: center;
+    padding: 20px;
+    padding-bottom: 60px;
+    position: relative;
+}
+
+.lcb-login-logo {
+    font-family: Pacifico;
+    font-size: 85px;
+    text-shadow: 0 0 10px rgba(0,0,0,.2);
+    color: #fff;
+    margin: 0;
+    margin-bottom: 30px;
+    .flavour {
+        color: #f22472;
+    }
+    @media (max-width: @screen-xs-max) {
+        font-size: 56px;
+    }
+}
+
+.lcb-login-box {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #e3e3e3;
+    position: relative;
+    z-index: 1;
+    border-radius: 3px;
+    .box-shadow(0 0 20px 3px rgba(0,0,0,.1));
+    .response:empty {
+        display: none;
+    }
+
+    @media (min-width: @screen-sm-min) {
+        .row {
+            .col-sm-9:first-child {
+                padding-right: 10px;
+            }
+            .col-sm-9:last-child {
+                padding-left: 10px;
+            }
+        }
+    }
+}
+
+.lcb-login-box-heading {
+    line-height: 100%;
+    color: #555;
+    font-family: Pacifico;
+    font-size: 24px;
+    padding: 0;
+    padding-bottom: 20px;
+    margin: 0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.lcb-login-avatar {
+    .size(0);
+    margin: 0 auto;
+    margin-bottom: 25px;
+    border-radius: 100%;
+    border: 1px #eee solid;
+    &.show {
+        .size(100px);
+        .animated;
+        .fadeInUp;
+    }
+}
+
+.lcb-login-box-bottom {
+    overflow: hidden;
+    .links {
+        margin-top: 12px;
+        margin-right: 12px;
+    }
+}
+
+.lcb-login-footer-heart {
+    float: left;
+}
+
+.lcb-login-footer-github {
+    float: right;
+}
+
+.lcb-login-footer {
+    background-color: rgba(0,0,0,.4);
+    width: 100%;
+    color: #f2f2f2;
+    font-family: Tahoma;
+    font-size: 11px;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 5px 0;
+    p {
+        margin: 0 10px;
+    }
+    a {
+        color: #fff;
+    }
+    .fa {
+        margin-right: 3px;
+    }
+    .fa-heart {
+        color: #f22472;
+    }
+    @media (max-width: @screen-xs-max) {
+        position: relative;
+        font-size: 14px;
+        margin-top: -5px;
+        border-radius: 0 0 3px 3px;
+        .lcb-login-footer-heart,
+        .lcb-login-footer-github {
+            margin: 10px 0;
+            float: none;
+        }
+        .dash {
+            line-height: 0;
+            visibility: hidden;
+            display: block;
+        }
+    }
+}

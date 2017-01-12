@@ -1,0 +1,149 @@
+/*********************
+ * Rooms Browser
+ *********************/
+
+@roomBrowserHeader: 50px;
+
+.lcb-rooms-browser {
+    background: #fff;
+    .flex(1);
+    .flex-display;
+    .flex-direction(column);
+    .lcb-room-meta {
+        .flex(initial);
+    }
+}
+
+.lcb-rooms-list,
+.lcb-rooms-list-item {
+    display: block;
+    padding: 0;
+    margin: 0;
+}
+
+.lcb-rooms-list {
+    min-width: 100%;
+    max-width: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    .transform(translate3d(0,0,0));
+}
+
+.lcb-rooms-list-item {
+    color: #777;
+    position: relative;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    border-bottom: 1px #f2f2f2 solid;
+    overflow: hidden;
+    &:hover {
+        background: #f2f2f2;
+    }
+}
+
+.lcb-rooms-list-item-top {
+    padding-right: 60px;
+}
+
+.lcb-rooms-list-item-name,
+.lcb-rooms-list-item-slug {
+    max-width: 49%;
+    vertical-align: middle;
+    display: inline-block;
+    .text-overflow;
+    @media (max-width: @screen-xs-max) {
+        margin-bottom: 0;
+        max-width: 100%;
+    }
+}
+
+.lcb-rooms-list-item-name {
+    font-size: 20px;
+}
+
+.lcb-rooms-list-item-slug, .lcb-rooms-list-item-password {
+    font-size: 16px;
+    font-weight: 300;
+    color: #aaa;
+    @media (max-width: @screen-xs-max) {
+        margin-bottom: 10px;
+        display: block;
+    }
+}
+
+.lcb-rooms-list-item-description {
+    .text-overflow;
+}
+
+.lcb-rooms-list-item-last-active {
+    font-size: 12px;
+    font-weight: 300;
+    position: relative;
+    float: right;
+}
+
+.lcb-rooms-list-users,
+.lcb-rooms-list-user {
+    padding: 0;
+    margin: 0;
+}
+
+.lcb-rooms-list-users {
+    margin-top: 5px;
+    margin-left: -2px;
+    overflow: hidden;
+}
+
+.lcb-rooms-list-user {
+    margin: 2px;
+    display: block;
+    float: left;
+}
+
+.lcb-rooms-list-user-avatar {
+    .size(30px);
+    border-radius: 100%;
+}
+
+.lcb-rooms-list-item-switch {
+    font-size: 9px;
+    position: absolute;
+    right: 24px;
+    top: 12px;
+    @media (min-width: @screen-sm-max) {
+        font-size: 8px;
+    }
+}
+
+.lcb-rooms-browser-filter {
+    font-weight: 300;
+    font-size: 22px;
+    color: #aaa;
+    .flex-display;
+    .flex(1);
+     @media (max-width: @screen-xs-max) {
+         font-size: 18px;
+     }
+}
+
+.lcb-rooms-browser-filter-label {
+    margin-right: 5px;
+}
+
+.lcb-rooms-browser-filter-input {
+    background: none;
+    border: none;
+    .flex(1);
+    &:focus {
+        outline: none;
+    }
+}
+
+// Eugh Firefox
+@-moz-document url-prefix() {
+    .lcb-rooms-list-item {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+    }
+}

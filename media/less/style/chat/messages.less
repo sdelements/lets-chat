@@ -1,0 +1,123 @@
+/*********************
+ * Messages
+ *********************/
+
+ @messagePadding: 7px;
+
+.lcb-messages {
+    background: #fff;
+    min-width: 100%;
+    max-width: 0;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    .flex(1 0 0);
+    .transform(translate3d(0,0,0));
+}
+
+.lcb-message {
+    min-height: 47px;
+    border-top: 1px #eee solid;
+    padding: @messagePadding;
+    font-size: 13px;
+    margin: 0;
+    display: block;
+    position: relative;
+    &:first-child {
+        border-top: none;
+    }
+    &.lcb-message-fragment {
+        min-height: 0;
+        margin-top: -@messagePadding / 2;
+        border-top: none;
+    }
+    &.lcb-message-own {
+        background: #fcffd8;
+    }
+    &.lcb-message-mentioned {
+        background: #ffe9ee;
+    }
+    &.lcb-message-mentioned:before {
+        background: #f22472;
+        width: 3px;
+        height: 100%;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    pre {
+        background: none;
+        border-width: 3px;
+        border-top: none;
+        border-bottom: none;
+        margin-bottom: 3px;
+    }
+    .thumbnail {
+        max-width: 100%;
+        overflow: hidden;
+        display: inline-block;
+        margin: 0;
+        img {
+            height: 200px;
+            width: auto;
+            object-fit: cover;
+        }
+    }
+}
+
+.lcb-message-avatar {
+    position: absolute;
+}
+
+.lcb-message-meta {
+    margin-left: 40px;
+}
+
+.lcb-message-name {
+    color: #666;
+    font-weight: 700;
+    margin-bottom: @messagePadding - 2px;
+    display: block;
+    .lcb-message-username {
+        color: #aaa;
+        font-weight: 400;
+    }
+}
+
+.lcb-message-time {
+    color: #bbb;
+    position: absolute;
+    top: @messagePadding;
+    right: @messagePadding;
+}
+
+.lcb-message-text {
+    word-wrap: break-word;
+    pre {
+        padding: 10px;
+        margin: 0;
+        border: 3px solid #cccccc;
+        border-top: none;
+        border-bottom: none;
+        border-radius: 4px;
+    }
+}
+
+.lcb-message-mention {
+    font-weight: bold;
+}
+
+// Eugh Firefox
+@-moz-document url-prefix() {
+    .lcb-message-text {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+        word-break: break-all;
+        pre {
+            white-space: pre-wrap;
+        }
+    }
+}
