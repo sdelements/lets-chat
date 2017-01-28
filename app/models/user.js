@@ -289,16 +289,16 @@ function initialiseDefaultUsers() {
     if (!createHubotUser || createHubotUser !== "true") {
         return;
     }
-    var firstName = envVarOrDefault('FIRST_NAME', 'hubot');
-    var lastName = envVarOrDefault('LAST_NAME', 'rocks');
+    var firstName = envVarOrDefault('FIRST_NAME', 'Op');
+    var lastName = envVarOrDefault('LAST_NAME', 'Bot');
 
     var adminUser = User({
         provider: 'local',
-        email: envVarOrDefault('EMAIL', 'hubot@googlegroups.com'),
-        token: envVarOrDefault('TOKEN', 'mytoken'),
+        email: envVarOrDefault('EMAIL', 'opbotenterprise@opvizor.com'),
+        token: envVarOrDefault('TOKEN', '8o1cj5mZMuIuoad2k947g70fRAg0ogWGZPLW7a8kGtjIFuzvFVpQ'),
         firstName: firstName,
         lastName: lastName,
-        username: envVarOrDefault('USERNAME', 'hubot'),
+        username: envVarOrDefault('USERNAME', 'opbot'),
         displayName: envVarOrDefault('DISPLAY_NAME', (firstName ? firstName + " " : "") + (lastName || "")),
         joined: Date.now(),
         status: 'ready',
@@ -306,7 +306,7 @@ function initialiseDefaultUsers() {
         rooms: [],
         messages: []
     });
-    adminUser.password = envVarOrDefault('PASSWORD', 'admin123');
+    adminUser.password = envVarOrDefault('PASSWORD', 'VMware123');
 
     var username = adminUser.username;
     User.findByIdentifier(username, function (err, user) {
