@@ -1,6 +1,7 @@
 ![Let's Chat](http://i.imgur.com/0a3l5VF.png)
 
 ![Screenshot](http://i.imgur.com/C4uMD67.png)
+[Free Demo](http://chat.sagivo.com)
 
 A self-hosted chat app for small teams built by [Security Compass][seccom].
 
