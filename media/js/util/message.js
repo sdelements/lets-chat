@@ -93,7 +93,17 @@ if (typeof exports !== 'undefined') {
                        '" target="_blank" rel="noreferrer nofollow"><img src="' + uri +
                        '" alt="Pasted Image" /></a>';
             });
-        } else {
+        } else if (mp4Pattern.test(text)) {
+	    return text.replace(mp4Pattern, function(url) {
+		var uri = encodeEntities(_.unescape(url));
+		return '<a class="thumbnail" href="' + uri + '" target="_blank" rel="noreferrer nofollow"><video height=400px controls="controls"><source src='+uri+' type="video/mp4" /></video></a>';
+	    });
+        } else if (webmPattern.test(text)) {
+	    return text.replace(webmPattern, function(url) {
+		var uri = encodeEntities(_.unescape(url));
+		return '<a class="thumbnail" href="' + uri + '" target="_blank" rel="noreferrer nofollow"><video height=400px controls="controls"><source src='+uri+' type="video/webm" /></video></a>';
+	    });
+	} else {
             return text.replace(linkPattern, function(url) {
                 var uri = encodeEntities(_.unescape(url));
                 return '<a href="' + uri + '" target="_blank" rel="noreferrer nofollow">' + url + '</a>';
@@ -133,7 +143,9 @@ if (typeof exports !== 'undefined') {
         // Match everything outside of normal chars and " (quote character)
         nonAlphanumericRegexp = /([^\#-~| |!])/g,
         imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|][.](jpe?g|png|gif))\s*(\?[\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?$/i,
-        linkPattern = /((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|])/ig;
+        linkPattern = /((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|])/ig,
+        mp4Pattern = /^\s*((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|][.](mp4))\s*$/i,
+        webmPattern = /^\s*((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|][.](webm))\s*$/i;
 
     exports.format = function(text, data) {
         var pipeline = [
