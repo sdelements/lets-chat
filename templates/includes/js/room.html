@@ -145,3 +145,9 @@
         </div><!-- edit room end -->
     </div><!-- lcb-room end -->
 </script>
+<script>
+      $(document).on('click', '.lcb-room-heading .slug', function() {
+        var input = $('.lcb-entry-input');
+        input.val(input.val() + ' ' + $(this).text());
+      });
+</script>
