@@ -55,4 +55,12 @@
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
+    <script>
+$('.lcb-room-name.form-control').change(function() {
+  var slug = $('.lcb-room-slug.form-control');
+  if (slug.val() === '') {
+    slug.val($(this).val());
+  }
+})
+    </script>
 </div><!-- /.modal -->
