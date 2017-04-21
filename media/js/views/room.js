@@ -20,7 +20,11 @@
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
             'click .lcb-room-poke': 'poke',
-            'click .lcb-upload-trigger': 'upload'
+            'click .lcb-upload-trigger': 'upload',
+            'keyup .lcb-entry-input': function(e) {
+                this.messageUp(e);
+                this.messageDown(e);
+            }
         },
         initialize: function(options) {
             this.client = options.client;
@@ -30,6 +34,8 @@
 
             this.model.set('iAmOwner', iAmOwner);
             this.model.set('iCanEdit', iCanEdit);
+            this.model.set('history', []);
+            this.model.set('historyCurrent', 0);
 
             this.template = options.template;
             this.messageTemplate =
@@ -331,6 +337,48 @@
                 }
             });
         },
+        messageUp: function(e) {
+            if (e.type === 'keyup' && e.keyCode === 38) {
+                e.preventDefault();
+                var $textarea = this.$('.lcb-entry-input');
+                var history = this.model.get('history');
+                var historyCurrent = this.model.get('historyCurrent');
+                historyCurrent++;
+                if (historyCurrent < history.length) {
+                    var currentMessage = this.model.get('history')[historyCurrent];
+                    $textarea.val(currentMessage.message.text);
+                    this.setCaretPosition($textarea, currentMessage.selection);
+                    this.model.set('historyCurrent', historyCurrent);
+                }
+            }
+        },
+        messageDown: function(e) {
+            if (e.type === 'keyup' && e.keyCode === 40) {
+                e.preventDefault()
+                var $textarea = this.$('.lcb-entry-input');
+                var history = this.model.get('history');
+                var historyCurrent = this.model.get('historyCurrent');
+                historyCurrent--;
+                if (0 <= historyCurrent) {
+                    var currentMessage = this.model.get('history')[historyCurrent];
+                    $textarea.val(currentMessage.message.text);
+                    this.setCaretPosition($textarea, currentMessage.selection);
+                    this.model.set('historyCurrent', historyCurrent);
+                }
+            }
+        },
+        getCaretPosition: function(field) {
+            var rawfield = field[0];
+            return {
+                start: rawfield.selectionStart,
+                end: rawfield.selectionEnd
+            };
+        },
+        setCaretPosition: function(field, selection) {
+            var rawfield = field[0];
+            rawfield.focus();
+            rawfield.setSelectionRange(selection.start, selection.end);
+        },
         sendMessage: function(e) {
             if (e.type === 'keypress' && e.keyCode !== 13 || e.altKey) return;
             if (e.type === 'keypress' && e.keyCode === 13 && e.shiftKey) return;
@@ -338,10 +386,20 @@
             if (!this.client.status.get('connected')) return;
             var $textarea = this.$('.lcb-entry-input');
             if (!$textarea.val()) return;
-            this.client.events.trigger('messages:send', {
+            var message = {
                 room: this.model.id,
                 text: $textarea.val()
+            };
+            this.client.events.trigger('messages:send', message);
+
+            var history = _.clone(this.model.get('history'));
+            history.unshift({
+                message: message,
+                selection: this.getCaretPosition($textarea)
             });
+            this.model.set('history', history);
+            this.model.set('historyCurrent', -1);
+
             $textarea.val('');
             this.scrollLocked = true;
             this.scrollMessages();
