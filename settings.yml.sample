@@ -34,7 +34,7 @@ database:
 secrets:
   cookie: secretsauce
 
-# -1 means using one server for all the processors available
+# -1 means using one server for every processors available
 # undefined, absent, or 0 specification means monolithic regime
 # otherwise servers_count is self commenting
 cluster_regime:
