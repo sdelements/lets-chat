@@ -75,3 +75,10 @@ rooms:
 
 i18n:
   locale: en
+
+# -1 means using one server for all the processors available
+# undefined, absent, or 0 specification means monolithic regime
+# otherwise servers_count is self commenting
+cluster_regime:
+  servers_count: 0 
+
