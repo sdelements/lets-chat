@@ -19,7 +19,7 @@ if(servers_count === undefined || servers_count === null || servers_count === 0)
 }
 
 function startCluster(servers_count) {
-  const cluster = require('cluster');
+  var cluster = require('cluster');
   if (cluster.isMaster) {
     if(servers_count == -1) {
       servers_count = require('os').cpus().length;
