@@ -132,7 +132,7 @@ if (typeof exports !== 'undefined') {
     var surrogatePairRegexp = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
         // Match everything outside of normal chars and " (quote character)
         nonAlphanumericRegexp = /([^\#-~| |!])/g,
-        imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|][.](jpe?g|png|gif))\s*$/i,
+        imagePattern = /^\s*((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|][.](jpe?g|png|gif))\s*(\?[\w-]+(=[\w-]*)?(&[\w-]+(=[\w-]*)?)*)?$/i,
         linkPattern = /((https?|ftp):\/\/[-A-Z0-9\u00a1-\uffff+&*@#\/%?=~_|!:,.;'"!()]*[-A-Z0-9\u00a1-\uffff+&@#\/%=~_|])/ig;
 
     exports.format = function(text, data) {
