@@ -34,17 +34,16 @@ ConnectionCollection.prototype.getUsers = function(filter) {
         connections = this.query(filter);
     }
 
-    var users = _.chain(connections)
-                .filter(function(value) {
-                    return !!value.user;
-                })
-                .map(function(value) {
-                    return value.user;
-                })
-                .uniq('id')
-                .value();
+    return _.chain(connections)
+            .filter(function(value) {
+                return !!value.user;
+            })
+            .map(function(value) {
+                return value.user;
+            })
+            .uniq('id')
+            .value();
 
-    return users;
 };
 
 ConnectionCollection.prototype.getUserIds = function(filter) {
