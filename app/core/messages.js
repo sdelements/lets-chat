@@ -46,7 +46,6 @@ MessageManager.prototype.create = function(options, cb) {
                     console.error(err);
                     return cb(err);
                 }
-
                 cb(null, message, room, user);
                 this.core.emit('messages:new', message, room, user, options.data);
             }.bind(this));

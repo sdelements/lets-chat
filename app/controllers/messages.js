@@ -14,7 +14,6 @@ module.exports = function() {
         var msg = message.toJSON();
         msg.owner = user;
         msg.room = room.toJSON(user);
-
         app.io.to(room.id)
               .emit('messages:new', msg);
     });
@@ -51,11 +50,14 @@ module.exports = function() {
                     text: req.param('text')
                 };
 
-            core.messages.create(options, function(err, message) {
+            core.messages.create(options, function(err, message, room, user) {
                 if (err) {
                     return res.sendStatus(400);
                 }
-                res.status(201).json(message);
+                var msg = message.toJSON();
+                msg.owner = user;
+                msg.room = room;
+                res.status(201).json(msg);
             });
         },
         list: function(req, res) {

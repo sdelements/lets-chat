@@ -1,0 +1,32 @@
+
+/* Let's Chat (MIT) -> Chat */
+
+.lcb-entry
+    background: #fff
+    height: 70px
+    min-height: 70px
+    border-top: 1px #eee solid
+    @include display(flex)
+    @include align-items(center)
+
+.lcb-entry-input
+    height: 100%
+    padding: 15px
+    border: none
+    resize: none
+    @include flex(1)
+    &:focus
+        outline: none
+
+.lcb-entry-button
+    background: none
+    color: #777
+    border: none
+    outline: none
+    padding: 0 25px
+    border-radius: 0
+    &:hover
+        curos: pointer
+        color: #999
+    &:active
+        color: #555

@@ -1,0 +1,25 @@
+
+/* Let's Chat (MIT) -> Chat */
+
+#lcb-app-mount,
+.lcb-app
+    width: 100%
+    height: 100%
+
+.lcb-app
+    @include display(flex)
+
+.lcb-app-message
+    width: 100%
+    height: 100%
+    color: #fff
+    fill: #fff
+    padding-bottom: 60px
+    @include display(flex)
+    @include flex-direction(column)
+    @include justify-content(center)
+    @include align-items(center)
+
+.lcb-app-message-icon,
+.lcb-app-message-actions
+    margin: 20px

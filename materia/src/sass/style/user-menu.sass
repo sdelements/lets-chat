@@ -1,0 +1,37 @@
+
+/* Let's Chat (MIT) -> Chat */
+
+.lcb-user-menu
+    background: rgba(0, 0 , 0, .2)
+    min-height: 55px
+    color: #bbb
+    padding: 10px
+    position: relative
+    @include display(flex)
+    @include align-items(center)
+    @include transition(color .1s linear)
+    &:hover,
+    &:focus
+        color: #fff
+        cursor: pointer
+    &:active
+        background: rgba(0, 0 , 0, .4)
+
+.lcb-user-menu-loader
+    margin: 0 auto
+
+.lcb-user-menu-meta
+    line-height: 1.2
+    margin-left: 8px
+
+.lcb-user-menu-name
+    color: #ccc
+    font-size: 18px
+    font-weight: 500
+    @include transition(color .1s linear)
+    .lcb-user-menu:hover &
+        color: #fff
+
+.lcb-user-menu-username
+    font-size: 12px
+    font-weight: 300
