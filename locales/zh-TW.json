@@ -7,7 +7,7 @@
 	"Register": "註冊",
 	"Username": "用戶名",
 	"Email": "電郵",
-	"Display Name": "顯示名稱",
+	"Display Name": "暱稱",
 	"First Name": "名",
 	"Last Name": "姓",
 	"Confirm Password": "確認密碼",
@@ -74,11 +74,11 @@
 	"Slug": "標識",
 	"XMPP/Jabber": "XMPP/Jabber",
 	"Private?": "設置密碼?",
-	"Empty for public room": "空的公共聊天室",
+	"Empty for public room": "公開的聊天室請留白",
 	"Toggle Navigation": "切換導航",
 	"Home": "家屋",
 	"Toggle Sidebar": "切換邊欄",
 	"Close": "關閉",
-	"Transcript for": "紀錄",
+	"Transcript for": "聊天紀錄-",
 	"Find a room...": "尋找聊天室..."
 }
