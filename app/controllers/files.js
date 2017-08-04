@@ -65,6 +65,10 @@ module.exports = function() {
                     return res.send(400);
                 }
 
+                if (!file) {
+                    return res.send(404);
+                }
+
                 var isImage = [
                   'image/jpeg',
                   'image/png',
