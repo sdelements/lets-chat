@@ -81,7 +81,7 @@ if (typeof exports !== 'undefined') {
         var pattern = /^\s*(upload:\/\/[-A-Z0-9+&*@#\/%?=~_|!:,.;'"!()]*)\s*$/i;
 
         return text.replace(pattern, function(url) {
-            return getBaseUrl() + url.substring(9);
+            return getBaseUrl() + url.substring(9);             //this place may cause problem on the trascript page.
         });
     }
 
