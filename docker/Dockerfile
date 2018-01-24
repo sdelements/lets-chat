@@ -28,8 +28,8 @@ RUN tar -xzvf master.tar.gz \
 &&  cp -a lets-chat-master/. . \
 &&  rm -rf lets-chat-master
 
-RUN groupadd -r node \
-&&  useradd -r -g node node \
+RUN (groups node || groupadd -r node) \
+&&  (id node || useradd -r -g node node ) \
 &&  chown node:node uploads \
 &&  mkdir -p builtAssets \
 &&  chown node:node builtAssets
