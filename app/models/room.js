@@ -61,7 +61,7 @@ var RoomSchema = new mongoose.Schema({
         type: String,
         required: false//only for password-protected room
     }
-});
+},{ usePushEach: true });
 
 RoomSchema.virtual('handle').get(function() {
     return this.slug || this.name.replace(/\W/i, '');
