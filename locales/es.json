@@ -8,8 +8,8 @@
 	"Username": "Nombre de Usuario",
 	"Email": "Correo Electrónico",
 	"Display Name": "Nombre a Mostrar",
-	"First Name": "Primer Nombre",
-	"Last Name": "Apellido",
+	"First Name": "Nombre",
+	"Last Name": "Apellido(s)",
 	"Confirm Password": "Confirmar Contraseña",
 	"I already have an account": "Ya tengo una cuenta",
 	"From Toronto with Love": "Desde Toronto con Amor",
@@ -36,7 +36,7 @@
 	"Giphy": "Giphy",
 	"Got something to say?": "¿Quieres decir algo?",
 	"Send": "Enviar",
-	"Who's Here": "Quien está aquí",
+	"Who's Here": "Quién está aquí",
 	"Files": "Archivos",
 	"Name": "Nombre",
 	"Description": "Descripción",
@@ -79,5 +79,5 @@
 	"Home": "Inicio",
 	"Toggle Sidebar": "Cambiar Barra Lateral",
 	"Close": "Cerrar",
-	"Transcript for": "Transcripción de"
+	"Transcript for": "Transcripción para"
 }
