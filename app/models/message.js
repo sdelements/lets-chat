@@ -5,6 +5,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var settings = require('./app/config'),
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var MessageSchema = new mongoose.Schema({
@@ -25,7 +26,8 @@ var MessageSchema = new mongoose.Schema({
     posted: {
         type: Date,
         default: Date.now,
-        index: true
+        index: true,
+        expires: settings.database.message_retention 
     }
 });
 

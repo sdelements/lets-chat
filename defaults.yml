@@ -32,6 +32,8 @@ xmpp:
 
 database:
   uri: mongodb://localhost/letschat
+  message_retention: 10800
+  room_retention: '30d'
 
 secrets:
   cookie: secretsauce

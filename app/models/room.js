@@ -3,7 +3,7 @@
 //
 
 'use strict';
-
+const settings = require('./app/config')
 var mongoose = require('mongoose'),
     uniqueValidator = require('mongoose-unique-validator'),
     bcrypt = require('bcryptjs');
@@ -51,7 +51,9 @@ var RoomSchema = new mongoose.Schema({
     },
     lastActive: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        expires: settings.database.room_retention
+        
     },
     private: {
         type: Boolean,
