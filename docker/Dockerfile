@@ -1,4 +1,4 @@
-FROM node:0.12-slim
+FROM node:9-slim
 MAINTAINER SD Elements
 
 ENV PKG_JSON_URL=https://raw.githubusercontent.com/sdelements/lets-chat/master/package.json \
@@ -18,7 +18,7 @@ RUN set -x \
 &&  npm install --production \
 &&  npm install $LCB_PLUGINS \
 &&  npm dedupe \
-&&  npm cache clean \
+&&  npm cache clean --force \
 &&  rm -rf /tmp/npm* \
 &&  apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $BUILD_DEPS
 
@@ -28,8 +28,8 @@ RUN tar -xzvf master.tar.gz \
 &&  cp -a lets-chat-master/. . \
 &&  rm -rf lets-chat-master
 
-RUN groupadd -r node \
-&&  useradd -r -g node node \
+RUN (groups node || groupadd -r node) \
+&&  (id node || useradd -r -g node node ) \
 &&  chown node:node uploads \
 &&  mkdir -p builtAssets \
 &&  chown node:node builtAssets
