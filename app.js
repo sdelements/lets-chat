@@ -20,7 +20,7 @@ var _ = require('lodash'),
     http = require('http'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
-    connectMongo = require('connect-mongo/es5'),
+    connectMongo = require('connect-mongo'),
     all = require('require-tree'),
     psjon = require('./package.json'),
     settings = require('./app/config'),
@@ -91,14 +91,16 @@ app.use(helmet.hsts({
     preload: true
 }));
 app.use(helmet.contentSecurityPolicy({
-    defaultSrc: ['\'none\''],
-    connectSrc: ['*'],
-    scriptSrc: ['\'self\'', '\'unsafe-eval\''],
-    styleSrc: ['\'self\'', 'fonts.googleapis.com', '\'unsafe-inline\''],
-    fontSrc: ['\'self\'', 'fonts.gstatic.com'],
-    mediaSrc: ['\'self\''],
-    objectSrc: ['\'self\''],
-    imgSrc: ['* data:']
+    directives: {
+	defaultSrc: ['\'none\''],
+	connectSrc: ['*'],
+	scriptSrc: ['\'self\'', '\'unsafe-eval\''],
+	styleSrc: ['\'self\'', 'fonts.googleapis.com', '\'unsafe-inline\''],
+	fontSrc: ['\'self\'', 'fonts.gstatic.com'],
+	mediaSrc: ['\'self\''],
+	objectSrc: ['\'self\''],
+	imgSrc: ['* data:']
+    }
 }));
 
 var bundles = {};
