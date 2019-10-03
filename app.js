@@ -4,6 +4,48 @@
 
 'use strict';
 
+var servers_count;
+var bCluster = 1;
+
+var settings = require('./app/config');
+
+if(settings.cluster_regime !== undefined) {
+  servers_count = settings.cluster_regime.servers_count;
+}
+
+if(servers_count === undefined || servers_count === null || servers_count === 0) {
+  bCluster = 0;
+  servers_count = 1;
+}
+
+function startCluster(servers_count) {
+  var cluster = require('cluster');
+  if (cluster.isMaster) {
+    if(servers_count == -1) {
+      servers_count = require('os').cpus().length;
+    }
+
+    console.log('Setting up cluster with 1 Master and ' + servers_count + ' workers..');
+
+    for (var i=0; i < servers_count; i++) {
+      cluster.fork();
+    }
+
+    cluster.on('online', function(worker) {
+      console.log('Worker:' + worker.process.pid + ' is online');
+    });
+
+    cluster.on('exit', function(worker, code, signal) {
+      console.log('Worker:' + worker.process.pid + ' exited');
+      cluster.fork(); /* Restart a new worker */
+    });
+  } else {
+    startSingleNodeInstance();
+  }
+}  
+
+function startSingleNodeInstance() {
+
 process.title = 'letschat';
 
 require('colors');
@@ -23,7 +65,6 @@ var _ = require('lodash'),
     connectMongo = require('connect-mongo/es5'),
     all = require('require-tree'),
     psjon = require('./package.json'),
-    settings = require('./app/config'),
     auth = require('./app/auth/index'),
     core = require('./app/core/index');
 
@@ -69,6 +110,41 @@ var session = {
     resave: false,
     saveUninitialized: true
 };
+
+app.get('/myroom', function(req, res) {
+  var  Room = require('./app/models/room');
+  Room.find({}, function( err, data) {
+    if(err) {
+      console.log(err);
+      res.json({'status': 'Could not delete all messages. Do it manually'});
+      return;
+    }
+      res.json({'rooms': data});
+      return;
+  });
+});
+
+//Delete
+app.get('/deleteall', function(req, res) {
+  console.log('Deleting stale data from last run');
+  var  Message = require('./app/models/message');
+  var  Room = require('./app/models/room');
+  Message.remove({}, function(err) {
+    if (err) {
+	  res.json({'status': 'Could not delete all messages. Do it manually'});
+	  return;
+	}
+    Room.remove({}, function(err) {
+      if (err) {
+	    res.json({'status': 'Could not delete all the rooms. Do it manually'});
+	    return;
+	  }
+    });
+
+    res.status(200);
+	res.json({'status': 'all clear'});
+  });
+});
 
 // Set compression before any routes
 app.use(compression({ threshold: 512 }));
@@ -117,6 +193,25 @@ app.use(require('connect-assets')({
 app.use('/media', express.static(__dirname + '/media', {
     maxAge: '364d'
 }));
+
+// Stop
+app.get('/stopserver', function(req, res) {
+  console.log('Got the SIGINT signal. Dumping memory usage stat.');
+  var after_memusage = process.memoryUsage();
+  setTimeout(print_stats, 250);
+  function print_stats() {
+    console.log('Memory usage is: ');
+    ['rss', 'heapTotal', 'heapUsed'].forEach(function(key) {
+      var a = after_memusage[key] / (1024 * 1024);
+    console.log('%sM %s', a.toFixed(2), key);
+  });
+  
+  console.log('Exiting ...');
+  res.json({message: 'Server stopped'});
+    server.close();
+    process.exit(0);
+ }
+});
 
 // Templates
 var nun = nunjucks.configure('templates', {
@@ -268,3 +363,13 @@ mongoose.connect(settings.database.uri, function(err) {
     checkForMongoTextSearch();
     startApp();
 });
+
+}
+
+if(bCluster === 1) {
+  startCluster(servers_count); 
+} else {
+  console.log('Starting a single instance of Node.js process with (pid: ' + process.pid + ')');
+  startSingleNodeInstance();
+}
+
