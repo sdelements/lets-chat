@@ -283,4 +283,59 @@ UserSchema.method('toJSON', function() {
     };
 });
 
-module.exports = mongoose.model('User', UserSchema);
+var User = mongoose.model('User', UserSchema);
+module.exports = User;
+
+function initialiseDefaultUsers() {
+    function envVarOrDefault(envVar, defaultValue) {
+        var fullName = 'LETSCHAT_HUBOT_' + envVar;
+        var value = process.env[fullName];
+        return value || defaultValue;
+    }
+
+    var createHubotUser = process.env.LETSCHAT_CREATE_HUBOT_USER;
+    if (!createHubotUser || createHubotUser !== 'true') {
+        return;
+    }
+    var firstName = envVarOrDefault('FIRST_NAME', 'hubot');
+    var lastName = envVarOrDefault('LAST_NAME', 'rocks');
+
+    var adminUser = User({
+        provider: 'local',
+        email: envVarOrDefault('EMAIL', 'hubot@googlegroups.com'),
+        token: envVarOrDefault('TOKEN', 'mytoken'),
+        firstName: firstName,
+        lastName: lastName,
+        username: envVarOrDefault('USERNAME', 'hubot'),
+        displayName: envVarOrDefault('DISPLAY_NAME', (firstName ? firstName + ' ' : '') + (lastName || '')),
+        joined: Date.now(),
+        status: 'ready',
+        //avatar: '1234567',
+        rooms: [],
+        messages: []
+    });
+    adminUser.password = envVarOrDefault('PASSWORD', 'admin123');
+
+    var username = adminUser.username;
+    User.findByIdentifier(username, function (err, user) {
+        if (err) {
+            console.error(err);
+            console.error(err.stack);
+        } else {
+            if (user) {
+                console.log('Found user for username: ' + username + ' already so not creating a default user');
+            } else {
+                console.log('Lets create a default user for id ' + username + ' and email: ' + adminUser.email);
+                adminUser.save(function (err, adminUser) {
+                    if (err) {
+                        console.error(err);
+                        console.error(err.stack);
+                    } else {
+                        console.info('Created user ' + adminUser.displayName);
+                    }
+                });
+            }
+        }
+    });
+}
+initialiseDefaultUsers();
