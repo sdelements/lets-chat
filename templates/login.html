@@ -1,11 +1,11 @@
 <% extends 'base.html' %>
 
-<% block title %>Login &middot; Let's Chat<% endblock %>
+<% block title %>Login &middot; OpBot Chat Central<% endblock %>
 
 <% block class %>lcb-login animated fadeIn<% endblock %>
 
 <% block attributes %>
-    style="background-image: url('./media/img/photos/<$ photo $>');"
+    style="background-image: url('./media/img/photos/opbot.jpg');"
 <% endblock %>
 
 <% block js %>
@@ -14,7 +14,7 @@
 
 <% block body %>
     <section class="lcb-login-main">
-        <h1 class="lcb-login-logo">Let<span class="flavour">'</span>s Chat</h1>
+        <h1 class="lcb-login-logo">OpBot Chat Central</h1>
         <div class="lcb-login-boxes">
             <form class="lcb-login-box lcb-login-box-login validate" action="./account/login" method="post" data-refresh="true">
                 <h2 class="lcb-login-box-heading"><$ __('Sign in') $></h2>
@@ -29,7 +29,7 @@
                     <% if auth.local.enableRegistration %>
                         <div class="links pull-left">
                             <a href="#" class="lcb-show-box" data-target=".lcb-login-box-registration">
-                                <$ __('I need an account') $>
+                                <$ __('Create an account') $>
                             </a>
                         </div>
                     <% endif %>
@@ -87,13 +87,6 @@
                 </form>
             <% endif %>
             <footer class="lcb-login-footer">
-                <p class="lcb-login-footer-heart">
-                    <i class="fa fa-heart"></i> <$ __('From Toronto with Love') $> <span class="dash">&mdash;</span>
-                    <$ __('Photos by %s and Friends', '<a href="http://funkaoshi.com/" target="_blank">Ramanan Sivaranjan</a>') | safe $>
-                </p>
-                <p class="lcb-login-footer-github"><a href="https://github.com/sdelements/lets-chat" target="_blank">
-                    <i class="fa fa-github"></i> <$ __('Fork me on GitHub') $> &raquo;</a>
-                </p>
             </footer>
         </div>
     </section>

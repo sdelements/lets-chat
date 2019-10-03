@@ -2,17 +2,17 @@
 # Let's Chat Built-in Defaults
 #
 
-env: development # development / production
+env: production # development / production
 
 http:
   enable: true
   host:
-  port: 5000
+  port: 80
 
 https:
   enable: false
   host:
-  port: 5001
+  port: 443
   key: key.pem
   cert: certificate.pem
 
@@ -39,12 +39,8 @@ secrets:
 files:
   enable: false
   provider: local
-  maxFileSize: 100000000
-  restrictTypes: true
-  allowedTypes:
-    - 'image/jpeg'
-    - 'image/png'
-    - 'image/gif'
+  maxFileSize: 1000000
+  restrictTypes: false
   local:
     dir: uploads
 

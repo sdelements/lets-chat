@@ -6,7 +6,7 @@
 
 var bcrypt = require('bcryptjs'),
     crypto = require('crypto'),
-    md5 = require('md5'),
+    md5 = require('MD5'),
     hash = require('node_hash'),
     mongoose = require('mongoose'),
     uniqueValidator = require('mongoose-unique-validator'),
@@ -88,11 +88,7 @@ var UserSchema = new mongoose.Schema({
     },
     rooms: [{
 		type: ObjectId,
-		ref: 'Room' 
-    }],
-    openRooms: [{
-      		type: String,
-                trim: true
+		ref: 'Room'
     }],
 	messages: [{
 		type: ObjectId,
@@ -112,9 +108,6 @@ UserSchema.virtual('local').get(function() {
 });
 
 UserSchema.virtual('avatar').get(function() {
-    if (!this.email) {
-      return null;
-    }
     return md5(this.email);
 });
 
@@ -278,9 +271,64 @@ UserSchema.method('toJSON', function() {
         lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
-        avatar: this.avatar,
-        openRooms: this.openRooms,
+        avatar: this.avatar
     };
 });
 
-module.exports = mongoose.model('User', UserSchema);
+var User = mongoose.model('User', UserSchema);
+module.exports = User;
+
+function initialiseDefaultUsers() {
+    function envVarOrDefault(envVar, defaultValue) {
+        var fullName = 'LETSCHAT_HUBOT_' + envVar;
+        var value = process.env[fullName];
+        return value || defaultValue;
+    }
+
+    var createHubotUser = process.env.LETSCHAT_CREATE_HUBOT_USER;
+    if (!createHubotUser || createHubotUser !== "true") {
+        return;
+    }
+    var firstName = envVarOrDefault('FIRST_NAME', 'Op');
+    var lastName = envVarOrDefault('LAST_NAME', 'Bot');
+
+    var adminUser = User({
+        provider: 'local',
+        email: envVarOrDefault('EMAIL', 'opbotenterprise@opvizor.com'),
+        token: envVarOrDefault('TOKEN', '8o1cj5mZMuIuoad2k947g70fRAg0ogWGZPLW7a8kGtjIFuzvFVpQ'),
+        firstName: firstName,
+        lastName: lastName,
+        username: envVarOrDefault('USERNAME', 'opbot'),
+        displayName: envVarOrDefault('DISPLAY_NAME', (firstName ? firstName + " " : "") + (lastName || "")),
+        joined: Date.now(),
+        status: 'ready',
+        //avatar: '1234567',
+        rooms: [],
+        messages: []
+    });
+    adminUser.password = envVarOrDefault('PASSWORD', 'VMware123');
+
+    var username = adminUser.username;
+    User.findByIdentifier(username, function (err, user) {
+        if (err) {
+            console.error(err);
+            console.error(err.stack);
+        } else {
+            if (user) {
+                console.log("Found user for username: " + username + " already so not creating a default user");
+            } else {
+                console.log("Lets create a default user for id " + username + " and email: " + adminUser.email);
+                adminUser.save(function (err, adminUser) {
+                    if (err) {
+                        console.error(err);
+                        console.error(err.stack);
+                        console.error(message);
+                    } else {
+                        console.info("Created user " + adminUser.displayName);
+                    }
+                });
+            }
+        }
+    });
+}
+initialiseDefaultUsers();
