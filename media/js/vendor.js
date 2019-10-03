@@ -10,6 +10,7 @@
 //= require vendor/store.js/store.js
 //= require vendor/JVFloat/jvfloat.js
 //= require vendor/dropzone/dropzone.js
+//= require vendor/fileReaderJS/filereader.js
 //= require vendor/selectize/selectize.js
 //= require vendor/notifications/desktop-notifications.js
 //= require vendor/favico.js/favico.js
