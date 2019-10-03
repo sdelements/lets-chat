@@ -13,31 +13,27 @@ module.exports = function() {
         models = this.models,
         User = models.user;
 
+    var findUserById = function(err, user, action) {
+        if (!err && user) {
+            user = user.toJSON();
+            user.room = data.roomId;
+            if (data.roomHasPassword) {
+                app.io.to(data.roomId).emit(action, user);
+            } else {
+                app.io.emit(action, user);
+            }
+        }
+    }
+
     core.on('presence:user_join', function(data) {
         User.findById(data.userId, function (err, user) {
-            if (!err && user) {
-                user = user.toJSON();
-                user.room = data.roomId;
-                if (data.roomHasPassword) {
-                    app.io.to(data.roomId).emit('users:join', user);
-                } else {
-                    app.io.emit('users:join', user);
-                }
-            }
+            findUserById(err, user, 'users:join');
         });
     });
 
     core.on('presence:user_leave', function(data) {
         User.findById(data.userId, function (err, user) {
-            if (!err && user) {
-                user = user.toJSON();
-                user.room = data.roomId;
-                if (data.roomHasPassword) {
-                    app.io.to(data.roomId).emit('users:leave', user);
-                } else {
-                    app.io.emit('users:leave', user);
-                }
-            }
+            findUserById(err, user, 'users:leave');
         });
     });
 
