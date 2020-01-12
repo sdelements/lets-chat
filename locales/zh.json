@@ -71,5 +71,10 @@
 	"Revoke token": "撤销令牌",
 	"Your generated token is below. It will not be shown again.": "您的认证令牌如下，之后将不再显示。",
 	"Add Room": "添加房间",
-	"Slug": "Slug"
+	"Slug": "标示",
+	"Toggle Navigation": "切换边栏",
+	"Home": "主页",
+	"Find a room...": "查找聊天室...",
+	"Toggle Sidebar": "Toggle Sidebar",
+	"Transcript for": "聊天记录"
 }
