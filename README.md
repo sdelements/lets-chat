@@ -1,5 +1,5 @@
 ![Let's Chat](http://i.imgur.com/0a3l5VF.png)
-
+[![Run on Repl.it](https://repl.it/badge/github/sdelements/lets-chat)](https://repl.it/github/sdelements/lets-chat)
 ![Screenshot](http://i.imgur.com/C4uMD67.png)
 
 A self-hosted chat app for small teams built by [Security Compass][seccom].
