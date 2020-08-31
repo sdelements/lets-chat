@@ -129,7 +129,8 @@
         },
         getToken: function() {
             var that = this;
-            $.post('./account/token/generate', function(data) {
+            var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            $.post('./account/token/generate', {_csrf: token}, function(data) {
                 if (data.token) {
                     that.$('.token').val(data.token);
                     that.$('.generated-token').show();
@@ -138,7 +139,8 @@
         },
         removeToken: function() {
             var that = this;
-            $.post('./account/token/revoke', function(data) {
+            var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            $.post('./account/token/revoke', {_csrf: token}, function(data) {
                 that.refresh();
                 swal('Success', 'Authentication token revoked!', 'success');
             });

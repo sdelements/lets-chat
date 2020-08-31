@@ -8,6 +8,16 @@ var passport = require('passport');
 
 function getMiddleware(fail) {
     return function(req, res, next) {
+
+        if(req.method=='POST'){
+            var fields = req.body || req.data;
+            var csrfToken = fields._csrf || fields['_csrf'] || req.headers['xcsrf-token'];
+            if(csrfToken !== req.session._csrf){
+                res.sendStatus(401);
+                return;
+            }
+        }
+
         if (req.user) {
             next();
             return;
