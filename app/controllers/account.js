@@ -5,12 +5,14 @@
 'use strict';
 
 var _ = require('lodash'),
-    {randomBytes} = require('crypto'),
+    Tokens = require('csrf'),
     fs = require('fs'),
     psjon = require('./../../package.json'),
     auth = require('./../auth/index'),
     path = require('path'),
     settings = require('./../config');
+
+var tokens = new Tokens();
 
 module.exports = function() {
 
@@ -26,7 +28,7 @@ module.exports = function() {
     // Routes
     //
     app.get('/', middlewares.requireLogin.redirect, function(req, res) {
-        res.locals.csrfToken = req.session._csrf ;
+        res.locals.csrfToken = tokens.create(req.session._csrf);
         res.render('chat.html', {
             account: req.user,
             settings: settings,
@@ -318,7 +320,7 @@ module.exports = function() {
                             });
                         }
                         req.session.passport = temp;
-                        req.session._csrf = randomBytes(100).toString('base64').replace(/\//g,'_').replace(/\+/g,'-').replace(/=/g,'~');
+                        req.session._csrf = tokens.secretSync()
                         res.json({
                             status: 'success',
                             message: 'Logging you in...'
