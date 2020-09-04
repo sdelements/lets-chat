@@ -5,9 +5,21 @@
 'use strict';
 
 var passport = require('passport');
+var Tokens = require('csrf');
+var tokens = new Tokens();
 
 function getMiddleware(fail) {
     return function(req, res, next) {
+
+        if(req.method=='POST'){
+            var fields = req.body || req.data;
+            var csrfToken = fields._csrf || fields['_csrf'] || req.headers['xcsrf-token'];
+            if(!tokens.verify(req.session._csrf, csrfToken)){
+                res.sendStatus(401);
+                return;
+            }
+        }
+
         if (req.user) {
             next();
             return;
