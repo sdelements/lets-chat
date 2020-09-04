@@ -38,7 +38,8 @@ Dropzone && (Dropzone.autoDiscover = false);
                 dictRemoveFile: 'Remove',
                 parallelUploads: 8,
                 maxFiles: 8,
-                previewTemplate: this.template
+                previewTemplate: this.template,
+                headers: {'xcsrf-token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')}
             });
             this.dropzone
                 .on('sending', _.bind(this.sending, this))
