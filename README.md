@@ -67,6 +67,12 @@ Editor preferences are available in the [editor config][editorconfig] for easy
 use in common text editors. Read more and download plugins at
 <http://editorconfig.org>.
 
+### Want to translate gmpublisher to your language?
+
+1. Create an empty JSON in https://github.com/sdelements/lets-chat/locales. 
+2. Update the [inlang.config.js](./inlang.config.js) file to include the new language. 
+3. Open https://inlang.com/editor/github.com/sdelements/lets-chat
+
 
 ## License
 
