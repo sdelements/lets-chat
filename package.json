@@ -64,7 +64,7 @@
     "async": "^2.0.0",
     "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.2",
-    "colors": "~1.1.2",
+    "colors": "~1.4.0",
     "compression": "^1.6.2",
     "connect-assets": "^5.3.0",
     "connect-mongo": "^1.2.1",
