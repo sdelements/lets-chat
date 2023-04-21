@@ -83,7 +83,7 @@
     "multer": "^1.1.0",
     "node-xmpp-server": "^2.2.0",
     "node_hash": "^0.2.0",
-    "nunjucks": "^2.4.2",
+    "nunjucks": "^3.2.4",
     "on-finished": "^2.3.0",
     "passport": "^0.3.2",
     "passport-http": "0.3.0",
