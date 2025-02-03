@@ -1,7 +1,3 @@
-//
-// Let's Chat
-//
-
 'use strict';
 
 process.title = 'letschat';
@@ -20,26 +16,24 @@ var _ = require('lodash'),
     http = require('http'),
     nunjucks = require('nunjucks'),
     mongoose = require('mongoose'),
-    connectMongo = require('connect-mongo/es5'),
+    MongoStore = require('connect-mongo'),
     all = require('require-tree'),
     psjon = require('./package.json'),
     settings = require('./app/config'),
     auth = require('./app/auth/index'),
     core = require('./app/core/index');
 
-var MongoStore = connectMongo(express.session),
-    httpEnabled = settings.http && settings.http.enable,
-    httpsEnabled = settings.https && settings.https.enable,
-    models = all(path.resolve('./app/models')),
-    middlewares = all(path.resolve('./app/middlewares')),
-    controllers = all(path.resolve('./app/controllers')),
-    app;
+const httpEnabled = settings.http?.enable;
+const httpsEnabled = settings.https?.enable;
+const models = all(path.resolve('./app/models'));
+const middlewares = all(path.resolve('./app/middlewares'));
+const controllers = all(path.resolve('./app/controllers'));
 
-//
-// express.oi Setup
-//
+let app;
+
+// Express.io Setup
 if (httpsEnabled) {
-     app = express().https({
+    app = express().https({
         key: fs.readFileSync(settings.https.key),
         cert: fs.readFileSync(settings.https.cert),
         passphrase: settings.https.passphrase
@@ -54,14 +48,14 @@ if (settings.env === 'production') {
     app.enable('view cache');
 }
 
-// Session
-var sessionStore = new MongoStore({
-    url: settings.database.uri,
+// Session Store (Updated for MongoDB v8)
+const sessionStore = MongoStore.create({
+    mongoUrl: settings.database.uri,
     autoReconnect: true
 });
 
-// Session
-var session = {
+// Session Configuration
+const session = {
     key: 'connect.sid',
     secret: settings.secrets.cookie,
     store: sessionStore,
@@ -70,56 +64,54 @@ var session = {
     saveUninitialized: true
 };
 
-// Set compression before any routes
+// Middleware
 app.use(compression({ threshold: 512 }));
-
 app.use(cookieParser());
 app.io.session(session);
-
 auth.setup(app, session, core);
 
-// Security protections
-app.use(helmet.frameguard());
-app.use(helmet.hidePoweredBy());
-app.use(helmet.ieNoOpen());
-app.use(helmet.noSniff());
-app.use(helmet.xssFilter());
-app.use(helmet.hsts({
-    maxAge: 31536000,
-    includeSubdomains: true,
-    force: httpsEnabled,
-    preload: true
-}));
-app.use(helmet.contentSecurityPolicy({
-    defaultSrc: ['\'none\''],
-    connectSrc: ['*'],
-    scriptSrc: ['\'self\'', '\'unsafe-eval\''],
-    styleSrc: ['\'self\'', 'fonts.googleapis.com', '\'unsafe-inline\''],
-    fontSrc: ['\'self\'', 'fonts.gstatic.com'],
-    mediaSrc: ['\'self\''],
-    objectSrc: ['\'self\''],
-    imgSrc: ['* data:']
+// Security Headers
+app.use(helmet({
+    frameguard: true,
+    hidePoweredBy: true,
+    ieNoOpen: true,
+    noSniff: true,
+    xssFilter: true,
+    hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        force: httpsEnabled,
+        preload: true
+    },
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'none'"],
+            connectSrc: ["*"],
+            scriptSrc: ["'self'", "'unsafe-eval'"],
+            styleSrc: ["'self'", "fonts.googleapis.com", "'unsafe-inline'"],
+            fontSrc: ["'self'", "fonts.gstatic.com"],
+            mediaSrc: ["'self'"],
+            objectSrc: ["'self'"],
+            imgSrc: ["* data:"]
+        }
+    }
 }));
 
-var bundles = {};
+// Asset Bundling
+const bundles = {};
 app.use(require('connect-assets')({
-    paths: [
-        'media/js',
-        'media/less'
-    ],
+    paths: ['media/js', 'media/less'],
     helperContext: bundles,
     build: settings.env === 'production',
     fingerprinting: settings.env === 'production',
     servePath: 'media/dist'
 }));
 
-// Public
-app.use('/media', express.static(__dirname + '/media', {
-    maxAge: '364d'
-}));
+// Static Files
+app.use('/media', express.static(path.join(__dirname, 'media'), { maxAge: '364d' }));
 
-// Templates
-var nun = nunjucks.configure('templates', {
+// Template Engine Setup
+const nun = nunjucks.configure('templates', {
     autoescape: true,
     express: app,
     tags: {
@@ -133,12 +125,10 @@ var nun = nunjucks.configure('templates', {
 });
 
 function wrapBundler(func) {
-    // This method ensures all assets paths start with "./"
-    // Making them relative, and not absolute
-    return function() {
+    return function () {
         return func.apply(func, arguments)
-                   .replace(/href="\//g, 'href="./')
-                   .replace(/src="\//g, 'src="./');
+            .replace(/href="\//g, 'href="./')
+            .replace(/src="\//g, 'src="./');
     };
 }
 
@@ -146,7 +136,7 @@ nun.addFilter('js', wrapBundler(bundles.js));
 nun.addFilter('css', wrapBundler(bundles.css));
 nun.addGlobal('text_search', false);
 
-// i18n
+// i18n Configuration
 i18n.configure({
     directory: path.resolve(__dirname, './locales'),
     locales: settings.i18n.locales || settings.i18n.locale,
@@ -156,115 +146,67 @@ app.use(i18n.init);
 
 // HTTP Middlewares
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// IE header
-app.use(function(req, res, next) {
+// IE Header
+app.use((req, res, next) => {
     res.setHeader('X-UA-Compatible', 'IE=Edge,chrome=1');
     next();
 });
 
-//
 // Controllers
-//
-_.each(controllers, function(controller) {
-    controller.apply({
-        app: app,
-        core: core,
-        settings: settings,
-        middlewares: middlewares,
-        models: models,
-        controllers: controllers
-    });
+_.each(controllers, (controller) => {
+    controller.apply({ app, core, settings, middlewares, models, controllers });
 });
 
-//
-// Mongo
-//
-
-mongoose.connection.on('error', function (err) {
-    throw new Error(err);
+// MongoDB Connection with Mongoose v8
+mongoose.connection.on('error', (err) => {
+    console.error('MongoDB Connection Error:', err);
+    process.exit(1);
 });
 
-mongoose.connection.on('disconnected', function() {
-    throw new Error('Could not connect to database');
+mongoose.connection.on('disconnected', () => {
+    console.error('MongoDB Disconnected');
+    process.exit(1);
 });
 
-//
-// Go Time
-//
-
-function startApp() {
-    var port = httpsEnabled && settings.https.port ||
-               httpEnabled && settings.http.port;
-
-    var host = httpsEnabled && settings.https.host ||
-               httpEnabled && settings.http.host || '0.0.0.0';
-
-
-
-    if (httpsEnabled && httpEnabled) {
-        // Create an HTTP -> HTTPS redirect server
-        var redirectServer = express();
-        redirectServer.get('*', function(req, res) {
-            var urlPort = port === 80 ? '' : ':' + port;
-            res.redirect('https://' + req.hostname + urlPort + req.path);
+// Start Application
+async function startApp() {
+    try {
+        await mongoose.connect(settings.database.uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
         });
-        http.createServer(redirectServer)
-            .listen(settings.http.port || 5000, host);
-    }
-
-    app.listen(port, host);
-
-    //
-    // XMPP
-    //
-    if (settings.xmpp.enable) {
-        var xmpp = require('./app/xmpp/index');
-        xmpp(core);
-    }
-
-    var art = fs.readFileSync('./app/misc/art.txt', 'utf8');
-    console.log('\n' + art + '\n\n' + 'Release ' + psjon.version.yellow + '\n');
-}
-
-function checkForMongoTextSearch() {
-    if (!mongoose.mongo || !mongoose.mongo.Admin) {
-        // MongoDB API has changed, assume text search is enabled
-        nun.addGlobal('text_search', true);
-        return;
-    }
-
-    var admin = new mongoose.mongo.Admin(mongoose.connection.db);
-    admin.buildInfo(function (err, info) {
-        if (err || !info) {
-            return;
-        }
-
-        var version = info.version.split('.');
-        if (version.length < 2) {
-            return;
-        }
-
-        if(version[0] < 2) {
-            return;
-        }
-
-        if(version[0] === '2' && version[1] < 6) {
-            return;
-        }
 
         nun.addGlobal('text_search', true);
-    });
+        
+        const port = httpsEnabled ? settings.https.port : settings.http.port;
+        const host = httpsEnabled ? settings.https.host : settings.http.host || '0.0.0.0';
+
+        if (httpsEnabled && httpEnabled) {
+            const redirectServer = express();
+            redirectServer.get('*', (req, res) => {
+                const urlPort = port === 80 ? '' : `:${port}`;
+                res.redirect(`https://${req.hostname}${urlPort}${req.path}`);
+            });
+            http.createServer(redirectServer).listen(settings.http.port || 5000, host);
+        }
+
+        app.listen(port, host, () => {
+            console.log(`Server is running on ${httpsEnabled ? 'https' : 'http'}://${host}:${port}`);
+        });
+
+        if (settings.xmpp?.enable) {
+            const xmpp = require('./app/xmpp/index');
+            xmpp(core);
+        }
+
+        const art = fs.readFileSync('./app/misc/art.txt', 'utf8');
+        console.log('\n' + art + '\n\n' + `Release ${psjon.version.yellow}\n`);
+    } catch (err) {
+        console.error('Error starting app:', err);
+        process.exit(1);
+    }
 }
 
-mongoose.connect(settings.database.uri, function(err) {
-    if (err) {
-        throw err;
-    }
-
-    checkForMongoTextSearch();
-    startApp();
-});
+startApp();
